@@ -28,4 +28,4 @@ jobs:
       - name: Run static checks (lint, typecheck, tests)
         env:
           CI: true
-        run: npm run -s static-checks
+        run: npm run static-checks
