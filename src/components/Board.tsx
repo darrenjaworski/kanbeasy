@@ -13,11 +13,10 @@ import {
   DndContext,
   KeyboardSensor,
   PointerSensor,
-  rectIntersection,
+  closestCenter,
   useSensor,
   useSensors,
   type DragEndEvent,
-  type DragOverEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -72,7 +71,7 @@ function SortableColumnItem({
 }
 
 export function Board() {
-  const { columns, addColumn, setColumns, moveCard, reorderCard } = useBoard();
+  const { columns, addColumn, setColumns } = useBoard();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -137,98 +136,12 @@ export function Board() {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    
-    const activeId = String(active.id);
-    const overId = String(over.id);
-    
-    // Check if we're dragging a column
-    const isColumnDrag = columns.some(c => c.id === activeId);
-    
-    if (isColumnDrag) {
-      // Handle column reordering
-      const oldIndex = columns.findIndex((c) => c.id === activeId);
-      const newIndex = columns.findIndex((c) => c.id === overId);
-      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-      const next = arrayMove(columns, oldIndex, newIndex);
-      setColumns(next);
-      return;
-    }
-    
-    // Handle card dragging
-    const activeCard = findCardAndColumn(activeId);
-    if (!activeCard) return;
-    
-    const { card, columnId: fromColumnId } = activeCard;
-    
-    // Check if we're dropping on a column droppable area
-    if (overId.startsWith('column-droppable-')) {
-      const targetColumnId = overId.replace('column-droppable-', '');
-      const targetColumn = columns.find(c => c.id === targetColumnId);
-      if (targetColumn && fromColumnId !== targetColumnId) {
-        // Move to the end of the target column
-        moveCard(activeId, fromColumnId, targetColumnId);
-      }
-      return;
-    }
-    
-    // Check if we're dropping on another card
-    const overCard = findCardAndColumn(overId);
-    if (overCard) {
-      const { columnId: toColumnId } = overCard;
-      
-      if (fromColumnId === toColumnId) {
-        // Reorder within same column
-        reorderCard(fromColumnId, activeId, overId);
-      } else {
-        // Move to different column at the position of the over card
-        const toColumn = columns.find(c => c.id === toColumnId);
-        if (toColumn) {
-          const overCardIndex = toColumn.cards.findIndex(c => c.id === overId);
-          moveCard(activeId, fromColumnId, toColumnId, overCardIndex);
-        }
-      }
-      return;
-    }
+    const oldIndex = columns.findIndex((c) => c.id === String(active.id));
+    const newIndex = columns.findIndex((c) => c.id === String(over.id));
+    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
+    const next = arrayMove(columns, oldIndex, newIndex);
+    setColumns(next);
   }
-
-  function handleDragOver(event: DragOverEvent) {
-    const { active, over } = event;
-    if (!over) return;
-    
-    const activeId = String(active.id);
-    const overId = String(over.id);
-    
-    // Check if we're dragging a card
-    const activeCard = findCardAndColumn(activeId);
-    if (!activeCard) return;
-    
-    const { columnId: fromColumnId } = activeCard;
-    
-    // Handle card being dragged over another column's droppable area
-    if (overId.startsWith('column-droppable-')) {
-      const targetColumnId = overId.replace('column-droppable-', '');
-      if (fromColumnId !== targetColumnId) {
-        // This is a cross-column drag, let the top-level context handle it
-        return;
-      }
-    }
-  }
-  
-  function findCardAndColumn(cardId: string): { card: import("../board/types").Card; columnId: string } | null {
-    for (const column of columns) {
-      const card = column.cards.find(c => c.id === cardId);
-      if (card) {
-        return { card, columnId: column.id };
-      }
-    }
-    return null;
-  }
-
-  // Get all items for the sortable contexts
-  const allItems = [
-    ...columns.map(c => c.id),
-    ...columns.flatMap(c => c.cards.map(card => card.id))
-  ];
 
   return (
     <div>
@@ -241,9 +154,8 @@ export function Board() {
           <div ref={scrollerRef} className="overflow-x-auto w-full">
             <DndContext
               sensors={sensors}
-              collisionDetection={rectIntersection}
+              collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
-              onDragOver={handleDragOver}
             >
               <SortableContext
                 items={columns.map((c) => c.id)}

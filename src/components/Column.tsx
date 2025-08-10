@@ -11,11 +11,20 @@ import dragIcon from "../icons/drag-indicator.svg";
 import closeIcon from "../icons/close.svg";
 import sortIcon from "../icons/sort.svg";
 import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
   SortableContext,
+  sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
 type Props = Readonly<{
@@ -125,7 +134,6 @@ export function Column({
         </button>
       </div>
       <CardList
-        columnId={id}
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
@@ -136,58 +144,62 @@ export function Column({
 }
 
 function CardList({
-  columnId,
   cards,
   onRemove,
   onUpdate,
   onReorder,
 }: Readonly<{
-  columnId: string;
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, title: string) => void;
   onReorder: (activeId: string, overId: string) => void;
 }>) {
-  const { setNodeRef } = useDroppable({
-    id: `column-droppable-${columnId}`,
-  });
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    onReorder(String(active.id), String(over.id));
+  };
 
   if (cards.length === 0) {
-    return (
-      <div ref={setNodeRef} className="flex flex-col gap-2 min-h-28">
-        <p className="text-xs opacity-60">No cards yet</p>
-      </div>
-    );
+    return <p className="text-xs opacity-60">No cards yet</p>;
   }
 
   return (
-    <SortableContext
-      items={cards.map((c) => c.id)}
-      strategy={verticalListSortingStrategy}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
     >
-      <div ref={setNodeRef} className="flex flex-col gap-2 min-h-28">
-        {cards.map((card) => (
-          <SortableCardItem
-            key={card.id}
-            card={card}
-            columnId={columnId}
-            onRemove={() => onRemove(card.id)}
-            onUpdate={(title) => onUpdate(card.id, title)}
-          />
-        ))}
-      </div>
-    </SortableContext>
+      <SortableContext
+        items={cards.map((c) => c.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="flex flex-col gap-2 min-h-28">
+          {cards.map((card) => (
+            <SortableCardItem
+              key={card.id}
+              card={card}
+              onRemove={() => onRemove(card.id)}
+              onUpdate={(title) => onUpdate(card.id, title)}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 }
 
 function SortableCardItem({
   card,
-  columnId,
   onRemove,
   onUpdate,
 }: Readonly<{
   card: Card;
-  columnId: string;
   onRemove: () => void;
   onUpdate: (title: string) => void;
 }>) {
