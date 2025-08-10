@@ -127,6 +127,20 @@ export function BoardProvider({
       return { columns: newColumns };
     });
   };
+  const sortCards: BoardContextValue["sortCards"] = (columnId) => {
+    setState((prev) => {
+      const idx = prev.columns.findIndex((c) => c.id === columnId);
+      if (idx === -1) return prev;
+      const col = prev.columns[idx];
+      const nextCards = col.cards
+        .slice()
+        .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
+      const nextColumns = prev.columns.slice();
+      nextColumns[idx] = { ...col, cards: nextCards };
+      return { columns: nextColumns };
+    });
+  };
+
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
@@ -137,6 +151,7 @@ export function BoardProvider({
       removeCard,
       updateCard,
       setColumns,
+      sortCards,
     }),
     [state.columns]
   );

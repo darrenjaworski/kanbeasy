@@ -3,6 +3,7 @@ import type { Card } from "../board/types";
 import { useBoard } from "../board/useBoard";
 import dragIcon from "../icons/drag-indicator.svg";
 import closeIcon from "../icons/close.svg";
+import sortIcon from "../icons/sort.svg";
 
 type Props = Readonly<{
   id: string;
@@ -19,7 +20,7 @@ export function Column({
   dragHandleRef,
   dragHandleProps,
 }: Props) {
-  const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
+  const { addCard, removeColumn, removeCard, updateColumn, updateCard, sortCards } =
     useBoard();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -151,6 +152,15 @@ export function Column({
                   aria-hidden
                   className="size-4 opacity-80"
                 />
+              </button>
+              <button
+                type="button"
+                aria-label="Sort cards"
+                title="Sort cards"
+                onClick={() => sortCards(id)}
+                className="absolute right-1 top-8 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              >
+                <img src={sortIcon} alt="" aria-hidden className="size-4 opacity-80" />
               </button>
             </div>
           ))
