@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run static checks (lint, typecheck, tests)
+      - name: Run static checks (lint, typecheck, tests, build)
         env:
           CI: true
         run: npm run static-checks
