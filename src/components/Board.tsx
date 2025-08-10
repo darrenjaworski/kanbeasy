@@ -318,7 +318,7 @@ export function Board() {
               </SortableContext>
               <DragOverlay>
                 {activeType === "card" && activeCard ? (
-                  <div className="group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/80 dark:bg-black/30 shadow-lg">
+                  <div className="group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/80 dark:bg-black/30 shadow-lg backdrop-blur-md">
                     <div className="whitespace-pre-wrap text-black/80 dark:text-white/80">
                       {activeCard.title || "New card"}
                     </div>
