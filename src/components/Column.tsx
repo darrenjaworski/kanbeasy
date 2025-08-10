@@ -11,7 +11,9 @@ import dragIcon from "../icons/drag-indicator.svg";
 import closeIcon from "../icons/close.svg";
 import sortIcon from "../icons/sort.svg";
 import {
+  SortableContext,
   useSortable,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
@@ -37,6 +39,7 @@ export function Column({
     removeCard,
     updateColumn,
     updateCard,
+    reorderCard,
   } = useBoard();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -126,6 +129,7 @@ export function Column({
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
+        onReorder={(activeId, overId) => reorderCard(id, activeId, overId)}
       />
     </section>
   );
@@ -136,14 +140,16 @@ function CardList({
   cards,
   onRemove,
   onUpdate,
+  onReorder,
 }: Readonly<{
   columnId: string;
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, title: string) => void;
+  onReorder: (activeId: string, overId: string) => void;
 }>) {
   const { setNodeRef } = useDroppable({
-    id: `column-${columnId}`,
+    id: `column-droppable-${columnId}`,
   });
 
   if (cards.length === 0) {
@@ -155,17 +161,22 @@ function CardList({
   }
 
   return (
-    <div ref={setNodeRef} className="flex flex-col gap-2 min-h-28">
-      {cards.map((card) => (
-        <SortableCardItem
-          key={card.id}
-          card={card}
-          columnId={columnId}
-          onRemove={() => onRemove(card.id)}
-          onUpdate={(title) => onUpdate(card.id, title)}
-        />
-      ))}
-    </div>
+    <SortableContext
+      items={cards.map((c) => c.id)}
+      strategy={verticalListSortingStrategy}
+    >
+      <div ref={setNodeRef} className="flex flex-col gap-2 min-h-28">
+        {cards.map((card) => (
+          <SortableCardItem
+            key={card.id}
+            card={card}
+            columnId={columnId}
+            onRemove={() => onRemove(card.id)}
+            onUpdate={(title) => onUpdate(card.id, title)}
+          />
+        ))}
+      </div>
+    </SortableContext>
   );
 }
 

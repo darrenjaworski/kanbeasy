@@ -13,10 +13,11 @@ import {
   DndContext,
   KeyboardSensor,
   PointerSensor,
-  closestCenter,
+  rectIntersection,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragOverEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -71,7 +72,7 @@ function SortableColumnItem({
 }
 
 export function Board() {
-  const { columns, addColumn, setColumns, reorderCard, moveCard } = useBoard();
+  const { columns, addColumn, setColumns, moveCard, reorderCard } = useBoard();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -159,6 +160,17 @@ export function Board() {
     
     const { card, columnId: fromColumnId } = activeCard;
     
+    // Check if we're dropping on a column droppable area
+    if (overId.startsWith('column-droppable-')) {
+      const targetColumnId = overId.replace('column-droppable-', '');
+      const targetColumn = columns.find(c => c.id === targetColumnId);
+      if (targetColumn && fromColumnId !== targetColumnId) {
+        // Move to the end of the target column
+        moveCard(activeId, fromColumnId, targetColumnId);
+      }
+      return;
+    }
+    
     // Check if we're dropping on another card
     const overCard = findCardAndColumn(overId);
     if (overCard) {
@@ -177,23 +189,28 @@ export function Board() {
       }
       return;
     }
+  }
+
+  function handleDragOver(event: DragOverEvent) {
+    const { active, over } = event;
+    if (!over) return;
     
-    // Check if we're dropping on a column droppable area
-    if (overId.startsWith('column-')) {
-      const targetColumnId = overId.replace('column-', '');
-      const targetColumn = columns.find(c => c.id === targetColumnId);
-      if (targetColumn && fromColumnId !== targetColumnId) {
-        // Move to the end of the target column
-        moveCard(activeId, fromColumnId, targetColumnId);
+    const activeId = String(active.id);
+    const overId = String(over.id);
+    
+    // Check if we're dragging a card
+    const activeCard = findCardAndColumn(activeId);
+    if (!activeCard) return;
+    
+    const { columnId: fromColumnId } = activeCard;
+    
+    // Handle card being dragged over another column's droppable area
+    if (overId.startsWith('column-droppable-')) {
+      const targetColumnId = overId.replace('column-droppable-', '');
+      if (fromColumnId !== targetColumnId) {
+        // This is a cross-column drag, let the top-level context handle it
+        return;
       }
-      return;
-    }
-    
-    // Check if we're dropping on a column (but not on a card)
-    const targetColumn = columns.find(c => c.id === overId);
-    if (targetColumn && fromColumnId !== overId) {
-      // Move to the end of the target column
-      moveCard(activeId, fromColumnId, overId);
     }
   }
   
@@ -207,7 +224,7 @@ export function Board() {
     return null;
   }
 
-  // Get all draggable items (columns and cards)
+  // Get all items for the sortable contexts
   const allItems = [
     ...columns.map(c => c.id),
     ...columns.flatMap(c => c.cards.map(card => card.id))
@@ -224,11 +241,12 @@ export function Board() {
           <div ref={scrollerRef} className="overflow-x-auto w-full">
             <DndContext
               sensors={sensors}
-              collisionDetection={closestCenter}
+              collisionDetection={rectIntersection}
               onDragEnd={handleDragEnd}
+              onDragOver={handleDragOver}
             >
               <SortableContext
-                items={allItems}
+                items={columns.map((c) => c.id)}
                 strategy={horizontalListSortingStrategy}
               >
                 <div className="flex gap-4 pb-1 items-stretch">
