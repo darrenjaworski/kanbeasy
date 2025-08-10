@@ -1,9 +1,31 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import type { Card } from "../board/types";
 import { useBoard } from "../board/useBoard";
 import dragIcon from "../icons/drag-indicator.svg";
 import closeIcon from "../icons/close.svg";
 import sortIcon from "../icons/sort.svg";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type Props = Readonly<{
   id: string;
@@ -26,7 +48,7 @@ export function Column({
     removeCard,
     updateColumn,
     updateCard,
-    sortCards,
+    reorderCard,
   } = useBoard();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -111,72 +133,146 @@ export function Column({
           Add card
         </button>
       </div>
-      <div className="flex flex-col gap-2 min-h-28">
-        {cards.length === 0 ? (
-          <p className="text-xs opacity-60">No cards yet</p>
-        ) : (
-          cards.map((card) => (
-            <div
-              key={card.id}
-              className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm"
-            >
-              <textarea
-                aria-label="Card content"
-                defaultValue={card.title || "New card"}
-                className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
-                rows={2}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    (e.currentTarget as HTMLTextAreaElement).blur();
-                  }
-                  if (e.key === "Escape") {
-                    (e.currentTarget as HTMLTextAreaElement).value =
-                      card.title || "New card";
-                    (e.currentTarget as HTMLTextAreaElement).blur();
-                  }
-                }}
-                onBlur={(e) => {
-                  const next = e.currentTarget.value.trim();
-                  if (!next) {
-                    e.currentTarget.value = card.title || "New card";
-                    return;
-                  }
-                  if (next !== card.title) updateCard(id, card.id, next);
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => removeCard(id, card.id)}
-                aria-label={`Remove card ${card.title || "Untitled"}`}
-                title="Remove card"
-                className="absolute right-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover/card:opacity-100 focus:opacity-100 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              >
-                <img
-                  src={closeIcon}
-                  alt=""
-                  aria-hidden
-                  className="size-4 opacity-80"
-                />
-              </button>
-              <button
-                type="button"
-                aria-label="Sort cards"
-                title="Sort cards"
-                onClick={() => sortCards(id)}
-                className="absolute right-1 top-8 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              >
-                <img
-                  src={sortIcon}
-                  alt=""
-                  aria-hidden
-                  className="size-4 opacity-80"
-                />
-              </button>
-            </div>
-          ))
-        )}
-      </div>
+      <CardList
+        cards={cards}
+        onRemove={(cardId) => removeCard(id, cardId)}
+        onUpdate={(cardId, title) => updateCard(id, cardId, title)}
+        onReorder={(activeId, overId) => reorderCard(id, activeId, overId)}
+      />
     </section>
+  );
+}
+
+function CardList({
+  cards,
+  onRemove,
+  onUpdate,
+  onReorder,
+}: Readonly<{
+  cards: Card[];
+  onRemove: (cardId: string) => void;
+  onUpdate: (cardId: string, title: string) => void;
+  onReorder: (activeId: string, overId: string) => void;
+}>) {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    onReorder(String(active.id), String(over.id));
+  };
+
+  if (cards.length === 0) {
+    return <p className="text-xs opacity-60">No cards yet</p>;
+  }
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={cards.map((c) => c.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="flex flex-col gap-2 min-h-28">
+          {cards.map((card) => (
+            <SortableCardItem
+              key={card.id}
+              card={card}
+              onRemove={() => onRemove(card.id)}
+              onUpdate={(title) => onUpdate(card.id, title)}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
+  );
+}
+
+function SortableCardItem({
+  card,
+  onRemove,
+  onUpdate,
+}: Readonly<{
+  card: Card;
+  onRemove: () => void;
+  onUpdate: (title: string) => void;
+}>) {
+  const {
+    attributes,
+    listeners,
+    setActivatorNodeRef,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: card.id });
+
+  const style: CSSProperties = useMemo(
+    () => ({
+      transform: CSS.Transform.toString(transform),
+      transition,
+      zIndex: isDragging ? 5 : undefined,
+    }),
+    [transform, transition, isDragging]
+  );
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm"
+    >
+      <textarea
+        aria-label="Card content"
+        defaultValue={card.title || "New card"}
+        className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
+        rows={2}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            (e.currentTarget as HTMLTextAreaElement).blur();
+          }
+          if (e.key === "Escape") {
+            (e.currentTarget as HTMLTextAreaElement).value =
+              card.title || "New card";
+            (e.currentTarget as HTMLTextAreaElement).blur();
+          }
+        }}
+        onBlur={(e) => {
+          const next = e.currentTarget.value.trim();
+          if (!next) {
+            e.currentTarget.value = card.title || "New card";
+            return;
+          }
+          if (next !== card.title) onUpdate(next);
+        }}
+      />
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove card ${card.title || "Untitled"}`}
+        title="Remove card"
+        className="absolute right-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover/card:opacity-100 focus:opacity-100 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      >
+        <img src={closeIcon} alt="" aria-hidden className="size-4 opacity-80" />
+      </button>
+      <button
+        type="button"
+        ref={setActivatorNodeRef}
+        {...(attributes as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+        {...(listeners as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+        aria-label={`Drag card ${card.title || "Untitled"}`}
+        title="Drag to reorder"
+        className="absolute right-1 top-8 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      >
+        <img src={sortIcon} alt="" aria-hidden className="size-4 opacity-80" />
+      </button>
+    </div>
   );
 }

@@ -14,8 +14,8 @@ function renderApp() {
   );
 }
 
-describe("card sort icon", () => {
-  it("renders a sort icon under the card's close button", async () => {
+describe("card drag handle", () => {
+  it("renders a drag handle under the card's close button and allows reordering", async () => {
     const user = userEvent.setup();
     renderApp();
 
@@ -46,11 +46,18 @@ describe("card sort icon", () => {
     await user.type(textareas[2], "B");
     await user.tab();
 
-    // Click Sort cards (any one sorts the whole column)
-    const sortBtns = within(column).getAllByRole("button", {
-      name: /sort cards/i,
+    // Drag handle exists for each card
+    const handles = within(column).getAllByRole("button", {
+      name: /drag card/i,
     });
-    await user.click(sortBtns[0]);
+    expect(handles.length).toBe(3);
+
+    // Keyboard-reorder: focus handle for first card (C) and move it down twice to end
+    handles[0].focus();
+    await user.keyboard(" "); // activate drag with space
+    await user.keyboard("{ArrowDown}");
+    await user.keyboard("{ArrowDown}");
+    await user.keyboard(" "); // drop
 
     const after = within(column).getAllByRole("textbox", {
       name: /card content/i,

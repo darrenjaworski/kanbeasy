@@ -23,4 +23,9 @@ export type BoardContextValue = Readonly<{
   updateCard: (columnId: string, cardId: string, title: string) => void;
   setColumns: (cols: Column[]) => void;
   sortCards: (columnId: string) => void;
+  reorderCard: (
+    columnId: string,
+    activeCardId: string,
+    overCardId: string
+  ) => void;
 }>;

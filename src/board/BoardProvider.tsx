@@ -143,6 +143,27 @@ export function BoardProvider({
     });
   };
 
+  const reorderCard: BoardContextValue["reorderCard"] = (
+    columnId,
+    activeCardId,
+    overCardId
+  ) => {
+    setState((prev) => {
+      const colIdx = prev.columns.findIndex((c) => c.id === columnId);
+      if (colIdx === -1) return prev;
+      const col = prev.columns[colIdx];
+      const fromIdx = col.cards.findIndex((c) => c.id === activeCardId);
+      const toIdx = col.cards.findIndex((c) => c.id === overCardId);
+      if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return prev;
+      const newCards = col.cards.slice();
+      const [moved] = newCards.splice(fromIdx, 1);
+      newCards.splice(toIdx, 0, moved);
+      const newColumns = prev.columns.slice();
+      newColumns[colIdx] = { ...col, cards: newCards };
+      return { columns: newColumns };
+    });
+  };
+
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
@@ -154,6 +175,7 @@ export function BoardProvider({
       updateCard,
       setColumns,
       sortCards,
+      reorderCard,
     }),
     [state.columns]
   );
