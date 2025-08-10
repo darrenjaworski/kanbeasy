@@ -11,14 +11,27 @@ Currently, two official plugins are available:
 
 This project uses Vitest.
 
-- Run once:
-  - `npm test`
-- Watch mode:
-  - `npm run test:watch`
-
-There is a trivial smoke test in `src/smoke.test.ts` to verify the setup.
+- `npm test`
+- `npm run test:watch`
+  There is a trivial smoke test in `src/smoke.test.ts` to verify the setup.
 
 ## Expanding the ESLint configuration
+
+## End-to-end tests (Playwright)
+
+Playwright is configured to start Vite automatically and run Chromium, Firefox, and WebKit projects.
+
+- Run all e2e tests: `npm run e2e`
+- Open the UI Test Runner: `npm run e2e:ui`
+- View the last HTML report: `npm run e2e:report`
+
+To run against a deployed environment, set `E2E_BASE_URL` to the site URL. For GitHub Pages in this repo:
+
+```sh
+E2E_BASE_URL=https://darrenjaworski.github.io/kanbeasy npm run e2e
+```
+
+Artifacts (HTML reports and videos) are ignored via `.gitignore`.
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
