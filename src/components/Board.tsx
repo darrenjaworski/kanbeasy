@@ -75,7 +75,7 @@ function SortableColumnItem({
 }
 
 export function Board() {
-  const { columns, addColumn, setColumns, moveCardBetweenColumns, reorderCard } = useBoard();
+  const { columns, addColumn, setColumns, moveCardBetweenColumns } = useBoard();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
