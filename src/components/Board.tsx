@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Column } from "./Column";
 import { useBoard } from "../board/useBoard";
+import { AddColumn } from "./AddColumn";
 
 export function Board() {
   const { columns, addColumn } = useBoard();
@@ -36,22 +37,7 @@ export function Board() {
     <div>
       {columns.length === 0 ? (
         <div>
-          <button
-            type="button"
-            onClick={() => addColumn("New Column")}
-            aria-label="Add column"
-            className="w-72 shrink-0 rounded-lg border border-dashed border-black/15 dark:border-white/15 p-3 text-sm flex flex-col text-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-          >
-            <h2
-              aria-hidden
-              className="text-sm font-semibold tracking-tight mb-3 opacity-0 select-none"
-            >
-              Add Column
-            </h2>
-            <div className="min-h-28 flex items-center justify-center">
-              Add Column
-            </div>
-          </button>
+          <AddColumn handleOnClick={() => addColumn("New Column")} />
         </div>
       ) : (
         <div className="relative">
@@ -63,22 +49,7 @@ export function Board() {
                 </div>
               ))}
               {/* Add Column tile at the end */}
-              <button
-                type="button"
-                onClick={() => addColumn("New Column")}
-                aria-label="Add column"
-                className="w-72 shrink-0 rounded-lg border border-dashed border-black/15 dark:border-white/15 p-3 text-sm flex flex-col text-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-              >
-                <h2
-                  aria-hidden
-                  className="text-sm font-semibold tracking-tight mb-3 opacity-0 select-none"
-                >
-                  Add Column
-                </h2>
-                <div className="min-h-28 flex items-center justify-center">
-                  Add Column
-                </div>
-              </button>
+              <AddColumn handleOnClick={() => addColumn("New Column")} />
             </div>
           </div>
           {canScrollLeft && (
