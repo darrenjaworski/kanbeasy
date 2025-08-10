@@ -134,7 +134,9 @@ export function BoardProvider({
       const col = prev.columns[idx];
       const nextCards = col.cards
         .slice()
-        .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
+        .sort((a, b) =>
+          a.title.localeCompare(b.title, undefined, { sensitivity: "base" })
+        );
       const nextColumns = prev.columns.slice();
       nextColumns[idx] = { ...col, cards: nextCards };
       return { columns: nextColumns };

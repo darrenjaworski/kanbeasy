@@ -20,8 +20,14 @@ export function Column({
   dragHandleRef,
   dragHandleProps,
 }: Props) {
-  const { addCard, removeColumn, removeCard, updateColumn, updateCard, sortCards } =
-    useBoard();
+  const {
+    addCard,
+    removeColumn,
+    removeCard,
+    updateColumn,
+    updateCard,
+    sortCards,
+  } = useBoard();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -160,7 +166,12 @@ export function Column({
                 onClick={() => sortCards(id)}
                 className="absolute right-1 top-8 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
-                <img src={sortIcon} alt="" aria-hidden className="size-4 opacity-80" />
+                <img
+                  src={sortIcon}
+                  alt=""
+                  aria-hidden
+                  className="size-4 opacity-80"
+                />
               </button>
             </div>
           ))

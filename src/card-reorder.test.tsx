@@ -29,7 +29,9 @@ describe("card sort icon", () => {
     await user.click(addCardBtn);
 
     const column = screen.getByRole("region", { name: /new column/i });
-    const textareas = within(column).getAllByRole("textbox", { name: /card content/i });
+    const textareas = within(column).getAllByRole("textbox", {
+      name: /card content/i,
+    });
 
     // Set titles: 'C', 'A', 'B'
     await user.clear(textareas[0]);
@@ -44,11 +46,15 @@ describe("card sort icon", () => {
     await user.type(textareas[2], "B");
     await user.tab();
 
-  // Click Sort cards (any one sorts the whole column)
-  const sortBtns = within(column).getAllByRole("button", { name: /sort cards/i });
-  await user.click(sortBtns[0]);
+    // Click Sort cards (any one sorts the whole column)
+    const sortBtns = within(column).getAllByRole("button", {
+      name: /sort cards/i,
+    });
+    await user.click(sortBtns[0]);
 
-    const after = within(column).getAllByRole("textbox", { name: /card content/i });
+    const after = within(column).getAllByRole("textbox", {
+      name: /card content/i,
+    });
     const values = after.map((el) => (el as HTMLTextAreaElement).value);
     expect(values).toEqual(["A", "B", "C"]);
   });
