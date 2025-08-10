@@ -23,3 +23,7 @@ an ultra simple task organizer
   - one line of details
   - three lines of details
 - column compactness
+
+### bugs
+
+- when you click the sort handle on a card and drag it below, you can drag it outside of the column and it drags the page down

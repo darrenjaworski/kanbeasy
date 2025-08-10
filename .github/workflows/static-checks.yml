@@ -2,8 +2,7 @@ name: static checks
 
 on:
   push:
-    branches:
-      - "**"
+  pull_request:
 
 concurrency:
   group: static-checks-${{ github.ref }}
