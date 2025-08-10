@@ -50,11 +50,6 @@ const DensityLargeIcon = () => (
   </svg>
 );
 
-type Props = Readonly<{
-  open: boolean;
-  onClose: () => void;
-}>;
-
 export function SettingsModal({ open, onClose }: Props) {
   const { theme, setTheme, cardDensity, setCardDensity } = useTheme();
 
