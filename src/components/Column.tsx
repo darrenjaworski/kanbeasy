@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Card } from "../board/types";
 import { useBoard } from "../board/useBoard";
 import dragIcon from "../icons/drag-indicator.svg";
+import closeIcon from "../icons/close.svg";
 
 type Props = Readonly<{
   id: string;
@@ -52,7 +53,7 @@ export function Column({
         title="Remove column"
         className="absolute right-2 top-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full text-base opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 focus:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
       >
-        ×
+        <img src={closeIcon} alt="" aria-hidden className="size-5 opacity-80" />
       </button>
       <div className="mb-3">
         <input
@@ -134,7 +135,12 @@ export function Column({
                 title="Remove card"
                 className="absolute right-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover/card:opacity-100 focus:opacity-100 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
-                ×
+                <img
+                  src={closeIcon}
+                  alt=""
+                  aria-hidden
+                  className="size-4 opacity-80"
+                />
               </button>
             </div>
           ))
