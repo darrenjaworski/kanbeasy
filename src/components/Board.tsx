@@ -81,11 +81,9 @@ export function Board() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const prevLenRef = useRef<number | null>(null);
 
-  // Get all sortable items (columns and cards) for the SortableContext
-  const sortableItems = useMemo(() => {
-    const columnIds = columns.map((c) => c.id);
-    const cardIds = columns.flatMap((c) => c.cards.map((card) => card.id));
-    return [...columnIds, ...cardIds];
+  // Get only column IDs for the Board-level SortableContext
+  const columnIds = useMemo(() => {
+    return columns.map((c) => c.id);
   }, [columns]);
 
   // Custom keyboard coordinate getter that supports cross-column navigation
@@ -226,45 +224,21 @@ export function Board() {
       return;
     }
 
-    // Check if dragging a card
+    // Check if dragging a card for cross-column moves only
     const activeCard = columns
       .flatMap((c) => c.cards.map((card) => ({ ...card, columnId: c.id })))
       .find((card) => card.id === activeId);
 
     if (!activeCard) return;
 
-    // Find which column the card is over
-    let targetColumnId = overId;
-    let targetIndex = 0;
-
-    // If dropped over another card, get its column and position
-    const overCard = columns
-      .flatMap((c) => c.cards.map((card) => ({ ...card, columnId: c.id })))
-      .find((card) => card.id === overId);
-
-    if (overCard) {
-      targetColumnId = overCard.columnId;
-      const targetColumn = columns.find((c) => c.id === overCard.columnId);
-      if (targetColumn) {
-        targetIndex = targetColumn.cards.findIndex((card) => card.id === overId);
-      }
-    } else if (isOverColumn) {
-      // Dropped over a column, place at the end
+    // Only handle cross-column moves at Board level
+    // Within-column moves are handled by Column's DndContext
+    if (isOverColumn && activeCard.columnId !== overId) {
+      // Cross-column move - drop at the end of the target column
       const targetColumn = columns.find((c) => c.id === overId);
       if (targetColumn) {
-        targetIndex = targetColumn.cards.length;
+        moveCardBetweenColumns(activeId, activeCard.columnId, overId, targetColumn.cards.length);
       }
-    } else {
-      return;
-    }
-
-    // Handle both within-column and cross-column moves at Board level
-    if (activeCard.columnId === targetColumnId && overCard) {
-      // Within-column reordering - use the reorderCard function
-      reorderCard(activeCard.columnId, activeId, overId);
-    } else {
-      // Cross-column move or within-column drop on empty column
-      moveCardBetweenColumns(activeId, activeCard.columnId, targetColumnId, targetIndex);
     }
   }
 
@@ -284,7 +258,7 @@ export function Board() {
               onDragEnd={handleDragEnd}
             >
               <SortableContext
-                items={sortableItems}
+                items={columnIds}
                 strategy={horizontalListSortingStrategy}
               >
                 <div className="flex gap-4 pb-1 items-stretch">
