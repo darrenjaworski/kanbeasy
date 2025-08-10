@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { useTheme } from "../theme/useTheme";
+import settingsIconUrl from "../icons/settings.svg";
 
 type Props = Readonly<{
   open: boolean;
@@ -32,7 +33,7 @@ export function SettingsModal({ open, onClose }: Props) {
       <dialog open className="relative z-10 w-full max-w-md rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-0 shadow-xl">
         <div className="p-4">
         <div className="flex items-center gap-3 mb-3">
-          <GearIcon className="size-5 opacity-70" />
+          <img src={settingsIconUrl} alt="" aria-hidden className="size-5 opacity-70" />
           <h2 id="settings-title" className="text-base font-semibold tracking-tight">
             Settings
           </h2>
@@ -69,21 +70,4 @@ export function SettingsModal({ open, onClose }: Props) {
   );
 }
 
-function GearIcon({ className = "" }: Readonly<{ className?: string }>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-hidden
-    >
-      <path d="M11.983 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" />
-      <path
-        fillRule="evenodd"
-        d="M10.362 2.504a1.5 1.5 0 0 1 3.276 0l.23 1.383c.117.7.683 1.246 1.387 1.34l1.397.187a1.5 1.5 0 0 1 .978 2.464l-.94 1.037a1.5 1.5 0 0 0 0 2.006l.94 1.037a1.5 1.5 0 0 1-.978 2.464l-1.397.187a1.5 1.5 0 0 0-1.387 1.34l-.23 1.383a1.5 1.5 0 0 1-3.276 0l-.23-1.383a1.5 1.5 0 0 0-1.387-1.34l-1.397-.187a1.5 1.5 0 0 1-.978-2.464l.94-1.037a1.5 1.5 0 0 0 0-2.006l-.94-1.037a1.5 1.5 0 0 1 .978-2.464l1.397-.187a1.5 1.5 0 0 0 1.387-1.34l.23-1.383Z"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-}
+// icon now provided by imported SVG
