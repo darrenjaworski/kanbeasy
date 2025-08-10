@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { useTheme } from "../theme/useTheme";
+import { useBoard } from "../board/useBoard";
 
 type Props = Readonly<{
   open: boolean;
@@ -9,6 +10,7 @@ type Props = Readonly<{
 
 export function SettingsModal({ open, onClose }: Props) {
   const { theme, setTheme } = useTheme();
+  const { columns, addColumn, updateColumn, removeColumn } = useBoard();
 
   useEffect(() => {
     if (!open) return;
@@ -86,6 +88,45 @@ export function SettingsModal({ open, onClose }: Props) {
                 </span>
               </span>
             </label>
+
+            <div>
+              <h3 className="text-sm font-semibold tracking-tight mb-2 opacity-80">
+                Columns
+              </h3>
+              {columns.length === 0 ? (
+                <p className="text-sm opacity-60 mb-2">No columns yet.</p>
+              ) : null}
+              <ul className="space-y-2">
+                {columns.map((c) => (
+                  <li key={c.id} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={c.title}
+                      onChange={(e) => updateColumn(c.id, e.target.value)}
+                      placeholder="Column title"
+                      className="flex-1 rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-indigo-500/40"
+                    />
+                    <button
+                      type="button"
+                      className="rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 px-2 py-1 text-xs hover:bg-white/80 dark:hover:bg-black/30 transition-colors"
+                      onClick={() => removeColumn(c.id)}
+                      aria-label={`Remove ${c.title || "column"}`}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-3">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 px-3 py-1.5 text-sm hover:bg-white/80 dark:hover:bg-black/30 transition-colors"
+                  onClick={() => addColumn("")}
+                >
+                  Add column
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </dialog>

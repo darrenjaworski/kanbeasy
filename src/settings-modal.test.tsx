@@ -2,11 +2,14 @@ import { render, screen, within, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 import { ThemeProvider } from "./theme/ThemeProvider";
+import { BoardProvider } from "./board/BoardProvider";
 
 function renderApp() {
   return render(
     <ThemeProvider>
-      <App />
+      <BoardProvider>
+        <App />
+      </BoardProvider>
     </ThemeProvider>
   );
 }
