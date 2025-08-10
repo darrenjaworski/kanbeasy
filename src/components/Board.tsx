@@ -71,7 +71,7 @@ function SortableColumnItem({
 }
 
 export function Board() {
-  const { columns, addColumn, setColumns } = useBoard();
+  const { columns, addColumn, setColumns, moveCard } = useBoard();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -136,11 +136,66 @@ export function Board() {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const oldIndex = columns.findIndex((c) => c.id === String(active.id));
-    const newIndex = columns.findIndex((c) => c.id === String(over.id));
-    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-    const next = arrayMove(columns, oldIndex, newIndex);
-    setColumns(next);
+    
+    const activeId = String(active.id);
+    const overId = String(over.id);
+    
+    // Check if we're dragging a column (original functionality)
+    const isColumnDrag = columns.some(c => c.id === activeId) && columns.some(c => c.id === overId);
+    
+    if (isColumnDrag) {
+      // Handle column reordering (original logic)
+      const oldIndex = columns.findIndex((c) => c.id === activeId);
+      const newIndex = columns.findIndex((c) => c.id === overId);
+      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
+      const next = arrayMove(columns, oldIndex, newIndex);
+      setColumns(next);
+      return;
+    }
+    
+    // Handle cross-column card dragging
+    const activeCard = findCardAndColumn(activeId);
+    if (!activeCard) return;
+    
+    const { columnId: fromColumnId } = activeCard;
+    
+    // Check if we're dropping on a column droppable area
+    if (overId.startsWith('column-droppable-')) {
+      const targetColumnId = overId.replace('column-droppable-', '');
+      const targetColumn = columns.find(c => c.id === targetColumnId);
+      if (targetColumn && fromColumnId !== targetColumnId) {
+        // Move to the end of the target column
+        moveCard(activeId, fromColumnId, targetColumnId);
+      }
+      return;
+    }
+    
+    // Check if we're dropping on another card for cross-column movement
+    const overCard = findCardAndColumn(overId);
+    if (overCard) {
+      const { columnId: toColumnId } = overCard;
+      
+      if (fromColumnId !== toColumnId) {
+        // Cross-column card movement at specific position
+        const toColumn = columns.find(c => c.id === toColumnId);
+        if (toColumn) {
+          const overCardIndex = toColumn.cards.findIndex(c => c.id === overId);
+          moveCard(activeId, fromColumnId, toColumnId, overCardIndex);
+        }
+      }
+      // Note: within-column reordering is handled by the Column component's own DndContext
+      return;
+    }
+  }
+  
+  function findCardAndColumn(cardId: string): { card: import("../board/types").Card; columnId: string } | null {
+    for (const column of columns) {
+      const card = column.cards.find(c => c.id === cardId);
+      if (card) {
+        return { card, columnId: column.id };
+      }
+    }
+    return null;
   }
 
   return (

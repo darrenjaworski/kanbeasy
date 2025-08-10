@@ -17,6 +17,7 @@ import {
   closestCenter,
   useSensor,
   useSensors,
+  useDroppable,
   type DragEndEvent,
 } from "@dnd-kit/core";
 import {
@@ -134,6 +135,7 @@ export function Column({
         </button>
       </div>
       <CardList
+        columnId={id}
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
@@ -144,11 +146,13 @@ export function Column({
 }
 
 function CardList({
+  columnId,
   cards,
   onRemove,
   onUpdate,
   onReorder,
 }: Readonly<{
+  columnId: string;
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, title: string) => void;
@@ -159,6 +163,11 @@ function CardList({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  // Add droppable area for cross-column operations
+  const { setNodeRef } = useDroppable({
+    id: `column-droppable-${columnId}`,
+  });
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -166,7 +175,11 @@ function CardList({
   };
 
   if (cards.length === 0) {
-    return <p className="text-xs opacity-60">No cards yet</p>;
+    return (
+      <div ref={setNodeRef} className="flex flex-col gap-2 min-h-28">
+        <p className="text-xs opacity-60">No cards yet</p>
+      </div>
+    );
   }
 
   return (
@@ -179,7 +192,7 @@ function CardList({
         items={cards.map((c) => c.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-2 min-h-28">
+        <div ref={setNodeRef} className="flex flex-col gap-2 min-h-28">
           {cards.map((card) => (
             <SortableCardItem
               key={card.id}
