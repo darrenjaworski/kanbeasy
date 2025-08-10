@@ -62,7 +62,3 @@ These instructions apply to any automated or AI-assisted changes in this reposit
 - Extend `expect` via `@testing-library/jest-dom` (already configured in `src/test/setup.ts`).
 
 Following these guidelines is required. PRs that don’t meet them will be rejected or asked to be revised.
-
-## code commits
-
-DO NOT COMMIT CODE PLEASE.
