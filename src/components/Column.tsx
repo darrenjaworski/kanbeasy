@@ -9,7 +9,7 @@ type Props = Readonly<{
 }>;
 
 export function Column({ id, title, cards }: Props) {
-  const { addCard, removeColumn, removeCard, updateColumn } = useBoard();
+  const { addCard, removeColumn, removeCard, updateColumn, updateCard } = useBoard();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -76,9 +76,32 @@ export function Column({ id, title, cards }: Props) {
           cards.map((card) => (
             <div
               key={card.id}
-              className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pl-2 pr-7 py-1 text-sm"
+              className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm"
             >
-              <span>{card.title || "Untitled"}</span>
+              <textarea
+                aria-label="Card content"
+                defaultValue={card.title || "New card"}
+                className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
+                rows={2}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    (e.currentTarget as HTMLTextAreaElement).blur();
+                  }
+                  if (e.key === "Escape") {
+                    (e.currentTarget as HTMLTextAreaElement).value = card.title || "New card";
+                    (e.currentTarget as HTMLTextAreaElement).blur();
+                  }
+                }}
+                onBlur={(e) => {
+                  const next = e.currentTarget.value.trim();
+                  if (!next) {
+                    e.currentTarget.value = card.title || "New card";
+                    return;
+                  }
+                  if (next !== card.title) updateCard(id, card.id, next);
+                }}
+              />
               <button
                 type="button"
                 onClick={() => removeCard(id, card.id)}

@@ -109,6 +109,20 @@ export function BoardProvider({
       return { columns: newColumns };
     });
   };
+  const updateCard: BoardContextValue["updateCard"] = (columnId, cardId, title) => {
+    setState((prev) => {
+      const idx = prev.columns.findIndex((c) => c.id === columnId);
+      if (idx === -1) return prev;
+      const col = prev.columns[idx];
+      const cardIdx = col.cards.findIndex((c) => c.id === cardId);
+      if (cardIdx === -1) return prev;
+      const newCards = col.cards.slice();
+      newCards[cardIdx] = { ...newCards[cardIdx], title };
+      const newColumns = prev.columns.slice();
+      newColumns[idx] = { ...col, cards: newCards };
+      return { columns: newColumns };
+    });
+  };
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
@@ -117,6 +131,7 @@ export function BoardProvider({
       removeColumn,
       addCard,
       removeCard,
+      updateCard,
       setColumns,
     }),
     [state.columns]
