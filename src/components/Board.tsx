@@ -28,17 +28,20 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 function SortableColumnItem({
   id,
   title,
   cards,
   canDrag,
+  style,
 }: Readonly<{
   id: string;
   title: string;
   cards: import("../board/types").Card[];
   canDrag: boolean;
+  style?: React.CSSProperties;
 }>) {
   const {
     attributes,
@@ -49,17 +52,19 @@ function SortableColumnItem({
     transition,
     isDragging,
   } = useSortable({ id, data: { type: "column" } });
-  const style: CSSProperties = useMemo(
+
+  const combinedStyle: CSSProperties = useMemo(
     () => ({
+      ...style,
       transform: CSS.Transform.toString(transform),
       transition,
-      // keep item above neighbors while dragging
       zIndex: isDragging ? 10 : undefined,
     }),
-    [transform, transition, isDragging]
+    [style, transform, transition, isDragging]
   );
+
   return (
-    <div ref={setNodeRef} style={style} className="w-80 shrink-0">
+    <div ref={setNodeRef} style={combinedStyle} className="w-80 shrink-0">
       <Column
         id={id}
         title={title}
@@ -290,6 +295,9 @@ export function Board() {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
+              modifiers={
+                activeType === "column" ? [restrictToHorizontalAxis] : undefined
+              }
               onDragStart={handleDragStart}
               onDragEnd={(e) => {
                 handleDragEnd(e);
@@ -317,13 +325,28 @@ export function Board() {
                 </div>
               </SortableContext>
               <DragOverlay>
-                {activeType === "card" && activeCard ? (
+                {activeType === "card" && activeCard && (
                   <div className="group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/80 dark:bg-black/30 shadow-lg backdrop-blur-md">
                     <div className="whitespace-pre-wrap text-black/80 dark:text-white/80">
                       {activeCard.title || "New card"}
                     </div>
                   </div>
-                ) : null}
+                )}
+                {activeType === "column" && activeId && (
+                  <div className="w-80 shrink-0">
+                    <Column
+                      id={activeId}
+                      title={
+                        columns.find((col) => col.id === activeId)?.title || ""
+                      }
+                      cards={
+                        columns.find((col) => col.id === activeId)?.cards || []
+                      }
+                      canDrag={false}
+                      overlayMode
+                    />
+                  </div>
+                )}
               </DragOverlay>
             </DndContext>
           </div>

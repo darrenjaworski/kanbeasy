@@ -18,6 +18,7 @@ type Props = Readonly<{
   canDrag?: boolean;
   dragHandleRef?: (el: HTMLButtonElement | null) => void;
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
+  overlayMode?: boolean;
 }>;
 
 export function Column({
@@ -27,6 +28,7 @@ export function Column({
   canDrag = true,
   dragHandleRef,
   dragHandleProps,
+  overlayMode = false,
 }: Props) {
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
@@ -40,7 +42,12 @@ export function Column({
     <section
       data-column-id={id}
       aria-label={title || "column"}
-      className="group relative rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-3"
+      className={
+        `group relative rounded-lg border border-black/10 dark:border-white/10 p-3 ` +
+        (overlayMode
+          ? "bg-white/60 dark:bg-black/20 backdrop-blur-md"
+          : "bg-surface-light dark:bg-surface-dark")
+      }
     >
       {/* Combined drag + delete control */}
       <div className="absolute right-2 top-2 z-10 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
@@ -94,6 +101,7 @@ export function Column({
           aria-label="Column title"
           className="w-full bg-transparent px-0 py-0 text-base font-semibold tracking-tight opacity-80 border-0 outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-sm"
           value={tempTitle}
+          onFocus={(e) => e.target.select()} // Highlight all text on focus
           onChange={(e) => setTempTitle(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
