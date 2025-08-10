@@ -241,7 +241,7 @@ function SortableCardItem({
       }`}
     >
       {/* Combined delete + drag control (vertical), mirrors column-level style */}
-      <div className="absolute right-1 top-1 z-10 inline-flex flex-col items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within:opacity-100">
+      <div className="absolute right-1 top-1 z-10 inline-flex flex-col items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100">
         <button
           type="button"
           onClick={onRemove}
