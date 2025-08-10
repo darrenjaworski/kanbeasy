@@ -226,7 +226,11 @@ function SortableCardItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm"
+      className={`group/card relative rounded-md border border-black/10 dark:border-white/10 pr-7 p-2 text-sm bg-white/60 dark:bg-black/20 ${
+        isDragging
+          ? "backdrop-blur-sm supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-black/30"
+          : ""
+      }`}
     >
       {/* Combined delete + drag control (vertical), mirrors column-level style */}
       <div className="absolute right-1 top-1 z-10 inline-flex flex-col items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within:opacity-100">
