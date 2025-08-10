@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
@@ -18,9 +19,9 @@ describe("app shell", () => {
   it("renders header and shows minimal empty-state, allows adding a column", async () => {
     const user = userEvent.setup();
     renderApp();
-    expect(
-      screen.getByRole("heading", { name: /kanbeasy/i })
-    ).toBeInTheDocument();
+  // There may be multiple headings with 'Kanbeasy' (header and welcome modal)
+  const headings = screen.getAllByRole("heading", { name: /kanbeasy/i });
+  expect(headings.length).toBeGreaterThan(0);
     // Empty state: only one "Add Column" button, flush-left
     const addBtn = screen.getByRole("button", { name: /add column/i });
     expect(addBtn).toBeInTheDocument();
