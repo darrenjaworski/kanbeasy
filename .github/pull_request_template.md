@@ -33,3 +33,5 @@ Briefly describe the change and the problem it solves.
 
 - See the repo guidelines: [.github/copilot-instructions.md](./copilot-instructions.md)
 - Tests live next to source in `src/` as `*.test.ts(x)` and use Vitest + Testing Library.
+- Please ensure static checks are passing
+- [please follow conventional commits for the PR title.](https://www.conventionalcommits.org/en/v1.0.0/)
