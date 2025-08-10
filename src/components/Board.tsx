@@ -17,6 +17,7 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
+  type KeyboardCoordinateGetter,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -74,20 +75,76 @@ function SortableColumnItem({
 }
 
 export function Board() {
-  const { columns, addColumn, setColumns, moveCardBetweenColumns, reorderCard } = useBoard();
+  const { columns, addColumn, setColumns, moveCardBetweenColumns } = useBoard();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const prevLenRef = useRef<number | null>(null);
 
-  // Get all column IDs for the SortableContext
+  // Get all column IDs for the SortableContext  
   const columnIds = useMemo(() => {
     return columns.map((c) => c.id);
   }, [columns]);
 
+  // Custom keyboard coordinate getter that supports cross-column navigation
+  const customKeyboardCoordinates: KeyboardCoordinateGetter = (
+    event,
+    { context, active, currentCoordinates }
+  ) => {
+    // For cards, enable cross-column navigation
+    const activeCard = columns
+      .flatMap((c) => c.cards.map((card) => ({ ...card, columnId: c.id })))
+      .find((card) => card.id === String(active));
+
+    if (activeCard) {
+      const { code } = event;
+      
+      if (code === "ArrowRight") {
+        // Move to next column
+        const currentColumnIndex = columns.findIndex(c => c.id === activeCard.columnId);
+        const nextColumnIndex = currentColumnIndex + 1;
+        
+        if (nextColumnIndex < columns.length) {
+          const nextColumn = columns[nextColumnIndex];
+          // Return the column element as the target
+          const columnElement = document.querySelector(`[data-column-id="${nextColumn.id}"]`);
+          if (columnElement) {
+            const rect = columnElement.getBoundingClientRect();
+            return {
+              x: rect.left + rect.width / 2,
+              y: rect.top + rect.height / 2,
+            };
+          }
+        }
+      }
+      
+      if (code === "ArrowLeft") {
+        // Move to previous column
+        const currentColumnIndex = columns.findIndex(c => c.id === activeCard.columnId);
+        const prevColumnIndex = currentColumnIndex - 1;
+        
+        if (prevColumnIndex >= 0) {
+          const prevColumn = columns[prevColumnIndex];
+          // Return the column element as the target
+          const columnElement = document.querySelector(`[data-column-id="${prevColumn.id}"]`);
+          if (columnElement) {
+            const rect = columnElement.getBoundingClientRect();
+            return {
+              x: rect.left + rect.width / 2,
+              y: rect.top + rect.height / 2,
+            };
+          }
+        }
+      }
+    }
+
+    // Fall back to default keyboard coordinates for other cases
+    return sortableKeyboardCoordinates(event, { context, active, currentCoordinates });
+  };
+
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: customKeyboardCoordinates })
   );
 
   useEffect(() => {
@@ -174,35 +231,14 @@ export function Board() {
 
     if (!activeCard) return;
 
-    // Find which column the card is over
-    let targetColumnId = overId;
-    let targetIndex = 0;
-
-    // If dropped over another card, get its column and position
-    const overCard = columns
-      .flatMap((c) => c.cards.map((card) => ({ ...card, columnId: c.id })))
-      .find((card) => card.id === overId);
-
-    if (overCard) {
-      targetColumnId = overCard.columnId;
-      const targetColumn = columns.find((c) => c.id === overCard.columnId);
-      if (targetColumn) {
-        targetIndex = targetColumn.cards.findIndex((card) => card.id === overId);
-      }
-    } else if (isOverColumn) {
-      // Dropped over a column, place at the end
+    // Only handle cross-column moves at Board level
+    // Within-column moves are handled by Column's DndContext
+    if (isOverColumn && activeCard.columnId !== overId) {
+      // Cross-column move - drop at the end of the target column
       const targetColumn = columns.find((c) => c.id === overId);
       if (targetColumn) {
-        targetIndex = targetColumn.cards.length;
+        moveCardBetweenColumns(activeId, activeCard.columnId, overId, targetColumn.cards.length);
       }
-    } else {
-      return;
-    }
-
-    // Only handle cross-column moves here. Within-column moves are handled by Column's DndContext
-    if (activeCard.columnId !== targetColumnId) {
-      // Moving between columns
-      moveCardBetweenColumns(activeId, activeCard.columnId, targetColumnId, targetIndex);
     }
   }
 
