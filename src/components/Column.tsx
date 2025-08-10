@@ -226,13 +226,61 @@ function SortableCardItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm"
+      className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm min-h-24"
     >
+      {/* Combined drag + delete control (vertical), mirrors column-level style */}
+      <div className="absolute right-1 top-1 z-10 inline-flex flex-col items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within:opacity-100">
+        <button
+          type="button"
+          onClick={onRemove}
+          aria-label={`Remove card ${card.title || "Untitled"}`}
+          title="Remove card"
+          className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <img
+            src={closeIcon}
+            alt=""
+            aria-hidden
+            className="size-4 opacity-80"
+          />
+        </button>
+        <span aria-hidden className="w-6 h-px bg-black/10 dark:bg-white/10" />
+        <button
+          type="button"
+          ref={setActivatorNodeRef}
+          {...(attributes as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+          {...(listeners as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+          aria-label={`Drag card ${card.title || "Untitled"}`}
+          title="Drag to reorder"
+          className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <img
+            src={sortIcon}
+            alt=""
+            aria-hidden
+            className="size-4 opacity-80"
+          />
+        </button>
+        {/* Decorative drag indicator below sort icon, not a button */}
+        <span aria-hidden className="w-6 h-px bg-black/10 dark:bg-white/10" />
+        <span
+          aria-hidden
+          className="h-6 w-6 inline-flex items-center justify-center"
+        >
+          <img
+            src={dragIcon}
+            alt=""
+            aria-hidden
+            className="size-4 opacity-80"
+          />
+        </span>
+      </div>
+
       <textarea
         aria-label="Card content"
         defaultValue={card.title || "New card"}
         className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
-        rows={2}
+        rows={3}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -253,26 +301,6 @@ function SortableCardItem({
           if (next !== card.title) onUpdate(next);
         }}
       />
-      <button
-        type="button"
-        onClick={onRemove}
-        aria-label={`Remove card ${card.title || "Untitled"}`}
-        title="Remove card"
-        className="absolute right-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover/card:opacity-100 focus:opacity-100 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-      >
-        <img src={closeIcon} alt="" aria-hidden className="size-4 opacity-80" />
-      </button>
-      <button
-        type="button"
-        ref={setActivatorNodeRef}
-        {...(attributes as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-        {...(listeners as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-        aria-label={`Drag card ${card.title || "Untitled"}`}
-        title="Drag to reorder"
-        className="absolute right-1 top-8 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-      >
-        <img src={sortIcon} alt="" aria-hidden className="size-4 opacity-80" />
-      </button>
     </div>
   );
 }
