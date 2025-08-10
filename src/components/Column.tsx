@@ -267,8 +267,8 @@ function SortableCardItem({
           : ""
       }`}
     >
-      {/* Combined delete + drag control (vertical), mirrors column-level style */}
-      <div className="absolute right-1 top-1 z-10 inline-flex flex-col items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100">
+      {/* Combined delete + drag control (horizontal), mirrors column-level style */}
+      <div className="absolute right-1 top-1 z-10 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100">
         <button
           type="button"
           onClick={onRemove}
@@ -288,7 +288,7 @@ function SortableCardItem({
           </svg>
         </button>
         {canDrag && (
-          <span aria-hidden className="w-6 h-px bg-black/10 dark:bg-white/10" />
+          <span aria-hidden className="h-6 w-px bg-black/10 dark:bg-white/10" />
         )}
         {canDrag && (
           <button
