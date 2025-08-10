@@ -226,9 +226,9 @@ function SortableCardItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm min-h-24"
+      className="group/card relative rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 pr-7 p-2 text-sm"
     >
-      {/* Combined drag + delete control (vertical), mirrors column-level style */}
+      {/* Combined delete + drag control (vertical), mirrors column-level style */}
       <div className="absolute right-1 top-1 z-10 inline-flex flex-col items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within:opacity-100">
         <button
           type="button"
@@ -261,26 +261,13 @@ function SortableCardItem({
             className="size-4 opacity-80"
           />
         </button>
-        {/* Decorative drag indicator below sort icon, not a button */}
-        <span aria-hidden className="w-6 h-px bg-black/10 dark:bg-white/10" />
-        <span
-          aria-hidden
-          className="h-6 w-6 inline-flex items-center justify-center"
-        >
-          <img
-            src={dragIcon}
-            alt=""
-            aria-hidden
-            className="size-4 opacity-80"
-          />
-        </span>
       </div>
 
       <textarea
         aria-label="Card content"
         defaultValue={card.title || "New card"}
         className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
-        rows={3}
+        rows={2}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
