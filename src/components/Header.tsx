@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SettingsModal } from "./SettingsModal";
+import settingsIconUrl from "../icons/settings.svg";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -14,10 +15,7 @@ export function Header() {
             aria-label="Open settings"
             onClick={() => setOpen(true)}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
-              <path d="M11.983 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" />
-              <path fillRule="evenodd" d="M10.362 2.504a1.5 1.5 0 0 1 3.276 0l.23 1.383c.117.7.683 1.246 1.387 1.34l1.397.187a1.5 1.5 0 0 1 .978 2.464l-.94 1.037a1.5 1.5 0 0 0 0 2.006l.94 1.037a1.5 1.5 0 0 1-.978 2.464l-1.397.187a1.5 1.5 0 0 0-1.387 1.34l-.23 1.383a1.5 1.5 0 0 1-3.276 0l-.23-1.383a1.5 1.5 0 0 0-1.387-1.34l-1.397-.187a1.5 1.5 0 0 1-.978-2.464l.94-1.037a1.5 1.5 0 0 0 0-2.006l-.94-1.037a1.5 1.5 0 0 1 .978-2.464l1.397-.187a1.5 1.5 0 0 0 1.387-1.34l.23-1.383Z" clipRule="evenodd" />
-            </svg>
+            <img src={settingsIconUrl} alt="" aria-hidden className="size-5" />
           </button>
         </div>
       </div>

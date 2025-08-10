@@ -22,13 +22,15 @@ describe("app shell", () => {
     expect(screen.getByText(/done/i)).toBeInTheDocument();
   });
 
-  it("toggles theme", async () => {
+  it("opens settings and toggles dark mode", async () => {
     const user = userEvent.setup();
     renderApp();
-    const btn = screen.getByRole("button", { name: /toggle theme/i });
+    const btn = screen.getByRole("button", { name: /open settings/i });
     const html = document.documentElement;
     const initial = html.classList.contains("dark");
     await user.click(btn);
+    const switchEl = await screen.findByRole("switch", { name: /dark mode/i });
+    await user.click(switchEl);
     expect(html.classList.contains("dark")).toBe(!initial);
   });
 });

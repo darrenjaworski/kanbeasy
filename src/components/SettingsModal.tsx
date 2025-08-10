@@ -22,17 +22,15 @@ export function SettingsModal({ open, onClose }: Props) {
   if (!open) return null;
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="settings-title"
-      onMouseDown={(e) => {
-        if (e.currentTarget === e.target) onClose();
-      }}
-    >
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative z-10 w-full max-w-md rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-4 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/40"
+        aria-label="Close settings"
+        onClick={onClose}
+      />
+      <dialog open className="relative z-10 w-full max-w-md rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-0 shadow-xl">
+        <div className="p-4">
         <div className="flex items-center gap-3 mb-3">
           <GearIcon className="size-5 opacity-70" />
           <h2 id="settings-title" className="text-base font-semibold tracking-tight">
@@ -64,13 +62,14 @@ export function SettingsModal({ open, onClose }: Props) {
             />
           </div>
         </div>
-      </div>
+        </div>
+      </dialog>
     </div>,
     document.body
   );
 }
 
-function GearIcon({ className = "" }: { className?: string }) {
+function GearIcon({ className = "" }: Readonly<{ className?: string }>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
