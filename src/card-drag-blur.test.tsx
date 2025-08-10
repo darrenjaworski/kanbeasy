@@ -5,43 +5,48 @@ import { ThemeProvider } from "./theme/ThemeProvider";
 import { BoardProvider } from "./board/BoardProvider";
 
 function renderApp() {
-	return render(
-		<ThemeProvider>
-			<BoardProvider>
-				<App />
-			</BoardProvider>
-		</ThemeProvider>
-	);
+  return render(
+    <ThemeProvider>
+      <BoardProvider>
+        <App />
+      </BoardProvider>
+    </ThemeProvider>
+  );
 }
 
 describe("card gets blur background while dragging", () => {
-	it("toggles blur class on the dragged card container during keyboard drag", async () => {
-		const user = userEvent.setup();
-		renderApp();
+  it("toggles blur class on the dragged card container during keyboard drag", async () => {
+    const user = userEvent.setup();
+    renderApp();
 
-		// Add one column and one card
-		await user.click(screen.getByRole("button", { name: /add column/i }));
-		const column = screen.getByRole("region", { name: /new column/i });
-		const addCardBtn = within(column).getByRole("button", { name: /add card/i });
-		await user.click(addCardBtn);
+    // Add one column and one card
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+    const column = screen.getByRole("region", { name: /new column/i });
+    const addCardBtn = within(column).getByRole("button", {
+      name: /add card/i,
+    });
+    await user.click(addCardBtn);
 
-		// Locate the card's textarea and its container (the card root element)
-		const textarea = within(column).getByRole("textbox", { name: /card content/i });
-		const cardContainer = textarea.parentElement as HTMLElement;
-		expect(cardContainer).toBeInTheDocument();
+    // Locate the card's textarea and its container (the card root element)
+    const textarea = within(column).getByRole("textbox", {
+      name: /card content/i,
+    });
+    const cardContainer = textarea.parentElement as HTMLElement;
+    expect(cardContainer).toBeInTheDocument();
 
-		// The drag handle inside this card
-		const handle = within(cardContainer).getByRole("button", { name: /drag card/i });
-		handle.focus();
-		expect(handle).toHaveFocus();
+    // The drag handle inside this card
+    const handle = within(cardContainer).getByRole("button", {
+      name: /drag card/i,
+    });
+    handle.focus();
+    expect(handle).toHaveFocus();
 
-		// Start drag (space) -> blur class appears
-		await user.keyboard(" ");
-		expect(cardContainer.className).toMatch(/backdrop-blur-sm/);
+    // Start drag (space) -> blur class appears
+    await user.keyboard(" ");
+    expect(cardContainer.className).toMatch(/backdrop-blur-sm/);
 
-		// Drop (space) -> blur class removed
-		await user.keyboard(" ");
-		expect(cardContainer.className).not.toMatch(/backdrop-blur-sm/);
-	});
+    // Drop (space) -> blur class removed
+    await user.keyboard(" ");
+    expect(cardContainer.className).not.toMatch(/backdrop-blur-sm/);
+  });
 });
-
