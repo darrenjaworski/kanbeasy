@@ -13,6 +13,7 @@ an ultra simple task organizer
 - minimal UI
 - prefer tailwind css
 - ability to specify column background color
+- customizable icons on the lefthand side of each todo
 
 ### settings
 
@@ -21,3 +22,4 @@ an ultra simple task organizer
   - title only
   - one line of details
   - three lines of details
+- column compactness

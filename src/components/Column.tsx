@@ -9,7 +9,8 @@ type Props = Readonly<{
 }>;
 
 export function Column({ id, title, cards }: Props) {
-  const { addCard, removeColumn, removeCard, updateColumn, updateCard } = useBoard();
+  const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
+    useBoard();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -89,7 +90,8 @@ export function Column({ id, title, cards }: Props) {
                     (e.currentTarget as HTMLTextAreaElement).blur();
                   }
                   if (e.key === "Escape") {
-                    (e.currentTarget as HTMLTextAreaElement).value = card.title || "New card";
+                    (e.currentTarget as HTMLTextAreaElement).value =
+                      card.title || "New card";
                     (e.currentTarget as HTMLTextAreaElement).blur();
                   }
                 }}

@@ -93,7 +93,7 @@ export function BoardProvider({
     const card: Card = { id: crypto.randomUUID(), title };
     setState((s) => ({
       columns: s.columns.map((c) =>
-        c.id === columnId ? { ...c, cards: [...c.cards, card] } : c
+        c.id === columnId ? { ...c, cards: [card, ...c.cards] } : c
       ),
     }));
   };
@@ -109,7 +109,11 @@ export function BoardProvider({
       return { columns: newColumns };
     });
   };
-  const updateCard: BoardContextValue["updateCard"] = (columnId, cardId, title) => {
+  const updateCard: BoardContextValue["updateCard"] = (
+    columnId,
+    cardId,
+    title
+  ) => {
     setState((prev) => {
       const idx = prev.columns.findIndex((c) => c.id === columnId);
       if (idx === -1) return prev;

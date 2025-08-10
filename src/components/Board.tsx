@@ -72,7 +72,7 @@ export function Board() {
           <div ref={scrollerRef} className="overflow-x-auto w-full">
             <div className="flex gap-4 pb-1 items-stretch">
               {columns.map((c) => (
-                <div key={c.id} className="w-72 shrink-0">
+                <div key={c.id} className="w-80 shrink-0">
                   <Column id={c.id} title={c.title} cards={c.cards} />
                 </div>
               ))}
