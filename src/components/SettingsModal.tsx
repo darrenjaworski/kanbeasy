@@ -1,14 +1,54 @@
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { useTheme } from "../theme/useTheme";
-import DensitySmall from "../icons/density-small.svg";
-import DensityMedium from "../icons/density-medium.svg";
-import DensityLarge from "../icons/density-large.svg";
 
 type Props = Readonly<{
   open: boolean;
   onClose: () => void;
 }>;
+
+// Inline SVG components for density icons to inherit currentColor
+const DensitySmallIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="20"
+    viewBox="0 -960 960 960"
+    width="20"
+    fill="currentColor"
+    aria-hidden
+    focusable="false"
+  >
+    <path d="M120-80v-80h720v80H120Zm0-240v-80h720v80H120Zm0-240v-80h720v80H120Zm0-240v-80h720v80H120Z" />
+  </svg>
+);
+
+const DensityMediumIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="20"
+    viewBox="0 -960 960 960"
+    width="20"
+    fill="currentColor"
+    aria-hidden
+    focusable="false"
+  >
+    <path d="M120-120v-80h720v80H120Zm0-320v-80h720v80H120Zm0-320v-80h720v80H120Z" />
+  </svg>
+);
+
+const DensityLargeIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="20"
+    viewBox="0 -960 960 960"
+    width="20"
+    fill="currentColor"
+    aria-hidden
+    focusable="false"
+  >
+    <path d="M120-120v-80h720v80H120Zm0-640v-80h720v80H120Z" />
+  </svg>
+);
 
 export function SettingsModal({ open, onClose }: Props) {
   const { theme, setTheme, cardDensity, setCardDensity } = useTheme();
@@ -111,7 +151,7 @@ export function SettingsModal({ open, onClose }: Props) {
                       : ""
                   }`}
                 >
-                  <img src={DensitySmall} alt="Compact" className="size-5" />
+                  <DensitySmallIcon />
                 </button>
                 <span
                   aria-hidden
@@ -128,11 +168,7 @@ export function SettingsModal({ open, onClose }: Props) {
                       : ""
                   }`}
                 >
-                  <img
-                    src={DensityMedium}
-                    alt="Comfortable"
-                    className="size-5"
-                  />
+                  <DensityMediumIcon />
                 </button>
                 <span
                   aria-hidden
@@ -149,7 +185,7 @@ export function SettingsModal({ open, onClose }: Props) {
                       : ""
                   }`}
                 >
-                  <img src={DensityLarge} alt="Spacious" className="size-5" />
+                  <DensityLargeIcon />
                 </button>
               </div>
             </fieldset>
