@@ -18,7 +18,7 @@ export function CardControls({
   listeners,
 }: CardControlsProps) {
   return (
-    <div className="absolute right-1 top-1 z-10 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100">
+    <div className="absolute right-1 top-1 z-1 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100">
       {canDrag && (
         <button
           type="button"
