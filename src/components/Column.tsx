@@ -10,19 +10,9 @@ import { useTheme } from "../theme/useTheme";
 import type { CardDensity } from "../theme/types";
 import { useBoard } from "../board/useBoard";
 // Inline SVGs for action icons so they can inherit currentColor for light/dark themes
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
+import { useDroppable, useDndContext } from "@dnd-kit/core"; // Cleaned up import
 import {
   SortableContext,
-  sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -45,14 +35,8 @@ export function Column({
   dragHandleRef,
   dragHandleProps,
 }: Props) {
-  const {
-    addCard,
-    removeColumn,
-    removeCard,
-    updateColumn,
-    updateCard,
-    reorderCard,
-  } = useBoard();
+  const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
+    useBoard();
   const { cardDensity } = useTheme();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -153,8 +137,8 @@ export function Column({
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
-        onReorder={(activeId, overId) => reorderCard(id, activeId, overId)}
         density={cardDensity}
+        columnId={id}
       />
     </section>
   );
@@ -164,47 +148,48 @@ function CardList({
   cards,
   onRemove,
   onUpdate,
-  onReorder,
   density,
+  columnId,
 }: Readonly<{
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, title: string) => void;
-  onReorder: (activeId: string, overId: string) => void;
   density: CardDensity;
+  columnId: string;
 }>) {
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    onReorder(String(active.id), String(over.id));
-  };
-
-  if (cards.length === 0) {
-    return <p className="text-xs opacity-60">No cards yet</p>;
-  }
+  // Register the column list as a droppable target (works even when empty)
+  const { setNodeRef, isOver } = useDroppable({
+    id: `col:${columnId}`,
+    data: { type: "column-drop", columnId },
+  });
+  // Also highlight when hovering cards within this column, not just the empty area
+  const { over, active } = useDndContext();
+  const isCardDrag = active?.data?.current?.type === "card";
+  const overColumnId = (
+    over?.data?.current as { columnId?: string } | undefined
+  )?.columnId;
+  const highlight = isCardDrag && (isOver || overColumnId === columnId);
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToParentElement]}
+    <SortableContext
+      items={cards.map((c) => c.id)}
+      strategy={verticalListSortingStrategy}
     >
-      <SortableContext
-        items={cards.map((c) => c.id)}
-        strategy={verticalListSortingStrategy}
+      <div
+        ref={setNodeRef}
+        className={`flex flex-col gap-2 rounded-md transition-colors min-h-16 ${
+          highlight
+            ? "ring-2 ring-blue-500/60 bg-blue-500/5 dark:bg-blue-400/10"
+            : ""
+        }`}
+        data-testid="card-list"
+        data-card-density={density}
+        data-droppable-column={columnId}
       >
-        <div
-          className={`flex flex-col gap-2`}
-          data-testid="card-list"
-          data-card-density={density}
-        >
-          {cards.map((card) => (
+        {cards.length === 0 ? (
+          <p className="text-xs opacity-60 select-none">No cards yet</p>
+        ) : (
+          cards.map((card) => (
             <SortableCardItem
               key={card.id}
               card={card}
@@ -212,11 +197,12 @@ function CardList({
               onUpdate={(title) => onUpdate(card.id, title)}
               canDrag={cards.length > 1}
               density={density}
+              columnId={columnId}
             />
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
+          ))
+        )}
+      </div>
+    </SortableContext>
   );
 }
 
@@ -226,12 +212,14 @@ function SortableCardItem({
   onUpdate,
   canDrag = true,
   density,
+  columnId,
 }: Readonly<{
   card: Card;
   onRemove: () => void;
   onUpdate: (title: string) => void;
   canDrag?: boolean;
   density: CardDensity;
+  columnId: string;
 }>) {
   const {
     attributes,
@@ -241,7 +229,7 @@ function SortableCardItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: card.id });
+  } = useSortable({ id: card.id, data: { type: "card", columnId } });
 
   const style: CSSProperties = useMemo(
     () => ({
