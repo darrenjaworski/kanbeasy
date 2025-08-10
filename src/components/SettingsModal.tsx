@@ -88,12 +88,11 @@ export function SettingsModal({ open, onClose }: Props) {
                   }
                   className="sr-only peer"
                 />
-                <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-indigo-500 transition-colors relative">
-                  <span
-                    aria-hidden
-                    className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4"
-                  />
-                </span>
+                <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-indigo-500 transition-colors relative" />
+                <span
+                  aria-hidden
+                  className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4"
+                />
               </span>
             </label>
 
