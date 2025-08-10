@@ -102,6 +102,11 @@ describe("cross-column card dragging", () => {
     await user.type(firstColumnTextarea, "Moving Card");
     await user.tab();
 
+    // Wait for the card title to be updated
+    await screen.findByRole("button", {
+      name: /drag card moving card/i,
+    });
+
     // Drag the card from first column to second column
     const dragHandle = within(columns[0]).getByRole("button", {
       name: /drag card moving card/i,

@@ -199,10 +199,8 @@ export function Board() {
       return;
     }
 
-    if (activeCard.columnId === targetColumnId) {
-      // Reordering within the same column
-      reorderCard(activeCard.columnId, activeId, overId);
-    } else {
+    // Only handle cross-column moves here. Within-column moves are handled by Column's DndContext
+    if (activeCard.columnId !== targetColumnId) {
       // Moving between columns
       moveCardBetweenColumns(activeId, activeCard.columnId, targetColumnId, targetIndex);
     }

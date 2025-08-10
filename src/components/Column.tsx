@@ -11,8 +11,19 @@ import type { CardDensity } from "../theme/types";
 import { useBoard } from "../board/useBoard";
 // Inline SVGs for action icons so they can inherit currentColor for light/dark themes
 import {
-  useSortable,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import { restrictToParentElement } from "@dnd-kit/modifiers";
+import {
   SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
@@ -143,6 +154,7 @@ export function Column({
         </button>
       </div>
       <CardList
+        columnId={id}
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
@@ -153,42 +165,67 @@ export function Column({
 }
 
 function CardList({
+  columnId,
   cards,
   onRemove,
   onUpdate,
   density,
 }: Readonly<{
+  columnId: string;
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, title: string) => void;
   density: CardDensity;
 }>) {
+  const { reorderCard } = useBoard();
+  
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      reorderCard(columnId, String(active.id), String(over.id));
+    }
+  }
+
   if (cards.length === 0) {
     return <p className="text-xs opacity-60">No cards yet</p>;
   }
 
   return (
-    <SortableContext
-      items={cards.map((c) => c.id)}
-      strategy={verticalListSortingStrategy}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+      modifiers={[restrictToParentElement]}
     >
-      <div
-        className={`flex flex-col gap-2`}
-        data-testid="card-list"
-        data-card-density={density}
+      <SortableContext
+        items={cards.map((c) => c.id)}
+        strategy={verticalListSortingStrategy}
       >
-        {cards.map((card) => (
-          <SortableCardItem
-            key={card.id}
-            card={card}
-            onRemove={() => onRemove(card.id)}
-            onUpdate={(title) => onUpdate(card.id, title)}
-            canDrag={true}
-            density={density}
-          />
-        ))}
-      </div>
-    </SortableContext>
+        <div
+          className={`flex flex-col gap-2`}
+          data-testid="card-list"
+          data-card-density={density}
+        >
+          {cards.map((card) => (
+            <SortableCardItem
+              key={card.id}
+              card={card}
+              onRemove={() => onRemove(card.id)}
+              onUpdate={(title) => onUpdate(card.id, title)}
+              canDrag={true}
+              density={density}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 }
 
