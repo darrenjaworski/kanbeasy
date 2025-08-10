@@ -17,6 +17,7 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -26,7 +27,6 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 function SortableColumnItem({
   id,
@@ -75,11 +75,16 @@ function SortableColumnItem({
 }
 
 export function Board() {
-  const { columns, addColumn, setColumns } = useBoard();
+  const { columns, addColumn, setColumns, moveCardBetweenColumns, reorderCard } = useBoard();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const prevLenRef = useRef<number | null>(null);
+
+  // Get all column IDs for the SortableContext
+  const columnIds = useMemo(() => {
+    return columns.map((c) => c.id);
+  }, [columns]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -137,14 +142,71 @@ export function Board() {
     prevLenRef.current = columns.length;
   }, [columns.length]);
 
+  function handleDragStart(_event: DragStartEvent) {
+    // Currently not used, but keeping for future drag overlay functionality
+  }
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
+    
     if (!over || active.id === over.id) return;
-    const oldIndex = columns.findIndex((c) => c.id === String(active.id));
-    const newIndex = columns.findIndex((c) => c.id === String(over.id));
-    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-    const next = arrayMove(columns, oldIndex, newIndex);
-    setColumns(next);
+
+    const activeId = String(active.id);
+    const overId = String(over.id);
+
+    // Check if dragging a column
+    const isActiveColumn = columns.some((c) => c.id === activeId);
+    const isOverColumn = columns.some((c) => c.id === overId);
+
+    if (isActiveColumn && isOverColumn) {
+      // Column reordering
+      const oldIndex = columns.findIndex((c) => c.id === activeId);
+      const newIndex = columns.findIndex((c) => c.id === overId);
+      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
+      const next = arrayMove(columns, oldIndex, newIndex);
+      setColumns(next);
+      return;
+    }
+
+    // Check if dragging a card
+    const activeCard = columns
+      .flatMap((c) => c.cards.map((card) => ({ ...card, columnId: c.id })))
+      .find((card) => card.id === activeId);
+
+    if (!activeCard) return;
+
+    // Find which column the card is over
+    let targetColumnId = overId;
+    let targetIndex = 0;
+
+    // If dropped over another card, get its column and position
+    const overCard = columns
+      .flatMap((c) => c.cards.map((card) => ({ ...card, columnId: c.id })))
+      .find((card) => card.id === overId);
+
+    if (overCard) {
+      targetColumnId = overCard.columnId;
+      const targetColumn = columns.find((c) => c.id === overCard.columnId);
+      if (targetColumn) {
+        targetIndex = targetColumn.cards.findIndex((card) => card.id === overId);
+      }
+    } else if (isOverColumn) {
+      // Dropped over a column, place at the end
+      const targetColumn = columns.find((c) => c.id === overId);
+      if (targetColumn) {
+        targetIndex = targetColumn.cards.length;
+      }
+    } else {
+      return;
+    }
+
+    if (activeCard.columnId === targetColumnId) {
+      // Reordering within the same column
+      reorderCard(activeCard.columnId, activeId, overId);
+    } else {
+      // Moving between columns
+      moveCardBetweenColumns(activeId, activeCard.columnId, targetColumnId, targetIndex);
+    }
   }
 
   return (
@@ -159,11 +221,11 @@ export function Board() {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
-              modifiers={[restrictToHorizontalAxis]}
             >
               <SortableContext
-                items={columns.map((c) => c.id)}
+                items={columnIds}
                 strategy={horizontalListSortingStrategy}
               >
                 <div className="flex gap-4 pb-1 items-stretch">

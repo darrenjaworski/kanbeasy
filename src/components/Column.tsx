@@ -11,21 +11,11 @@ import type { CardDensity } from "../theme/types";
 import { useBoard } from "../board/useBoard";
 // Inline SVGs for action icons so they can inherit currentColor for light/dark themes
 import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
   useSortable,
+  SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
 type Props = Readonly<{
@@ -51,16 +41,19 @@ export function Column({
     removeCard,
     updateColumn,
     updateCard,
-    reorderCard,
   } = useBoard();
   const { cardDensity } = useTheme();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { setNodeRef } = useDroppable({ id });
+  
   useEffect(() => {
     setTempTitle(title);
   }, [title]);
+  
   return (
     <section
+      ref={setNodeRef}
       data-column-id={id}
       aria-label={title || "column"}
       className="group relative rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-3"
@@ -153,7 +146,6 @@ export function Column({
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
-        onReorder={(activeId, overId) => reorderCard(id, activeId, overId)}
         density={cardDensity}
       />
     </section>
@@ -164,59 +156,39 @@ function CardList({
   cards,
   onRemove,
   onUpdate,
-  onReorder,
   density,
 }: Readonly<{
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, title: string) => void;
-  onReorder: (activeId: string, overId: string) => void;
   density: CardDensity;
 }>) {
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    onReorder(String(active.id), String(over.id));
-  };
-
   if (cards.length === 0) {
     return <p className="text-xs opacity-60">No cards yet</p>;
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToParentElement]}
+    <SortableContext
+      items={cards.map((c) => c.id)}
+      strategy={verticalListSortingStrategy}
     >
-      <SortableContext
-        items={cards.map((c) => c.id)}
-        strategy={verticalListSortingStrategy}
+      <div
+        className={`flex flex-col gap-2`}
+        data-testid="card-list"
+        data-card-density={density}
       >
-        <div
-          className={`flex flex-col gap-2`}
-          data-testid="card-list"
-          data-card-density={density}
-        >
-          {cards.map((card) => (
-            <SortableCardItem
-              key={card.id}
-              card={card}
-              onRemove={() => onRemove(card.id)}
-              onUpdate={(title) => onUpdate(card.id, title)}
-              canDrag={cards.length > 1}
-              density={density}
-            />
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
+        {cards.map((card) => (
+          <SortableCardItem
+            key={card.id}
+            card={card}
+            onRemove={() => onRemove(card.id)}
+            onUpdate={(title) => onUpdate(card.id, title)}
+            canDrag={true}
+            density={density}
+          />
+        ))}
+      </div>
+    </SortableContext>
   );
 }
 
