@@ -26,13 +26,17 @@ describe("app shell", () => {
     expect(addBtn).toBeInTheDocument();
     // Add a column via CTA
     await user.click(addBtn);
-    // A new column appears with default title
-    expect(screen.getByText(/new column/i)).toBeInTheDocument();
+    // A new column appears with default title (region named by the column title)
+    expect(
+      screen.getByRole("region", { name: /new column/i })
+    ).toBeInTheDocument();
     // The persistent add tile exists after first column
     const addTile = screen.getByRole("button", { name: /add column/i });
     await user.click(addTile);
     // Two columns now
-    expect(screen.getAllByText(/new column/i).length).toBeGreaterThanOrEqual(2);
+    expect(
+      screen.getAllByRole("region", { name: /new column/i }).length
+    ).toBeGreaterThanOrEqual(2);
   });
 
   it("opens settings and toggles dark mode", async () => {

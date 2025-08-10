@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import type { Card } from "../board/types";
 import { useBoard } from "../board/useBoard";
 
@@ -8,11 +9,15 @@ type Props = Readonly<{
 }>;
 
 export function Column({ id, title, cards }: Props) {
-  const { addCard, removeColumn, removeCard } = useBoard();
-  const headingId = `col-${id}-title`;
+  const { addCard, removeColumn, removeCard, updateColumn } = useBoard();
+  const [tempTitle, setTempTitle] = useState(title);
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    setTempTitle(title);
+  }, [title]);
   return (
     <section
-      aria-labelledby={headingId}
+      aria-label={title || "column"}
       className="group relative rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-3"
     >
       {/* Remove column button (appears on hover/focus) */}
@@ -25,12 +30,34 @@ export function Column({ id, title, cards }: Props) {
       >
         ×
       </button>
-      <h2
-        id={headingId}
-        className="text-sm font-semibold tracking-tight mb-3 opacity-80"
-      >
-        {title}
-      </h2>
+      <div className="mb-3">
+        <input
+          ref={inputRef}
+          type="text"
+          aria-label="Column title"
+          className="w-full bg-transparent px-0 py-0 text-base font-semibold tracking-tight opacity-80 border-0 outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-sm"
+          value={tempTitle}
+          onChange={(e) => setTempTitle(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              (e.currentTarget as HTMLInputElement).blur();
+            }
+            if (e.key === "Escape") {
+              setTempTitle(title);
+              (e.currentTarget as HTMLInputElement).blur();
+            }
+          }}
+          onBlur={() => {
+            const next = tempTitle.trim();
+            if (!next) {
+              setTempTitle(title);
+              return;
+            }
+            if (next !== title) updateColumn(id, next);
+          }}
+        />
+      </div>
       {/* Add card button moved to the top of the column */}
       <div className="mb-3">
         <button

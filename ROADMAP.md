@@ -7,10 +7,12 @@ an ultra simple task organizer
 - all data saved locally on device
 - light/dark mode
 - customizable columns
-- drag and drop between columns
+- ability to reorder columns with drag and drop
+- drag and drop cards between columns
 - draggable within a single column to sort
 - minimal UI
 - prefer tailwind css
+- ability to specify column background color
 
 ### settings
 
