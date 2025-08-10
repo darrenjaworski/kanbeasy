@@ -68,7 +68,7 @@ export function SettingsModal({ open, onClose }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <button
         type="button"
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         aria-label="Close settings"
         onClick={onClose}
       />
@@ -189,6 +189,16 @@ export function SettingsModal({ open, onClose }: Props) {
                 </button>
               </div>
             </fieldset>
+          </div>
+
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 px-3 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+            >
+              Save
+            </button>
           </div>
         </div>
       </dialog>

@@ -38,4 +38,19 @@ describe("SettingsModal", () => {
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
+
+  it("renders a Save button and triggers onClose when clicked", () => {
+    const onCloseMock = vi.fn();
+    render(
+      <ThemeProvider>
+        <SettingsModal open={true} onClose={onCloseMock} />
+      </ThemeProvider>
+    );
+
+    const saveBtn = screen.getByRole("button", { name: /save/i });
+    expect(saveBtn).toBeInTheDocument();
+
+    fireEvent.click(saveBtn);
+    expect(onCloseMock).toHaveBeenCalledTimes(1);
+  });
 });
