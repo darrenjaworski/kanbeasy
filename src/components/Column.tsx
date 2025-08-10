@@ -261,7 +261,7 @@ function SortableCardItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group/card relative rounded-md border border-black/10 dark:border-white/10 pr-8 p-2 text-sm bg-white/60 dark:bg-black/20 ${
+      className={`group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/60 dark:bg-black/20 ${
         isDragging
           ? "backdrop-blur-sm supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-black/30"
           : ""
