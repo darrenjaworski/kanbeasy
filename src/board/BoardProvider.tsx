@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { BoardContext } from "./BoardContext";
-import type { BoardContextValue, BoardState, Column } from "./types";
+import type { BoardContextValue, BoardState, Column, Card } from "./types";
 
 const STORAGE_KEY = "kanbeasy:board";
 
@@ -8,12 +8,23 @@ const defaultState: BoardState = {
   columns: [],
 };
 
-function isColumn(x: unknown): x is Column {
+function isCard(x: unknown): x is Card {
   return (
     !!x &&
     typeof x === "object" &&
     typeof (x as { id?: unknown }).id === "string" &&
     typeof (x as { title?: unknown }).title === "string"
+  );
+}
+
+function isColumn(x: unknown): x is Column {
+  return (
+    !!x &&
+    typeof x === "object" &&
+    typeof (x as { id?: unknown }).id === "string" &&
+    typeof (x as { title?: unknown }).title === "string" &&
+    Array.isArray((x as { cards?: unknown }).cards) &&
+    ((x as { cards?: unknown }).cards as unknown[]).every(isCard)
   );
 }
 
@@ -23,7 +34,21 @@ function loadState(): BoardState {
     if (!raw) return defaultState;
     const parsed = JSON.parse(raw) as { columns?: unknown };
     const cols = Array.isArray(parsed.columns)
-      ? (parsed.columns as unknown[]).filter(isColumn)
+      ? (parsed.columns as unknown[])
+          .map((c) => {
+            // migrate legacy columns lacking cards
+            if (
+              c &&
+              typeof c === "object" &&
+              typeof (c as { id?: unknown }).id === "string" &&
+              typeof (c as { title?: unknown }).title === "string" &&
+              !Array.isArray((c as { cards?: unknown }).cards)
+            ) {
+              return { ...(c as object), cards: [] };
+            }
+            return c;
+          })
+          .filter(isColumn)
       : [];
     return { columns: cols };
   } catch {
@@ -50,7 +75,7 @@ export function BoardProvider({
 
   const addColumn: BoardContextValue["addColumn"] = (title = "") => {
     const id = crypto.randomUUID();
-    setState((s) => ({ columns: [...s.columns, { id, title }] }));
+    setState((s) => ({ columns: [...s.columns, { id, title, cards: [] }] }));
   };
   const updateColumn: BoardContextValue["updateColumn"] = (id, title) => {
     setState((s) => ({
@@ -63,12 +88,21 @@ export function BoardProvider({
   const setColumns: BoardContextValue["setColumns"] = (cols) => {
     setState({ columns: cols });
   };
+  const addCard: BoardContextValue["addCard"] = (columnId, title = "") => {
+    const card: Card = { id: crypto.randomUUID(), title };
+    setState((s) => ({
+      columns: s.columns.map((c) =>
+        c.id === columnId ? { ...c, cards: [...c.cards, card] } : c
+      ),
+    }));
+  };
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
       addColumn,
       updateColumn,
       removeColumn,
+      addCard,
       setColumns,
     }),
     [state.columns]

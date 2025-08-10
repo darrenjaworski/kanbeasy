@@ -40,9 +40,17 @@ export function Board() {
             type="button"
             onClick={() => addColumn("New Column")}
             aria-label="Add column"
-            className="w-72 shrink-0 min-h-28 rounded-lg border border-dashed border-black/15 dark:border-white/15 p-3 text-sm flex items-center justify-center text-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            className="w-72 shrink-0 rounded-lg border border-dashed border-black/15 dark:border-white/15 p-3 text-sm flex flex-col text-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
           >
-            Add Column
+            <h2
+              aria-hidden
+              className="text-sm font-semibold tracking-tight mb-3 opacity-0 select-none"
+            >
+              Add Column
+            </h2>
+            <div className="min-h-28 flex items-center justify-center">
+              Add Column
+            </div>
           </button>
         </div>
       ) : (
@@ -51,7 +59,7 @@ export function Board() {
             <div className="flex gap-4 pb-1 items-stretch">
               {columns.map((c) => (
                 <div key={c.id} className="w-72 shrink-0">
-                  <Column title={c.title} />
+                  <Column id={c.id} title={c.title} cards={c.cards} />
                 </div>
               ))}
               {/* Add Column tile at the end */}
@@ -59,9 +67,17 @@ export function Board() {
                 type="button"
                 onClick={() => addColumn("New Column")}
                 aria-label="Add column"
-                className="w-72 shrink-0 min-h-28 rounded-lg border border-dashed border-black/15 dark:border-white/15 p-3 text-sm flex items-center justify-center text-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className="w-72 shrink-0 rounded-lg border border-dashed border-black/15 dark:border-white/15 p-3 text-sm flex flex-col text-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
-                Add Column
+                <h2
+                  aria-hidden
+                  className="text-sm font-semibold tracking-tight mb-3 opacity-0 select-none"
+                >
+                  Add Column
+                </h2>
+                <div className="min-h-28 flex items-center justify-center">
+                  Add Column
+                </div>
               </button>
             </div>
           </div>
