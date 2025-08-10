@@ -1,5 +1,7 @@
 # minimal kanban
 
+an ultra simple task organizer
+
 ## features
 
 - all data saved locally on device

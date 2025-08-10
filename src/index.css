@@ -1,1 +1,23 @@
-/* TODO replace with normalize */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App base styles */
+:root {
+	color-scheme: light dark;
+}
+
+html,
+body,
+#root {
+	height: 100%;
+}
+
+body {
+	@apply bg-bg-light text-text-light dark:bg-bg-dark dark:text-text-dark antialiased;
+}
+
+/* Reduce tap highlight on mobile */
+* {
+	-webkit-tap-highlight-color: transparent;
+}

@@ -1,5 +1,15 @@
+import { Board } from "./components/Board";
+import { Header } from "./components/Header";
+
 function App() {
-  return <h1>hello world</h1>;
+  return (
+    <div className="min-h-screen bg-bg-light text-text-light dark:bg-bg-dark dark:text-text-dark transition-colors">
+      <Header />
+      <main className="mx-auto max-w-6xl px-4 py-6">
+        <Board />
+      </main>
+    </div>
+  );
 }
 
 export default App;

@@ -1,6 +1,6 @@
 # Copilot Contribution Instructions
 
-These instructions apply to any automated or AI-assisted changes in this repository. The goal is to keep the project healthy, predictable, and safe to change.
+These instructions apply to any automated or AI-assisted changes in this repository. The goal is to keep the project healthy, predictable, and safe to change. Please think deeply about the changes you propose and their impact on the overall system.
 
 ## Non‑negotiable quality bars
 
