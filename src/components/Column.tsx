@@ -187,7 +187,7 @@ function CardList({
         items={cards.map((c) => c.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-2 min-h-28">
+        <div className="flex flex-col gap-2">
           {cards.map((card) => (
             <SortableCardItem
               key={card.id}
