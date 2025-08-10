@@ -157,6 +157,7 @@ function CardList({
   density: CardDensity;
   columnId: string;
 }>) {
+  const { columns } = useBoard();
   // Register the column list as a droppable target (works even when empty)
   const { setNodeRef, isOver } = useDroppable({
     id: `col:${columnId}`,
@@ -195,7 +196,7 @@ function CardList({
               card={card}
               onRemove={() => onRemove(card.id)}
               onUpdate={(title) => onUpdate(card.id, title)}
-              canDrag={cards.length > 1}
+              canDrag={cards.length > 1 || columns.length > 1}
               density={density}
               columnId={columnId}
             />
