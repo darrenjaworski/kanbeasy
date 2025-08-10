@@ -200,6 +200,7 @@ function CardList({
               card={card}
               onRemove={() => onRemove(card.id)}
               onUpdate={(title) => onUpdate(card.id, title)}
+              canDrag={cards.length > 1}
             />
           ))}
         </div>
@@ -212,10 +213,12 @@ function SortableCardItem({
   card,
   onRemove,
   onUpdate,
+  canDrag = true,
 }: Readonly<{
   card: Card;
   onRemove: () => void;
   onUpdate: (title: string) => void;
+  canDrag?: boolean;
 }>) {
   const {
     attributes,
@@ -266,27 +269,31 @@ function SortableCardItem({
             <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
           </svg>
         </button>
-        <span aria-hidden className="w-6 h-px bg-black/10 dark:bg-white/10" />
-        <button
-          type="button"
-          ref={setActivatorNodeRef}
-          {...(attributes as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-          {...(listeners as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-          aria-label={`Drag card ${card.title || "Untitled"}`}
-          title="Drag to reorder"
-          className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 -960 960 960"
-            className="size-4"
-            fill="currentColor"
-            aria-hidden
-            focusable="false"
+        {canDrag && (
+          <span aria-hidden className="w-6 h-px bg-black/10 dark:bg-white/10" />
+        )}
+        {canDrag && (
+          <button
+            type="button"
+            ref={setActivatorNodeRef}
+            {...(attributes as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+            {...(listeners as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+            aria-label={`Drag card ${card.title || "Untitled"}`}
+            title="Drag to reorder"
+            className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
           >
-            <path d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z" />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 -960 960 960"
+              className="size-4"
+              fill="currentColor"
+              aria-hidden
+              focusable="false"
+            >
+              <path d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z" />
+            </svg>
+          </button>
+        )}
       </div>
 
       <textarea

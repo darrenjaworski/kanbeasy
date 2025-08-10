@@ -19,19 +19,20 @@ describe("card gets blur background while dragging", () => {
     const user = userEvent.setup();
     renderApp();
 
-    // Add one column and one card
+    // Add one column and two cards (drag handle only shows when multiple cards exist)
     await user.click(screen.getByRole("button", { name: /add column/i }));
     const column = screen.getByRole("region", { name: /new column/i });
     const addCardBtn = within(column).getByRole("button", {
       name: /add card/i,
     });
     await user.click(addCardBtn);
+    await user.click(addCardBtn);
 
-    // Locate the card's textarea and its container (the card root element)
-    const textarea = within(column).getByRole("textbox", {
+    // Locate the first card's textarea and its container (the card root element)
+    const textareas = within(column).getAllByRole("textbox", {
       name: /card content/i,
     });
-    const cardContainer = textarea.parentElement as HTMLElement;
+    const cardContainer = textareas[0].parentElement as HTMLElement;
     expect(cardContainer).toBeInTheDocument();
 
     // The drag handle inside this card
