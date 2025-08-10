@@ -6,6 +6,8 @@ import {
   type CSSProperties,
 } from "react";
 import type { Card } from "../board/types";
+import { useTheme } from "../theme/useTheme";
+import type { CardDensity } from "../theme/types";
 import { useBoard } from "../board/useBoard";
 // Inline SVGs for action icons so they can inherit currentColor for light/dark themes
 import {
@@ -51,6 +53,7 @@ export function Column({
     updateCard,
     reorderCard,
   } = useBoard();
+  const { cardDensity } = useTheme();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -151,6 +154,7 @@ export function Column({
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
         onReorder={(activeId, overId) => reorderCard(id, activeId, overId)}
+        density={cardDensity}
       />
     </section>
   );
@@ -161,11 +165,13 @@ function CardList({
   onRemove,
   onUpdate,
   onReorder,
+  density,
 }: Readonly<{
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, title: string) => void;
   onReorder: (activeId: string, overId: string) => void;
+  density: CardDensity;
 }>) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -193,7 +199,11 @@ function CardList({
         items={cards.map((c) => c.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-2">
+        <div
+          className={`flex flex-col gap-2`}
+          data-testid="card-list"
+          data-card-density={density}
+        >
           {cards.map((card) => (
             <SortableCardItem
               key={card.id}
@@ -201,6 +211,7 @@ function CardList({
               onRemove={() => onRemove(card.id)}
               onUpdate={(title) => onUpdate(card.id, title)}
               canDrag={cards.length > 1}
+              density={density}
             />
           ))}
         </div>
@@ -214,11 +225,13 @@ function SortableCardItem({
   onRemove,
   onUpdate,
   canDrag = true,
+  density,
 }: Readonly<{
   card: Card;
   onRemove: () => void;
   onUpdate: (title: string) => void;
   canDrag?: boolean;
+  density: CardDensity;
 }>) {
   const {
     attributes,
@@ -239,6 +252,11 @@ function SortableCardItem({
     [transform, transition, isDragging]
   );
 
+  const rowsForDensity = (() => {
+    if (density === "small") return 1;
+    if (density === "large") return 3;
+    return 2;
+  })();
   return (
     <div
       ref={setNodeRef}
@@ -300,7 +318,7 @@ function SortableCardItem({
         aria-label="Card content"
         defaultValue={card.title || "New card"}
         className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
-        rows={2}
+        rows={rowsForDensity}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();

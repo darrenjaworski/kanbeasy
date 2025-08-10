@@ -1,6 +1,9 @@
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { useTheme } from "../theme/useTheme";
+import DensitySmall from "../icons/density-small.svg";
+import DensityMedium from "../icons/density-medium.svg";
+import DensityLarge from "../icons/density-large.svg";
 
 type Props = Readonly<{
   open: boolean;
@@ -8,7 +11,7 @@ type Props = Readonly<{
 }>;
 
 export function SettingsModal({ open, onClose }: Props) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, cardDensity, setCardDensity } = useTheme();
 
   useEffect(() => {
     if (!open) return;
@@ -93,6 +96,64 @@ export function SettingsModal({ open, onClose }: Props) {
                 </span>
               </span>
             </label>
+
+            <fieldset className="flex items-center justify-between gap-3 text-sm font-medium border-0 p-0 m-0">
+              <legend className="sr-only">Card density</legend>
+              <span aria-hidden>Card density</span>
+              <div className="inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20">
+                <button
+                  type="button"
+                  onClick={() => setCardDensity("small")}
+                  title="Compact"
+                  aria-pressed={cardDensity === "small"}
+                  className={`h-9 w-9 inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:bg-black/10 dark:hover:bg-white/10 ${
+                    cardDensity === "small"
+                      ? "bg-black/10 dark:bg-white/10"
+                      : ""
+                  }`}
+                >
+                  <img src={DensitySmall} alt="Compact" className="size-5" />
+                </button>
+                <span
+                  aria-hidden
+                  className="h-7 w-px bg-black/10 dark:bg-white/10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setCardDensity("medium")}
+                  title="Comfortable"
+                  aria-pressed={cardDensity === "medium"}
+                  className={`h-9 w-9 inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:bg-black/10 dark:hover:bg-white/10 ${
+                    cardDensity === "medium"
+                      ? "bg-black/10 dark:bg-white/10"
+                      : ""
+                  }`}
+                >
+                  <img
+                    src={DensityMedium}
+                    alt="Comfortable"
+                    className="size-5"
+                  />
+                </button>
+                <span
+                  aria-hidden
+                  className="h-7 w-px bg-black/10 dark:bg-white/10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setCardDensity("large")}
+                  title="Spacious"
+                  aria-pressed={cardDensity === "large"}
+                  className={`h-9 w-9 inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:bg-black/10 dark:hover:bg-white/10 ${
+                    cardDensity === "large"
+                      ? "bg-black/10 dark:bg-white/10"
+                      : ""
+                  }`}
+                >
+                  <img src={DensityLarge} alt="Spacious" className="size-5" />
+                </button>
+              </div>
+            </fieldset>
           </div>
         </div>
       </dialog>
