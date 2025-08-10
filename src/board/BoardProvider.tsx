@@ -164,6 +164,38 @@ export function BoardProvider({
     });
   };
 
+  const moveCard: BoardContextValue["moveCard"] = (
+    cardId,
+    fromColumnId,
+    toColumnId,
+    toIndex
+  ) => {
+    setState((prev) => {
+      const fromColIdx = prev.columns.findIndex((c) => c.id === fromColumnId);
+      const toColIdx = prev.columns.findIndex((c) => c.id === toColumnId);
+      if (fromColIdx === -1 || toColIdx === -1) return prev;
+
+      const fromCol = prev.columns[fromColIdx];
+      const toCol = prev.columns[toColIdx];
+      const cardIdx = fromCol.cards.findIndex((c) => c.id === cardId);
+      if (cardIdx === -1) return prev;
+
+      const [movedCard] = fromCol.cards.slice(cardIdx, cardIdx + 1);
+      const newFromCards = fromCol.cards.filter((c) => c.id !== cardId);
+      const newToCards = toCol.cards.slice();
+      
+      // Insert at specified index or at the end
+      const insertIndex = toIndex !== undefined ? toIndex : newToCards.length;
+      newToCards.splice(insertIndex, 0, movedCard);
+
+      const newColumns = prev.columns.slice();
+      newColumns[fromColIdx] = { ...fromCol, cards: newFromCards };
+      newColumns[toColIdx] = { ...toCol, cards: newToCards };
+      
+      return { columns: newColumns };
+    });
+  };
+
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
@@ -176,6 +208,7 @@ export function BoardProvider({
       setColumns,
       sortCards,
       reorderCard,
+      moveCard,
     }),
     [state.columns]
   );

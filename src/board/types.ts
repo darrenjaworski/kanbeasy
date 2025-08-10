@@ -28,4 +28,10 @@ export type BoardContextValue = Readonly<{
     activeCardId: string,
     overCardId: string
   ) => void;
+  moveCard: (
+    cardId: string,
+    fromColumnId: string,
+    toColumnId: string,
+    toIndex?: number
+  ) => void;
 }>;
