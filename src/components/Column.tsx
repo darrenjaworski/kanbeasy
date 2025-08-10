@@ -33,9 +33,7 @@ export function Column({
       className="group relative rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-3"
     >
       {/* Combined drag + delete control */}
-      <div
-        className="absolute right-2 top-2 z-10 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
-      >
+      <div className="absolute right-2 top-2 z-10 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
         <button
           type="button"
           ref={dragHandleRef}
@@ -44,7 +42,12 @@ export function Column({
           {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
           className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
-          <img src={dragIcon} alt="" aria-hidden className="size-5 opacity-80" />
+          <img
+            src={dragIcon}
+            alt=""
+            aria-hidden
+            className="size-5 opacity-80"
+          />
         </button>
         <span aria-hidden className="h-6 w-px bg-black/10 dark:bg-white/10" />
         <button
@@ -54,7 +57,12 @@ export function Column({
           title="Remove column"
           className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
-          <img src={closeIcon} alt="" aria-hidden className="size-5 opacity-80" />
+          <img
+            src={closeIcon}
+            alt=""
+            aria-hidden
+            className="size-5 opacity-80"
+          />
         </button>
       </div>
       <div className="mb-3">
