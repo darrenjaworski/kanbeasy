@@ -30,6 +30,7 @@ type Props = Readonly<{
   id: string;
   title: string;
   cards: Card[];
+  canDrag?: boolean;
   dragHandleRef?: (el: HTMLButtonElement | null) => void;
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
 }>;
@@ -38,6 +39,7 @@ export function Column({
   id,
   title,
   cards,
+  canDrag = true,
   dragHandleRef,
   dragHandleProps,
 }: Props) {
@@ -62,26 +64,30 @@ export function Column({
     >
       {/* Combined drag + delete control */}
       <div className="absolute right-2 top-2 z-10 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-        <button
-          type="button"
-          ref={dragHandleRef}
-          aria-label={`Drag column ${title || "column"}`}
-          title="Drag to reorder"
-          {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-          className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 -960 960 960"
-            className="size-5"
-            fill="currentColor"
-            aria-hidden
-            focusable="false"
+        {canDrag && (
+          <button
+            type="button"
+            ref={dragHandleRef}
+            aria-label={`Drag column ${title || "column"}`}
+            title="Drag to reorder"
+            {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+            className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
           >
-            <path d="M360-160q-33 0-56.5-23.5T280-240q0-33 23.5-56.5T360-320q33 0 56.5 23.5T440-240q0 33-23.5 56.5T360-160Zm240 0q-33 0-56.5-23.5T520-240q0-33 23.5-56.5T600-320q33 0 56.5 23.5T680-240q0 33-23.5 56.5T600-160ZM360-400q-33 0-56.5-23.5T280-480q0-33 23.5-56.5T360-560q33 0 56.5 23.5T440-480q0 33-23.5 56.5T360-400Zm240 0q-33 0-56.5-23.5T520-480q0-33 23.5-56.5T600-560q33 0 56.5 23.5T680-480q0 33-23.5 56.5T600-400ZM360-640q-33 0-56.5-23.5T280-720q0-33 23.5-56.5T360-800q33 0 56.5 23.5T440-720q0 33-23.5 56.5T360-640Zm240 0q-33 0-56.5-23.5T520-720q0-33 23.5-56.5T600-800q33 0 56.5 23.5T680-720q0 33-23.5 56.5T600-640Z" />
-          </svg>
-        </button>
-        <span aria-hidden className="h-6 w-px bg-black/10 dark:bg-white/10" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 -960 960 960"
+              className="size-5"
+              fill="currentColor"
+              aria-hidden
+              focusable="false"
+            >
+              <path d="M360-160q-33 0-56.5-23.5T280-240q0-33 23.5-56.5T360-320q33 0 56.5 23.5T440-240q0 33-23.5 56.5T360-160Zm240 0q-33 0-56.5-23.5T520-240q0-33 23.5-56.5T600-320q33 0 56.5 23.5T680-240q0 33-23.5 56.5T600-160ZM360-400q-33 0-56.5-23.5T280-480q0-33 23.5-56.5T360-560q33 0 56.5 23.5T440-480q0 33-23.5 56.5T360-400Zm240 0q-33 0-56.5-23.5T520-480q0-33 23.5-56.5T600-560q33 0 56.5 23.5T680-480q0 33-23.5 56.5T600-400ZM360-640q-33 0-56.5-23.5T280-720q0-33 23.5-56.5T360-800q33 0 56.5 23.5T440-720q0 33-23.5 56.5T360-640Zm240 0q-33 0-56.5-23.5T520-720q0-33 23.5-56.5T600-800q33 0 56.5 23.5T680-720q0 33-23.5 56.5T600-640Z" />
+            </svg>
+          </button>
+        )}
+        {canDrag && (
+          <span aria-hidden className="h-6 w-px bg-black/10 dark:bg-white/10" />
+        )}
         <button
           type="button"
           onClick={() => removeColumn(id)}

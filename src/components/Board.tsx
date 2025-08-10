@@ -32,10 +32,12 @@ function SortableColumnItem({
   id,
   title,
   cards,
+  canDrag,
 }: Readonly<{
   id: string;
   title: string;
   cards: import("../board/types").Card[];
+  canDrag: boolean;
 }>) {
   const {
     attributes,
@@ -61,6 +63,7 @@ function SortableColumnItem({
         id={id}
         title={title}
         cards={cards}
+        canDrag={canDrag}
         dragHandleRef={setActivatorNodeRef}
         dragHandleProps={{
           ...(attributes as unknown as ButtonHTMLAttributes<HTMLButtonElement>),
@@ -170,6 +173,7 @@ export function Board() {
                       id={c.id}
                       title={c.title}
                       cards={c.cards}
+                      canDrag={columns.length > 1}
                     />
                   ))}
                   {/* Add Column tile at the end */}
