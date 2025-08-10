@@ -11,3 +11,11 @@ an ultra simple task organizer
 - draggable within a single column to sort
 - minimal UI
 - prefer tailwind css
+
+### settings
+
+- light/dark mode
+- card compactness
+  - title only
+  - one line of details
+  - three lines of details

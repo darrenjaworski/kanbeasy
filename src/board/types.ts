@@ -19,5 +19,6 @@ export type BoardContextValue = Readonly<{
   updateColumn: (id: string, title: string) => void;
   removeColumn: (id: string) => void;
   addCard: (columnId: string, title?: string) => void;
+  removeCard: (columnId: string, cardId: string) => void;
   setColumns: (cols: Column[]) => void;
 }>;

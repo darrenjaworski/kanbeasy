@@ -44,7 +44,8 @@ function loadState(): BoardState {
               typeof (c as { title?: unknown }).title === "string" &&
               !Array.isArray((c as { cards?: unknown }).cards)
             ) {
-              return { ...(c as object), cards: [] };
+              const obj = c as Record<string, unknown>;
+              return { ...obj, cards: [] };
             }
             return c;
           })
@@ -96,6 +97,18 @@ export function BoardProvider({
       ),
     }));
   };
+  const removeCard: BoardContextValue["removeCard"] = (columnId, cardId) => {
+    setState((prev) => {
+      const idx = prev.columns.findIndex((c) => c.id === columnId);
+      if (idx === -1) return prev;
+      const col = prev.columns[idx];
+      const newCards = col.cards.filter((c) => c.id !== cardId);
+      if (newCards === col.cards) return prev;
+      const newColumns = prev.columns.slice();
+      newColumns[idx] = { ...col, cards: newCards };
+      return { columns: newColumns };
+    });
+  };
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
@@ -103,6 +116,7 @@ export function BoardProvider({
       updateColumn,
       removeColumn,
       addCard,
+      removeCard,
       setColumns,
     }),
     [state.columns]
