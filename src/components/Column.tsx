@@ -8,13 +8,23 @@ type Props = Readonly<{
 }>;
 
 export function Column({ id, title, cards }: Props) {
-  const { addCard } = useBoard();
+  const { addCard, removeColumn } = useBoard();
   const headingId = `col-${id}-title`;
   return (
     <section
       aria-labelledby={headingId}
-      className="rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-3"
+      className="group relative rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-3"
     >
+      {/* Remove column button (appears on hover/focus) */}
+      <button
+        type="button"
+        onClick={() => removeColumn(id)}
+        aria-label={`Remove column ${title || "column"}`}
+        title="Remove column"
+        className="absolute right-2 top-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full text-base opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 focus:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      >
+        ×
+      </button>
       <h2
         id={headingId}
         className="text-sm font-semibold tracking-tight mb-3 opacity-80"

@@ -8,6 +8,7 @@ export function Board() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const prevLenRef = useRef<number | null>(null);
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -31,6 +32,33 @@ export function Board() {
       ro.disconnect();
       window.removeEventListener("resize", update);
     };
+  }, [columns.length]);
+
+  // Scroll to the far right when a new column is added (but skip initial mount)
+  useEffect(() => {
+    const el = scrollerRef.current;
+    const prevLen = prevLenRef.current;
+    if (!el) {
+      prevLenRef.current = columns.length;
+      return;
+    }
+    if (prevLen !== null && columns.length > prevLen) {
+      // Wait a frame to ensure the new column is laid out, then scroll smoothly
+      requestAnimationFrame(() => {
+        const maxLeft = el.scrollWidth;
+        // Prefer smooth scroll when available (browsers); fallback for jsdom
+        type MaybeScrollTo = { scrollTo?: (opts: ScrollToOptions) => void };
+        if (typeof (el as unknown as MaybeScrollTo).scrollTo === "function") {
+          (el as unknown as MaybeScrollTo).scrollTo!({
+            left: maxLeft,
+            behavior: "smooth",
+          });
+        } else {
+          el.scrollLeft = maxLeft;
+        }
+      });
+    }
+    prevLenRef.current = columns.length;
   }, [columns.length]);
 
   return (
