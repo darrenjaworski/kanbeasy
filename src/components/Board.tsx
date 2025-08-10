@@ -17,7 +17,6 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-  type DragStartEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -142,7 +141,7 @@ export function Board() {
     prevLenRef.current = columns.length;
   }, [columns.length]);
 
-  function handleDragStart(_event: DragStartEvent) {
+  function handleDragStart() {
     // Currently not used, but keeping for future drag overlay functionality
   }
 
