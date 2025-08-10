@@ -8,7 +8,7 @@ export function Column({ title }: Props) {
       <h2 className="text-sm font-semibold tracking-tight mb-3 opacity-80">
         {title}
       </h2>
-      <div className="flex flex-col gap-2 min-h-24">
+      <div className="flex flex-col gap-2 min-h-28">
         <p className="text-xs opacity-60">No cards yet</p>
       </div>
     </section>
