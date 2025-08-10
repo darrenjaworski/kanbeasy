@@ -32,29 +32,31 @@ export function Column({
       aria-label={title || "column"}
       className="group relative rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark p-3"
     >
-      {/* Remove column button (appears on hover/focus) */}
-      {/* Drag handle button to reorder (appears on hover/focus) */}
-      <button
-        type="button"
-        ref={dragHandleRef}
-        aria-label={`Drag column ${title || "column"}`}
-        title="Drag to reorder"
-        {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-        className="absolute right-10 top-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full text-base opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 focus:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      {/* Combined drag + delete control */}
+      <div
+        className="absolute right-2 top-2 z-10 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
       >
-        <img src={dragIcon} alt="" aria-hidden className="size-5 opacity-80" />
-      </button>
-
-      {/* Remove column button (appears on hover/focus) */}
-      <button
-        type="button"
-        onClick={() => removeColumn(id)}
-        aria-label={`Remove column ${title || "column"}`}
-        title="Remove column"
-        className="absolute right-2 top-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full text-base opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 focus:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-      >
-        <img src={closeIcon} alt="" aria-hidden className="size-5 opacity-80" />
-      </button>
+        <button
+          type="button"
+          ref={dragHandleRef}
+          aria-label={`Drag column ${title || "column"}`}
+          title="Drag to reorder"
+          {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+          className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <img src={dragIcon} alt="" aria-hidden className="size-5 opacity-80" />
+        </button>
+        <span aria-hidden className="h-6 w-px bg-black/10 dark:bg-white/10" />
+        <button
+          type="button"
+          onClick={() => removeColumn(id)}
+          aria-label={`Remove column ${title || "column"}`}
+          title="Remove column"
+          className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <img src={closeIcon} alt="" aria-hidden className="size-5 opacity-80" />
+        </button>
+      </div>
       <div className="mb-3">
         <input
           ref={inputRef}
