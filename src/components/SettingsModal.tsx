@@ -54,11 +54,20 @@ export function SettingsModal({ open, onClose }: Props) {
             </h2>
             <button
               type="button"
-              className="ml-auto rounded-md px-2 py-1 text-sm"
+              className="ml-auto h-6 w-6 inline-flex items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
               onClick={onClose}
               aria-label="Close settings"
             >
-              ✕
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 -960 960 960"
+                className="size-4"
+                fill="currentColor"
+                aria-hidden
+                focusable="false"
+              >
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+              </svg>
             </button>
           </div>
 

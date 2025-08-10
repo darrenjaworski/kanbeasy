@@ -10,7 +10,7 @@ export function Header() {
         <div className="ml-auto">
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 p-2 text-sm hover:bg-white/80 dark:hover:bg-black/30 transition-colors text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+            className="inline-flex items-center justify-center rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 p-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
             aria-label="Open settings"
             onClick={() => setOpen(true)}
           >
