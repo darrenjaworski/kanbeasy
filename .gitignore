@@ -13,7 +13,7 @@ dist-ssr
 *.local
 
 # Playwright artifacts
-playwright-report/
+playwright-report
 test-results/
 playwright/.cache/
 
