@@ -11,12 +11,14 @@ import { useBoard } from "../board/useBoard";
 import { AddColumn } from "./AddColumn";
 import {
   DndContext,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
   closestCorners,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -79,6 +81,8 @@ export function Board() {
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const prevLenRef = useRef<number | null>(null);
+  const [activeType, setActiveType] = useState<"card" | "column" | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -136,101 +140,143 @@ export function Board() {
     prevLenRef.current = columns.length;
   }, [columns.length]);
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over) return;
-    const activeType = active.data.current?.type as string | undefined;
-    const overType = over.data.current?.type as string | undefined;
+  // Helpers to keep drag-end logic readable and within complexity limits
+  function reorderColumns(activeId: string, overId: string) {
+    const oldIndex = columns.findIndex((c) => c.id === activeId);
+    const newIndex = columns.findIndex((c) => c.id === overId);
+    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
+    setColumns(arrayMove(columns, oldIndex, newIndex));
+  }
 
-    // Column reordering
-    if (activeType === "column" && overType === "column") {
-      const oldIndex = columns.findIndex((c) => c.id === String(active.id));
-      const newIndex = columns.findIndex((c) => c.id === String(over.id));
+  function moveCardWithinOrAcrossColumns(
+    fromColId: string,
+    toColId: string,
+    activeId: string,
+    overId: string
+  ) {
+    const cols = columns.slice();
+    const fromIdx = cols.findIndex((c) => c.id === fromColId);
+    const toIdx = cols.findIndex((c) => c.id === toColId);
+    if (fromIdx === -1 || toIdx === -1) return;
+
+    if (fromIdx === toIdx) {
+      const col = cols[fromIdx];
+      const oldIndex = col.cards.findIndex((c) => c.id === activeId);
+      const newIndex = col.cards.findIndex((c) => c.id === overId);
       if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-      const next = arrayMove(columns, oldIndex, newIndex);
+      const reordered = arrayMove(col.cards, oldIndex, newIndex);
+      const next = cols.slice();
+      next[fromIdx] = { ...col, cards: reordered };
       setColumns(next);
       return;
     }
 
-    // Card sorting within same column via over card
-    if (activeType === "card" && overType === "card") {
-      const fromColId = active.data.current?.columnId as string;
-      const toColId = over.data.current?.columnId as string;
-      const activeId = String(active.id);
-      const overId = String(over.id);
-      const cols = columns.slice();
-      const fromIdx = cols.findIndex((c) => c.id === fromColId);
-      const toIdx = cols.findIndex((c) => c.id === toColId);
-      if (fromIdx === -1 || toIdx === -1) return;
-      // Same column: just reorder within the array
-      if (fromIdx === toIdx) {
-        const col = cols[fromIdx];
-        const oldIndex = col.cards.findIndex((c) => c.id === activeId);
-        const newIndex = col.cards.findIndex((c) => c.id === overId);
-        if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-        const reordered = arrayMove(col.cards, oldIndex, newIndex);
-        const next = cols.slice();
-        next[fromIdx] = { ...col, cards: reordered };
-        setColumns(next);
-      } else {
-        const fromCol = cols[fromIdx];
-        const toCol = cols[toIdx];
-        const cardIdx = fromCol.cards.findIndex((c) => c.id === activeId);
-        if (cardIdx === -1) return;
-        const moved = fromCol.cards[cardIdx];
-        // remove from source
-        const nextFromCards = fromCol.cards.slice();
-        nextFromCards.splice(cardIdx, 1);
-        // compute insertion index in target based on over card index
-        const overIdx = toCol.cards.findIndex((c) => c.id === overId);
-        const insertAt = overIdx === -1 ? toCol.cards.length : overIdx;
-        const nextToCards = toCol.cards.slice();
-        nextToCards.splice(insertAt, 0, moved);
-        const next = cols.slice();
-        next[fromIdx] = { ...fromCol, cards: nextFromCards };
-        next[toIdx] = { ...toCol, cards: nextToCards };
-        setColumns(next);
-      }
+    const fromCol = cols[fromIdx];
+    const toCol = cols[toIdx];
+    const cardIdx = fromCol.cards.findIndex((c) => c.id === activeId);
+    if (cardIdx === -1) return;
+    const moved = fromCol.cards[cardIdx];
+    const nextFromCards = fromCol.cards.slice();
+    nextFromCards.splice(cardIdx, 1);
+    const overIdx = toCol.cards.findIndex((c) => c.id === overId);
+    const insertAt = overIdx === -1 ? toCol.cards.length : overIdx;
+    const nextToCards = toCol.cards.slice();
+    nextToCards.splice(insertAt, 0, moved);
+    const next = cols.slice();
+    next[fromIdx] = { ...fromCol, cards: nextFromCards };
+    next[toIdx] = { ...toCol, cards: nextToCards };
+    setColumns(next);
+  }
+
+  function dropCardOnColumnArea(
+    fromColId: string,
+    toColId: string,
+    activeId: string
+  ) {
+    const cols = columns.slice();
+    const fromIdx = cols.findIndex((c) => c.id === fromColId);
+    const toIdx = cols.findIndex((c) => c.id === toColId);
+    if (fromIdx === -1 || toIdx === -1) return;
+
+    if (fromIdx === toIdx) {
+      const col = cols[fromIdx];
+      const oldIndex = col.cards.findIndex((c) => c.id === activeId);
+      if (oldIndex === -1) return;
+      const reordered = arrayMove(col.cards, oldIndex, col.cards.length - 1);
+      const next = cols.slice();
+      next[fromIdx] = { ...col, cards: reordered };
+      setColumns(next);
       return;
     }
 
-    // Card dropped over empty column area
-    if (activeType === "card" && overType === "column-drop") {
-      const fromColId = active.data.current?.columnId as string;
-      const toColId = over.data.current?.columnId as string;
-      const activeId = String(active.id);
-      if (!toColId) return;
-      const cols = columns.slice();
-      const fromIdx = cols.findIndex((c) => c.id === fromColId);
-      const toIdx = cols.findIndex((c) => c.id === toColId);
-      if (fromIdx === -1 || toIdx === -1) return;
-      // Same column: move item to the end when dropping on column area
-      if (fromIdx === toIdx) {
-        const col = cols[fromIdx];
-        const oldIndex = col.cards.findIndex((c) => c.id === activeId);
-        if (oldIndex === -1) return;
-        const reordered = arrayMove(col.cards, oldIndex, col.cards.length - 1);
-        const next = cols.slice();
-        next[fromIdx] = { ...col, cards: reordered };
-        setColumns(next);
-      } else {
-        const fromCol = cols[fromIdx];
-        const toCol = cols[toIdx];
-        const cardIdx = fromCol.cards.findIndex((c) => c.id === activeId);
-        if (cardIdx === -1) return;
-        const moved = fromCol.cards[cardIdx];
-        const nextFromCards = fromCol.cards.slice();
-        nextFromCards.splice(cardIdx, 1);
-        const nextToCards = toCol.cards.slice();
-        nextToCards.unshift(moved); // add to top of target column
-        const next = cols.slice();
-        next[fromIdx] = { ...fromCol, cards: nextFromCards };
-        next[toIdx] = { ...toCol, cards: nextToCards };
-        setColumns(next);
-      }
+    const fromCol = cols[fromIdx];
+    const toCol = cols[toIdx];
+    const cardIdx = fromCol.cards.findIndex((c) => c.id === activeId);
+    if (cardIdx === -1) return;
+    const moved = fromCol.cards[cardIdx];
+    const nextFromCards = fromCol.cards.slice();
+    nextFromCards.splice(cardIdx, 1);
+    const nextToCards = toCol.cards.slice();
+    nextToCards.unshift(moved);
+    const next = cols.slice();
+    next[fromIdx] = { ...fromCol, cards: nextFromCards };
+    next[toIdx] = { ...toCol, cards: nextToCards };
+    setColumns(next);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over) return;
+    const aType = active.data.current?.type as string | undefined;
+    const oType = over.data.current?.type as string | undefined;
+
+    if (aType === "column" && oType === "column") {
+      reorderColumns(String(active.id), String(over.id));
       return;
     }
+
+    if (aType === "card" && oType === "card") {
+      const fromColId = active.data.current?.columnId as string;
+      const toColId = over.data.current?.columnId as string;
+      moveCardWithinOrAcrossColumns(
+        fromColId,
+        toColId,
+        String(active.id),
+        String(over.id)
+      );
+      return;
+    }
+
+    if (aType === "card" && oType === "column-drop") {
+      const fromColId = active.data.current?.columnId as string;
+      const toColId = over.data.current?.columnId as string;
+      if (!toColId) return;
+      dropCardOnColumnArea(fromColId, toColId, String(active.id));
+    }
   }
+
+  function handleDragStart(event: DragStartEvent) {
+    const { active } = event;
+    const type =
+      (active.data.current?.type as "card" | "column" | undefined) ?? null;
+    setActiveType(type ?? null);
+    setActiveId(String(active.id));
+  }
+
+  function handleDragCancel() {
+    setActiveType(null);
+    setActiveId(null);
+  }
+
+  // Resolve the active card data for DragOverlay rendering
+  const activeCard = useMemo(() => {
+    if (activeType !== "card" || !activeId) return null;
+    for (const col of columns) {
+      const found = col.cards.find((c) => c.id === activeId);
+      if (found) return found;
+    }
+    return null;
+  }, [activeType, activeId, columns]);
 
   return (
     <div>
@@ -244,7 +290,13 @@ export function Board() {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
-              onDragEnd={handleDragEnd}
+              onDragStart={handleDragStart}
+              onDragEnd={(e) => {
+                handleDragEnd(e);
+                setActiveType(null);
+                setActiveId(null);
+              }}
+              onDragCancel={handleDragCancel}
             >
               <SortableContext
                 items={columns.map((c) => c.id)}
@@ -264,6 +316,15 @@ export function Board() {
                   <AddColumn handleOnClick={() => addColumn("New Column")} />
                 </div>
               </SortableContext>
+              <DragOverlay>
+                {activeType === "card" && activeCard ? (
+                  <div className="group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/80 dark:bg-black/30 shadow-lg">
+                    <div className="whitespace-pre-wrap text-black/80 dark:text-white/80">
+                      {activeCard.title || "New card"}
+                    </div>
+                  </div>
+                ) : null}
+              </DragOverlay>
             </DndContext>
           </div>
           {canScrollLeft && (
