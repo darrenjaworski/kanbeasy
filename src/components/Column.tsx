@@ -101,7 +101,7 @@ export function Column({
           </svg>
         </button>
       </div>
-      <div className="mb-3">
+      <div className="mb-3 mr-16">
         <input
           ref={inputRef}
           type="text"

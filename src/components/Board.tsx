@@ -26,6 +26,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 function SortableColumnItem({
   id,
@@ -156,6 +157,7 @@ export function Board() {
               sensors={sensors}
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
+              modifiers={[restrictToHorizontalAxis]}
             >
               <SortableContext
                 items={columns.map((c) => c.id)}
