@@ -5,9 +5,6 @@ import { useTheme } from "../theme/useTheme";
 import { useBoard } from "../board/useBoard";
 import { DragIndicatorIcon } from "./icons/DragIndicatorIcon";
 import { CloseIcon } from "./icons/CloseIcon";
-// Inline SVGs for action icons so they can inherit currentColor for light/dark themes
-// import { useDroppable, useDndContext } from "@dnd-kit/core"; // No longer needed
-// import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"; // No longer needed
 import { CardList } from "./CardList";
 
 type Props = Readonly<{
