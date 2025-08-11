@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { Column } from "./Column";
+import { BoardDragOverlay } from "./BoardDragOverlay";
+import { BoardScrollGradients } from "./BoardScrollGradients";
+// ...
 import { useBoard } from "../board/useBoard";
 import { AddColumn } from "./AddColumn";
 import {
   DndContext,
-  DragOverlay,
+  // DragOverlay,
   KeyboardSensor,
   PointerSensor,
   closestCorners,
@@ -266,44 +268,18 @@ export function Board() {
                   <AddColumn handleOnClick={() => addColumn("New Column")} />
                 </div>
               </SortableContext>
-              <DragOverlay>
-                {activeType === "card" && activeCard && (
-                  <div className="group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/80 dark:bg-black/30 shadow-lg backdrop-blur-md">
-                    <div className="whitespace-pre-wrap text-black/80 dark:text-white/80">
-                      {activeCard.title || "New card"}
-                    </div>
-                  </div>
-                )}
-                {activeType === "column" && activeId && (
-                  <div className="w-80 shrink-0">
-                    <Column
-                      id={activeId}
-                      title={
-                        columns.find((col) => col.id === activeId)?.title || ""
-                      }
-                      cards={
-                        columns.find((col) => col.id === activeId)?.cards || []
-                      }
-                      canDrag={false}
-                      overlayMode
-                    />
-                  </div>
-                )}
-              </DragOverlay>
+              <BoardDragOverlay
+                activeType={activeType}
+                activeId={activeId}
+                activeCard={activeCard}
+                columns={columns}
+              />
             </DndContext>
           </div>
-          {canScrollLeft && (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-bg-light/90 to-transparent dark:from-bg-dark/90"
-            />
-          )}
-          {canScrollRight && (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-bg-light/90 to-transparent dark:from-bg-dark/90"
-            />
-          )}
+          <BoardScrollGradients
+            canScrollLeft={canScrollLeft}
+            canScrollRight={canScrollRight}
+          />
         </div>
       )}
     </div>
