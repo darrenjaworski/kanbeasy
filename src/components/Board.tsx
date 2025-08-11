@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ButtonHTMLAttributes,
-} from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Column } from "./Column";
 import { useBoard } from "../board/useBoard";
 import { AddColumn } from "./AddColumn";
@@ -25,60 +18,9 @@ import {
   arrayMove,
   sortableKeyboardCoordinates,
   horizontalListSortingStrategy,
-  useSortable,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
-
-function SortableColumnItem({
-  id,
-  title,
-  cards,
-  canDrag,
-  style,
-}: Readonly<{
-  id: string;
-  title: string;
-  cards: import("../board/types").Card[];
-  canDrag: boolean;
-  style?: React.CSSProperties;
-}>) {
-  const {
-    attributes,
-    listeners,
-    setActivatorNodeRef,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id, data: { type: "column" } });
-
-  const combinedStyle: CSSProperties = useMemo(
-    () => ({
-      ...style,
-      transform: CSS.Transform.toString(transform),
-      transition,
-      zIndex: isDragging ? 10 : undefined,
-    }),
-    [style, transform, transition, isDragging]
-  );
-
-  return (
-    <div ref={setNodeRef} style={combinedStyle} className="w-80 shrink-0">
-      <Column
-        id={id}
-        title={title}
-        cards={cards}
-        canDrag={canDrag}
-        dragHandleRef={setActivatorNodeRef}
-        dragHandleProps={{
-          ...(attributes as unknown as ButtonHTMLAttributes<HTMLButtonElement>),
-          ...(listeners as unknown as ButtonHTMLAttributes<HTMLButtonElement>),
-        }}
-      />
-    </div>
-  );
-}
+import { SortableColumnItem } from "./SortableColumnItem";
 
 export function Board() {
   const { columns, addColumn, setColumns } = useBoard();
