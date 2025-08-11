@@ -226,11 +226,9 @@ export function Board() {
   }, [activeType, activeId, columns]);
 
   return (
-    <div>
+    <>
       {columns.length === 0 ? (
-        <div>
-          <AddColumn handleOnClick={() => addColumn("New Column")} />
-        </div>
+        <AddColumn handleOnClick={() => addColumn("New Column")} />
       ) : (
         <div className="relative">
           <div ref={scrollerRef} className="overflow-x-auto w-full">
@@ -280,6 +278,6 @@ export function Board() {
           />
         </div>
       )}
-    </div>
+    </>
   );
 }
