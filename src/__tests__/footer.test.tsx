@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import App from "./App";
-import { ThemeProvider } from "./theme/ThemeProvider";
-import { BoardProvider } from "./board/BoardProvider";
+import App from "../App";
+import { ThemeProvider } from "../theme/ThemeProvider";
+import { BoardProvider } from "../board/BoardProvider";
 
 function renderApp() {
   return render(

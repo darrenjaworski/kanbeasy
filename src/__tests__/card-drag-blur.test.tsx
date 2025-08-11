@@ -1,8 +1,8 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "./App";
-import { ThemeProvider } from "./theme/ThemeProvider";
-import { BoardProvider } from "./board/BoardProvider";
+import App from "../App";
+import { ThemeProvider } from "../theme/ThemeProvider";
+import { BoardProvider } from "../board/BoardProvider";
 
 function renderApp() {
   return render(

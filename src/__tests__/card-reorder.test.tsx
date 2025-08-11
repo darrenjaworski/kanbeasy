@@ -1,8 +1,8 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "./App";
-import { ThemeProvider } from "./theme/ThemeProvider";
-import { BoardProvider } from "./board/BoardProvider";
+import App from "../App";
+import { ThemeProvider } from "../theme/ThemeProvider";
+import { BoardProvider } from "../board/BoardProvider";
 
 function renderApp() {
   return render(
@@ -14,16 +14,17 @@ function renderApp() {
   );
 }
 
-describe("card drag boundary constraints", () => {
-  it("ensures cards stay within column boundaries when dragging", async () => {
+describe("card drag handle", () => {
+  it("renders a drag handle under the card's close button and allows reordering", async () => {
     const user = userEvent.setup();
     renderApp();
 
     // Add one column
     await user.click(screen.getByRole("button", { name: /add column/i }));
 
-    // Add two cards
+    // Add three cards with different titles
     const addCardBtn = screen.getByRole("button", { name: /add card to/i });
+    await user.click(addCardBtn);
     await user.click(addCardBtn);
     await user.click(addCardBtn);
 
@@ -32,35 +33,36 @@ describe("card drag boundary constraints", () => {
       name: /card content/i,
     });
 
-    // Set titles: 'Card 1', 'Card 2'
+    // Set titles: 'C', 'A', 'B'
     await user.clear(textareas[0]);
-    await user.type(textareas[0], "Card 1");
+    await user.type(textareas[0], "C");
     await user.tab();
 
     await user.clear(textareas[1]);
-    await user.type(textareas[1], "Card 2");
+    await user.type(textareas[1], "A");
     await user.tab();
 
-    // Get drag handle for first card
+    await user.clear(textareas[2]);
+    await user.type(textareas[2], "B");
+    await user.tab();
+
+    // Drag handle exists for each card
     const handles = within(column).getAllByRole("button", {
       name: /drag card/i,
     });
-    expect(handles.length).toBe(2);
+    expect(handles.length).toBe(3);
 
-    // Test keyboard-based reordering still works (this validates the boundary doesn't break functionality)
+    // Keyboard-reorder: focus handle for first card (C) and move it down twice to end
     handles[0].focus();
     await user.keyboard(" "); // activate drag with space
-    await user.keyboard("{ArrowDown}"); // move down one position
+    await user.keyboard("{ArrowDown}");
+    await user.keyboard("{ArrowDown}");
     await user.keyboard(" "); // drop
 
-    // Verify cards were reordered correctly
-    const afterReorder = within(column).getAllByRole("textbox", {
+    const after = within(column).getAllByRole("textbox", {
       name: /card content/i,
     });
-    const values = afterReorder.map((el) => (el as HTMLTextAreaElement).value);
-    expect(values).toEqual(["Card 2", "Card 1"]);
-
-    // Verify the cards are still present and reorderable (boundary constraint doesn't break this)
-    expect(within(column).getAllByRole("button", { name: /drag card/i }).length).toBe(2);
+    const values = after.map((el) => (el as HTMLTextAreaElement).value);
+    expect(values).toEqual(["A", "B", "C"]);
   });
 });
