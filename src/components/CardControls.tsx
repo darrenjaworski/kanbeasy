@@ -1,4 +1,6 @@
 import React from "react";
+import { CardDragIcon } from "./icons/CardDragIcon";
+import { CloseIcon } from "./icons/CloseIcon";
 
 interface CardControlsProps {
   readonly canDrag: boolean;
@@ -29,16 +31,7 @@ export function CardControls({
           title="Drag to reorder"
           className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 -960 960 960"
-            className="size-4"
-            fill="currentColor"
-            aria-hidden
-            focusable="false"
-          >
-            <path d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z" />
-          </svg>
+          <CardDragIcon className="size-4" />
         </button>
       )}
       {canDrag && (
@@ -51,16 +44,7 @@ export function CardControls({
         title="Remove card"
         className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 -960 960 960"
-          className="size-4"
-          fill="currentColor"
-          aria-hidden
-          focusable="false"
-        >
-          <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-        </svg>
+        <CloseIcon className="size-4" />
       </button>
     </div>
   );

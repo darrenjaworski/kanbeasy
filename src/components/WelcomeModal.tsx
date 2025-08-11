@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { CloseIcon } from "./icons/CloseIcon";
 import { useEffect, useState } from "react";
 
 export function WelcomeModal() {
@@ -45,16 +46,7 @@ export function WelcomeModal() {
               onClick={handleClose}
               aria-label="Close welcome modal"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 -960 960 960"
-                className="size-4"
-                fill="currentColor"
-                aria-hidden
-                focusable="false"
-              >
-                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-              </svg>
+              <CloseIcon className="size-4" />
             </button>
           </div>
           <p className="mb-4">

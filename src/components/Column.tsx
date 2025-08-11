@@ -3,6 +3,8 @@ import type { Card } from "../board/types";
 import { useTheme } from "../theme/useTheme";
 import type { CardDensity } from "../theme/types";
 import { useBoard } from "../board/useBoard";
+import { DragIndicatorIcon } from "./icons/DragIndicatorIcon";
+import { CloseIcon } from "./icons/CloseIcon";
 // Inline SVGs for action icons so they can inherit currentColor for light/dark themes
 import { useDroppable, useDndContext } from "@dnd-kit/core"; // Cleaned up import
 import {
@@ -60,16 +62,7 @@ export function Column({
             {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
             className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 -960 960 960"
-              className="size-5"
-              fill="currentColor"
-              aria-hidden
-              focusable="false"
-            >
-              <path d="M360-160q-33 0-56.5-23.5T280-240q0-33 23.5-56.5T360-320q33 0 56.5 23.5T440-240q0 33-23.5 56.5T360-160Zm240 0q-33 0-56.5-23.5T520-240q0-33 23.5-56.5T600-320q33 0 56.5 23.5T680-240q0 33-23.5 56.5T600-160ZM360-400q-33 0-56.5-23.5T280-480q0-33 23.5-56.5T360-560q33 0 56.5 23.5T440-480q0 33-23.5 56.5T360-400Zm240 0q-33 0-56.5-23.5T520-480q0-33 23.5-56.5T600-560q33 0 56.5 23.5T680-480q0 33-23.5 56.5T600-400ZM360-640q-33 0-56.5-23.5T280-720q0-33 23.5-56.5T360-800q33 0 56.5 23.5T440-720q0 33-23.5 56.5T360-640Zm240 0q-33 0-56.5-23.5T520-720q0-33 23.5-56.5T600-800q33 0 56.5 23.5T680-720q0 33-23.5 56.5T600-640Z" />
-            </svg>
+            <DragIndicatorIcon className="size-5" />
           </button>
         )}
         {canDrag && (
@@ -82,16 +75,7 @@ export function Column({
           title="Remove column"
           className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 -960 960 960"
-            className="size-5"
-            fill="currentColor"
-            aria-hidden
-            focusable="false"
-          >
-            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </svg>
+          <CloseIcon className="size-5" />
         </button>
       </div>
       <div className="mb-3 mr-16">
