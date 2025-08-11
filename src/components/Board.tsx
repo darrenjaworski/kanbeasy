@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { BoardDragOverlay } from "./BoardDragOverlay";
 import { BoardScrollGradients } from "./BoardScrollGradients";
-// ...
 import { useBoard } from "../board/useBoard";
 import { AddColumn } from "./AddColumn";
 import {
   DndContext,
-  // DragOverlay,
   KeyboardSensor,
   PointerSensor,
   closestCorners,
