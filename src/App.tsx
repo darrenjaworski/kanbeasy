@@ -8,9 +8,7 @@ function App() {
     <div className="min-h-screen bg-bg-light text-text-light dark:bg-bg-dark dark:text-text-dark transition-colors">
       <WelcomeModal />
       <Header />
-      <main className="mx-auto px-4 py-6 pb-16">
-        <Board />
-      </main>
+      <Board />
       <Footer />
     </div>
   );

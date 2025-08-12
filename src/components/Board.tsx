@@ -226,11 +226,11 @@ export function Board() {
   }, [activeType, activeId, columns]);
 
   return (
-    <>
+    <main className="mx-auto p-6">
       {columns.length === 0 ? (
         <AddColumn handleOnClick={() => addColumn("New Column")} />
       ) : (
-        <div className="relative">
+        <>
           <div ref={scrollerRef} className="overflow-x-auto w-full">
             <DndContext
               sensors={sensors}
@@ -276,8 +276,8 @@ export function Board() {
             canScrollLeft={canScrollLeft}
             canScrollRight={canScrollRight}
           />
-        </div>
+        </>
       )}
-    </>
+    </main>
   );
 }
