@@ -39,7 +39,7 @@ export function Column({
       data-column-id={id}
       aria-label={title || "column"}
       className={
-        `group relative rounded-lg border border-black/10 dark:border-white/10 p-3 ` +
+        `group relative rounded-lg border border-black/10 dark:border-white/10 p-3 w-80 ` +
         (overlayMode
           ? "bg-white/60 dark:bg-black/20 backdrop-blur-md"
           : "bg-surface-light dark:bg-surface-dark")
