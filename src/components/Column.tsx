@@ -81,6 +81,7 @@ export function Column({
           value={tempTitle}
           onFocus={(e) => e.target.select()} // Highlight all text on focus
           onChange={(e) => setTempTitle(e.target.value)}
+          id={`${id}-title`}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();

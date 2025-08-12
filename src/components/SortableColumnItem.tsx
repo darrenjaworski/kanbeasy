@@ -37,7 +37,7 @@ export function SortableColumnItem({
   );
 
   return (
-    <div ref={setNodeRef} style={combinedStyle} className="w-80 shrink-0">
+    <div ref={setNodeRef} style={combinedStyle}>
       <Column
         id={id}
         title={title}

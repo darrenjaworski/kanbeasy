@@ -68,6 +68,7 @@ export function SortableCardItem({
       />
 
       <textarea
+        id={`${columnId}-${card.id}-content`}
         aria-label="Card content"
         defaultValue={card.title || "New card"}
         className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
