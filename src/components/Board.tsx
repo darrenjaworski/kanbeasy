@@ -266,9 +266,7 @@ export function Board() {
               </SortableContext>
               <BoardDragOverlay
                 activeType={activeType}
-                activeId={activeId}
                 activeCard={activeCard}
-                columns={columns}
               />
             </DndContext>
           </div>
