@@ -49,7 +49,7 @@ export function WelcomeModal() {
               <CloseIcon className="size-4" />
             </button>
           </div>
-          <p className="mb-4">
+          <p className="mb-4" data-testid="welcome-description">
             Kanban is a simple and effective way to organize tasks. Drag and
             drop cards between columns to track progress. Customize your
             workflow to suit your needs.
