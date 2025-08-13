@@ -13,6 +13,9 @@
 /* Use class-based dark mode to match ThemeProvider */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Touch device variant */
+@custom-variant touch (@media (pointer: coarse));
+
 /* App base styles */
 :root {
 	color-scheme: light dark;

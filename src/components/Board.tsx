@@ -32,7 +32,9 @@ export function Board() {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(PointerSensor, { 
+      activationConstraint: { distance: 8 },
+    }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
