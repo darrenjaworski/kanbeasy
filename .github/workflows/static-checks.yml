@@ -28,5 +28,5 @@ jobs:
 
       - name: Run static checks (lint, typecheck, tests, build)
         env:
-          CI: true
+          GITHUB_ACTIONS: true
         run: npm run static-checks
