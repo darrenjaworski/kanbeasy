@@ -112,3 +112,75 @@ test("can delete a card from a column", async ({ page }) => {
   // Also verify the remaining card's index has collapsed to 0
   await expect(column.getByTestId("card-0")).toBeVisible();
 });
+
+test("can drag and drop a card from one column to another", async ({
+  page,
+}) => {
+  // Create two columns
+  await page.getByTestId("add-column-button").click();
+  await page.getByTestId("add-column-button").click();
+
+  const leftColumn = page.getByTestId("column-0");
+  const rightColumn = page.getByTestId("column-1");
+
+  await expect(leftColumn).toBeVisible();
+  await expect(rightColumn).toBeVisible();
+
+  // Add one card to each column
+  await leftColumn.getByTestId("add-card-button-0").click();
+  await rightColumn.getByTestId("add-card-button-1").click();
+
+  // Give them distinct content so we can assert later
+  const leftContent = leftColumn.getByTestId("card-content-0");
+  await leftContent.click();
+  await leftContent.fill("Left Card");
+  await leftContent.press("Enter");
+
+  const rightContent = rightColumn.getByTestId("card-content-0");
+  await rightContent.click();
+  await rightContent.fill("Right Card");
+  await rightContent.press("Enter");
+
+  // Drag the left card onto the right card
+  const leftCard = leftColumn.getByTestId("card-0");
+  await leftCard.hover();
+  const leftDragHandle = leftColumn.getByTestId("card-drag-0");
+  await leftDragHandle.scrollIntoViewIfNeeded();
+  await expect(leftDragHandle).toBeVisible();
+
+  const handleBox = await leftDragHandle.boundingBox();
+  const rightTargetCard = rightColumn.getByTestId("card-0");
+  const rightTargetBox = await rightTargetCard.boundingBox();
+  if (!handleBox || !rightTargetBox) {
+    throw new Error("Could not get bounding boxes for cross-column drag");
+  }
+
+  const startX = handleBox.x + handleBox.width / 2;
+  const startY = handleBox.y + handleBox.height / 2;
+  const targetX = rightTargetBox.x + rightTargetBox.width / 2;
+  const targetY = rightTargetBox.y + rightTargetBox.height / 2;
+
+  await page.mouse.move(startX, startY);
+  await page.mouse.down();
+  // small jitter to initiate drag (dnd-kit activation distance)
+  await page.mouse.move(startX + 10, startY + 10);
+  await page.mouse.move(targetX, targetY, { steps: 12 });
+  await page.mouse.up();
+
+  // Assert left column now has no cards
+  await expect(
+    leftColumn.locator('[data-testid^="card-content-"]')
+  ).toHaveCount(0);
+
+  // Assert right column now has both cards
+  const rightCardsContents = rightColumn.locator(
+    '[data-testid^="card-content-"]'
+  );
+  await expect(rightCardsContents).toHaveCount(2);
+
+  // Read values and assert both are present (order can vary by drop position)
+  const values = await rightCardsContents.evaluateAll((nodes) =>
+    nodes.map((n) => (n as HTMLTextAreaElement).value)
+  );
+  expect(new Set(values)).toEqual(new Set(["Left Card", "Right Card"]));
+});
