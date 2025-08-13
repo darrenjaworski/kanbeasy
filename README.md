@@ -1,5 +1,8 @@
 # React + TypeScript + Vite
 
+[![static checks](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml)
+[![post-deploy e2e](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml)
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
