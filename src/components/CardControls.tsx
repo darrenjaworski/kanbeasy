@@ -29,7 +29,7 @@ export function CardControls({
           {...(listeners as unknown as React.HTMLAttributes<HTMLButtonElement>)}
           aria-label={`Drag card ${cardTitle || "Untitled"}`}
           title="Drag to reorder"
-          className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+          className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
         >
           <CardDragIcon className="size-4" />
         </button>
@@ -42,7 +42,7 @@ export function CardControls({
         onClick={onRemove}
         aria-label={`Remove card ${cardTitle || "Untitled"}`}
         title="Remove card"
-        className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+        className="h-6 w-6 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
       >
         <CloseIcon className="size-4" />
       </button>

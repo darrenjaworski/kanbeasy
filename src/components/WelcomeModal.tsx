@@ -23,7 +23,7 @@ export function WelcomeModal() {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <button
         type="button"
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-xs"
         aria-label="Close welcome modal"
         onClick={handleClose}
       />
@@ -42,7 +42,7 @@ export function WelcomeModal() {
             </h2>
             <button
               type="button"
-              className="ml-auto h-6 w-6 inline-flex items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+              className="ml-auto h-6 w-6 inline-flex items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
               onClick={handleClose}
               aria-label="Close welcome modal"
             >

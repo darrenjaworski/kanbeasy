@@ -53,7 +53,7 @@ export function SortableCardItem({
       style={style}
       className={`group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/60 dark:bg-black/20 ${
         isDragging
-          ? "backdrop-blur-sm supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-black/30"
+          ? "backdrop-blur-xs supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-black/30"
           : ""
       }`}
     >
@@ -71,7 +71,7 @@ export function SortableCardItem({
         id={`${columnId}-${card.id}-content`}
         aria-label="Card content"
         defaultValue={card.title || "New card"}
-        className="w-full resize-y rounded-sm bg-transparent outline-none border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="w-full resize-y rounded-xs bg-transparent outline-hidden border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
         rows={rowsForDensity}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {

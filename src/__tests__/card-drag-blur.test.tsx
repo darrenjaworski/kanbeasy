@@ -45,10 +45,10 @@ describe("card gets blur background while dragging", () => {
 
     // Start drag (space) -> blur class appears
     await user.keyboard(" ");
-    expect(cardContainer.className).toMatch(/backdrop-blur-sm/);
+    expect(cardContainer.className).toMatch(/backdrop-blur-xs/);
 
     // Drop (space) -> blur class removed
     await user.keyboard(" ");
-    expect(cardContainer.className).not.toMatch(/backdrop-blur-sm/);
+    expect(cardContainer.className).not.toMatch(/backdrop-blur-xs/);
   });
 });

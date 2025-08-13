@@ -54,7 +54,7 @@ export function Column({
             aria-label={`Drag column ${title || "column"}`}
             title="Drag to reorder"
             {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-            className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+            className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
           >
             <DragIndicatorIcon className="size-5" />
           </button>
@@ -67,7 +67,7 @@ export function Column({
           onClick={() => removeColumn(id)}
           aria-label={`Remove column ${title || "column"}`}
           title="Remove column"
-          className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+          className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
         >
           <CloseIcon className="size-5" />
         </button>
@@ -77,7 +77,7 @@ export function Column({
           ref={inputRef}
           type="text"
           aria-label="Column title"
-          className="w-full bg-transparent px-0 py-0 text-base font-semibold tracking-tight opacity-80 border-0 outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-sm"
+          className="w-full bg-transparent px-0 py-0 text-base font-semibold tracking-tight opacity-80 border-0 outline-hidden focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 rounded-xs"
           value={tempTitle}
           onFocus={(e) => e.target.select()} // Highlight all text on focus
           onChange={(e) => setTempTitle(e.target.value)}
