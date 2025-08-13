@@ -51,6 +51,8 @@ export function Modal({
         open
         aria-modal="true"
         aria-labelledby={ariaLabelledby}
+        // role="dialog" removed (redundant)
+        aria-label={ariaLabelledby ? undefined : "Settings"}
         className={`relative z-10 w-full max-w-md rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark p-0 shadow-xl ${className}`}
       >
         {children}
