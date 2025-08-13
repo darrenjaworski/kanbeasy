@@ -15,4 +15,4 @@ test("can be closed", async ({ page }) => {
   await expect(page.getByTestId("welcome-description")).not.toBeVisible();
 });
 
-test.skip("it will only show once", async ({ page }) => {});
+test.skip("it will only show once", async () => {});
