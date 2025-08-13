@@ -2,12 +2,13 @@ import { defineConfig, devices } from "@playwright/test";
 
 const deployedBaseURL = process.env.E2E_BASE_URL; // e.g. https://<user>.github.io/<repo>
 const isDeployedRun = Boolean(deployedBaseURL);
+const isCI = process.env.CI == "true";
 
 export default defineConfig({
   testDir: "./tests-e2e",
   timeout: 30_000,
-  retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? "github" : [["list"], ["html"]],
+  retries: isCI ? 2 : 0,
+  reporter: isCI ? "github" : [["list"], ["html"]],
   use: {
     baseURL: deployedBaseURL || "http://localhost:5173",
     trace: "on-first-retry",
@@ -20,7 +21,7 @@ export default defineConfig({
     : {
         command: "npm run dev",
         port: 5173,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: !isCI,
         timeout: 60_000,
       },
   projects: [
