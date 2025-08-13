@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { WelcomeModal } from "../WelcomeModal";
+import { describe, beforeEach, it, expect } from "vitest";
 
 describe("WelcomeModal", () => {
   beforeEach(() => {

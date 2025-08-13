@@ -28,4 +28,5 @@ export type BoardContextValue = Readonly<{
     activeCardId: string,
     overCardId: string
   ) => void;
+  resetBoard: () => void;
 }>;

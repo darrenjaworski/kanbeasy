@@ -164,6 +164,10 @@ export function BoardProvider({
     });
   };
 
+  const resetBoard: BoardContextValue["resetBoard"] = () => {
+    setState(defaultState);
+  };
+
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
@@ -176,6 +180,7 @@ export function BoardProvider({
       setColumns,
       sortCards,
       reorderCard,
+      resetBoard,
     }),
     [state.columns]
   );

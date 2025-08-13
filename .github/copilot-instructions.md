@@ -7,7 +7,7 @@ These instructions apply to any automated or AI-assisted changes in this reposit
 - Green static checks are mandatory before proposing changes:
   - TypeScript typecheck must pass (`npm run -s build` or equivalent).
   - ESLint must pass (`npm run lint`).
-  - Unit tests must pass locally (`npm test`) and include meaningful coverage for new code.
+  - Unit tests must pass locally (`npm test:run`) and include meaningful coverage for new code.
 - No `any` or implicit `any` unless justified with an inline comment and a `TODO` to remove. Prefer precise, exported types.
 - Public APIs and components must be fully typed (props, return values, event handlers, context, etc.).
 - Keep the build free of console errors and warnings.

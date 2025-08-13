@@ -1,6 +1,7 @@
 import { Modal } from "./Modal";
 
 import { useTheme } from "../theme/useTheme";
+import { useBoard } from "../board/useBoard";
 import { DensitySmallIcon } from "./icons/DensitySmallIcon";
 import { DensityMediumIcon } from "./icons/DensityMediumIcon";
 import { DensityLargeIcon } from "./icons/DensityLargeIcon";
@@ -14,6 +15,14 @@ type Props = Readonly<{
 
 export function SettingsModal({ open, onClose }: Props) {
   const { theme, setTheme, cardDensity, setCardDensity } = useTheme();
+  const { resetBoard } = useBoard();
+
+  const handleClearLocalStorage = () => {
+    window.localStorage.clear();
+    resetBoard();
+    // Optionally close modal after clearing
+    // onClose();
+  };
 
   if (!open) return null;
 
@@ -105,6 +114,13 @@ export function SettingsModal({ open, onClose }: Props) {
           </fieldset>
         </div>
         <div className="mt-4">
+          <button
+            type="button"
+            onClick={handleClearLocalStorage}
+            className="w-full rounded-md border border-red-400 bg-white/60 dark:bg-black/20 px-3 py-1.5 mb-2 text-sm hover:bg-red-100 dark:hover:bg-red-900 transition-colors text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100"
+          >
+            Clear board data
+          </button>
           <button
             type="button"
             onClick={onClose}

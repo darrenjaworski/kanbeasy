@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { ThemeProvider } from "../theme/ThemeProvider";
 import { BoardProvider } from "../board/BoardProvider";
+import { describe, it, expect } from "vitest";
 
 function renderApp() {
   return render(
