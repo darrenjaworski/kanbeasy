@@ -9,12 +9,14 @@ export function SortableColumnItem({
   cards,
   canDrag,
   style,
+  index,
 }: Readonly<{
   id: string;
   title: string;
   cards: import("../board/types").Card[];
   canDrag: boolean;
   style?: React.CSSProperties;
+  index?: number;
 }>) {
   const {
     attributes,
@@ -39,6 +41,7 @@ export function SortableColumnItem({
   return (
     <div ref={setNodeRef} style={combinedStyle}>
       <Column
+        index={index}
         id={id}
         title={title}
         cards={cards}

@@ -15,6 +15,7 @@ type Props = Readonly<{
   dragHandleRef?: (el: HTMLButtonElement | null) => void;
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
   overlayMode?: boolean;
+  index?: number;
 }>;
 
 export function Column({
@@ -25,6 +26,7 @@ export function Column({
   dragHandleRef,
   dragHandleProps,
   overlayMode = false,
+  index,
 }: Props) {
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
@@ -44,6 +46,7 @@ export function Column({
           ? "bg-white/60 dark:bg-black/20 backdrop-blur-md"
           : "bg-surface-light dark:bg-surface-dark")
       }
+      data-testid={`column-${index}`}
     >
       {/* Combined drag + delete control */}
       <div className="absolute right-2 top-2 z-1 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
@@ -55,6 +58,7 @@ export function Column({
             title="Drag to reorder"
             {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
             className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white hover:cursor-grab active:cursor-grabbing"
+            data-testid={`drag-column-button-${index}`}
           >
             <DragIndicatorIcon className="size-5" />
           </button>
@@ -68,6 +72,7 @@ export function Column({
           aria-label={`Remove column ${title || "column"}`}
           title="Remove column"
           className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+          data-testid={`delete-column-button-${index}`}
         >
           <CloseIcon className="size-5" />
         </button>
@@ -100,6 +105,7 @@ export function Column({
             }
             if (next !== title) updateColumn(id, next);
           }}
+          data-testid={`column-title-input-${index}`}
         />
       </div>
       {/* Add card button moved to the top of the column */}

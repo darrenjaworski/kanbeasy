@@ -251,8 +251,9 @@ export function Board() {
                 strategy={horizontalListSortingStrategy}
               >
                 <div className="flex gap-4 pb-1 items-stretch">
-                  {columns.map((c) => (
+                  {columns.map((c, index) => (
                     <SortableColumnItem
+                      index={index}
                       key={c.id}
                       id={c.id}
                       title={c.title}
