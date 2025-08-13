@@ -115,6 +115,7 @@ export function Column({
           className="w-full rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 px-3 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
           onClick={() => addCard(id, "New card")}
           aria-label={`Add card to ${title || "column"}`}
+          data-testid={`add-card-button-${index}`}
         >
           Add card
         </button>

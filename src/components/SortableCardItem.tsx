@@ -12,6 +12,7 @@ type SortableCardItemProps = Readonly<{
   canDrag?: boolean;
   density: CardDensity;
   columnId: string;
+  index: number;
 }>;
 
 export function SortableCardItem({
@@ -21,6 +22,7 @@ export function SortableCardItem({
   canDrag = true,
   density,
   columnId,
+  index,
 }: SortableCardItemProps) {
   const {
     attributes,
@@ -56,9 +58,11 @@ export function SortableCardItem({
           ? "backdrop-blur-xs supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-black/30"
           : ""
       }`}
+      data-testid={`card-${index}`}
     >
       {/* Combined delete + drag control (horizontal), mirrors column-level style */}
       <CardControls
+        index={index}
         canDrag={canDrag}
         cardTitle={card.title}
         onRemove={onRemove}
@@ -92,6 +96,7 @@ export function SortableCardItem({
           }
           if (next !== card.title) onUpdate(next);
         }}
+        data-testid={`card-content-${index}`}
       />
     </div>
   );

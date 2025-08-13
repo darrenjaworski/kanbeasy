@@ -54,8 +54,9 @@ export function CardList({
         {cards.length === 0 ? (
           <p className="text-xs opacity-60 select-none">No cards yet</p>
         ) : (
-          cards.map((card) => (
+          cards.map((card, index) => (
             <SortableCardItem
+              index={index}
               key={card.id}
               card={card}
               onRemove={() => onRemove(card.id)}
