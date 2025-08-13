@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Restore hover grab/grabbing cursor on card and column drag handles after Tailwind update.
+
 ## [1.0.0]
 
 - kanbeasy initial release version

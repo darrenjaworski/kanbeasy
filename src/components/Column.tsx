@@ -54,7 +54,7 @@ export function Column({
             aria-label={`Drag column ${title || "column"}`}
             title="Drag to reorder"
             {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-            className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+            className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white hover:cursor-grab active:cursor-grabbing"
           >
             <DragIndicatorIcon className="size-5" />
           </button>

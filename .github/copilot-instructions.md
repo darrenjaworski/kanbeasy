@@ -11,6 +11,7 @@ These instructions apply to any automated or AI-assisted changes in this reposit
 - No `any` or implicit `any` unless justified with an inline comment and a `TODO` to remove. Prefer precise, exported types.
 - Public APIs and components must be fully typed (props, return values, event handlers, context, etc.).
 - Keep the build free of console errors and warnings.
+- For new features, update the changelog.
 
 ## Tests are required for every feature
 
