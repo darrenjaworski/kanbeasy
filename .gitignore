@@ -27,3 +27,5 @@ playwright/.cache/
 *.njsproj
 *.sln
 *.sw?
+
+coverage
