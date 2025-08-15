@@ -13,16 +13,17 @@ describe("AddColumn alignment", () => {
     // Check button classes for flexbox layout
     expect(button).toHaveClass("flex");
     expect(button).toHaveClass("flex-col");
-    // Should NOT have text-center (using flexbox centering instead)
+    // Button should NOT have text-center (applying it to inner div instead)
     expect(button).not.toHaveClass("text-center");
     
-    // Check inner div classes for centering
+    // Check inner div classes for centering (flexbox + text-center for reliable iPad support)
     expect(innerDiv).toHaveClass("flex");
     expect(innerDiv).toHaveClass("items-center");
     expect(innerDiv).toHaveClass("justify-center");
+    expect(innerDiv).toHaveClass("text-center");
   });
 
-  it("should center content properly using flexbox", () => {
+  it("should center content properly using flexbox and text alignment", () => {
     const handleOnClick = () => {};
     render(<AddColumn handleOnClick={handleOnClick} />);
     
@@ -32,10 +33,11 @@ describe("AddColumn alignment", () => {
     // Verify the button text content is present
     expect(button).toHaveTextContent("Add Column");
     
-    // Verify flexbox structure
+    // Verify hybrid centering approach: flexbox + text-center
     expect(innerDiv).not.toBeNull();
     expect(innerDiv).toHaveClass("flex");
     expect(innerDiv).toHaveClass("items-center");
     expect(innerDiv).toHaveClass("justify-center");
+    expect(innerDiv).toHaveClass("text-center");
   });
 });
