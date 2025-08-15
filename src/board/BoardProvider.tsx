@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState, Column, Card } from "./types";
+import { generateUUID } from "../utils/uuid";
 
 const STORAGE_KEY = "kanbeasy:board";
 
@@ -75,7 +76,7 @@ export function BoardProvider({
   }, [state]);
 
   const addColumn: BoardContextValue["addColumn"] = (title = "") => {
-    const id = crypto.randomUUID();
+    const id = generateUUID();
     setState((s) => ({ columns: [...s.columns, { id, title, cards: [] }] }));
   };
   const updateColumn: BoardContextValue["updateColumn"] = (id, title) => {
@@ -90,7 +91,7 @@ export function BoardProvider({
     setState({ columns: cols });
   };
   const addCard: BoardContextValue["addCard"] = (columnId, title = "") => {
-    const card: Card = { id: crypto.randomUUID(), title };
+    const card: Card = { id: generateUUID(), title };
     setState((s) => ({
       columns: s.columns.map((c) =>
         c.id === columnId ? { ...c, cards: [card, ...c.cards] } : c
