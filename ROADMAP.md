@@ -30,3 +30,4 @@ an ultra simple task organizer
 ### bugs
 
 - when you click the sort handle on a card and drag it below, you can drag it outside of the column and it drags the page down
+- ✅ the more scroll indicators on the left and right when content is overflowing is not working after the tailwind update
