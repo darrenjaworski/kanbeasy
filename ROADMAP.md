@@ -15,8 +15,8 @@ an ultra simple task organizer
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - warn on delete column and there are cards
-- welcome text
-  - when first initialized, show text to explain what kanban is, what it's good at, and how to use the application
+- ✅ welcome text
+  - ✅ when first initialized, show text to explain what kanban is, what it's good at, and how to use the application
 
 ### settings
 
