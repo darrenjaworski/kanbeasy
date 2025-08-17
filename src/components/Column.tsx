@@ -28,24 +28,69 @@ export function Column({
   overlayMode = false,
   index,
 }: Props) {
+  // Column resizing state
+  const DEFAULT_WIDTH = 320; // Tailwind w-80 = 320px
+  const MIN_WIDTH = 200;
+  const MAX_WIDTH = 480;
+  const [width, setWidth] = useState<number>(DEFAULT_WIDTH);
+  const resizing = useRef(false);
+  const startX = useRef(0);
+  const startWidth = useRef(DEFAULT_WIDTH);
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
-  const { cardDensity } = useTheme();
+  const { cardDensity, columnResizingEnabled } = useTheme();
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     setTempTitle(title);
   }, [title]);
+  // Mouse event handlers for resizing
+  const onResizeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    resizing.current = true;
+    startX.current = e.clientX;
+    startWidth.current = width;
+    document.body.style.cursor = "col-resize";
+    window.addEventListener("mousemove", onResizeMouseMove);
+    window.addEventListener("mouseup", onResizeMouseUp);
+  };
+
+  const onResizeMouseMove = (e: MouseEvent) => {
+    if (!resizing.current) return;
+    const delta = e.clientX - startX.current;
+    let newWidth = startWidth.current + delta;
+    newWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, newWidth));
+    setWidth(newWidth);
+  };
+
+  const onResizeMouseUp = () => {
+    resizing.current = false;
+    document.body.style.cursor = "";
+    window.removeEventListener("mousemove", onResizeMouseMove);
+    window.removeEventListener("mouseup", onResizeMouseUp);
+  };
+
+  useEffect(() => {
+    return () => {
+      // Clean up listeners if unmounted while resizing
+      window.removeEventListener("mousemove", onResizeMouseMove);
+      window.removeEventListener("mouseup", onResizeMouseUp);
+      document.body.style.cursor = "";
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <section
       data-column-id={id}
       aria-label={title || "column"}
       className={
-        `group relative rounded-lg border border-black/10 dark:border-white/10 p-3 w-80 ` +
+        `group relative rounded-lg border border-black/10 dark:border-white/10 p-3` +
+        (columnResizingEnabled ? "" : " w-80") +
         (overlayMode
-          ? "bg-white/60 dark:bg-black/20 backdrop-blur-md"
-          : "bg-surface-light dark:bg-surface-dark")
+          ? " bg-white/60 dark:bg-black/20 backdrop-blur-md"
+          : " bg-surface-light dark:bg-surface-dark")
       }
+      style={columnResizingEnabled ? { width } : undefined}
       data-testid={`column-${index}`}
     >
       {/* Combined drag + delete control */}
@@ -127,6 +172,30 @@ export function Column({
         density={cardDensity}
         columnId={id}
       />
+      {/* Resize handle (feature-flagged) */}
+      {columnResizingEnabled && (
+        <div
+          className="absolute top-0 pt-[8px] pb-[8px] right-0 h-full w-2 cursor-col-resize z-10 group/resizer"
+          style={{
+            // Make handle easier to grab
+            marginRight: -8,
+            touchAction: "none",
+          }}
+          onMouseDown={onResizeMouseDown}
+          aria-label="Resize column"
+          role="separator"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight")
+              setWidth((w) => Math.min(MAX_WIDTH, w + 10));
+            if (e.key === "ArrowLeft")
+              setWidth((w) => Math.max(MIN_WIDTH, w - 10));
+          }}
+          data-testid={`resize-handle-${index}`}
+        >
+          <div className="mx-auto h-full w-1 rounded-md bg-black/10 dark:bg-white/10 opacity-60 hover:opacity-100 transition-opacity" />
+        </div>
+      )}
     </section>
   );
 }

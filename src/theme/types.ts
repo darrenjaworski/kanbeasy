@@ -8,4 +8,6 @@ export type ThemeContextValue = Readonly<{
   toggle: () => void;
   cardDensity: CardDensity;
   setCardDensity: (d: CardDensity) => void;
+  columnResizingEnabled: boolean;
+  setColumnResizingEnabled: (enabled: boolean) => void;
 }>;

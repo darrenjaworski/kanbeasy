@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Column resizing: Users can now resize columns horizontally with a drag handle (feature-flagged).
+- New setting in Settings modal to enable/disable column resizing (default: off).
+- Resizing is fully accessible, persists per session, and is visually consistent with the UI.
+
 ## [1.0.1]
 
 ### Fixed

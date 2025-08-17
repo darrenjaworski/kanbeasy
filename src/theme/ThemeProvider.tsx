@@ -4,6 +4,7 @@ import type { Theme, ThemeContextValue, CardDensity } from "./types";
 
 const STORAGE_KEY = "kanbeasy:theme";
 const DENSITY_KEY = "kanbeasy:cardDensity";
+const COLUMN_RESIZE_KEY = "kanbeasy:columnResizingEnabled";
 
 function getSystemTheme(): Theme {
   if (
@@ -35,16 +36,12 @@ export function ThemeProvider({
   const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
   const [cardDensity, setCardDensity] =
     useState<CardDensity>(getInitialDensity);
-
-  const value = useMemo<ThemeContextValue>(
-    () => ({
-      theme,
-      setTheme,
-      toggle: () => setTheme((t) => (t === "dark" ? "light" : "dark")),
-      cardDensity,
-      setCardDensity,
-    }),
-    [theme, cardDensity]
+  const [columnResizingEnabled, setColumnResizingEnabled] = useState<boolean>(
+    () => {
+      if (typeof window === "undefined") return false;
+      const stored = window.localStorage.getItem(COLUMN_RESIZE_KEY);
+      return stored === null ? false : stored === "true";
+    }
   );
 
   useEffect(() => {
@@ -63,6 +60,30 @@ export function ThemeProvider({
       /* ignore */
     }
   }, [cardDensity]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        COLUMN_RESIZE_KEY,
+        String(columnResizingEnabled)
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [columnResizingEnabled]);
+
+  const value = useMemo<import("./types").ThemeContextValue>(
+    () => ({
+      theme,
+      setTheme,
+      toggle: () => setTheme((t) => (t === "dark" ? "light" : "dark")),
+      cardDensity,
+      setCardDensity,
+      columnResizingEnabled,
+      setColumnResizingEnabled,
+    }),
+    [theme, cardDensity, columnResizingEnabled]
+  );
 
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

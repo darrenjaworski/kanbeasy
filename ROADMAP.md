@@ -17,9 +17,9 @@ an ultra simple task organizer
 - warn on delete column and there are cards
 - ✅ welcome text
   - ✅ when first initialized, show text to explain what kanban is, what it's good at, and how to use the application
-- allow column to be resized
-  - cursor to indicate resizability
-  - upper limit to prevent full page column
+- ✅ allow column to be resized
+  - ✅ cursor to indicate resizability
+  - ✅ upper limit to prevent full page column
 
 ### settings
 
