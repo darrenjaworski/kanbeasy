@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
-import type { Theme, ThemeContextValue, CardDensity } from "./types";
+import type { Theme, CardDensity } from "./types";
 
 const STORAGE_KEY = "kanbeasy:theme";
 const DENSITY_KEY = "kanbeasy:cardDensity";

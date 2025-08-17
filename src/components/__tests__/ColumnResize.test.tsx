@@ -1,25 +1,42 @@
+
+
+import * as React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import { Column } from "../Column";
 import { BoardProvider } from "../../board/BoardProvider";
-import { ThemeProvider } from "../../theme/ThemeProvider";
+import { Column } from "../Column";
+import { ThemeContext } from "../../theme/ThemeContext";
+import type { ThemeContextValue } from "../../theme/types";
+
+function ThemeProviderWithColumnResize({ children }: { children: React.ReactNode }) {
+  const value: ThemeContextValue = React.useMemo(
+    () => ({
+      theme: "light",
+      setTheme: () => {},
+      toggle: () => {},
+      cardDensity: "medium",
+      setCardDensity: () => {},
+      columnResizingEnabled: true,
+      setColumnResizingEnabled: () => {},
+    }),
+    []
+  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
 
 describe("Column resizing", () => {
   it("should allow resizing the column with the mouse", () => {
     const { getByTestId } = render(
-      <ThemeProvider>
+      <ThemeProviderWithColumnResize>
         <BoardProvider>
           <Column id="col1" title="Test Column" cards={[]} index={0} />
         </BoardProvider>
-      </ThemeProvider>
+      </ThemeProviderWithColumnResize>
     );
     const section = getByTestId("column-0");
     const handle = getByTestId("resize-handle-0");
-    // Simulate mouse down on handle
     fireEvent.mouseDown(handle, { clientX: 320 });
-    // Simulate mouse move to the right (increase width)
     fireEvent.mouseMove(window, { clientX: 400 });
     fireEvent.mouseUp(window);
-    // Should have increased width, but not more than max
     expect(section.style.width).not.toBe("");
     expect(parseInt(section.style.width)).toBeGreaterThanOrEqual(320);
     expect(parseInt(section.style.width)).toBeLessThanOrEqual(480);
@@ -27,11 +44,11 @@ describe("Column resizing", () => {
 
   it("should not allow resizing beyond max width", () => {
     const { getByTestId } = render(
-      <ThemeProvider>
+      <ThemeProviderWithColumnResize>
         <BoardProvider>
           <Column id="col2" title="Test Column 2" cards={[]} index={1} />
         </BoardProvider>
-      </ThemeProvider>
+      </ThemeProviderWithColumnResize>
     );
     const section = getByTestId("column-1");
     const handle = getByTestId("resize-handle-1");
@@ -43,11 +60,11 @@ describe("Column resizing", () => {
 
   it("should not allow resizing below min width", () => {
     const { getByTestId } = render(
-      <ThemeProvider>
+      <ThemeProviderWithColumnResize>
         <BoardProvider>
           <Column id="col3" title="Test Column 3" cards={[]} index={2} />
         </BoardProvider>
-      </ThemeProvider>
+      </ThemeProviderWithColumnResize>
     );
     const section = getByTestId("column-2");
     const handle = getByTestId("resize-handle-2");
