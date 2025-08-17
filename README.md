@@ -1,7 +1,23 @@
-# React + TypeScript + Vite
+# Kanbeasy
 
 [![static checks](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml)
 [![post-deploy e2e](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml)
+
+Kanbeasy is an ultra simple, local-first kanban-style task organizer built with React, TypeScript and Vite. It focuses on a minimal UI, keyboard and touch-friendly drag-and-drop, and a small but useful feature set (resizable columns, dark mode, configurable card density). The app stores data locally by default and aims to be a lightweight alternative for personal task management.
+
+## VS Code extension
+
+There is a companion VS Code extension available that integrates Kanbeasy into the editor: [vscode-kanbeasy](https://github.com/darrenjaworski/vscode-kanbeasy)
+
+## Changelog
+
+Included below are the notable changes from the project's [CHANGELOG.md](https://github.com/darrenjaworski/kanbeasy/blob/main/CHANGELOG.md).
+
+## Roadmap
+
+Planned and upcoming features are listed in the project's [ROADMAP.md](https://github.com/darrenjaworski/kanbeasy/blob/main/ROADMAP.md).
+
+## React + TypeScript + Vite - local development
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -93,4 +109,7 @@ export default tseslint.config([
     },
   },
 ]);
+
+]);
+
 ```
