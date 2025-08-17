@@ -1,5 +1,3 @@
-
-
 import * as React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { BoardProvider } from "../../board/BoardProvider";
@@ -7,7 +5,11 @@ import { Column } from "../Column";
 import { ThemeContext } from "../../theme/ThemeContext";
 import type { ThemeContextValue } from "../../theme/types";
 
-function ThemeProviderWithColumnResize({ children }: { children: React.ReactNode }) {
+function ThemeProviderWithColumnResize({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const value: ThemeContextValue = React.useMemo(
     () => ({
       theme: "light",
@@ -20,7 +22,9 @@ function ThemeProviderWithColumnResize({ children }: { children: React.ReactNode
     }),
     []
   );
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
 }
 
 describe("Column resizing", () => {
