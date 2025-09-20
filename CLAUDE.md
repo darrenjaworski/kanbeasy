@@ -67,3 +67,28 @@ The app uses React Context for state management with two main providers:
 - Card density options (affects UI compactness)
 - Local data persistence
 - Welcome modal for first-time users
+
+## Quality Standards
+
+Before making any changes, ensure:
+- TypeScript typecheck passes (`npm run type:check`)
+- ESLint passes (`npm run lint`)
+- Unit tests pass (`npm run test:run`)
+- No `any` types without justification
+- New features include tests and cover edge cases
+
+## Testing Approach
+
+- Use Vitest with jsdom environment for unit tests
+- Place test files adjacent to source: `*.test.ts(x)` in `src/`
+- Use `@testing-library/react` and `@testing-library/user-event` for UI tests
+- Focus on black-box testing of observable behavior
+- Test setup is configured in `src/test/setup.ts`
+
+## Code Conventions
+
+- Strict TypeScript with no implicit `any`
+- Export precise types for shared data models
+- Components and hooks must be fully typed
+- Follow existing patterns for Context providers and hooks
+- Keep components lean and avoid unnecessary re-renders
