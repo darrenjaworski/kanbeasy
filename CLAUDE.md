@@ -68,6 +68,43 @@ The app uses React Context for state management with two main providers:
 - Local data persistence
 - Welcome modal for first-time users
 
+## Model Selection & Cost Optimization
+
+To minimize costs while maintaining quality, follow these guidelines for model selection:
+
+### Use Haiku (Fast & Cheap) For:
+- **Running tests**: Spawn Bash agent with Haiku model
+- **Linting & type checking**: Straightforward validation tasks
+- **Building**: Compilation and build verification
+- **Simple fixes**: Typos, formatting, obvious corrections
+- **Package management**: Installing/updating dependencies
+- **Verification tasks**: Confirming tests pass, checking output
+
+**Example:** `Use Bash agent with Haiku to run npm run test:run`
+
+### Use Sonnet (Default) For:
+- **Implementation**: Writing new features or components
+- **Refactoring**: Restructuring existing code
+- **Bug fixes**: Non-trivial debugging and fixes
+- **Code reviews**: Analyzing code quality and suggesting improvements
+- **Documentation**: Writing or updating docs
+- **Moderate complexity tasks**: Anything requiring context understanding
+
+### Use Opus (Complex Reasoning) For:
+- **Architectural decisions**: System design and structure
+- **Complex debugging**: Multi-layered issues requiring deep analysis
+- **Planning**: Breaking down large features into tasks
+- **Performance optimization**: Analyzing and improving performance
+- **Security reviews**: Identifying vulnerabilities
+
+### Cost-Saving Strategy:
+1. Default to Sonnet for general work
+2. Delegate routine tasks (tests, builds, simple checks) to Haiku agents
+3. Only escalate to Opus when truly needed for complex reasoning
+4. When in doubt, try Sonnet first before using Opus
+
+**Note:** This project has custom Haiku-powered agents available in `.claude/agents/` for common tasks.
+
 ## Quality Standards
 
 Before making any changes, ensure:
