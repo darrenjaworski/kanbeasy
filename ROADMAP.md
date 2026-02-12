@@ -19,6 +19,10 @@ an ultra simple task organizer
 - ✅ allow column to be resized
   - ✅ cursor to indicate resizability
   - ✅ upper limit to prevent full page column
+- ✅ search cards
+  - ✅ fuzzy search on card titles
+  - ✅ highlight matching cards
+  - ✅ display match count
 
 Settings
 
@@ -34,7 +38,6 @@ Settings
 - customizable icons on the lefthand side of each todo
 - warn on delete column and there are cards
 - keyboard shortcuts
-- search cards
 - card checklists, labels, due dates, and reminders
 - undo/redo
 
