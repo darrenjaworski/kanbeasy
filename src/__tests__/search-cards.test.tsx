@@ -179,4 +179,73 @@ describe("search cards", () => {
     expect(card).toHaveClass("border-blue-500");
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
+
+  it("performs case-insensitive search", async () => {
+    const user = userEvent.setup();
+    renderApp();
+
+    // Add a column and card
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+
+    const column = screen.getByRole("region", { name: /new column/i });
+    const addCardBtn = within(column).getByRole("button", { name: /add card to/i });
+    await user.click(addCardBtn);
+
+    const textarea = within(column).getByRole("textbox", {
+      name: /card content/i,
+    });
+
+    await user.clear(textarea);
+    await user.type(textarea, "Buy groceries");
+    await user.tab();
+
+    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+
+    // Search with uppercase
+    await user.type(searchInput, "GROC");
+
+    const card = within(column).getByTestId("card-0");
+    expect(card).toHaveClass("border-blue-500");
+    expect(screen.getByText("1 match")).toBeInTheDocument();
+  });
+
+  it("searches across multiple columns", async () => {
+    const user = userEvent.setup();
+    renderApp();
+
+    // Add two columns
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+
+    const columns = screen.getAllByRole("region", { name: /new column/i });
+
+    // Add card to first column
+    const addCardBtn1 = within(columns[0]).getByRole("button", { name: /add card to/i });
+    await user.click(addCardBtn1);
+    const textarea1 = within(columns[0]).getByRole("textbox", { name: /card content/i });
+    await user.clear(textarea1);
+    await user.type(textarea1, "Backend task");
+    await user.tab();
+
+    // Add card to second column
+    const addCardBtn2 = within(columns[1]).getByRole("button", { name: /add card to/i });
+    await user.click(addCardBtn2);
+    const textarea2 = within(columns[1]).getByRole("textbox", { name: /card content/i });
+    await user.clear(textarea2);
+    await user.type(textarea2, "Frontend task");
+    await user.tab();
+
+    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+
+    // Search for "task" which appears in both columns
+    await user.type(searchInput, "task");
+
+    // Both cards should be highlighted
+    const card1 = within(columns[0]).getByTestId("card-0");
+    const card2 = within(columns[1]).getByTestId("card-0");
+
+    expect(card1).toHaveClass("border-blue-500");
+    expect(card2).toHaveClass("border-blue-500");
+    expect(screen.getByText("2 matches")).toBeInTheDocument();
+  });
 });
