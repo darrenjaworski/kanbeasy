@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
 import type { Theme, CardDensity } from "./types";
-
-const STORAGE_KEY = "kanbeasy:theme";
-const DENSITY_KEY = "kanbeasy:cardDensity";
-const COLUMN_RESIZE_KEY = "kanbeasy:columnResizingEnabled";
+import {
+  getStringFromStorage,
+  saveStringToStorage,
+} from "../utils/storage";
+import { STORAGE_KEYS } from "../constants/storage";
 
 function getSystemTheme(): Theme {
   if (
@@ -19,15 +20,19 @@ function getSystemTheme(): Theme {
 }
 
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light";
-  const stored = window.localStorage.getItem(STORAGE_KEY) as Theme | null;
-  return stored ?? getSystemTheme();
+  const stored = getStringFromStorage(STORAGE_KEYS.THEME, "");
+  if (stored === "dark" || stored === "light") {
+    return stored;
+  }
+  return getSystemTheme();
 }
 
 function getInitialDensity(): CardDensity {
-  if (typeof window === "undefined") return "medium";
-  const stored = window.localStorage.getItem(DENSITY_KEY) as CardDensity | null;
-  return stored ?? "medium";
+  const stored = getStringFromStorage(STORAGE_KEYS.CARD_DENSITY, "medium");
+  if (stored === "small" || stored === "medium" || stored === "large") {
+    return stored;
+  }
+  return "medium";
 }
 
 export function ThemeProvider({
@@ -38,38 +43,22 @@ export function ThemeProvider({
     useState<CardDensity>(getInitialDensity);
   const [columnResizingEnabled, setColumnResizingEnabled] = useState<boolean>(
     () => {
-      if (typeof window === "undefined") return false;
-      const stored = window.localStorage.getItem(COLUMN_RESIZE_KEY);
-      return stored === null ? false : stored === "true";
+      const stored = getStringFromStorage(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, "false");
+      return stored === "true";
     }
   );
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
+    saveStringToStorage(STORAGE_KEYS.THEME, theme);
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(DENSITY_KEY, cardDensity);
-    } catch {
-      /* ignore */
-    }
+    saveStringToStorage(STORAGE_KEYS.CARD_DENSITY, cardDensity);
   }, [cardDensity]);
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(
-        COLUMN_RESIZE_KEY,
-        String(columnResizingEnabled)
-      );
-    } catch {
-      /* ignore */
-    }
+    saveStringToStorage(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, String(columnResizingEnabled));
   }, [columnResizingEnabled]);
 
   const value = useMemo<import("./types").ThemeContextValue>(

@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { Card } from "../board/types";
 import { useTheme } from "../theme/useTheme";
+import {
+  DEFAULT_COLUMN_WIDTH,
+  MIN_COLUMN_WIDTH,
+  MAX_COLUMN_WIDTH,
+} from "../constants/column";
 
 import { useBoard } from "../board/useBoard";
 import { DragIndicatorIcon } from "./icons/DragIndicatorIcon";
@@ -29,13 +34,10 @@ export function Column({
   index,
 }: Props) {
   // Column resizing state
-  const DEFAULT_WIDTH = 320; // Tailwind w-80 = 320px
-  const MIN_WIDTH = 200;
-  const MAX_WIDTH = 480;
-  const [width, setWidth] = useState<number>(DEFAULT_WIDTH);
+  const [width, setWidth] = useState<number>(DEFAULT_COLUMN_WIDTH);
   const resizing = useRef(false);
   const startX = useRef(0);
-  const startWidth = useRef(DEFAULT_WIDTH);
+  const startWidth = useRef(DEFAULT_COLUMN_WIDTH);
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
   const { cardDensity, columnResizingEnabled } = useTheme();
@@ -58,7 +60,7 @@ export function Column({
     if (!resizing.current) return;
     const delta = e.clientX - startX.current;
     let newWidth = startWidth.current + delta;
-    newWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, newWidth));
+    newWidth = Math.max(MIN_COLUMN_WIDTH, Math.min(MAX_COLUMN_WIDTH, newWidth));
     setWidth(newWidth);
   };
 
@@ -187,9 +189,9 @@ export function Column({
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "ArrowRight")
-              setWidth((w) => Math.min(MAX_WIDTH, w + 10));
+              setWidth((w) => Math.min(MAX_COLUMN_WIDTH, w + 10));
             if (e.key === "ArrowLeft")
-              setWidth((w) => Math.max(MIN_WIDTH, w - 10));
+              setWidth((w) => Math.max(MIN_COLUMN_WIDTH, w - 10));
           }}
           data-testid={`resize-handle-${index}`}
         >

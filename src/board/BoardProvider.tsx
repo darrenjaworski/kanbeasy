@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState, Column, Card } from "./types";
-
-const STORAGE_KEY = "kanbeasy:board";
+import { getFromStorage, saveToStorage } from "../utils/storage";
+import { STORAGE_KEYS } from "../constants/storage";
 
 const defaultState: BoardState = {
   columns: [],
@@ -29,40 +29,32 @@ function isColumn(x: unknown): x is Column {
 }
 
 function loadState(): BoardState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultState;
-    const parsed = JSON.parse(raw) as { columns?: unknown };
-    const cols = Array.isArray(parsed.columns)
-      ? (parsed.columns as unknown[])
-          .map((c) => {
-            // migrate legacy columns lacking cards
-            if (
-              c &&
-              typeof c === "object" &&
-              typeof (c as { id?: unknown }).id === "string" &&
-              typeof (c as { title?: unknown }).title === "string" &&
-              !Array.isArray((c as { cards?: unknown }).cards)
-            ) {
-              const obj = c as Record<string, unknown>;
-              return { ...obj, cards: [] };
-            }
-            return c;
-          })
-          .filter(isColumn)
-      : [];
-    return { columns: cols };
-  } catch {
-    return defaultState;
-  }
+  const stored = getFromStorage<{ columns?: unknown }>(STORAGE_KEYS.BOARD, {});
+
+  const cols = Array.isArray(stored.columns)
+    ? (stored.columns as unknown[])
+        .map((c) => {
+          // migrate legacy columns lacking cards
+          if (
+            c &&
+            typeof c === "object" &&
+            typeof (c as { id?: unknown }).id === "string" &&
+            typeof (c as { title?: unknown }).title === "string" &&
+            !Array.isArray((c as { cards?: unknown }).cards)
+          ) {
+            const obj = c as Record<string, unknown>;
+            return { ...obj, cards: [] };
+          }
+          return c;
+        })
+        .filter(isColumn)
+    : [];
+
+  return { columns: cols };
 }
 
 function saveState(state: BoardState) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    // ignore
-  }
+  saveToStorage(STORAGE_KEYS.BOARD, state);
 }
 
 export function BoardProvider({
