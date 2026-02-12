@@ -190,7 +190,7 @@ export function BoardProvider({
 
   // Fuzzy search for matching cards
   const matchingCardIds = useMemo(() => {
-    if (!searchQuery.trim()) {
+    if (searchQuery.trim().length < 2) {
       return new Set<string>();
     }
 

@@ -140,4 +140,43 @@ describe("search cards", () => {
     const card = within(column).getByTestId("card-0");
     expect(card).not.toHaveClass("border-blue-500");
   });
+
+  it("does not search with less than 2 characters", async () => {
+    const user = userEvent.setup();
+    renderApp();
+
+    // Add a column and card
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+
+    const column = screen.getByRole("region", { name: /new column/i });
+    const addCardBtn = within(column).getByRole("button", { name: /add card to/i });
+    await user.click(addCardBtn);
+
+    const textarea = within(column).getByRole("textbox", {
+      name: /card content/i,
+    });
+
+    await user.clear(textarea);
+    await user.type(textarea, "Buy groceries");
+    await user.tab();
+
+    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+
+    // Type single character that matches
+    await user.type(searchInput, "B");
+
+    // Card should NOT be highlighted with single character
+    const card = within(column).getByTestId("card-0");
+    expect(card).not.toHaveClass("border-blue-500");
+
+    // No match count should be shown
+    expect(screen.queryByText(/match/i)).not.toBeInTheDocument();
+
+    // Type second character to activate search
+    await user.type(searchInput, "u");
+
+    // Now card should be highlighted
+    expect(card).toHaveClass("border-blue-500");
+    expect(screen.getByText("1 match")).toBeInTheDocument();
+  });
 });
