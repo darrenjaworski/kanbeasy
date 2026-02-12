@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { SettingsModal } from "./SettingsModal";
 import { SettingsGearIcon } from "./icons/SettingsGearIcon";
+import { SearchInput } from "./SearchInput";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -15,6 +16,7 @@ export function Header() {
         >
           Kanbeasy
         </h1>
+        <SearchInput />
         <div className="ml-auto">
           <button
             type="button"

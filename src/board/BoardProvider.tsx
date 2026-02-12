@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Fuse from "fuse.js";
 import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState, Column, Card } from "./types";
 import { getFromStorage, saveToStorage } from "../utils/storage";
@@ -61,6 +62,7 @@ export function BoardProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [state, setState] = useState<BoardState>(() => loadState());
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     saveState(state);
@@ -186,6 +188,26 @@ export function BoardProvider({
     setState(defaultState);
   }, []);
 
+  // Fuzzy search for matching cards
+  const matchingCardIds = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return new Set<string>();
+    }
+
+    // Flatten all cards with their IDs
+    const allCards = state.columns.flatMap((col) => col.cards);
+
+    // Configure Fuse for fuzzy search
+    const fuse = new Fuse(allCards, {
+      keys: ["title"],
+      threshold: 0.4, // 0.0 = perfect match, 1.0 = match anything
+      ignoreLocation: true,
+    });
+
+    const results = fuse.search(searchQuery);
+    return new Set(results.map((result) => result.item.id));
+  }, [searchQuery, state.columns]);
+
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
@@ -199,6 +221,9 @@ export function BoardProvider({
       sortCards,
       reorderCard,
       resetBoard,
+      searchQuery,
+      setSearchQuery,
+      matchingCardIds,
     }),
     [
       state.columns,
@@ -212,6 +237,8 @@ export function BoardProvider({
       sortCards,
       reorderCard,
       resetBoard,
+      searchQuery,
+      matchingCardIds,
     ]
   );
 

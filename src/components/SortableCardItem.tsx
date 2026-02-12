@@ -13,6 +13,7 @@ type SortableCardItemProps = Readonly<{
   density: CardDensity;
   columnId: string;
   index: number;
+  isSearchMatch?: boolean;
 }>;
 
 export function SortableCardItem({
@@ -23,6 +24,7 @@ export function SortableCardItem({
   density,
   columnId,
   index,
+  isSearchMatch = false,
 }: SortableCardItemProps) {
   const {
     attributes,
@@ -53,7 +55,11 @@ export function SortableCardItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group/card relative rounded-md border border-black/10 dark:border-white/10 pr-14 p-2 text-sm bg-white/60 dark:bg-black/20 ${
+      className={`group/card relative rounded-md border pr-14 p-2 text-sm ${
+        isSearchMatch
+          ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30 ring-2 ring-blue-500/50"
+          : "border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20"
+      } ${
         isDragging
           ? "backdrop-blur-xs supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-black/30"
           : ""

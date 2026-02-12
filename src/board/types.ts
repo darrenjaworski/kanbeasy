@@ -29,4 +29,7 @@ export type BoardContextValue = Readonly<{
     overCardId: string
   ) => void;
   resetBoard: () => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  matchingCardIds: Set<string>;
 }>;

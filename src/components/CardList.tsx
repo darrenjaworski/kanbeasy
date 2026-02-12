@@ -21,7 +21,7 @@ export function CardList({
   density: CardDensity;
   columnId: string;
 }>) {
-  const { columns } = useBoard();
+  const { columns, matchingCardIds } = useBoard();
   // Register the column list as a droppable target (works even when empty)
   const { setNodeRef, isOver } = useDroppable({
     id: `col:${columnId}`,
@@ -64,6 +64,7 @@ export function CardList({
               canDrag={cards.length > 1 || columns.length > 1}
               density={density}
               columnId={columnId}
+              isSearchMatch={matchingCardIds.has(card.id)}
             />
           ))
         )}

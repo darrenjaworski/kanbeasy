@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { beforeEach } from "vitest";
 
 // Minimal ResizeObserver polyfill for jsdom tests
 class RO {
@@ -32,3 +33,8 @@ declare global {
 if (typeof globalThis.ResizeObserver === "undefined") {
   globalThis.ResizeObserver = RO as unknown as typeof ResizeObserver;
 }
+
+// Clear localStorage before each test to avoid state leakage
+beforeEach(() => {
+  localStorage.clear();
+});
