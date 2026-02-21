@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0]
+
+### Features
+
+- 6 predefined color themes (3 light, 3 dark) with centralized configuration in `src/theme/themes.ts`.
+- Theme picker in settings modal with light/dark segmented toggle and color swatch buttons.
+- Centralized theme class tokens (`src/theme/classNames.ts`) to reduce repeated Tailwind class patterns across components.
+- Accent color support via CSS custom property (`--color-accent`), used for toggle switches and focus rings.
+
+### Changed
+
+- ThemeProvider now dynamically applies CSS custom properties (`--color-bg`, `--color-surface`, `--color-text`, `--color-accent`) on the root element.
+- Simplified Tailwind `@theme` block from 6 separate light/dark vars to 4 unified tokens.
+- Migrated component classes from `bg-bg-light dark:bg-bg-dark` pattern to unified `bg-bg` pattern.
+- Legacy localStorage theme values (`"light"`/`"dark"`) auto-migrate to new theme IDs.
+- Footer credit updated to include Claude.
+- Added conventional commits and release process to CLAUDE.md.
+
 ## [1.1.0]
 
 ### Features

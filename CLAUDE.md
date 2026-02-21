@@ -137,6 +137,41 @@ Use [Conventional Commits](https://www.conventionalcommits.org/) for all commit 
 
 Use lowercase, imperative mood, no period at the end. Include scope when helpful: `feat(theme): add forest dark theme`.
 
+## Releasing
+
+Follow these steps to prepare a new release:
+
+1. **Determine version bump** by reading commits since the last tag:
+   ```bash
+   git log $(git describe --tags --abbrev=0)..HEAD --oneline
+   ```
+   Apply semver based on conventional commits:
+   - `fix:` → patch (e.g. 1.1.0 → 1.1.1)
+   - `feat:` → minor (e.g. 1.1.0 → 1.2.0)
+   - `BREAKING CHANGE` or `!` after type → major (e.g. 1.1.0 → 2.0.0)
+
+2. **Run all checks** — everything must pass before releasing:
+   ```bash
+   npm run static-checks
+   ```
+
+3. **Update CHANGELOG.md**:
+   - Move items from `[Unreleased]` into a new version heading
+   - Group changes under `### Features`, `### Fixed`, `### Changed`, `### Removed` as appropriate
+   - Derive entries from the conventional commit messages since the last tag
+   - Follow the existing [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format
+
+4. **Bump version and tag**:
+   ```bash
+   npm version <patch|minor|major>
+   ```
+   This updates `package.json`, creates a commit, and creates a git tag.
+
+5. **Verify the build** compiles cleanly at the new version:
+   ```bash
+   npm run build
+   ```
+
 ## Code Conventions
 
 - Strict TypeScript with no implicit `any`
