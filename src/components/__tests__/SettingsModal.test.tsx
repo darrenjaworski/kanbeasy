@@ -7,7 +7,7 @@ import { vi, describe, it, expect } from "vitest";
 
 describe("SettingsModal", () => {
   it("clears localStorage when the clear button is clicked", () => {
-    window.localStorage.setItem("kanbeasy:theme", "dark");
+    window.localStorage.setItem("kanbeasy:theme", "dark-slate");
     window.localStorage.setItem("kanbeasy:cardDensity", "large");
     render(
       <BoardProvider>

@@ -11,6 +11,7 @@ import { useBoard } from "../board/useBoard";
 import { DragIndicatorIcon } from "./icons/DragIndicatorIcon";
 import { CloseIcon } from "./icons/CloseIcon";
 import { CardList } from "./CardList";
+import { tc } from "../theme/classNames";
 
 type Props = Readonly<{
   id: string;
@@ -86,17 +87,17 @@ export function Column({
       data-column-id={id}
       aria-label={title || "column"}
       className={
-        `group relative rounded-lg border border-black/10 dark:border-white/10 p-3` +
+        `group relative rounded-lg border ${tc.border} p-3` +
         (columnResizingEnabled ? "" : " w-80") +
         (overlayMode
-          ? " bg-white/60 dark:bg-black/20 backdrop-blur-md"
-          : " bg-surface-light dark:bg-surface-dark")
+          ? ` ${tc.glass} backdrop-blur-md`
+          : " bg-surface")
       }
       style={columnResizingEnabled ? { width } : undefined}
       data-testid={`column-${index}`}
     >
       {/* Combined drag + delete control */}
-      <div className="absolute right-2 top-2 z-1 inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+      <div className={`absolute right-2 top-2 z-1 ${tc.buttonGroup} rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}>
         {canDrag && (
           <button
             type="button"
@@ -104,21 +105,21 @@ export function Column({
             aria-label={`Drag column ${title || "column"}`}
             title="Drag to reorder"
             {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-            className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white hover:cursor-grab active:cursor-grabbing"
+            className={`${tc.iconButton} h-8 w-8 hover:cursor-grab active:cursor-grabbing`}
             data-testid={`drag-column-button-${index}`}
           >
             <DragIndicatorIcon className="size-5" />
           </button>
         )}
         {canDrag && (
-          <span aria-hidden className="h-6 w-px bg-black/10 dark:bg-white/10" />
+          <span aria-hidden className={`${tc.separator} h-6 w-px`} />
         )}
         <button
           type="button"
           onClick={() => removeColumn(id)}
           aria-label={`Remove column ${title || "column"}`}
           title="Remove column"
-          className="h-8 w-8 inline-flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+          className={`${tc.iconButton} h-8 w-8`}
           data-testid={`delete-column-button-${index}`}
         >
           <CloseIcon className="size-5" />
@@ -129,9 +130,9 @@ export function Column({
           ref={inputRef}
           type="text"
           aria-label="Column title"
-          className="w-full bg-transparent px-0 py-0 text-base font-semibold tracking-tight opacity-80 border-0 outline-hidden focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 rounded-xs"
+          className={`${tc.input} w-full px-0 py-0 text-base font-semibold tracking-tight opacity-80 rounded-xs`}
           value={tempTitle}
-          onFocus={(e) => e.target.select()} // Highlight all text on focus
+          onFocus={(e) => e.target.select()}
           onChange={(e) => setTempTitle(e.target.value)}
           id={`${id}-title`}
           onKeyDown={(e) => {
@@ -155,11 +156,10 @@ export function Column({
           data-testid={`column-title-input-${index}`}
         />
       </div>
-      {/* Add card button moved to the top of the column */}
       <div className="mb-3">
         <button
           type="button"
-          className="w-full rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 px-3 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+          className={`${tc.button} w-full rounded-md px-3 py-1.5`}
           onClick={() => addCard(id, "New card")}
           aria-label={`Add card to ${title || "column"}`}
           data-testid={`add-card-button-${index}`}
@@ -179,7 +179,6 @@ export function Column({
         <div
           className="absolute top-0 pt-[8px] pb-[8px] right-0 h-full w-2 cursor-col-resize z-10 group/resizer"
           style={{
-            // Make handle easier to grab
             marginRight: -8,
             touchAction: "none",
           }}
@@ -195,7 +194,7 @@ export function Column({
           }}
           data-testid={`resize-handle-${index}`}
         >
-          <div className="mx-auto h-full w-1 rounded-md bg-black/10 dark:bg-white/10 opacity-60 hover:opacity-100 transition-opacity" />
+          <div className={`mx-auto h-full w-1 rounded-md ${tc.separator} opacity-60 hover:opacity-100 transition-opacity`} />
         </div>
       )}
     </section>

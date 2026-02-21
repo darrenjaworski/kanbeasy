@@ -1,11 +1,12 @@
-export type Theme = "light" | "dark";
+import type { ThemeId, ThemeMode } from "./themes";
 
 export type CardDensity = "small" | "medium" | "large";
 
 export type ThemeContextValue = Readonly<{
-  theme: Theme;
-  setTheme: (t: Theme) => void;
-  toggle: () => void;
+  themeId: ThemeId;
+  setThemeId: (id: ThemeId) => void;
+  isDark: boolean;
+  themeMode: ThemeMode;
   cardDensity: CardDensity;
   setCardDensity: (d: CardDensity) => void;
   columnResizingEnabled: boolean;

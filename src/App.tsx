@@ -5,7 +5,7 @@ import { WelcomeModal } from "./components/WelcomeModal";
 
 function App() {
   return (
-    <div className="min-h-screen bg-bg-light text-text-light dark:bg-bg-dark dark:text-text-dark transition-colors">
+    <div className="min-h-screen bg-bg text-text transition-colors">
       <WelcomeModal />
       <Header />
       <Board />

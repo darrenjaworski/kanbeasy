@@ -41,15 +41,17 @@ describe("app shell", () => {
     ).toBeGreaterThanOrEqual(2);
   });
 
-  it("opens settings and toggles dark mode", async () => {
+  it("opens settings and selects a dark theme", async () => {
     const user = userEvent.setup();
     renderApp();
     const btn = screen.getByRole("button", { name: /open settings/i });
-    const html = document.documentElement;
-    const initial = html.classList.contains("dark");
     await user.click(btn);
-    const switchEl = await screen.findByRole("switch", { name: /dark mode/i });
-    await user.click(switchEl);
-    expect(html.classList.contains("dark")).toBe(!initial);
+    // Switch to dark mode, then pick a dark theme
+    await user.click(await screen.findByRole("button", { name: /dark/i }));
+    const darkSwatch = await screen.findByRole("button", {
+      name: /midnight theme/i,
+    });
+    await user.click(darkSwatch);
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
 });

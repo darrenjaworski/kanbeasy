@@ -26,6 +26,6 @@ describe("footer", () => {
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
     // Trailing text
-    expect(screen.getByText(/and Copilot\./i)).toBeInTheDocument();
+    expect(screen.getByText(/, Copilot, and Claude\./i)).toBeInTheDocument();
   });
 });

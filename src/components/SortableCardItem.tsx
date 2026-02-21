@@ -4,6 +4,7 @@ import { useMemo, type CSSProperties } from "react";
 import type { Card } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { CardControls } from "./CardControls";
+import { tc } from "../theme/classNames";
 
 type SortableCardItemProps = Readonly<{
   card: Card;
@@ -58,7 +59,7 @@ export function SortableCardItem({
       className={`group/card relative rounded-md border pr-14 p-2 text-sm ${
         isSearchMatch
           ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30 ring-2 ring-blue-500/50"
-          : "border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20"
+          : `${tc.border} ${tc.glass}`
       } ${
         isDragging
           ? "backdrop-blur-xs supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-black/30"
@@ -66,7 +67,6 @@ export function SortableCardItem({
       }`}
       data-testid={`card-${index}`}
     >
-      {/* Combined delete + drag control (horizontal), mirrors column-level style */}
       <CardControls
         index={index}
         canDrag={canDrag}
@@ -81,7 +81,7 @@ export function SortableCardItem({
         id={`${columnId}-${card.id}-content`}
         aria-label="Card content"
         defaultValue={card.title || "New card"}
-        className="w-full resize-y rounded-xs bg-transparent outline-hidden border-0 focus-visible:ring-2 focus-visible:ring-blue-500"
+        className={`${tc.input} w-full resize-y rounded-xs`}
         rows={rowsForDensity}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {

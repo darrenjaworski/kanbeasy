@@ -54,16 +54,20 @@ describe("settings modal", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("toggles dark mode in modal and persists across remount", async () => {
+  it("selects a dark theme and persists across remount", async () => {
     const user = userEvent.setup();
     const { unmount } = renderApp();
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
     const html = document.documentElement;
-    const initial = html.classList.contains("dark");
-    const switchEl = within(dlg).getByRole("switch", { name: /dark mode/i });
-    await user.click(switchEl);
-    expect(html.classList.contains("dark")).toBe(!initial);
+
+    // Switch to dark mode, then pick a dark theme
+    await user.click(within(dlg).getByRole("button", { name: /dark/i }));
+    const darkSwatch = within(dlg).getByRole("button", {
+      name: /midnight theme/i,
+    });
+    await user.click(darkSwatch);
+    expect(html.classList.contains("dark")).toBe(true);
 
     // Close and unmount, then re-render to ensure persistence via localStorage
     await user.click(
@@ -72,7 +76,7 @@ describe("settings modal", () => {
     unmount();
     cleanup();
     renderApp();
-    expect(document.documentElement.classList.contains("dark")).toBe(!initial);
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
 
   it("shows Card density control with three options and updates card height only", async () => {

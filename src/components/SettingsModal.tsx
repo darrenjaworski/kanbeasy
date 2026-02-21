@@ -2,21 +2,32 @@ import { Modal } from "./Modal";
 
 import { useTheme } from "../theme/useTheme";
 import { useBoard } from "../board/useBoard";
+import { themes, getDefaultThemeForMode } from "../theme/themes";
+import type { ThemeMode } from "../theme/themes";
 import { DensitySmallIcon } from "./icons/DensitySmallIcon";
 import { DensityMediumIcon } from "./icons/DensityMediumIcon";
 import { DensityLargeIcon } from "./icons/DensityLargeIcon";
 import { SettingsGearIcon } from "./icons/SettingsGearIcon";
 import { CloseIcon } from "./icons/CloseIcon";
+import { tc } from "../theme/classNames";
 
 type Props = Readonly<{
   open: boolean;
   onClose: () => void;
 }>;
 
+const lightThemes = themes.filter((t) => t.mode === "light");
+const darkThemes = themes.filter((t) => t.mode === "dark");
+
+function themesForMode(mode: ThemeMode) {
+  return mode === "light" ? lightThemes : darkThemes;
+}
+
 export function SettingsModal({ open, onClose }: Props) {
   const {
-    theme,
-    setTheme,
+    themeId,
+    setThemeId,
+    themeMode,
     cardDensity,
     setCardDensity,
     columnResizingEnabled,
@@ -27,17 +38,22 @@ export function SettingsModal({ open, onClose }: Props) {
   const handleClearLocalStorage = () => {
     window.localStorage.clear();
     resetBoard();
-    // Optionally close modal after clearing
-    // onClose();
+  };
+
+  const handleModeSwitch = (mode: ThemeMode) => {
+    if (mode === themeMode) return;
+    setThemeId(getDefaultThemeForMode(mode).id);
   };
 
   if (!open) return null;
+
+  const visibleThemes = themesForMode(themeMode);
 
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="settings-title">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-3">
-          <SettingsGearIcon className="size-5 text-black/70 dark:text-white/70" />
+          <SettingsGearIcon className={`size-5 ${tc.textMuted}`} />
           <h2
             id="settings-title"
             className="text-base font-semibold tracking-tight"
@@ -46,33 +62,75 @@ export function SettingsModal({ open, onClose }: Props) {
           </h2>
           <button
             type="button"
-            className="ml-auto h-6 w-6 inline-flex items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+            className={`ml-auto ${tc.iconButton} h-6 w-6 rounded-full`}
             onClick={onClose}
             aria-label="Close settings"
           >
             <CloseIcon className="size-4" />
           </button>
         </div>
-        <div className="space-y-4">
-          <label className="flex items-center justify-between gap-3 text-sm font-medium cursor-pointer select-none">
-            <span>Dark mode</span>
-            <span className="relative inline-flex items-center">
-              <input
-                id="dark-mode"
-                type="checkbox"
-                role="switch"
-                checked={theme === "dark"}
-                onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
-                className="sr-only peer"
-              />
-              <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-indigo-500 transition-colors relative" />
-              <span
-                aria-hidden
-                className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-xs transition-transform peer-checked:translate-x-4"
-              />
-            </span>
-          </label>
-          <label className="flex items-center justify-between gap-3 text-sm font-medium cursor-pointer select-none">
+        {/* Theme */}
+        <fieldset className="border-0 p-0 m-0 mb-4 space-y-3 text-sm font-medium">
+          <legend className="sr-only">Theme</legend>
+          <span aria-hidden>Theme</span>
+          <div className={`${tc.buttonGroup} rounded-full w-full mt-1`}>
+            <button
+              type="button"
+              onClick={() => handleModeSwitch("light")}
+              aria-pressed={themeMode === "light"}
+              className={`flex-1 px-3 py-1.5 text-sm text-center transition-colors ${tc.focusRing} ${
+                themeMode === "light"
+                  ? `${tc.pressed} ${tc.text}`
+                  : `${tc.textFaint} ${tc.textHover}`
+              }`}
+            >
+              Light
+            </button>
+            <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+            <button
+              type="button"
+              onClick={() => handleModeSwitch("dark")}
+              aria-pressed={themeMode === "dark"}
+              className={`flex-1 px-3 py-1.5 text-sm text-center transition-colors ${tc.focusRing} ${
+                themeMode === "dark"
+                  ? `${tc.pressed} ${tc.text}`
+                  : `${tc.textFaint} ${tc.textHover}`
+              }`}
+            >
+              Dark
+            </button>
+          </div>
+          <div className="flex gap-2">
+            {visibleThemes.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setThemeId(t.id)}
+                aria-pressed={themeId === t.id}
+                aria-label={`${t.name} theme`}
+                className={`flex-1 rounded-lg border-2 py-3 text-xs font-medium transition-all ${tc.focusRing} focus-visible:ring-offset-2 ${
+                  themeId === t.id
+                    ? "border-accent ring-2 ring-accent/30"
+                    : `${tc.border} hover:border-black/20 dark:hover:border-white/20`
+                }`}
+                style={{ backgroundColor: t.colors.bg, color: t.colors.text }}
+              >
+                <div className="flex flex-col items-center gap-1.5">
+                  <span
+                    className="h-4 w-4 rounded-full"
+                    style={{ backgroundColor: t.colors.accent }}
+                  />
+                  <span>{t.name}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+
+        {/* Board settings */}
+        <div className="space-y-3 text-sm font-medium mb-4">
+          <label className="flex items-center justify-between gap-3 cursor-pointer select-none">
             <span>Enable column resizing</span>
             <span className="relative inline-flex items-center">
               <input
@@ -83,54 +141,48 @@ export function SettingsModal({ open, onClose }: Props) {
                 onChange={(e) => setColumnResizingEnabled(e.target.checked)}
                 className="sr-only peer"
               />
-              <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-indigo-500 transition-colors relative" />
+              <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-accent transition-colors relative" />
               <span
                 aria-hidden
                 className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-xs transition-transform peer-checked:translate-x-4"
               />
             </span>
           </label>
-          <fieldset className="flex items-center justify-between gap-3 text-sm font-medium border-0 p-0 m-0">
+          <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
             <legend className="sr-only">Card density</legend>
             <span aria-hidden>Card density</span>
-            <div className="inline-flex items-center overflow-hidden rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20">
+            <div className={`${tc.buttonGroup} rounded-full`}>
               <button
                 type="button"
                 onClick={() => setCardDensity("small")}
                 title="Compact"
                 aria-pressed={cardDensity === "small"}
-                className={`h-9 w-9 inline-flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:bg-black/10 dark:hover:bg-white/10 ${
-                  cardDensity === "small" ? "bg-black/10 dark:bg-white/10" : ""
+                className={`h-9 w-9 ${tc.iconButton} ${
+                  cardDensity === "small" ? tc.pressed : ""
                 }`}
               >
                 <DensitySmallIcon />
               </button>
-              <span
-                aria-hidden
-                className="h-7 w-px bg-black/10 dark:bg-white/10"
-              />
+              <span aria-hidden className={`${tc.separator} h-7 w-px`} />
               <button
                 type="button"
                 onClick={() => setCardDensity("medium")}
                 title="Comfortable"
                 aria-pressed={cardDensity === "medium"}
-                className={`h-9 w-9 inline-flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:bg-black/10 dark:hover:bg-white/10 ${
-                  cardDensity === "medium" ? "bg-black/10 dark:bg-white/10" : ""
+                className={`h-9 w-9 ${tc.iconButton} ${
+                  cardDensity === "medium" ? tc.pressed : ""
                 }`}
               >
                 <DensityMediumIcon />
               </button>
-              <span
-                aria-hidden
-                className="h-7 w-px bg-black/10 dark:bg-white/10"
-              />
+              <span aria-hidden className={`${tc.separator} h-7 w-px`} />
               <button
                 type="button"
                 onClick={() => setCardDensity("large")}
                 title="Spacious"
                 aria-pressed={cardDensity === "large"}
-                className={`h-9 w-9 inline-flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 text-black/80 dark:text-white/80 hover:bg-black/10 dark:hover:bg-white/10 ${
-                  cardDensity === "large" ? "bg-black/10 dark:bg-white/10" : ""
+                className={`h-9 w-9 ${tc.iconButton} ${
+                  cardDensity === "large" ? tc.pressed : ""
                 }`}
               >
                 <DensityLargeIcon />
@@ -138,18 +190,21 @@ export function SettingsModal({ open, onClose }: Props) {
             </div>
           </fieldset>
         </div>
-        <div className="mt-4">
+
+
+        {/* Actions */}
+        <div className="space-y-2">
           <button
             type="button"
             onClick={handleClearLocalStorage}
-            className="w-full rounded-md border border-red-400 bg-white/60 dark:bg-black/20 px-3 py-1.5 mb-2 text-sm hover:bg-red-100 dark:hover:bg-red-900 transition-colors text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100"
+            className={`${tc.dangerButton} w-full rounded-md px-3 py-1.5`}
           >
             Clear board data
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-md border border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/20 px-3 py-1.5 text-sm hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+            className={`${tc.button} w-full rounded-md px-3 py-1.5`}
           >
             Save
           </button>

@@ -9,23 +9,20 @@ test.beforeEach(async ({ page }) => {
   await page.getByTestId("get-started-button").click();
 });
 
-test("can toggle theme", async ({ page }) => {
+test("can select a dark theme", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
 
-  const initialDark = await page.evaluate(() =>
-    document.documentElement.classList.contains("dark")
-  );
-  const switchEl = dlg.getByRole("switch", { name: /dark mode/i });
-  await switchEl.focus();
-  await page.keyboard.press("Space");
+  // Switch to dark mode, then pick a dark theme
+  await dlg.getByRole("button", { name: /dark/i }).click();
+  await dlg.getByRole("button", { name: /midnight theme/i }).click();
 
   await expect
     .poll(() =>
       page.evaluate(() => document.documentElement.classList.contains("dark"))
     )
-    .toBe(!initialDark);
+    .toBe(true);
 
   await dlg.getByRole("button", { name: /close settings/i }).click();
 });
@@ -83,7 +80,7 @@ test("can wipe the board data", async ({ page }) => {
 
   // Seed some theme/density keys to ensure they are cleared
   await page.evaluate(() => {
-    localStorage.setItem("kanbeasy:theme", "dark");
+    localStorage.setItem("kanbeasy:theme", "dark-slate");
     localStorage.setItem("kanbeasy:cardDensity", "large");
   });
 

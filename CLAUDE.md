@@ -122,6 +122,21 @@ Before making any changes, ensure:
 - Focus on black-box testing of observable behavior
 - Test setup is configured in `src/test/setup.ts`
 
+## Commit Conventions
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) for all commit messages:
+
+- `feat:` new feature
+- `fix:` bug fix
+- `refactor:` code restructuring (no behavior change)
+- `style:` formatting, whitespace (no code change)
+- `test:` adding or updating tests
+- `docs:` documentation only
+- `chore:` tooling, dependencies, config
+- `perf:` performance improvement
+
+Use lowercase, imperative mood, no period at the end. Include scope when helpful: `feat(theme): add forest dark theme`.
+
 ## Code Conventions
 
 - Strict TypeScript with no implicit `any`
