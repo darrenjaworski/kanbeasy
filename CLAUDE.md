@@ -137,6 +137,8 @@ Use [Conventional Commits](https://www.conventionalcommits.org/) for all commit 
 
 Use lowercase, imperative mood, no period at the end. Include scope when helpful: `feat(theme): add forest dark theme`.
 
+When committing `feat:`, `fix:`, or other user-facing changes, also add a corresponding entry under the `## [Unreleased]` section of `CHANGELOG.md` in the same commit. Use the appropriate heading (`### Features`, `### Fixed`, `### Changed`, `### Removed`) following the Keep a Changelog format.
+
 ## Releasing
 
 Follow these steps to prepare a new release:
