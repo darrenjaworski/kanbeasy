@@ -42,7 +42,7 @@ export function Column({
   const startWidth = useRef(DEFAULT_COLUMN_WIDTH);
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
-  const { cardDensity, columnResizingEnabled } = useTheme();
+  const { cardDensity, columnResizingEnabled, deleteColumnWarningEnabled } = useTheme();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -119,7 +119,7 @@ export function Column({
         <button
           type="button"
           onClick={() =>
-            cards.length > 0
+            deleteColumnWarningEnabled && cards.length > 0
               ? setShowDeleteConfirm(true)
               : removeColumn(id)
           }

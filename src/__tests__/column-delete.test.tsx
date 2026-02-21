@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { ThemeProvider } from "../theme/ThemeProvider";
 import { BoardProvider } from "../board/BoardProvider";
-import { describe, it, expect } from "vitest";
+import { STORAGE_KEYS } from "../constants/storage";
+import { describe, it, expect, beforeEach } from "vitest";
 
 function renderApp() {
   return render(
@@ -16,6 +17,13 @@ function renderApp() {
 }
 
 describe("column delete", () => {
+  beforeEach(() => {
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns: [] })
+    );
+  });
+
   it("deletes an empty column immediately without confirmation", async () => {
     const user = userEvent.setup();
     renderApp();
@@ -126,5 +134,29 @@ describe("column delete", () => {
     );
 
     expect(screen.getByText(/this column has 2 cards/i)).toBeInTheDocument();
+  });
+
+  it("deletes column with cards without confirmation when warning is disabled", async () => {
+    localStorage.setItem(STORAGE_KEYS.DELETE_COLUMN_WARNING, "false");
+    const user = userEvent.setup();
+    renderApp();
+
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+    const column = screen.getByRole("region", { name: /new column/i });
+
+    await user.click(
+      within(column as HTMLElement).getByRole("button", { name: /add card/i })
+    );
+
+    await user.click(
+      within(column as HTMLElement).getByRole("button", {
+        name: /remove column/i,
+      })
+    );
+
+    expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: /new column/i })
+    ).not.toBeInTheDocument();
   });
 });
