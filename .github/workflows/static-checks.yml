@@ -36,4 +36,4 @@ jobs:
         run: npm run build
 
       - name: Test
-        run: npx vitest run --reporter=github-actions --reporter=default
+        run: npx vitest run --reporter=github-actions
