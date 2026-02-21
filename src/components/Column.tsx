@@ -11,6 +11,7 @@ import { useBoard } from "../board/useBoard";
 import { DragIndicatorIcon } from "./icons/DragIndicatorIcon";
 import { CloseIcon } from "./icons/CloseIcon";
 import { CardList } from "./CardList";
+import { ConfirmDialog } from "./ConfirmDialog";
 import { tc } from "../theme/classNames";
 
 type Props = Readonly<{
@@ -42,6 +43,7 @@ export function Column({
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
   const { cardDensity, columnResizingEnabled } = useTheme();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -116,7 +118,11 @@ export function Column({
         )}
         <button
           type="button"
-          onClick={() => removeColumn(id)}
+          onClick={() =>
+            cards.length > 0
+              ? setShowDeleteConfirm(true)
+              : removeColumn(id)
+          }
           aria-label={`Remove column ${title || "column"}`}
           title="Remove column"
           className={`${tc.iconButton} h-8 w-8`}
@@ -173,6 +179,16 @@ export function Column({
         onUpdate={(cardId, title) => updateCard(id, cardId, title)}
         density={cardDensity}
         columnId={id}
+      />
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={() => {
+          setShowDeleteConfirm(false);
+          removeColumn(id);
+        }}
+        title="Delete column?"
+        message={`This column has ${cards.length} card${cards.length === 1 ? "" : "s"}. Deleting it will remove them permanently.`}
       />
       {/* Resize handle (feature-flagged) */}
       {columnResizingEnabled && (

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0]
+
+### Features
+
+- Confirmation dialog when deleting a column that contains cards, preventing accidental data loss.
+- Reusable `ConfirmDialog` component built on the existing `Modal`.
+
 ## [1.3.2]
 
 ### Features
