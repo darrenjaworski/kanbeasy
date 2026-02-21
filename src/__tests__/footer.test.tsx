@@ -1,8 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import App from "../App";
 import { ThemeProvider } from "../theme/ThemeProvider";
 import { BoardProvider } from "../board/BoardProvider";
+import { STORAGE_KEYS } from "../constants/storage";
 
 function renderApp() {
   return render(
@@ -15,6 +16,13 @@ function renderApp() {
 }
 
 describe("footer", () => {
+  beforeEach(() => {
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns: [] })
+    );
+  });
+
   it("renders footer credit", () => {
     renderApp();
     // Leading text

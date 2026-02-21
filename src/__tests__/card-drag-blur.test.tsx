@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { ThemeProvider } from "../theme/ThemeProvider";
 import { BoardProvider } from "../board/BoardProvider";
-import { describe, it, expect } from "vitest";
+import { STORAGE_KEYS } from "../constants/storage";
+import { describe, it, expect, beforeEach } from "vitest";
 
 function renderApp() {
   return render(
@@ -16,6 +17,13 @@ function renderApp() {
 }
 
 describe("card gets blur background while dragging", () => {
+  beforeEach(() => {
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns: [] })
+    );
+  });
+
   it("toggles blur class on the dragged card container during keyboard drag", async () => {
     const user = userEvent.setup();
     renderApp();

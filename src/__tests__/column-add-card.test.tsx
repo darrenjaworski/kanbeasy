@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { ThemeProvider } from "../theme/ThemeProvider";
 import { BoardProvider } from "../board/BoardProvider";
-import { describe, it, expect } from "vitest";
+import { STORAGE_KEYS } from "../constants/storage";
+import { describe, it, expect, beforeEach } from "vitest";
 
 function renderApp() {
   return render(
@@ -16,6 +17,13 @@ function renderApp() {
 }
 
 describe("column add card", () => {
+  beforeEach(() => {
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns: [] })
+    );
+  });
+
   it("adds a card to a column using the column's Add card button", async () => {
     const user = userEvent.setup();
     renderApp();

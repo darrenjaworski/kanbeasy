@@ -9,6 +9,35 @@ const defaultState: BoardState = {
   columns: [],
 };
 
+function createInitialBoard(): BoardState {
+  return {
+    columns: [
+      {
+        id: crypto.randomUUID(),
+        title: "To Do",
+        cards: [
+          { id: crypto.randomUUID(), title: "My first task" },
+          { id: crypto.randomUUID(), title: "Another task" },
+        ],
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "In Progress",
+        cards: [
+          { id: crypto.randomUUID(), title: "A task in progress" },
+        ],
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Done",
+        cards: [
+          { id: crypto.randomUUID(), title: "A completed task" },
+        ],
+      },
+    ],
+  };
+}
+
 function isCard(x: unknown): x is Card {
   return (
     !!x &&
@@ -30,6 +59,17 @@ function isColumn(x: unknown): x is Column {
 }
 
 function loadState(): BoardState {
+  // When no board data has ever been saved, seed with example columns.
+  // After "Clear board data", the key exists with { columns: [] }, so we won't re-seed.
+  const raw =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem(STORAGE_KEYS.BOARD)
+      : null;
+
+  if (raw === null) {
+    return createInitialBoard();
+  }
+
   const stored = getFromStorage<{ columns?: unknown }>(STORAGE_KEYS.BOARD, {});
 
   const cols = Array.isArray(stored.columns)

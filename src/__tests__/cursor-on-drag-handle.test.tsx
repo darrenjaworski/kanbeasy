@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { ThemeProvider } from "../theme/ThemeProvider";
 import { BoardProvider } from "../board/BoardProvider";
-import { describe, it, expect } from "vitest";
+import { STORAGE_KEYS } from "../constants/storage";
+import { describe, it, expect, beforeEach } from "vitest";
 
 function renderApp() {
   return render(
@@ -18,6 +19,13 @@ function renderApp() {
 // Note: we assert classList contains cursor utility classes; jsdom won't compute CSS, but
 // this guards against regressions in class names.
 describe("drag handle cursor styles", () => {
+  beforeEach(() => {
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns: [] })
+    );
+  });
+
   it("applies grab/grabbing cursor classes on card drag handle", async () => {
     const user = userEvent.setup();
     renderApp();
