@@ -209,6 +209,18 @@ export function SettingsModal({ open, onClose }: Props) {
             Save
           </button>
         </div>
+
+        {/* Version */}
+        <div className={`mt-4 text-center text-xs ${tc.textFaint}`}>
+          <a
+            href="https://github.com/darrenjaworski/kanbeasy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${tc.textHover} transition-colors`}
+          >
+            kanbeasy v{__APP_VERSION__}
+          </a>
+        </div>
       </div>
     </Modal>
   );
