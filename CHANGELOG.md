@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0]
+
+### Features
+
+- Seed initial board with example columns (To Do, In Progress, Done) for new users.
+- Respect delete column warning setting — skip confirmation dialog when disabled.
+
 ## [1.5.0]
 
 ### Features
