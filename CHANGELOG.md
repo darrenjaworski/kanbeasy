@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.1]
+
+### Changed
+
+- Fix npm audit vulnerabilities in dependencies (ajv, js-yaml, lodash, playwright, tar, vite).
+
 ## [1.6.0]
 
 ### Features
