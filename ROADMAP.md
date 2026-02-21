@@ -46,6 +46,14 @@ Settings
 - keyboard shortcuts
 - card checklists, labels, due dates, and reminders
 - undo/redo
+- export/import board data
+- column card count badges
+- card color/priority indicator
+- multiple boards
+- basic dashboard showing metrics derived from the board
+  - how long a card takes to move between columns
+  - time spent in each column
+  - throughput and cycle time
 
 settings
 
