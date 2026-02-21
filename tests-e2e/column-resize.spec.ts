@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
+  });
   const target = process.env.CI == "true" ? "/kanbeasy" : "/";
   await page.goto(target);
 
@@ -21,7 +24,7 @@ test("settings toggle enables column resize and persists", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
-  const switchEl = dlg.getByRole("switch", { name: /enable column resizing/i });
+  const switchEl = dlg.getByRole("switch", { name: /column resizing/i });
   await switchEl.focus();
   await page.keyboard.press("Space");
   await dlg.getByRole("button", { name: /close settings/i }).click();
@@ -43,7 +46,7 @@ test("can resize a column with the mouse and clamps to min/max", async ({
   await page.getByTestId("add-column-button").click();
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
-  const switch2 = dlg.getByRole("switch", { name: /enable column resizing/i });
+  const switch2 = dlg.getByRole("switch", { name: /column resizing/i });
   await switch2.focus();
   await page.keyboard.press("Space");
   await dlg.getByRole("button", { name: /close settings/i }).click();

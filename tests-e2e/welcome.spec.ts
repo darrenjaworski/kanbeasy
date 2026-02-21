@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
+  });
   const target = process.env.CI == "true" ? "/kanbeasy" : "/";
   await page.goto(target);
 });
