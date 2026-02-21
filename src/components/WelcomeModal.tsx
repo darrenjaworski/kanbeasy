@@ -50,11 +50,21 @@ export function WelcomeModal() {
               <CloseIcon className="size-4" />
             </button>
           </div>
-          <p className="mb-4" data-testid="welcome-description">
-            Kanban is a simple and effective way to organize tasks. Drag and
-            drop cards between columns to track progress. Customize your
-            workflow to suit your needs.
-          </p>
+          <div className="mb-4 space-y-3 text-sm" data-testid="welcome-description">
+            <p>
+              Kanban is a visual way to manage work. You organize tasks into
+              columns that represent stages — like "To Do," "In Progress," and
+              "Done." As work moves forward, you move cards from one column to
+              the next. It gives you a clear picture of where everything stands
+              at a glance.
+            </p>
+            <p>
+              To get started, add a column for each stage of your workflow, then
+              create cards for your tasks. Drag and drop cards between columns
+              as you make progress, or reorder them within a column to set
+              priorities. Everything is saved automatically to your device.
+            </p>
+          </div>
           <button
             onClick={handleClose}
             className={`${tc.button} w-full rounded-md px-3 py-1.5`}

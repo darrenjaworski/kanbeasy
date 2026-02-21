@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1]
+
+### Changed
+
+- Improved welcome modal text with clearer explanation of kanban concepts and application usage.
+
 ## [1.3.0]
 
 ### Features
