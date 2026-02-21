@@ -15,4 +15,10 @@ export const STORAGE_KEYS = {
 
   /** Column resizing feature flag */
   COLUMN_RESIZING_ENABLED: "kanbeasy:columnResizingEnabled",
+
+  /** Delete column warning preference */
+  DELETE_COLUMN_WARNING: "kanbeasy:deleteColumnWarning",
+
+  /** Theme preference (light/dark/system) */
+  THEME_PREFERENCE: "kanbeasy:themePreference",
 } as const;

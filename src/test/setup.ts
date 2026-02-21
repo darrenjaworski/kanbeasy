@@ -34,6 +34,21 @@ if (typeof globalThis.ResizeObserver === "undefined") {
   globalThis.ResizeObserver = RO as unknown as typeof ResizeObserver;
 }
 
+// Minimal matchMedia polyfill for jsdom tests
+if (typeof window.matchMedia !== "function") {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+      addListener: () => {},
+      removeListener: () => {},
+    }) as MediaQueryList;
+}
+
 // Clear localStorage before each test to avoid state leakage
 beforeEach(() => {
   localStorage.clear();

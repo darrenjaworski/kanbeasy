@@ -2,8 +2,8 @@ import { Modal } from "./Modal";
 
 import { useTheme } from "../theme/useTheme";
 import { useBoard } from "../board/useBoard";
-import { themes, getDefaultThemeForMode } from "../theme/themes";
-import type { ThemeMode } from "../theme/themes";
+import { themes } from "../theme/themes";
+import type { ThemePreference } from "../theme/types";
 import { DensitySmallIcon } from "./icons/DensitySmallIcon";
 import { DensityMediumIcon } from "./icons/DensityMediumIcon";
 import { DensityLargeIcon } from "./icons/DensityLargeIcon";
@@ -19,7 +19,7 @@ type Props = Readonly<{
 const lightThemes = themes.filter((t) => t.mode === "light");
 const darkThemes = themes.filter((t) => t.mode === "dark");
 
-function themesForMode(mode: ThemeMode) {
+function themesForMode(mode: "light" | "dark") {
   return mode === "light" ? lightThemes : darkThemes;
 }
 
@@ -28,10 +28,14 @@ export function SettingsModal({ open, onClose }: Props) {
     themeId,
     setThemeId,
     themeMode,
+    themePreference,
+    setThemePreference,
     cardDensity,
     setCardDensity,
     columnResizingEnabled,
     setColumnResizingEnabled,
+    deleteColumnWarningEnabled,
+    setDeleteColumnWarningEnabled,
   } = useTheme();
   const { resetBoard } = useBoard();
 
@@ -40,9 +44,9 @@ export function SettingsModal({ open, onClose }: Props) {
     resetBoard();
   };
 
-  const handleModeSwitch = (mode: ThemeMode) => {
-    if (mode === themeMode) return;
-    setThemeId(getDefaultThemeForMode(mode).id);
+  const handleModeSwitch = (pref: ThemePreference) => {
+    if (pref === themePreference) return;
+    setThemePreference(pref);
   };
 
   if (!open) return null;
@@ -77,9 +81,9 @@ export function SettingsModal({ open, onClose }: Props) {
             <button
               type="button"
               onClick={() => handleModeSwitch("light")}
-              aria-pressed={themeMode === "light"}
+              aria-pressed={themePreference === "light"}
               className={`flex-1 px-3 py-1.5 text-sm text-center transition-colors ${tc.focusRing} ${
-                themeMode === "light"
+                themePreference === "light"
                   ? `${tc.pressed} ${tc.text}`
                   : `${tc.textFaint} ${tc.textHover}`
               }`}
@@ -89,10 +93,23 @@ export function SettingsModal({ open, onClose }: Props) {
             <span aria-hidden className={`${tc.separator} h-7 w-px`} />
             <button
               type="button"
-              onClick={() => handleModeSwitch("dark")}
-              aria-pressed={themeMode === "dark"}
+              onClick={() => handleModeSwitch("system")}
+              aria-pressed={themePreference === "system"}
               className={`flex-1 px-3 py-1.5 text-sm text-center transition-colors ${tc.focusRing} ${
-                themeMode === "dark"
+                themePreference === "system"
+                  ? `${tc.pressed} ${tc.text}`
+                  : `${tc.textFaint} ${tc.textHover}`
+              }`}
+            >
+              System
+            </button>
+            <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+            <button
+              type="button"
+              onClick={() => handleModeSwitch("dark")}
+              aria-pressed={themePreference === "dark"}
+              className={`flex-1 px-3 py-1.5 text-sm text-center transition-colors ${tc.focusRing} ${
+                themePreference === "dark"
                   ? `${tc.pressed} ${tc.text}`
                   : `${tc.textFaint} ${tc.textHover}`
               }`}
@@ -131,7 +148,7 @@ export function SettingsModal({ open, onClose }: Props) {
         {/* Board settings */}
         <div className="space-y-3 text-sm font-medium mb-4">
           <label className="flex items-center justify-between gap-3 cursor-pointer select-none">
-            <span>Enable column resizing</span>
+            <span>Column resizing</span>
             <span className="relative inline-flex items-center">
               <input
                 id="column-resizing"
@@ -139,6 +156,24 @@ export function SettingsModal({ open, onClose }: Props) {
                 role="switch"
                 checked={columnResizingEnabled}
                 onChange={(e) => setColumnResizingEnabled(e.target.checked)}
+                className="sr-only peer"
+              />
+              <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-accent transition-colors relative" />
+              <span
+                aria-hidden
+                className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-xs transition-transform peer-checked:translate-x-4"
+              />
+            </span>
+          </label>
+          <label className="flex items-center justify-between gap-3 cursor-pointer select-none">
+            <span>Warn before deleting columns with cards</span>
+            <span className="relative inline-flex items-center">
+              <input
+                id="delete-column-warning"
+                type="checkbox"
+                role="switch"
+                checked={deleteColumnWarningEnabled}
+                onChange={(e) => setDeleteColumnWarningEnabled(e.target.checked)}
                 className="sr-only peer"
               />
               <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-accent transition-colors relative" />
@@ -206,7 +241,7 @@ export function SettingsModal({ open, onClose }: Props) {
             onClick={onClose}
             className={`${tc.button} w-full rounded-md px-3 py-1.5`}
           >
-            Save
+            Close
           </button>
         </div>
 

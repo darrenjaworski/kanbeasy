@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
-import type { CardDensity } from "./types";
-import type { ThemeId } from "./themes";
+import type { CardDensity, ThemePreference } from "./types";
+import type { ThemeId, ThemeMode } from "./themes";
 import {
   getDefaultThemeForMode,
   getThemeById,
@@ -12,7 +12,7 @@ import {
 } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
 
-function getSystemTheme(): "light" | "dark" {
+function getSystemTheme(): ThemeMode {
   if (
     typeof window === "undefined" ||
     typeof window.matchMedia !== "function"
@@ -24,11 +24,30 @@ function getSystemTheme(): "light" | "dark" {
     : "light";
 }
 
-function getInitialThemeId(): ThemeId {
+function getInitialThemePreference(): ThemePreference {
+  const stored = getStringFromStorage(STORAGE_KEYS.THEME_PREFERENCE, "");
+  if (stored === "light" || stored === "dark" || stored === "system") {
+    return stored;
+  }
+  // Backward compat: infer from stored theme
+  const themeStored = getStringFromStorage(STORAGE_KEYS.THEME, "");
+  const theme = getThemeById(themeStored);
+  if (theme) return theme.mode;
+  if (themeStored === "light") return "light";
+  if (themeStored === "dark") return "dark";
+  // No stored data at all — default to system
+  return "system";
+}
+
+function getInitialThemeId(preference: ThemePreference): ThemeId {
   const stored = getStringFromStorage(STORAGE_KEYS.THEME, "");
 
   // Already a valid theme ID
   if (getThemeById(stored)) {
+    // If preference is "system", resolve to the OS-appropriate default
+    if (preference === "system") {
+      return getDefaultThemeForMode(getSystemTheme()).id as ThemeId;
+    }
     return stored as ThemeId;
   }
 
@@ -51,7 +70,11 @@ function getInitialDensity(): CardDensity {
 export function ThemeProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [themeId, setThemeId] = useState<ThemeId>(getInitialThemeId);
+  const [themePreference, setThemePreferenceState] =
+    useState<ThemePreference>(getInitialThemePreference);
+  const [themeId, setThemeId] = useState<ThemeId>(() =>
+    getInitialThemeId(themePreference),
+  );
   const [cardDensity, setCardDensity] =
     useState<CardDensity>(getInitialDensity);
   const [columnResizingEnabled, setColumnResizingEnabled] = useState<boolean>(
@@ -63,6 +86,41 @@ export function ThemeProvider({
       return stored === "true";
     },
   );
+  const [deleteColumnWarningEnabled, setDeleteColumnWarningEnabled] =
+    useState<boolean>(() => {
+      const stored = getStringFromStorage(
+        STORAGE_KEYS.DELETE_COLUMN_WARNING,
+        "true",
+      );
+      return stored === "true";
+    });
+
+  const setThemePreference = useCallback((pref: ThemePreference) => {
+    setThemePreferenceState(pref);
+    if (pref === "system") {
+      setThemeId(getDefaultThemeForMode(getSystemTheme()).id as ThemeId);
+    } else {
+      setThemeId(getDefaultThemeForMode(pref).id as ThemeId);
+    }
+  }, []);
+
+  // Listen for OS color-scheme changes when preference is "system"
+  useEffect(() => {
+    if (themePreference !== "system") return;
+
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => {
+      const mode: ThemeMode = e.matches ? "dark" : "light";
+      setThemeId(getDefaultThemeForMode(mode).id as ThemeId);
+    };
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [themePreference]);
+
+  // Persist theme preference
+  useEffect(() => {
+    saveStringToStorage(STORAGE_KEYS.THEME_PREFERENCE, themePreference);
+  }, [themePreference]);
 
   useEffect(() => {
     const theme = getThemeById(themeId);
@@ -97,6 +155,13 @@ export function ThemeProvider({
     );
   }, [columnResizingEnabled]);
 
+  useEffect(() => {
+    saveStringToStorage(
+      STORAGE_KEYS.DELETE_COLUMN_WARNING,
+      String(deleteColumnWarningEnabled),
+    );
+  }, [deleteColumnWarningEnabled]);
+
   const theme = getThemeById(themeId);
 
   const value = useMemo<import("./types").ThemeContextValue>(
@@ -105,12 +170,16 @@ export function ThemeProvider({
       setThemeId,
       isDark: theme?.mode === "dark",
       themeMode: theme?.mode ?? "light",
+      themePreference,
+      setThemePreference,
       cardDensity,
       setCardDensity,
       columnResizingEnabled,
       setColumnResizingEnabled,
+      deleteColumnWarningEnabled,
+      setDeleteColumnWarningEnabled,
     }),
-    [themeId, theme?.mode, cardDensity, columnResizingEnabled],
+    [themeId, theme?.mode, themePreference, setThemePreference, cardDensity, columnResizingEnabled, deleteColumnWarningEnabled],
   );
 
   return (

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- System/auto theme preference that follows OS light/dark mode automatically.
+
 ## [1.4.0]
 
 ### Features

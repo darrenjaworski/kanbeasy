@@ -62,7 +62,7 @@ describe("SettingsModal", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("renders a Save button and triggers onClose when clicked", () => {
+  it("renders a Close button and triggers onClose when clicked", () => {
     const onCloseMock = vi.fn();
     render(
       <BoardProvider>
@@ -72,10 +72,10 @@ describe("SettingsModal", () => {
       </BoardProvider>
     );
 
-    const saveBtn = screen.getByRole("button", { name: /save/i });
-    expect(saveBtn).toBeInTheDocument();
+    const closeBtn = screen.getByRole("button", { name: /^close$/i });
+    expect(closeBtn).toBeInTheDocument();
 
-    fireEvent.click(saveBtn);
+    fireEvent.click(closeBtn);
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 });
