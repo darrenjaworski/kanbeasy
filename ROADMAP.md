@@ -42,11 +42,11 @@ Settings
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - ✅ warn on delete column and there are cards
+- ✅ initial application placeholder columns to match instructions modal on initial start
 - keyboard shortcuts
 - card checklists, labels, due dates, and reminders
 - undo/redo
-- initial application placeholder columns to match instructions modal on initial start
 
 settings
 
-- turn off warnings when deleting columns with cards
+- ✅ turn off warnings when deleting columns with cards
