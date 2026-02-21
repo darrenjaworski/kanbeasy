@@ -25,6 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Footer credit updated to include Claude.
 - Added conventional commits and release process to CLAUDE.md.
 
+## [1.2.0]
+
+### Features
+
+- Fuzzy search for cards across all columns.
+
+### Changed
+
+- Search requires a minimum of 2 characters before matching.
+
+## [1.1.1]
+
+### Fixed
+
+- Additional search functionality test coverage.
+
 ## [1.1.0]
 
 ### Features
