@@ -44,11 +44,17 @@ Settings
 - ✅ warn on delete column and there are cards
 - ✅ initial application placeholder columns to match instructions modal on initial start
 - keyboard shortcuts
-- card checklists, labels, due dates, and reminders
+- card enhancements
+  - markdown description with rendered preview
+  - checklists with inline progress (e.g., "3/5")
+  - labels/tags with custom colors, filterable from search
+  - due dates with visual overdue indicator
+  - priority levels (none/low/medium/high) with colored border indicator
+  - image attachments (base64 or IndexedDB for larger storage)
+  - timestamps (createdAt, columnHistory) to support metrics
 - undo/redo
 - export/import board data
 - column card count badges
-- card color/priority indicator
 - multiple boards
 - basic dashboard showing metrics derived from the board
   - how long a card takes to move between columns
