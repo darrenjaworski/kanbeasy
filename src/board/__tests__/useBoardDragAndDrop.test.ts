@@ -349,6 +349,53 @@ describe("useBoardDragAndDrop", () => {
     });
   });
 
+  describe("blur on drag end", () => {
+    it("blurs active element after drag end", () => {
+      const setColumns = vi.fn();
+      const { result } = renderHook(() =>
+        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+      );
+
+      const button = document.createElement("button");
+      document.body.appendChild(button);
+      button.focus();
+      expect(document.activeElement).toBe(button);
+
+      const startEvent = createDragStartEvent("col-1", "column");
+      const endEvent = createDragEndEvent("col-1", "column", "col-2", "column");
+
+      act(() => {
+        result.current.handleDragStart(startEvent);
+        result.current.handleDragEnd(endEvent);
+      });
+
+      expect(document.activeElement).toBe(document.body);
+      document.body.removeChild(button);
+    });
+
+    it("blurs active element after drag cancel", () => {
+      const setColumns = vi.fn();
+      const { result } = renderHook(() =>
+        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+      );
+
+      const button = document.createElement("button");
+      document.body.appendChild(button);
+      button.focus();
+      expect(document.activeElement).toBe(button);
+
+      const startEvent = createDragStartEvent("card-1", "card", "col-1");
+
+      act(() => {
+        result.current.handleDragStart(startEvent);
+        result.current.handleDragCancel();
+      });
+
+      expect(document.activeElement).toBe(document.body);
+      document.body.removeChild(button);
+    });
+  });
+
   describe("handleDragCancel", () => {
     it("resets drag state without calling setColumns", () => {
       const setColumns = vi.fn();

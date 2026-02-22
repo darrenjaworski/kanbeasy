@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add card count badge to column headers that slides left on hover to clear controls.
 
+### Fixed
+
+- Column controls staying visible after drag-and-drop due to lingering focus.
+
 ## [1.6.1]
 
 ### Changed

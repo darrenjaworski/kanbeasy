@@ -133,7 +133,7 @@ export function Column({
       </div>
       {/* Card count badge — slides left on hover to clear controls */}
       <span
-        className={`absolute right-2 top-2 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${tc.glass} px-2.5 text-sm font-medium ${tc.textFaint} transition-[right] duration-200 ease-in-out group-hover:right-20`}
+        className={`absolute right-2 top-2 z-0 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${tc.glass} px-2.5 text-sm font-medium ${tc.textFaint} transition-[right] duration-200 ease-in-out group-hover:right-20`}
         aria-label={`${cards.length} card${cards.length === 1 ? "" : "s"}`}
       >
         {cards.length}
