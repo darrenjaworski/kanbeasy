@@ -65,14 +65,14 @@ describe("search cards", () => {
     const cards = within(column).getAllByTestId(/^card-\d+$/);
 
     // First card should have search highlight classes
-    expect(cards[0]).toHaveClass("border-blue-500");
+    expect(cards[0]).toHaveClass("border-accent");
     expect(cards[0]).toHaveClass("ring-2");
 
     // Second card should NOT have highlight
-    expect(cards[1]).not.toHaveClass("border-blue-500");
+    expect(cards[1]).not.toHaveClass("border-accent");
 
     // Third card should have search highlight classes
-    expect(cards[2]).toHaveClass("border-blue-500");
+    expect(cards[2]).toHaveClass("border-accent");
     expect(cards[2]).toHaveClass("ring-2");
 
     // Check match count is displayed
@@ -83,7 +83,7 @@ describe("search cards", () => {
 
     // No cards should be highlighted
     cards.forEach((card) => {
-      expect(card).not.toHaveClass("border-blue-500");
+      expect(card).not.toHaveClass("border-accent");
     });
   });
 
@@ -116,7 +116,7 @@ describe("search cards", () => {
     await user.type(searchInput, "meetng"); // Missing 'i'
 
     const card = within(column).getByTestId("card-0");
-    expect(card).toHaveClass("border-blue-500");
+    expect(card).toHaveClass("border-accent");
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
 
@@ -153,7 +153,7 @@ describe("search cards", () => {
 
     // Card should not be highlighted
     const card = within(column).getByTestId("card-0");
-    expect(card).not.toHaveClass("border-blue-500");
+    expect(card).not.toHaveClass("border-accent");
   });
 
   it("does not search with less than 2 characters", async () => {
@@ -186,7 +186,7 @@ describe("search cards", () => {
 
     // Card should NOT be highlighted with single character
     const card = within(column).getByTestId("card-0");
-    expect(card).not.toHaveClass("border-blue-500");
+    expect(card).not.toHaveClass("border-accent");
 
     // No match count should be shown
     expect(screen.queryByText(/match/i)).not.toBeInTheDocument();
@@ -195,7 +195,7 @@ describe("search cards", () => {
     await user.type(searchInput, "u");
 
     // Now card should be highlighted
-    expect(card).toHaveClass("border-blue-500");
+    expect(card).toHaveClass("border-accent");
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
 
@@ -228,7 +228,7 @@ describe("search cards", () => {
     await user.type(searchInput, "GROC");
 
     const card = within(column).getByTestId("card-0");
-    expect(card).toHaveClass("border-blue-500");
+    expect(card).toHaveClass("border-accent");
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
 
@@ -277,8 +277,8 @@ describe("search cards", () => {
     const card1 = within(columns[0]).getByTestId("card-0");
     const card2 = within(columns[1]).getByTestId("card-0");
 
-    expect(card1).toHaveClass("border-blue-500");
-    expect(card2).toHaveClass("border-blue-500");
+    expect(card1).toHaveClass("border-accent");
+    expect(card2).toHaveClass("border-accent");
     expect(screen.getByText("2 matches")).toBeInTheDocument();
   });
 });

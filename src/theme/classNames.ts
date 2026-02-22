@@ -18,7 +18,7 @@ const textHover = "hover:text-black dark:hover:text-white";
 const glass = "bg-white/60 dark:bg-black/20";
 const bgHover = "hover:bg-black/10 dark:hover:bg-white/10";
 const focusRing =
-  "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500";
+  "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent";
 const separator = "bg-black/10 dark:bg-white/10";
 const pressed = "bg-black/10 dark:bg-white/10";
 

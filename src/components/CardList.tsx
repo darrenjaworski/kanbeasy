@@ -43,9 +43,7 @@ export function CardList({
       <div
         ref={setNodeRef}
         className={`flex flex-col gap-2 rounded-md transition-colors min-h-16 ${
-          highlight
-            ? "ring-2 ring-blue-500/60 bg-blue-500/5 dark:bg-blue-400/10"
-            : ""
+          highlight ? "ring-2 ring-accent/60 bg-accent/5 dark:bg-accent/10" : ""
         }`}
         data-testid="card-list"
         data-card-density={density}

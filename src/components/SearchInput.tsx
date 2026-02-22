@@ -14,7 +14,7 @@ export function SearchInput() {
         placeholder="Search cards..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-3 ${showMatchCount ? "pr-24" : ""} py-1.5 text-sm placeholder:text-black/40 dark:placeholder:text-white/40 focus:outline-hidden focus:ring-2 focus:ring-blue-500`}
+        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-3 ${showMatchCount ? "pr-24" : ""} py-1.5 text-sm placeholder:text-black/40 dark:placeholder:text-white/40 focus:outline-hidden focus:ring-2 focus:ring-accent`}
         aria-label="Search cards"
         data-testid="search-input"
       />

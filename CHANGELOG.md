@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve theme choice when switching preferences within the same mode (e.g., "system" to "dark" when OS is dark)
+
 ## [1.11.3]
 
 ### Fixed

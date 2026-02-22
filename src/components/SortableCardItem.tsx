@@ -72,7 +72,7 @@ export function SortableCardItem({
       style={style}
       className={`group/card relative rounded-md border pr-14 p-2 text-sm ${
         isSearchMatch
-          ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30 ring-2 ring-blue-500/50"
+          ? "border-accent bg-accent/5 dark:bg-accent/10 ring-2 ring-accent/50"
           : `${tc.border} ${tc.glass}`
       } ${
         isDragging
