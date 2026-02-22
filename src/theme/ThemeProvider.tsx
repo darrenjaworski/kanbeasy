@@ -90,14 +90,17 @@ export function ThemeProvider({
       return stored === "true";
     });
 
-  const setThemePreference = useCallback((pref: ThemePreference) => {
-    setThemePreferenceState(pref);
-    if (pref === "system") {
-      setThemeId(getDefaultThemeForMode(getSystemTheme()).id as ThemeId);
-    } else {
-      setThemeId(getDefaultThemeForMode(pref).id as ThemeId);
-    }
-  }, []);
+  const setThemePreference = useCallback(
+    (pref: ThemePreference) => {
+      setThemePreferenceState(pref);
+      const newMode = pref === "system" ? getSystemTheme() : pref;
+      const currentTheme = getThemeById(themeId);
+      if (currentTheme?.mode !== newMode) {
+        setThemeId(getDefaultThemeForMode(newMode).id as ThemeId);
+      }
+    },
+    [themeId],
+  );
 
   // Listen for OS color-scheme changes when preference is "system"
   useEffect(() => {
