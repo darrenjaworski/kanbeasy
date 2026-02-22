@@ -5,26 +5,39 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  workflow_run:
-    workflows: [static checks]
-    types:
-      - completed
+  push:
+    tags:
+      - "v*"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run type:check
+      - run: npx vitest run --reporter=dot --reporter=github-actions
+      - run: npm run build
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
 
       - run: npm ci
       - run: PUBLIC_URL="https://darrenjaworski.github.io/kanbeasy" npm run build
@@ -32,4 +45,4 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist #
+          folder: dist
