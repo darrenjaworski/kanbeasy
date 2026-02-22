@@ -53,6 +53,13 @@ The app uses React Context for state management with two main providers:
 - Type-safe state management with TypeScript interfaces
 - Context providers wrap the entire app in `main.tsx`
 
+### localStorage Versioning
+All localStorage data is part of the export/import system (`src/utils/exportBoard.ts`). The export format includes a `version` field (currently `1`). When making changes to localStorage data structures:
+- **Bump the export version number** in `exportBoard.ts` when the shape of stored data changes
+- **Write a migration** in the future import tool that can upgrade older export versions to the current version
+- This ensures users can export on one version and import on a newer version without data loss
+- Storage keys are centralized in `src/constants/storage.ts`
+
 ### Component Structure
 - `App.tsx`: Main layout with Header, Board, Footer, and WelcomeModal
 - `components/Board.tsx`: Main drag-and-drop board implementation
