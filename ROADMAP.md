@@ -61,5 +61,5 @@ Settings
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
 - limit the number of columns
-- undo/redo
+- ✅ undo/redo (dev-only feature flag)
 - multiple boards

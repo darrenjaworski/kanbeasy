@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0]
+
+### Features
+
+- Add undo/redo for board actions via Cmd+Z / Cmd+Shift+Z with floating UI controls (dev-only feature flag)
+- Add e2e test coverage for analytics, search, export/import, and card count badges
+
+### Fixed
+
+- Search match count overlapping native clear button in search input
+
 ## [1.9.2]
 
 ### Fixed
