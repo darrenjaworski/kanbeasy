@@ -189,7 +189,6 @@ export function SettingsModal({ open, onClose }: Props) {
           </div>
         </fieldset>
 
-
         {/* Board settings */}
         <div className="space-y-3 text-sm font-medium mb-4">
           <label className="flex items-center justify-between gap-3 cursor-pointer select-none">
@@ -218,7 +217,9 @@ export function SettingsModal({ open, onClose }: Props) {
                 type="checkbox"
                 role="switch"
                 checked={deleteColumnWarningEnabled}
-                onChange={(e) => setDeleteColumnWarningEnabled(e.target.checked)}
+                onChange={(e) =>
+                  setDeleteColumnWarningEnabled(e.target.checked)
+                }
                 className="sr-only peer"
               />
               <span className="block h-6 w-10 rounded-full bg-black/10 dark:bg-white/15 peer-checked:bg-accent transition-colors relative" />
@@ -270,7 +271,6 @@ export function SettingsModal({ open, onClose }: Props) {
             </div>
           </fieldset>
         </div>
-
 
         {/* Actions */}
         <div className="space-y-2">
@@ -334,13 +334,6 @@ export function SettingsModal({ open, onClose }: Props) {
             className={`${tc.dangerButton} w-full rounded-md px-3 py-1.5`}
           >
             Clear board data
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className={`${tc.button} w-full rounded-md px-3 py-1.5`}
-          >
-            Close
           </button>
         </div>
 
