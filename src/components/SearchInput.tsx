@@ -7,6 +7,7 @@ export function SearchInput() {
   return (
     <div className="relative flex-1 max-w-md">
       <input
+        id="search-cards"
         type="search"
         placeholder="Search cards..."
         value={searchQuery}
