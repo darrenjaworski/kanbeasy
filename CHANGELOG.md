@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0]
+
 ### Features
 
 - Export board data as JSON file from Settings modal for backup purposes.
-- Import board data from JSON file in Settings modal to restore backups.
+- Import board data from JSON file in Settings modal to restore backups, with loading indicator and completion feedback.
+
+### Fixed
+
+- Card count badge sliding under column action buttons when editing column title without hovering.
 
 ## [1.7.0]
 
