@@ -6,9 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Development server**: `npm run dev` (starts Vite dev server on localhost:5173)
 - **Build**: `npm run build` (TypeScript compilation + Vite build)
+- **Bundle analysis**: `npm run build:analyze` (opens interactive treemap of bundle contents)
 - **Type checking**: `npm run type:check` (TypeScript without emit)
 - **Linting**: `npm run lint` (ESLint)
-- **Full validation**: `npm run static-checks` (runs lint, type-check, build, and test:run)
+- **Formatting**: `npm run format` (Prettier — write) / `npm run format:check` (Prettier — verify)
+- **Unused code**: `npm run knip` (detect unused files, exports, and dependencies)
+- **Full validation**: `npm run static-checks` (runs format:check, lint, knip, type-check, build, and test:run)
 
 ### Testing
 

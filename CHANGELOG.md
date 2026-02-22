@@ -16,6 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Harden ESLint config with eqeqeq, no-console, prefer-const, consistent-type-imports, and stricter no-unused-vars rules
 - Fix all lint warnings: add coverage to global ignores, correct React hook dependency arrays, enforce strict equality across codebase, replace inline import() types with proper type imports
 - Update CLAUDE.md to require routine static checks during development and tests alongside every feature or fix
+- Add Prettier for code formatting with `format` and `format:check` scripts
+- Add eslint-config-prettier to disable conflicting ESLint formatting rules
+- Add Knip for unused code detection with `knip` script (included in static-checks)
+- Add bundle size tracking via `preactjs/compressed-size-action` on PRs and push to main
+- Add `rollup-plugin-visualizer` with `build:analyze` script for local bundle analysis
+- Add Lighthouse CI audit workflow triggered after GitHub Pages deploy
+- Extract static checks into a reusable composite GitHub Action
+- Add Lighthouse audit badge to README
+- Apply Prettier formatting to entire codebase
+- Remove unused exports found by Knip (DragType, ModalProps, ThemeColors, ThemeDefinition, CardReverseTime, CardCycleTime, ExportData, ValidatedImport, ImportResult, DEFAULT_THEME_ID)
+- Prepend `format:check` and `knip` to `static-checks` pipeline
 
 ## [1.11.0]
 
