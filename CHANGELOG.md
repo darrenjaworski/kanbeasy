@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.2]
+
+### Changed
+
+- Add bottom padding to board to compensate for footer size
+
 ## [1.12.1]
 
 ### Changed
