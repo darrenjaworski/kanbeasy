@@ -3,6 +3,7 @@
 [![static checks](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml)
 [![post-deploy e2e](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml)
 [![lighthouse audit](https://github.com/darrenjaworski/kanbeasy/actions/workflows/lighthouse.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/lighthouse.yml)
+![bundle size](https://img.shields.io/endpoint?url=https://darrenjaworski.github.io/kanbeasy/bundle-size.json)
 
 Kanbeasy is an ultra simple, local-first kanban-style task organizer built with React, TypeScript and Vite. It focuses on a minimal UI, keyboard and touch-friendly drag-and-drop, and a small but useful feature set (resizable columns, dark mode, configurable card density). The app stores data locally by default and aims to be a lightweight alternative for personal task management.
 

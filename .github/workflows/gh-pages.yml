@@ -41,6 +41,20 @@ jobs:
       - run: npm ci
       - run: PUBLIC_URL="https://darrenjaworski.github.io/kanbeasy" npm run build
 
+      - name: Generate bundle size badge
+        run: |
+          JS_SIZE=$(gzip -c dist/assets/*.js | wc -c)
+          CSS_SIZE=$(gzip -c dist/assets/*.css | wc -c)
+          TOTAL=$((JS_SIZE + CSS_SIZE))
+          if [ $TOTAL -ge 1048576 ]; then
+            SIZE="$(echo "scale=1; $TOTAL/1048576" | bc) MB"
+          elif [ $TOTAL -ge 1024 ]; then
+            SIZE="$(echo "scale=1; $TOTAL/1024" | bc) kB"
+          else
+            SIZE="${TOTAL} B"
+          fi
+          echo "{\"schemaVersion\":1,\"label\":\"bundle size (gzip)\",\"message\":\"${SIZE}\",\"color\":\"blue\"}" > dist/bundle-size.json
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
