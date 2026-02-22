@@ -118,7 +118,7 @@ describe("import board integration", () => {
 
     // Close the settings modal to see the board
     await user.click(
-      within(dialog).getByRole("button", { name: /close$/i })
+      within(dialog).getByRole("button", { name: /close settings/i })
     );
 
     // The imported column title appears in an input

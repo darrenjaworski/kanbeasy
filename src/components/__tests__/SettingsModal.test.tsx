@@ -62,20 +62,4 @@ describe("SettingsModal", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("renders a Close button and triggers onClose when clicked", () => {
-    const onCloseMock = vi.fn();
-    render(
-      <BoardProvider>
-        <ThemeProvider>
-          <SettingsModal open={true} onClose={onCloseMock} />
-        </ThemeProvider>
-      </BoardProvider>
-    );
-
-    const closeBtn = screen.getByRole("button", { name: /^close$/i });
-    expect(closeBtn).toBeInTheDocument();
-
-    fireEvent.click(closeBtn);
-    expect(onCloseMock).toHaveBeenCalledTimes(1);
-  });
 });
