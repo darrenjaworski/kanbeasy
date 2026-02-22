@@ -53,9 +53,9 @@ Settings
   - image attachments (base64 or IndexedDB for larger storage)
   - timestamps (createdAt, columnHistory) to support metrics
 - undo/redo
-- ✅ export board data (import upcoming)
+- ✅ export board data
 - ✅ import board data
-- column card count badges
+- ✅ column card count badges
 - multiple boards
 - basic dashboard showing metrics derived from the board
   - how long a card takes to move between columns
