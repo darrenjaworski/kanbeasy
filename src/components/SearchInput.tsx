@@ -14,13 +14,13 @@ export function SearchInput() {
         placeholder="Search cards..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-3 ${showMatchCount ? "pr-24" : ""} py-1.5 text-sm placeholder:text-black/40 dark:placeholder:text-white/40 focus:outline-hidden focus:ring-2 focus:ring-accent`}
+        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-3 ${showMatchCount ? "pr-18" : ""} py-1.5 text-sm placeholder:text-black/40 dark:placeholder:text-white/40 focus:outline-hidden focus:ring-2 focus:ring-accent`}
         aria-label="Search cards"
         data-testid="search-input"
       />
       {showMatchCount && (
         <div
-          className={`pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 text-xs ${tc.textFaint}`}
+          className={`pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs ${tc.textFaint}`}
         >
           {matchingCardIds.size}{" "}
           {matchingCardIds.size === 1 ? "match" : "matches"}
