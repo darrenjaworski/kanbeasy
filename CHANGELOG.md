@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.2]
+
+### Fixed
+
+- Fix test failures from removed Close button in settings modal
+
 ## [1.9.1]
 
 ### Changed
