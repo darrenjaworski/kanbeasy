@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add card count badge to column headers that slides left on hover to clear controls.
+
 ## [1.6.1]
 
 ### Changed

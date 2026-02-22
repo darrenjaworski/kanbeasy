@@ -131,6 +131,13 @@ export function Column({
           <CloseIcon className="size-5" />
         </button>
       </div>
+      {/* Card count badge — slides left on hover to clear controls */}
+      <span
+        className={`absolute right-2 top-2 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${tc.glass} px-2.5 text-sm font-medium ${tc.textFaint} transition-[right] duration-200 ease-in-out group-hover:right-20`}
+        aria-label={`${cards.length} card${cards.length === 1 ? "" : "s"}`}
+      >
+        {cards.length}
+      </span>
       <div className="mb-3 mr-16">
         <input
           ref={inputRef}
