@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { computeAverageCycleTime, formatDuration } from "../cycleTime";
+import {
+  computeAverageCycleTime,
+  formatDuration,
+  getCardCycleTimes,
+} from "../cycleTime";
 import type { Column } from "../../board/types";
 
 function makeColumn(cards: Column["cards"]): Column {
@@ -121,6 +125,87 @@ describe("computeAverageCycleTime", () => {
     ]);
     // Only c1 qualifies: 7000 - 1000 = 6000
     expect(computeAverageCycleTime([col])).toBe(6000);
+  });
+});
+
+describe("getCardCycleTimes", () => {
+  it("returns empty array when no cards qualify", () => {
+    expect(getCardCycleTimes([])).toEqual([]);
+    expect(getCardCycleTimes([makeColumn([])])).toEqual([]);
+    expect(
+      getCardCycleTimes([
+        makeColumn([
+          {
+            id: "c1",
+            title: "Unmoved",
+            createdAt: 0,
+            updatedAt: 0,
+            columnHistory: [{ columnId: "a", enteredAt: 1000 }],
+          },
+        ]),
+      ]),
+    ).toEqual([]);
+  });
+
+  it("returns cards sorted descending by cycle time", () => {
+    const col = makeColumn([
+      {
+        id: "c1",
+        title: "Fast Card",
+        createdAt: 0,
+        updatedAt: 0,
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 3000 },
+        ],
+      },
+      {
+        id: "c2",
+        title: "Slow Card",
+        createdAt: 0,
+        updatedAt: 0,
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 9000 },
+        ],
+      },
+    ]);
+    const result = getCardCycleTimes([col]);
+    expect(result).toEqual([
+      { cardTitle: "Slow Card", cycleTimeMs: 8000 },
+      { cardTitle: "Fast Card", cycleTimeMs: 2000 },
+    ]);
+  });
+
+  it("excludes cards with fewer than 2 history entries", () => {
+    const col = makeColumn([
+      {
+        id: "c1",
+        title: "Moved",
+        createdAt: 0,
+        updatedAt: 0,
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 5000 },
+        ],
+      },
+      {
+        id: "c2",
+        title: "Unmoved",
+        createdAt: 0,
+        updatedAt: 0,
+        columnHistory: [{ columnId: "a", enteredAt: 1000 }],
+      },
+      {
+        id: "c3",
+        title: "Grandfathered",
+        createdAt: 0,
+        updatedAt: 0,
+        columnHistory: [],
+      },
+    ]);
+    const result = getCardCycleTimes([col]);
+    expect(result).toEqual([{ cardTitle: "Moved", cycleTimeMs: 4000 }]);
   });
 });
 

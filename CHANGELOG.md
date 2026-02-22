@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Add total cards, cards in flight, throughput, and reverse time metrics to analytics modal
+- Add data disclaimer note to analytics modal
+- Add per-card cycle time table to analytics modal
 - Add average cycle time metric to analytics modal
 - Add development-only feature flag system for gating in-progress features
 - Add analytics button and modal shell in header

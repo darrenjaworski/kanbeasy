@@ -1,24 +1,46 @@
 import type { Column } from "../board/types";
 
+export type CardCycleTime = {
+  cardTitle: string;
+  cycleTimeMs: number;
+};
+
 /**
- * Compute the average cycle time across all cards that have moved between columns.
- * Returns the average in milliseconds, or null if no qualifying cards exist.
+ * Get per-card cycle times for all cards that have moved between columns.
+ * Returns an array sorted descending by cycle time.
  */
-export function computeAverageCycleTime(columns: Column[]): number | null {
-  const cycleTimes: number[] = [];
+export function getCardCycleTimes(columns: Column[]): CardCycleTime[] {
+  const results: CardCycleTime[] = [];
 
   for (const col of columns) {
     for (const card of col.cards) {
       if (card.columnHistory.length < 2) continue;
       const first = card.columnHistory[0];
       const last = card.columnHistory[card.columnHistory.length - 1];
-      cycleTimes.push(last.enteredAt - first.enteredAt);
+      results.push({
+        cardTitle: card.title,
+        cycleTimeMs: last.enteredAt - first.enteredAt,
+      });
     }
   }
 
+  results.sort((a, b) => b.cycleTimeMs - a.cycleTimeMs);
+  return results;
+}
+
+/**
+ * Compute the average cycle time across all cards that have moved between columns.
+ * Returns the average in milliseconds, or null if no qualifying cards exist.
+ */
+export function computeAverageCycleTime(columns: Column[]): number | null {
+  const cycleTimes = getCardCycleTimes(columns);
+
   if (cycleTimes.length === 0) return null;
 
-  return cycleTimes.reduce((sum, t) => sum + t, 0) / cycleTimes.length;
+  return (
+    cycleTimes.reduce((sum, ct) => sum + ct.cycleTimeMs, 0) /
+    cycleTimes.length
+  );
 }
 
 /**
