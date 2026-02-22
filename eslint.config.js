@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import { globalIgnores } from "eslint/config";
 
 export default tseslint.config([
-  globalIgnores(["dist"]),
+  globalIgnores(["dist", "coverage"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -18,6 +18,28 @@ export default tseslint.config([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    rules: {
+      // Enforce strict equality
+      eqeqeq: ["error", "always"],
+      // Disallow console.log (allow warn/error for intentional logging)
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      // Prefer const over let when variable is never reassigned
+      "prefer-const": "error",
+      // Require consistent type imports (type-only imports use `import type`)
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports", fixStyle: "separate-type-imports" },
+      ],
+      // Tighten unused vars: error on unused vars, allow underscore-prefixed args
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
     },
   },
   // Node environment for config and e2e files

@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
   });
-  const target = process.env.CI == "true" ? "/kanbeasy" : "/";
+  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
   await page.goto(target);
 
   await page.getByTestId("get-started-button").click();

@@ -156,6 +156,7 @@ export function BoardProvider({
       state.columns,
       mutations,
       searchQuery,
+      setSearchQuery,
       matchingCardIds,
       canUndo,
       canRedo,

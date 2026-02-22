@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update CLAUDE.md commit conventions to require changelog entries before every commit
 - Expand roadmap with new feature ideas and mobile/tablet usability
 - Deploy to GitHub Pages only on tagged releases instead of every push to main
+- Harden ESLint config with eqeqeq, no-console, prefer-const, consistent-type-imports, and stricter no-unused-vars rules
+- Fix all lint warnings: add coverage to global ignores, correct React hook dependency arrays, enforce strict equality across codebase, replace inline import() types with proper type imports
 
 ## [1.11.0]
 

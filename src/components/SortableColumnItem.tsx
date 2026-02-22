@@ -1,4 +1,5 @@
 import { useMemo, type CSSProperties, type ButtonHTMLAttributes } from "react";
+import type { Card } from "../board/types";
 import { Column } from "./Column";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -13,7 +14,7 @@ export function SortableColumnItem({
 }: Readonly<{
   id: string;
   title: string;
-  cards: import("../board/types").Card[];
+  cards: Card[];
   canDrag: boolean;
   style?: React.CSSProperties;
   index?: number;

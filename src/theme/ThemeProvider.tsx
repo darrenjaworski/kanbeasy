@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
-import type { CardDensity, ThemePreference } from "./types";
+import type { CardDensity, ThemeContextValue, ThemePreference } from "./types";
 import type { ThemeId, ThemeMode } from "./themes";
 import {
   getDefaultThemeForMode,
@@ -164,7 +164,7 @@ export function ThemeProvider({
 
   const theme = getThemeById(themeId);
 
-  const value = useMemo<import("./types").ThemeContextValue>(
+  const value = useMemo<ThemeContextValue>(
     () => ({
       themeId,
       setThemeId,

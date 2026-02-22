@@ -51,7 +51,7 @@ export function validateExportData(parsed: unknown): ImportResult {
 
   // Validate board
   let columns: Column[] = [];
-  if (parsed.board != null) {
+  if (parsed.board !== null && parsed.board !== undefined) {
     if (!isObject(parsed.board)) {
       return { ok: false, error: "Invalid board data." };
     }

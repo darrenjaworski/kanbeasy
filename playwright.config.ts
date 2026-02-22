@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const deployedBaseURL = process.env.E2E_BASE_URL; // e.g. https://<user>.github.io/<repo>
 const isDeployedRun = Boolean(deployedBaseURL);
-const isCI = process.env.CI == "true";
+const isCI = process.env.CI === "true";
 
 export default defineConfig({
   testDir: "./tests-e2e",

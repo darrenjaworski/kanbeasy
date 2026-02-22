@@ -19,7 +19,7 @@ export function useBoardMutations(
         ],
       }));
     },
-    [],
+    [setState],
   );
 
   const updateColumn = useCallback<BoardContextValue["updateColumn"]>(
@@ -31,21 +31,21 @@ export function useBoardMutations(
         ),
       }));
     },
-    [],
+    [setState],
   );
 
   const removeColumn = useCallback<BoardContextValue["removeColumn"]>(
     (id) => {
       setState((s) => ({ columns: s.columns.filter((c) => c.id !== id) }));
     },
-    [],
+    [setState],
   );
 
   const setColumns = useCallback<BoardContextValue["setColumns"]>(
     (cols) => {
       setState({ columns: cols });
     },
-    [],
+    [setState],
   );
 
   const addCard = useCallback<BoardContextValue["addCard"]>(
@@ -66,7 +66,7 @@ export function useBoardMutations(
         ),
       }));
     },
-    [],
+    [setState],
   );
 
   const removeCard = useCallback<BoardContextValue["removeCard"]>(
@@ -83,7 +83,7 @@ export function useBoardMutations(
         return { columns: newColumns };
       });
     },
-    [],
+    [setState],
   );
 
   const updateCard = useCallback<BoardContextValue["updateCard"]>(
@@ -102,7 +102,7 @@ export function useBoardMutations(
         return { columns: newColumns };
       });
     },
-    [],
+    [setState],
   );
 
   const sortCards = useCallback<BoardContextValue["sortCards"]>(
@@ -122,7 +122,7 @@ export function useBoardMutations(
         return { columns: nextColumns };
       });
     },
-    [],
+    [setState],
   );
 
   const reorderCard = useCallback<BoardContextValue["reorderCard"]>(
@@ -143,12 +143,12 @@ export function useBoardMutations(
         return { columns: newColumns };
       });
     },
-    [],
+    [setState],
   );
 
   const resetBoard = useCallback<BoardContextValue["resetBoard"]>(() => {
     setState(defaultState);
-  }, []);
+  }, [setState]);
 
   return {
     addColumn,
