@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0]
+
+### Features
+
+- Enable undo/redo and analytics for all users (previously behind dev-only feature flag)
+
+### Changed
+
+- Extract reusable ToggleSwitch, ModalHeader, and MetricCard components from settings and analytics modals
+- Extract useInlineEdit hook to deduplicate inline edit logic across Column and SortableCardItem
+- Split BoardProvider into useBoardMutations and useCardSearch hooks for maintainability
+- Add barrel exports for icons and hooks directories
+
+### Tests
+
+- Add unit tests for useInlineEdit hook and validation type guards
+- Add e2e tests for undo/redo buttons and keyboard shortcuts
+- Remove outdated feature flag mock from undo/redo integration tests
+
 ## [1.10.0]
 
 ### Features

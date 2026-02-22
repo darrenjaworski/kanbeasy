@@ -38,6 +38,7 @@ an ultra simple task organizer
   - ✅ how long a card takes to move between columns
   - ✅ time spent in each column
   - ✅ throughput and cycle time
+- ✅ undo/redo for board actions
 
 Settings
 
@@ -61,5 +62,4 @@ Settings
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
 - limit the number of columns
-- ✅ undo/redo (dev-only feature flag)
 - multiple boards
