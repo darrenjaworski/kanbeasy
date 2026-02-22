@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0]
+
 ### Features
 
 - Add "Owl assistant" easter egg: a floating owl buddy in the bottom-left corner that shares productivity tips and programming jokes
