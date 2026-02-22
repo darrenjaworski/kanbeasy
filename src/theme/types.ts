@@ -17,4 +17,6 @@ export type ThemeContextValue = Readonly<{
   setColumnResizingEnabled: (enabled: boolean) => void;
   deleteColumnWarningEnabled: boolean;
   setDeleteColumnWarningEnabled: (enabled: boolean) => void;
+  owlModeEnabled: boolean;
+  setOwlModeEnabled: (enabled: boolean) => void;
 }>;

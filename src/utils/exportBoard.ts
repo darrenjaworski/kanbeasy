@@ -10,6 +10,7 @@ interface ExportData {
     cardDensity: string;
     columnResizingEnabled: string;
     deleteColumnWarning: string;
+    owlModeEnabled: string;
   };
 }
 
@@ -38,6 +39,7 @@ function buildExportData(): ExportData {
       cardDensity: readRaw(STORAGE_KEYS.CARD_DENSITY),
       columnResizingEnabled: readRaw(STORAGE_KEYS.COLUMN_RESIZING_ENABLED),
       deleteColumnWarning: readRaw(STORAGE_KEYS.DELETE_COLUMN_WARNING),
+      owlModeEnabled: readRaw(STORAGE_KEYS.OWL_MODE_ENABLED),
     },
   };
 }

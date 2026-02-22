@@ -84,6 +84,7 @@ describe("exportBoard", () => {
       cardDensity: "medium",
       columnResizingEnabled: "true",
       deleteColumnWarning: "true",
+      owlModeEnabled: "",
     });
   });
 

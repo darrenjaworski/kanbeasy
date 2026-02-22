@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { WelcomeModal } from "./components/WelcomeModal";
 import { UndoRedoControls } from "./components/UndoRedoControls";
+import { OwlBuddy } from "./components/OwlBuddy";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Header />
       <Board />
       <UndoRedoControls />
+      <OwlBuddy />
       <Footer />
     </div>
   );

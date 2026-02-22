@@ -89,6 +89,10 @@ export function ThemeProvider({
       );
       return stored === "true";
     });
+  const [owlModeEnabled, setOwlModeEnabled] = useState<boolean>(() => {
+    const stored = getStringFromStorage(STORAGE_KEYS.OWL_MODE_ENABLED, "false");
+    return stored === "true";
+  });
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -160,6 +164,10 @@ export function ThemeProvider({
     );
   }, [deleteColumnWarningEnabled]);
 
+  useEffect(() => {
+    saveStringToStorage(STORAGE_KEYS.OWL_MODE_ENABLED, String(owlModeEnabled));
+  }, [owlModeEnabled]);
+
   const theme = getThemeById(themeId);
 
   const value = useMemo<ThemeContextValue>(
@@ -176,6 +184,8 @@ export function ThemeProvider({
       setColumnResizingEnabled,
       deleteColumnWarningEnabled,
       setDeleteColumnWarningEnabled,
+      owlModeEnabled,
+      setOwlModeEnabled,
     }),
     [
       themeId,
@@ -185,6 +195,7 @@ export function ThemeProvider({
       cardDensity,
       columnResizingEnabled,
       deleteColumnWarningEnabled,
+      owlModeEnabled,
     ],
   );
 

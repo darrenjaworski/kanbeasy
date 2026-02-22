@@ -43,6 +43,8 @@ export function SettingsModal({ open, onClose }: Props) {
     setColumnResizingEnabled,
     deleteColumnWarningEnabled,
     setDeleteColumnWarningEnabled,
+    owlModeEnabled,
+    setOwlModeEnabled,
   } = useTheme();
   const { setColumns, resetBoard } = useBoard();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,6 +94,7 @@ export function SettingsModal({ open, onClose }: Props) {
     setCardDensity(settings.cardDensity);
     setColumnResizingEnabled(settings.columnResizingEnabled);
     setDeleteColumnWarningEnabled(settings.deleteColumnWarning);
+    setOwlModeEnabled(settings.owlModeEnabled);
 
     setImportStatus("complete");
     setTimeout(() => setImportStatus("idle"), 600);
@@ -196,6 +199,12 @@ export function SettingsModal({ open, onClose }: Props) {
             label="Warn before deleting columns with cards"
             checked={deleteColumnWarningEnabled}
             onChange={setDeleteColumnWarningEnabled}
+          />
+          <ToggleSwitch
+            id="owl-mode"
+            label="Owl assistant"
+            checked={owlModeEnabled}
+            onChange={setOwlModeEnabled}
           />
           <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
             <legend className="sr-only">Card density</legend>

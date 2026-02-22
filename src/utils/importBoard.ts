@@ -12,6 +12,7 @@ interface ValidatedImport {
     cardDensity: CardDensity;
     columnResizingEnabled: boolean;
     deleteColumnWarning: boolean;
+    owlModeEnabled: boolean;
   };
 }
 
@@ -101,6 +102,13 @@ export function validateExportData(parsed: unknown): ImportResult {
         ? s.deleteColumnWarning
         : true;
 
+  const owlModeEnabled =
+    typeof s.owlModeEnabled === "string"
+      ? s.owlModeEnabled === "true"
+      : typeof s.owlModeEnabled === "boolean"
+        ? s.owlModeEnabled
+        : false;
+
   return {
     ok: true,
     data: {
@@ -111,6 +119,7 @@ export function validateExportData(parsed: unknown): ImportResult {
         cardDensity,
         columnResizingEnabled,
         deleteColumnWarning,
+        owlModeEnabled,
       },
     },
   };

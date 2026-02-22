@@ -21,4 +21,7 @@ export const STORAGE_KEYS = {
 
   /** Theme preference (light/dark/system) */
   THEME_PREFERENCE: "kanbeasy:themePreference",
+
+  /** Owl mode easter egg */
+  OWL_MODE_ENABLED: "kanbeasy:owlModeEnabled",
 } as const;
