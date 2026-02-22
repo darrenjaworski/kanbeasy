@@ -1,6 +1,5 @@
 import React from "react";
-import { CardDragIcon } from "./icons/CardDragIcon";
-import { CloseIcon } from "./icons/CloseIcon";
+import { CardDragIcon, CloseIcon } from "./icons";
 import { tc } from "../theme/classNames";
 
 interface CardControlsProps {

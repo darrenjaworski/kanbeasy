@@ -1,10 +1,11 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useMemo, type CSSProperties } from "react";
+import { useCallback, useMemo, useRef, type CSSProperties } from "react";
 import type { Card } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../theme/classNames";
+import { useInlineEdit } from "../hooks";
 
 type SortableCardItemProps = Readonly<{
   card: Card;
@@ -46,6 +47,22 @@ export function SortableCardItem({
     [transform, transition, isDragging]
   );
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const cardValue = card.title || "New card";
+  const revertCard = useCallback(() => {
+    if (textareaRef.current) textareaRef.current.value = cardValue;
+  }, [cardValue]);
+  const saveCard = useCallback(
+    (value: string) => onUpdate(value),
+    [onUpdate],
+  );
+  const { onKeyDown: cardKeyDown, onBlur: cardBlur } = useInlineEdit({
+    originalValue: card.title,
+    onSave: saveCard,
+    onRevert: revertCard,
+    multiline: true,
+  });
+
   const rowsForDensity = (() => {
     if (density === "small") return 1;
     if (density === "large") return 3;
@@ -78,30 +95,14 @@ export function SortableCardItem({
       />
 
       <textarea
+        ref={textareaRef}
         id={`${columnId}-${card.id}-content`}
         aria-label="Card content"
-        defaultValue={card.title || "New card"}
+        defaultValue={cardValue}
         className={`${tc.input} w-full resize-y rounded-xs`}
         rows={rowsForDensity}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            (e.currentTarget as HTMLTextAreaElement).blur();
-          }
-          if (e.key === "Escape") {
-            (e.currentTarget as HTMLTextAreaElement).value =
-              card.title || "New card";
-            (e.currentTarget as HTMLTextAreaElement).blur();
-          }
-        }}
-        onBlur={(e) => {
-          const next = e.currentTarget.value.trim();
-          if (!next) {
-            e.currentTarget.value = card.title || "New card";
-            return;
-          }
-          if (next !== card.title) onUpdate(next);
-        }}
+        onKeyDown={cardKeyDown}
+        onBlur={cardBlur}
         data-testid={`card-content-${index}`}
       />
     </div>

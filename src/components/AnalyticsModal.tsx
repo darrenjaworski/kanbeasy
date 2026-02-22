@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
-import { AnalyticsIcon } from "./icons/AnalyticsIcon";
-import { CloseIcon } from "./icons/CloseIcon";
+import { AnalyticsIcon } from "./icons";
 import { tc } from "../theme/classNames";
+import { ModalHeader } from "./ModalHeader";
+import { MetricCard } from "./MetricCard";
 import { useBoard } from "../board/useBoard";
 import {
   computeAverageCycleTime,
@@ -45,23 +46,12 @@ export function AnalyticsModal({ open, onClose }: Props) {
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="analytics-title">
       <div className="p-4 pb-2">
-        <div className="flex items-center gap-3">
-          <AnalyticsIcon className={`size-5 ${tc.textMuted}`} />
-          <h2
-            id="analytics-title"
-            className="text-base font-semibold tracking-tight"
-          >
-            Analytics
-          </h2>
-          <button
-            type="button"
-            className={`ml-auto ${tc.iconButton} h-6 w-6 rounded-full`}
-            onClick={onClose}
-            aria-label="Close analytics"
-          >
-            <CloseIcon className="size-4" />
-          </button>
-        </div>
+        <ModalHeader
+          icon={AnalyticsIcon}
+          title="Analytics"
+          titleId="analytics-title"
+          onClose={onClose}
+        />
       </div>
 
       <div className="p-4 pt-3 max-h-[60vh] overflow-y-auto">
@@ -72,67 +62,26 @@ export function AnalyticsModal({ open, onClose }: Props) {
 
         {/* Metric cards grid */}
         <div className="grid grid-cols-2 gap-3">
-          <div className={`rounded-lg border ${tc.border} ${tc.glass} p-4`}>
-            <p
-              className={`text-xs font-medium uppercase tracking-wide ${tc.textFaint} mb-1`}
-            >
-              Total Cards
-            </p>
-            <p className="text-2xl font-semibold tabular-nums">{totalCards}</p>
-            <p className={`text-xs ${tc.textFaint} mt-2`}>
-              Across all columns
-            </p>
-          </div>
-
-          <div className={`rounded-lg border ${tc.border} ${tc.glass} p-4`}>
-            <p
-              className={`text-xs font-medium uppercase tracking-wide ${tc.textFaint} mb-1`}
-            >
-              Cards in Flight
-            </p>
-            <p className="text-2xl font-semibold tabular-nums">
-              {cardsInFlight}
-            </p>
-            <p className={`text-xs ${tc.textFaint} mt-2`}>
-              Cards not in the first or last column
-            </p>
-          </div>
-
-          <div className={`rounded-lg border ${tc.border} ${tc.glass} p-4`}>
-            <p
-              className={`text-xs font-medium uppercase tracking-wide ${tc.textFaint} mb-1`}
-            >
-              Avg Cycle Time
-            </p>
-            {avgCycleTime !== null ? (
-              <p className="text-2xl font-semibold tabular-nums">
-                {formatDuration(avgCycleTime)}
-              </p>
-            ) : (
-              <p className={`text-sm ${tc.textMuted}`}>Not enough data</p>
-            )}
-            <p className={`text-xs ${tc.textFaint} mt-2`}>
-              Average time from first to last column
-            </p>
-          </div>
-
-          <div className={`rounded-lg border ${tc.border} ${tc.glass} p-4`}>
-            <p
-              className={`text-xs font-medium uppercase tracking-wide ${tc.textFaint} mb-1`}
-            >
-              Avg Reverse Time
-            </p>
-            {avgReverseTime !== null ? (
-              <p className="text-2xl font-semibold tabular-nums">
-                {formatDuration(avgReverseTime)}
-              </p>
-            ) : (
-              <p className={`text-sm ${tc.textMuted}`}>Not enough data</p>
-            )}
-            <p className={`text-xs ${tc.textFaint} mt-2`}>
-              Average time cards spend moving backwards
-            </p>
-          </div>
+          <MetricCard
+            label="Total Cards"
+            value={String(totalCards)}
+            description="Across all columns"
+          />
+          <MetricCard
+            label="Cards in Flight"
+            value={String(cardsInFlight)}
+            description="Cards not in the first or last column"
+          />
+          <MetricCard
+            label="Avg Cycle Time"
+            value={avgCycleTime !== null ? formatDuration(avgCycleTime) : null}
+            description="Average time from first to last column"
+          />
+          <MetricCard
+            label="Avg Reverse Time"
+            value={avgReverseTime !== null ? formatDuration(avgReverseTime) : null}
+            description="Average time cards spend moving backwards"
+          />
         </div>
 
         {/* Throughput card */}

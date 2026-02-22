@@ -1,8 +1,7 @@
 import { useBoard } from "../board/useBoard";
-import { useUndoRedoKeyboard } from "../hooks/useUndoRedoKeyboard";
+import { useUndoRedoKeyboard } from "../hooks";
 import { tc } from "../theme/classNames";
-import { UndoIcon } from "./icons/UndoIcon";
-import { RedoIcon } from "./icons/RedoIcon";
+import { UndoIcon, RedoIcon } from "./icons";
 
 export function UndoRedoControls() {
   const { canUndo, canRedo, undo, redo } = useBoard();

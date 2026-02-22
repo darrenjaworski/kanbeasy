@@ -2,8 +2,7 @@ import { useState } from "react";
 
 import { SettingsModal } from "./SettingsModal";
 import { AnalyticsModal } from "./AnalyticsModal";
-import { SettingsGearIcon } from "./icons/SettingsGearIcon";
-import { AnalyticsIcon } from "./icons/AnalyticsIcon";
+import { SettingsGearIcon, AnalyticsIcon } from "./icons";
 import { SearchInput } from "./SearchInput";
 import { tc } from "../theme/classNames";
 import { featureFlags } from "../constants/featureFlags";

@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { CloseIcon } from "./icons/CloseIcon";
+import { CloseIcon } from "./icons";
 import { useEffect, useState } from "react";
 import { tc } from "../theme/classNames";
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Card } from "../board/types";
 import { useTheme } from "../theme/useTheme";
 import {
@@ -8,11 +8,11 @@ import {
 } from "../constants/column";
 
 import { useBoard } from "../board/useBoard";
-import { DragIndicatorIcon } from "./icons/DragIndicatorIcon";
-import { CloseIcon } from "./icons/CloseIcon";
+import { DragIndicatorIcon, CloseIcon } from "./icons";
 import { CardList } from "./CardList";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { tc } from "../theme/classNames";
+import { useInlineEdit } from "../hooks";
 
 type Props = Readonly<{
   id: string;
@@ -49,6 +49,16 @@ export function Column({
   useEffect(() => {
     setTempTitle(title);
   }, [title]);
+  const revertTitle = useCallback(() => setTempTitle(title), [title]);
+  const saveTitle = useCallback(
+    (value: string) => updateColumn(id, value),
+    [id, updateColumn],
+  );
+  const { onKeyDown: titleKeyDown, onBlur: titleBlur } = useInlineEdit({
+    originalValue: title,
+    onSave: saveTitle,
+    onRevert: revertTitle,
+  });
   // Mouse event handlers for resizing
   const onResizeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     resizing.current = true;
@@ -148,24 +158,8 @@ export function Column({
           onFocus={(e) => e.target.select()}
           onChange={(e) => setTempTitle(e.target.value)}
           id={`${id}-title`}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              (e.currentTarget as HTMLInputElement).blur();
-            }
-            if (e.key === "Escape") {
-              setTempTitle(title);
-              (e.currentTarget as HTMLInputElement).blur();
-            }
-          }}
-          onBlur={() => {
-            const next = tempTitle.trim();
-            if (!next) {
-              setTempTitle(title);
-              return;
-            }
-            if (next !== title) updateColumn(id, next);
-          }}
+          onKeyDown={titleKeyDown}
+          onBlur={titleBlur}
           data-testid={`column-title-input-${index}`}
         />
       </div>
