@@ -74,3 +74,7 @@ Settings
 - activity log (timeline of card movements, edits, deletions)
 - offline PWA (service worker + manifest for standalone install)
 - print/PDF view (clean print stylesheet for standups and sharing)
+- responsive design for tablets and mobile devices
+  - touch-friendly drag and drop
+  - mobile-optimized column layout (stacked or swipeable)
+  - appropriately sized tap targets and spacing
