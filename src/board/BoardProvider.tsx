@@ -6,7 +6,6 @@ import { STORAGE_KEYS } from "../constants/storage";
 import { isColumn } from "./validation";
 import { migrateColumns } from "./migration";
 import { useUndoableState } from "./useUndoableState";
-import { featureFlags } from "../constants/featureFlags";
 import { useBoardMutations } from "./useBoardMutations";
 import { useCardSearch } from "./useCardSearch";
 
@@ -129,7 +128,6 @@ export function BoardProvider({
     canUndo,
     canRedo,
   } = useUndoableState<BoardState>(() => loadState(), {
-    enabled: featureFlags.undoRedo,
     maxHistory: 50,
   });
 

@@ -5,7 +5,6 @@ import { AnalyticsModal } from "./AnalyticsModal";
 import { SettingsGearIcon, AnalyticsIcon } from "./icons";
 import { SearchInput } from "./SearchInput";
 import { tc } from "../theme/classNames";
-import { featureFlags } from "../constants/featureFlags";
 
 export function Header() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -22,16 +21,14 @@ export function Header() {
         </h1>
         <SearchInput />
         <div className="ml-auto flex items-center gap-1">
-          {featureFlags.analytics && (
-            <button
-              type="button"
-              className={`${tc.button} rounded-md p-2 inline-flex items-center justify-center`}
-              aria-label="Open analytics"
-              onClick={() => setAnalyticsOpen(true)}
-            >
-              <AnalyticsIcon className="size-5" />
-            </button>
-          )}
+          <button
+            type="button"
+            className={`${tc.button} rounded-md p-2 inline-flex items-center justify-center`}
+            aria-label="Open analytics"
+            onClick={() => setAnalyticsOpen(true)}
+          >
+            <AnalyticsIcon className="size-5" />
+          </button>
           <button
             type="button"
             className={`${tc.button} rounded-md p-2 inline-flex items-center justify-center`}
@@ -42,9 +39,7 @@ export function Header() {
           </button>
         </div>
       </div>
-      {featureFlags.analytics && (
-        <AnalyticsModal open={analyticsOpen} onClose={() => setAnalyticsOpen(false)} />
-      )}
+      <AnalyticsModal open={analyticsOpen} onClose={() => setAnalyticsOpen(false)} />
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </header>
   );
