@@ -1,7 +1,7 @@
 import { STORAGE_KEYS } from "../constants/storage";
 
 export interface ExportData {
-  version: 1;
+  version: 1 | 2;
   exportedAt: string;
   board: unknown;
   settings: {
@@ -29,7 +29,7 @@ function buildExportData(): ExportData {
   }
 
   return {
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
     board,
     settings: {

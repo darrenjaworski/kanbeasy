@@ -1,12 +1,22 @@
+export type ColumnHistoryEntry = Readonly<{
+  columnId: string;
+  enteredAt: number;
+}>;
+
 export type Card = Readonly<{
   id: string;
   title: string;
+  createdAt: number;
+  updatedAt: number;
+  columnHistory: ColumnHistoryEntry[];
 }>;
 
 export type Column = Readonly<{
   id: string;
   title: string;
   cards: Card[];
+  createdAt: number;
+  updatedAt: number;
 }>;
 
 export type BoardState = Readonly<{

@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   findColumnIndex,
   findCardIndex,
@@ -8,32 +8,45 @@ import {
   moveCardAcrossColumns,
   dropCardOnColumn,
 } from "../dragUtils";
-import type { Column } from "../types";
+import type { Card, Column } from "../types";
+
+function makeCard(id: string, title: string, columnId: string): Card {
+  return {
+    id,
+    title,
+    createdAt: 1000,
+    updatedAt: 1000,
+    columnHistory: [{ columnId, enteredAt: 1000 }],
+  };
+}
+
+function makeColumn(id: string, title: string, cards: Card[]): Column {
+  return { id, title, cards, createdAt: 1000, updatedAt: 1000 };
+}
 
 describe("dragUtils", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-06-15T12:00:00Z"));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const NOW = new Date("2025-06-15T12:00:00Z").getTime();
+
   const mockColumns: Column[] = [
-    {
-      id: "col-1",
-      title: "Column 1",
-      cards: [
-        { id: "card-1", title: "Card 1" },
-        { id: "card-2", title: "Card 2" },
-        { id: "card-3", title: "Card 3" },
-      ],
-    },
-    {
-      id: "col-2",
-      title: "Column 2",
-      cards: [
-        { id: "card-4", title: "Card 4" },
-        { id: "card-5", title: "Card 5" },
-      ],
-    },
-    {
-      id: "col-3",
-      title: "Column 3",
-      cards: [],
-    },
+    makeColumn("col-1", "Column 1", [
+      makeCard("card-1", "Card 1", "col-1"),
+      makeCard("card-2", "Card 2", "col-1"),
+      makeCard("card-3", "Card 3", "col-1"),
+    ]),
+    makeColumn("col-2", "Column 2", [
+      makeCard("card-4", "Card 4", "col-2"),
+      makeCard("card-5", "Card 5", "col-2"),
+    ]),
+    makeColumn("col-3", "Column 3", []),
   ];
 
   describe("findColumnIndex", () => {
@@ -65,12 +78,12 @@ describe("dragUtils", () => {
   describe("findCardInColumns", () => {
     it("finds card in the first column", () => {
       const card = findCardInColumns(mockColumns, "card-1");
-      expect(card).toEqual({ id: "card-1", title: "Card 1" });
+      expect(card).toEqual(makeCard("card-1", "Card 1", "col-1"));
     });
 
     it("finds card in the second column", () => {
       const card = findCardInColumns(mockColumns, "card-4");
-      expect(card).toEqual({ id: "card-4", title: "Card 4" });
+      expect(card).toEqual(makeCard("card-4", "Card 4", "col-2"));
     });
 
     it("returns null when card does not exist", () => {
@@ -87,6 +100,12 @@ describe("dragUtils", () => {
       expect(result[2].id).toBe("col-3");
     });
 
+    it("bumps updatedAt on reordered column", () => {
+      const result = reorderColumns(mockColumns, "col-1", "col-2");
+      expect(result[1].updatedAt).toBe(NOW); // col-1 was moved
+      expect(result[0].updatedAt).toBe(1000); // col-2 unchanged
+    });
+
     it("returns original array when oldIndex equals newIndex", () => {
       const result = reorderColumns(mockColumns, "col-1", "col-1");
       expect(result).toBe(mockColumns);
@@ -100,8 +119,6 @@ describe("dragUtils", () => {
 
   describe("moveCardWithinColumn", () => {
     it("reorders cards within the same column", () => {
-      // Moving card-1 (index 0) to card-3's position (index 2)
-      // arrayMove([card-1, card-2, card-3], 0, 2) -> [card-2, card-3, card-1]
       const result = moveCardWithinColumn(
         mockColumns,
         "col-1",
@@ -111,6 +128,30 @@ describe("dragUtils", () => {
       expect(result[0].cards[0].id).toBe("card-2");
       expect(result[0].cards[1].id).toBe("card-3");
       expect(result[0].cards[2].id).toBe("card-1");
+    });
+
+    it("bumps updatedAt on moved card and column", () => {
+      const result = moveCardWithinColumn(
+        mockColumns,
+        "col-1",
+        "card-1",
+        "card-3"
+      );
+      const movedCard = result[0].cards.find((c) => c.id === "card-1")!;
+      expect(movedCard.updatedAt).toBe(NOW);
+      expect(result[0].updatedAt).toBe(NOW);
+    });
+
+    it("does NOT append columnHistory on within-column move", () => {
+      const result = moveCardWithinColumn(
+        mockColumns,
+        "col-1",
+        "card-1",
+        "card-3"
+      );
+      const movedCard = result[0].cards.find((c) => c.id === "card-1")!;
+      expect(movedCard.columnHistory).toHaveLength(1);
+      expect(movedCard.columnHistory[0].columnId).toBe("col-1");
     });
 
     it("returns original array when column not found", () => {
@@ -154,14 +195,48 @@ describe("dragUtils", () => {
         "card-4"
       );
 
-      // card-1 should be removed from col-1
       expect(result[0].cards.length).toBe(2);
       expect(result[0].cards.find((c) => c.id === "card-1")).toBeUndefined();
 
-      // card-1 should be in col-2 at the position of card-4
       expect(result[1].cards.length).toBe(3);
       expect(result[1].cards[0].id).toBe("card-1");
       expect(result[1].cards[1].id).toBe("card-4");
+    });
+
+    it("appends columnHistory entry on cross-column move", () => {
+      const result = moveCardAcrossColumns(
+        mockColumns,
+        "col-1",
+        "col-2",
+        "card-1",
+        "card-4"
+      );
+
+      const movedCard = result[1].cards.find((c) => c.id === "card-1")!;
+      expect(movedCard.columnHistory).toHaveLength(2);
+      expect(movedCard.columnHistory[0]).toEqual({
+        columnId: "col-1",
+        enteredAt: 1000,
+      });
+      expect(movedCard.columnHistory[1]).toEqual({
+        columnId: "col-2",
+        enteredAt: NOW,
+      });
+    });
+
+    it("bumps updatedAt on moved card and both columns", () => {
+      const result = moveCardAcrossColumns(
+        mockColumns,
+        "col-1",
+        "col-2",
+        "card-1",
+        "card-4"
+      );
+
+      const movedCard = result[1].cards.find((c) => c.id === "card-1")!;
+      expect(movedCard.updatedAt).toBe(NOW);
+      expect(result[0].updatedAt).toBe(NOW); // from column
+      expect(result[1].updatedAt).toBe(NOW); // to column
     });
 
     it("moves card to end when overCardId not found", () => {
@@ -173,7 +248,6 @@ describe("dragUtils", () => {
         "non-existent"
       );
 
-      // card-1 should be at the end of col-2
       expect(result[1].cards.length).toBe(3);
       expect(result[1].cards[2].id).toBe("card-1");
     });
@@ -221,26 +295,38 @@ describe("dragUtils", () => {
       expect(result[0].cards[2].id).toBe("card-1");
     });
 
+    it("does NOT append columnHistory on same-column drop", () => {
+      const result = dropCardOnColumn(mockColumns, "col-1", "col-1", "card-1");
+      const movedCard = result[0].cards.find((c) => c.id === "card-1")!;
+      expect(movedCard.columnHistory).toHaveLength(1);
+    });
+
     it("moves card to beginning when dropped in different column", () => {
       const result = dropCardOnColumn(mockColumns, "col-1", "col-2", "card-1");
 
-      // card-1 removed from col-1
       expect(result[0].cards.length).toBe(2);
       expect(result[0].cards.find((c) => c.id === "card-1")).toBeUndefined();
 
-      // card-1 at beginning of col-2
       expect(result[1].cards.length).toBe(3);
       expect(result[1].cards[0].id).toBe("card-1");
       expect(result[1].cards[1].id).toBe("card-4");
     });
 
+    it("appends columnHistory on cross-column drop", () => {
+      const result = dropCardOnColumn(mockColumns, "col-1", "col-2", "card-1");
+      const movedCard = result[1].cards.find((c) => c.id === "card-1")!;
+      expect(movedCard.columnHistory).toHaveLength(2);
+      expect(movedCard.columnHistory[1]).toEqual({
+        columnId: "col-2",
+        enteredAt: NOW,
+      });
+    });
+
     it("moves card to empty column", () => {
       const result = dropCardOnColumn(mockColumns, "col-1", "col-3", "card-1");
 
-      // card-1 removed from col-1
       expect(result[0].cards.length).toBe(2);
 
-      // card-1 in col-3
       expect(result[2].cards.length).toBe(1);
       expect(result[2].cards[0].id).toBe("card-1");
     });

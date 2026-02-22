@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add development-only feature flag system for gating in-progress features
+- Add analytics button and modal shell in header
+- Add timestamps (createdAt, updatedAt) and column history tracking to cards and columns
+- Bump export format to v2 with seamless v1 import migration
+
 ## [1.8.0]
 
 ### Features

@@ -9,15 +9,19 @@ describe("useBoardDragAndDrop", () => {
     {
       id: "col-1",
       title: "Column 1",
+      createdAt: 1000,
+      updatedAt: 1000,
       cards: [
-        { id: "card-1", title: "Card 1" },
-        { id: "card-2", title: "Card 2" },
+        { id: "card-1", title: "Card 1", createdAt: 1000, updatedAt: 1000, columnHistory: [{ columnId: "col-1", enteredAt: 1000 }] },
+        { id: "card-2", title: "Card 2", createdAt: 1000, updatedAt: 1000, columnHistory: [{ columnId: "col-1", enteredAt: 1000 }] },
       ],
     },
     {
       id: "col-2",
       title: "Column 2",
-      cards: [{ id: "card-3", title: "Card 3" }],
+      createdAt: 1000,
+      updatedAt: 1000,
+      cards: [{ id: "card-3", title: "Card 3", createdAt: 1000, updatedAt: 1000, columnHistory: [{ columnId: "col-2", enteredAt: 1000 }] }],
     },
   ];
 
@@ -138,10 +142,9 @@ describe("useBoardDragAndDrop", () => {
 
       expect(result.current.activeType).toBe("card");
       expect(result.current.activeId).toBe("card-1");
-      expect(result.current.activeCard).toEqual({
-        id: "card-1",
-        title: "Card 1",
-      });
+      expect(result.current.activeCard).toEqual(
+        expect.objectContaining({ id: "card-1", title: "Card 1" })
+      );
     });
 
     it("handles missing type in drag data", () => {
@@ -457,10 +460,9 @@ describe("useBoardDragAndDrop", () => {
         result.current.handleDragStart(event);
       });
 
-      expect(result.current.activeCard).toEqual({
-        id: "card-2",
-        title: "Card 2",
-      });
+      expect(result.current.activeCard).toEqual(
+        expect.objectContaining({ id: "card-2", title: "Card 2" })
+      );
     });
 
     it("returns null when card not found", () => {

@@ -51,7 +51,7 @@ Settings
   - due dates with visual overdue indicator
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
-  - timestamps (createdAt, columnHistory) to support metrics
+  - ✅ timestamps (createdAt, columnHistory) to support metrics
 - undo/redo
 - ✅ export board data
 - ✅ import board data

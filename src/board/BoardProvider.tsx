@@ -5,34 +5,70 @@ import type { BoardContextValue, BoardState, Card } from "./types";
 import { getFromStorage, saveToStorage } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
 import { isColumn } from "./validation";
+import { migrateColumns } from "./migration";
 
 const defaultState: BoardState = {
   columns: [],
 };
 
 function createInitialBoard(): BoardState {
+  const now = Date.now();
+  const todoId = crypto.randomUUID();
+  const inProgressId = crypto.randomUUID();
+  const doneId = crypto.randomUUID();
+
   return {
     columns: [
       {
-        id: crypto.randomUUID(),
+        id: todoId,
         title: "To Do",
+        createdAt: now,
+        updatedAt: now,
         cards: [
-          { id: crypto.randomUUID(), title: "My first task" },
-          { id: crypto.randomUUID(), title: "Another task" },
+          {
+            id: crypto.randomUUID(),
+            title: "My first task",
+            createdAt: now,
+            updatedAt: now,
+            columnHistory: [{ columnId: todoId, enteredAt: now }],
+          },
+          {
+            id: crypto.randomUUID(),
+            title: "Another task",
+            createdAt: now,
+            updatedAt: now,
+            columnHistory: [{ columnId: todoId, enteredAt: now }],
+          },
         ],
       },
       {
-        id: crypto.randomUUID(),
+        id: inProgressId,
         title: "In Progress",
+        createdAt: now,
+        updatedAt: now,
         cards: [
-          { id: crypto.randomUUID(), title: "A task in progress" },
+          {
+            id: crypto.randomUUID(),
+            title: "A task in progress",
+            createdAt: now,
+            updatedAt: now,
+            columnHistory: [{ columnId: inProgressId, enteredAt: now }],
+          },
         ],
       },
       {
-        id: crypto.randomUUID(),
+        id: doneId,
         title: "Done",
+        createdAt: now,
+        updatedAt: now,
         cards: [
-          { id: crypto.randomUUID(), title: "A completed task" },
+          {
+            id: crypto.randomUUID(),
+            title: "A completed task",
+            createdAt: now,
+            updatedAt: now,
+            columnHistory: [{ columnId: doneId, enteredAt: now }],
+          },
         ],
       },
     ],
@@ -73,7 +109,10 @@ function loadState(): BoardState {
         .filter(isColumn)
     : [];
 
-  return { columns: cols };
+  // Backfill timestamps on legacy data
+  const migrated = migrateColumns(cols as unknown as Record<string, unknown>[]);
+
+  return { columns: migrated };
 }
 
 function saveState(state: BoardState) {
@@ -92,16 +131,25 @@ export function BoardProvider({
 
   const addColumn = useCallback<BoardContextValue["addColumn"]>(
     (title = "") => {
+      const now = Date.now();
       const id = crypto.randomUUID();
-      setState((s) => ({ columns: [...s.columns, { id, title, cards: [] }] }));
+      setState((s) => ({
+        columns: [
+          ...s.columns,
+          { id, title, cards: [], createdAt: now, updatedAt: now },
+        ],
+      }));
     },
     []
   );
 
   const updateColumn = useCallback<BoardContextValue["updateColumn"]>(
     (id, title) => {
+      const now = Date.now();
       setState((s) => ({
-        columns: s.columns.map((c) => (c.id === id ? { ...c, title } : c)),
+        columns: s.columns.map((c) =>
+          c.id === id ? { ...c, title, updatedAt: now } : c
+        ),
       }));
     },
     []
@@ -123,10 +171,19 @@ export function BoardProvider({
 
   const addCard = useCallback<BoardContextValue["addCard"]>(
     (columnId, title = "") => {
-      const card: Card = { id: crypto.randomUUID(), title };
+      const now = Date.now();
+      const card: Card = {
+        id: crypto.randomUUID(),
+        title,
+        createdAt: now,
+        updatedAt: now,
+        columnHistory: [{ columnId, enteredAt: now }],
+      };
       setState((s) => ({
         columns: s.columns.map((c) =>
-          c.id === columnId ? { ...c, cards: [card, ...c.cards] } : c
+          c.id === columnId
+            ? { ...c, cards: [card, ...c.cards], updatedAt: now }
+            : c
         ),
       }));
     },
@@ -141,8 +198,9 @@ export function BoardProvider({
         const col = prev.columns[idx];
         const newCards = col.cards.filter((c) => c.id !== cardId);
         if (newCards === col.cards) return prev;
+        const now = Date.now();
         const newColumns = prev.columns.slice();
-        newColumns[idx] = { ...col, cards: newCards };
+        newColumns[idx] = { ...col, cards: newCards, updatedAt: now };
         return { columns: newColumns };
       });
     },
@@ -157,10 +215,11 @@ export function BoardProvider({
         const col = prev.columns[idx];
         const cardIdx = col.cards.findIndex((c) => c.id === cardId);
         if (cardIdx === -1) return prev;
+        const now = Date.now();
         const newCards = col.cards.slice();
-        newCards[cardIdx] = { ...newCards[cardIdx], title };
+        newCards[cardIdx] = { ...newCards[cardIdx], title, updatedAt: now };
         const newColumns = prev.columns.slice();
-        newColumns[idx] = { ...col, cards: newCards };
+        newColumns[idx] = { ...col, cards: newCards, updatedAt: now };
         return { columns: newColumns };
       });
     },
@@ -173,13 +232,14 @@ export function BoardProvider({
         const idx = prev.columns.findIndex((c) => c.id === columnId);
         if (idx === -1) return prev;
         const col = prev.columns[idx];
+        const now = Date.now();
         const nextCards = col.cards
           .slice()
           .sort((a, b) =>
             a.title.localeCompare(b.title, undefined, { sensitivity: "base" })
           );
         const nextColumns = prev.columns.slice();
-        nextColumns[idx] = { ...col, cards: nextCards };
+        nextColumns[idx] = { ...col, cards: nextCards, updatedAt: now };
         return { columns: nextColumns };
       });
     },
@@ -195,11 +255,12 @@ export function BoardProvider({
         const fromIdx = col.cards.findIndex((c) => c.id === activeCardId);
         const toIdx = col.cards.findIndex((c) => c.id === overCardId);
         if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return prev;
+        const now = Date.now();
         const newCards = col.cards.slice();
         const [moved] = newCards.splice(fromIdx, 1);
-        newCards.splice(toIdx, 0, moved);
+        newCards.splice(toIdx, 0, { ...moved, updatedAt: now });
         const newColumns = prev.columns.slice();
-        newColumns[colIdx] = { ...col, cards: newCards };
+        newColumns[colIdx] = { ...col, cards: newCards, updatedAt: now };
         return { columns: newColumns };
       });
     },

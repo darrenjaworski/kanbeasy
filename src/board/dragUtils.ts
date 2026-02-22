@@ -48,7 +48,11 @@ export function reorderColumns(
     return columns;
   }
 
-  return arrayMove(columns, oldIndex, newIndex);
+  const now = Date.now();
+  const reordered = arrayMove(columns, oldIndex, newIndex);
+  return reordered.map((c) =>
+    c.id === activeId ? { ...c, updatedAt: now } : c
+  );
 }
 
 /**
@@ -72,9 +76,13 @@ export function moveCardWithinColumn(
     return columns;
   }
 
+  const now = Date.now();
   const reordered = arrayMove(col.cards, oldIndex, newIndex);
+  const updatedCards = reordered.map((c) =>
+    c.id === activeCardId ? { ...c, updatedAt: now } : c
+  );
   const next = columns.slice();
-  next[colIdx] = { ...col, cards: reordered };
+  next[colIdx] = { ...col, cards: updatedCards, updatedAt: now };
 
   return next;
 }
@@ -101,7 +109,17 @@ export function moveCardAcrossColumns(
 
   if (cardIdx === -1) return columns;
 
-  const moved = fromCol.cards[cardIdx];
+  const now = Date.now();
+  const original = fromCol.cards[cardIdx];
+  const moved: Card = {
+    ...original,
+    updatedAt: now,
+    columnHistory: [
+      ...original.columnHistory,
+      { columnId: toColId, enteredAt: now },
+    ],
+  };
+
   const nextFromCards = fromCol.cards.slice();
   nextFromCards.splice(cardIdx, 1);
 
@@ -111,8 +129,8 @@ export function moveCardAcrossColumns(
   nextToCards.splice(insertAt, 0, moved);
 
   const next = columns.slice();
-  next[fromIdx] = { ...fromCol, cards: nextFromCards };
-  next[toIdx] = { ...toCol, cards: nextToCards };
+  next[fromIdx] = { ...fromCol, cards: nextFromCards, updatedAt: now };
+  next[toIdx] = { ...toCol, cards: nextToCards, updatedAt: now };
 
   return next;
 }
@@ -133,6 +151,8 @@ export function dropCardOnColumn(
 
   if (fromIdx === -1 || toIdx === -1) return columns;
 
+  const now = Date.now();
+
   // Same column: move to end
   if (fromIdx === toIdx) {
     const col = columns[fromIdx];
@@ -140,8 +160,11 @@ export function dropCardOnColumn(
     if (oldIndex === -1) return columns;
 
     const reordered = arrayMove(col.cards, oldIndex, col.cards.length - 1);
+    const updatedCards = reordered.map((c) =>
+      c.id === activeCardId ? { ...c, updatedAt: now } : c
+    );
     const next = columns.slice();
-    next[fromIdx] = { ...col, cards: reordered };
+    next[fromIdx] = { ...col, cards: updatedCards, updatedAt: now };
     return next;
   }
 
@@ -152,7 +175,16 @@ export function dropCardOnColumn(
 
   if (cardIdx === -1) return columns;
 
-  const moved = fromCol.cards[cardIdx];
+  const original = fromCol.cards[cardIdx];
+  const moved: Card = {
+    ...original,
+    updatedAt: now,
+    columnHistory: [
+      ...original.columnHistory,
+      { columnId: toColId, enteredAt: now },
+    ],
+  };
+
   const nextFromCards = fromCol.cards.slice();
   nextFromCards.splice(cardIdx, 1);
 
@@ -160,8 +192,8 @@ export function dropCardOnColumn(
   nextToCards.unshift(moved);
 
   const next = columns.slice();
-  next[fromIdx] = { ...fromCol, cards: nextFromCards };
-  next[toIdx] = { ...toCol, cards: nextToCards };
+  next[fromIdx] = { ...fromCol, cards: nextFromCards, updatedAt: now };
+  next[toIdx] = { ...toCol, cards: nextToCards, updatedAt: now };
 
   return next;
 }

@@ -2,6 +2,7 @@ import type { Column } from "../board/types";
 import type { CardDensity, ThemePreference } from "../theme/types";
 import { isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
+import { migrateColumns } from "../board/migration";
 
 export interface ValidatedImport {
   columns: Column[];
@@ -38,11 +39,12 @@ export function validateExportData(parsed: unknown): ImportResult {
     return { ok: false, error: "File is not valid JSON." };
   }
 
-  if (parsed.version !== 1) {
+  const version = parsed.version;
+  if (version !== 1 && version !== 2) {
     return {
       ok: false,
-      error: parsed.version
-        ? `Unsupported export version: ${String(parsed.version)}. Only version 1 is supported.`
+      error: version
+        ? `Unsupported export version: ${String(version)}. Only versions 1 and 2 are supported.`
         : "Missing export version.",
     };
   }
@@ -54,7 +56,13 @@ export function validateExportData(parsed: unknown): ImportResult {
       return { ok: false, error: "Invalid board data." };
     }
     if (Array.isArray(parsed.board.columns)) {
-      columns = (parsed.board.columns as unknown[]).filter(isColumn);
+      const validColumns = (parsed.board.columns as unknown[]).filter(isColumn);
+      columns =
+        version === 1
+          ? migrateColumns(
+              validColumns as unknown as Record<string, unknown>[]
+            )
+          : validColumns;
     }
   }
 
