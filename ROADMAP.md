@@ -27,6 +27,17 @@ an ultra simple task organizer
   - ✅ fuzzy search on card titles
   - ✅ highlight matching cards
   - ✅ display match count
+- ✅ system/auto theme preference (follow OS light/dark mode)
+- ✅ warn on delete column and there are cards
+- ✅ initial application placeholder columns to match instructions modal on initial start
+- ✅ export board data
+- ✅ import board data
+- ✅ column card count badges
+- ✅ card timestamps (createdAt, columnHistory) to support metrics
+- ✅ basic dashboard showing metrics derived from the board
+  - ✅ how long a card takes to move between columns
+  - ✅ time spent in each column
+  - ✅ throughput and cycle time
 
 Settings
 
@@ -35,14 +46,12 @@ Settings
   - ✅ title only
   - ✅ one line of details
   - ✅ three lines of details
+- ✅ turn off warnings when deleting columns with cards
 
 ### upcoming
 
-- ✅ system/auto theme preference (follow OS light/dark mode)
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
-- ✅ warn on delete column and there are cards
-- ✅ initial application placeholder columns to match instructions modal on initial start
 - keyboard shortcuts
 - card enhancements
   - markdown description with rendered preview
@@ -51,17 +60,6 @@ Settings
   - due dates with visual overdue indicator
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
-  - ✅ timestamps (createdAt, columnHistory) to support metrics
+- limit the number of columns
 - undo/redo
-- ✅ export board data
-- ✅ import board data
-- ✅ column card count badges
 - multiple boards
-- basic dashboard showing metrics derived from the board
-  - how long a card takes to move between columns
-  - time spent in each column
-  - throughput and cycle time
-
-settings
-
-- ✅ turn off warnings when deleting columns with cards

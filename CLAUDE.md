@@ -164,19 +164,24 @@ Follow these steps to prepare a new release:
    npm run static-checks
    ```
 
-3. **Update CHANGELOG.md**:
+3. **Update ROADMAP.md**:
+   - Compare commits since the last tag against items in `ROADMAP.md`
+   - Move any completed items from **upcoming** to **shipped** (mark with ✅)
+   - Ensure new features not already listed are added to the shipped section
+
+4. **Update CHANGELOG.md**:
    - Move items from `[Unreleased]` into a new version heading
    - Group changes under `### Features`, `### Fixed`, `### Changed`, `### Removed` as appropriate
    - Derive entries from the conventional commit messages since the last tag
    - Follow the existing [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format
 
-4. **Bump version and tag**:
+5. **Bump version and tag**:
    ```bash
    npm version <patch|minor|major>
    ```
    This updates `package.json`, creates a commit, and creates a git tag.
 
-5. **Verify the build** compiles cleanly at the new version:
+6. **Verify the build** compiles cleanly at the new version:
    ```bash
    npm run build
    ```
