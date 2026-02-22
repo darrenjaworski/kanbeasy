@@ -1,8 +1,10 @@
+import { useRef, useState } from "react";
 import { Modal } from "./Modal";
 
 import { useTheme } from "../theme/useTheme";
 import { useBoard } from "../board/useBoard";
 import { themes } from "../theme/themes";
+import type { ThemeId } from "../theme/themes";
 import type { ThemePreference } from "../theme/types";
 import { DensitySmallIcon } from "./icons/DensitySmallIcon";
 import { DensityMediumIcon } from "./icons/DensityMediumIcon";
@@ -11,6 +13,7 @@ import { SettingsGearIcon } from "./icons/SettingsGearIcon";
 import { CloseIcon } from "./icons/CloseIcon";
 import { tc } from "../theme/classNames";
 import { exportBoard } from "../utils/exportBoard";
+import { readImportFile } from "../utils/importBoard";
 
 type Props = Readonly<{
   open: boolean;
@@ -38,7 +41,12 @@ export function SettingsModal({ open, onClose }: Props) {
     deleteColumnWarningEnabled,
     setDeleteColumnWarningEnabled,
   } = useTheme();
-  const { resetBoard } = useBoard();
+  const { setColumns, resetBoard } = useBoard();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importError, setImportError] = useState("");
+  const [importStatus, setImportStatus] = useState<
+    "idle" | "importing" | "complete"
+  >("idle");
 
   const handleClearLocalStorage = () => {
     window.localStorage.clear();
@@ -48,6 +56,42 @@ export function SettingsModal({ open, onClose }: Props) {
   const handleModeSwitch = (pref: ThemePreference) => {
     if (pref === themePreference) return;
     setThemePreference(pref);
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImportError("");
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImportStatus("importing");
+
+    const minDelay = new Promise<void>((r) => setTimeout(r, 300));
+    const result = await Promise.all([readImportFile(file), minDelay]).then(
+      ([r]) => r,
+    );
+
+    // Reset so re-selecting the same file triggers onChange again
+    e.target.value = "";
+
+    if (!result.ok) {
+      setImportError(result.error);
+      setImportStatus("idle");
+      return;
+    }
+
+    const { columns, settings } = result.data;
+
+    setColumns(columns);
+    setThemePreference(settings.themePreference);
+    if (settings.theme) {
+      setThemeId(settings.theme as ThemeId);
+    }
+    setCardDensity(settings.cardDensity);
+    setColumnResizingEnabled(settings.columnResizingEnabled);
+    setDeleteColumnWarningEnabled(settings.deleteColumnWarning);
+
+    setImportStatus("complete");
+    setTimeout(() => setImportStatus("idle"), 600);
   };
 
   if (!open) return null;
@@ -237,6 +281,53 @@ export function SettingsModal({ open, onClose }: Props) {
           >
             Export board data
           </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={handleImport}
+            data-testid="import-file-input"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importStatus !== "idle"}
+            className={`${tc.button} w-full rounded-md px-3 py-1.5 disabled:opacity-60`}
+          >
+            {importStatus === "importing" && (
+              <span className="inline-flex items-center gap-2">
+                <svg
+                  className="size-4 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+                Importing…
+              </span>
+            )}
+            {importStatus === "complete" && "Import complete"}
+            {importStatus === "idle" && "Import board data"}
+          </button>
+          {importError && (
+            <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+              {importError}
+            </p>
+          )}
           <button
             type="button"
             onClick={handleClearLocalStorage}

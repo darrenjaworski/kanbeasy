@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Fuse from "fuse.js";
 import { BoardContext } from "./BoardContext";
-import type { BoardContextValue, BoardState, Column, Card } from "./types";
+import type { BoardContextValue, BoardState, Card } from "./types";
 import { getFromStorage, saveToStorage } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
+import { isColumn } from "./validation";
 
 const defaultState: BoardState = {
   columns: [],
@@ -38,25 +39,6 @@ function createInitialBoard(): BoardState {
   };
 }
 
-function isCard(x: unknown): x is Card {
-  return (
-    !!x &&
-    typeof x === "object" &&
-    typeof (x as { id?: unknown }).id === "string" &&
-    typeof (x as { title?: unknown }).title === "string"
-  );
-}
-
-function isColumn(x: unknown): x is Column {
-  return (
-    !!x &&
-    typeof x === "object" &&
-    typeof (x as { id?: unknown }).id === "string" &&
-    typeof (x as { title?: unknown }).title === "string" &&
-    Array.isArray((x as { cards?: unknown }).cards) &&
-    ((x as { cards?: unknown }).cards as unknown[]).every(isCard)
-  );
-}
 
 function loadState(): BoardState {
   // When no board data has ever been saved, seed with example columns.

@@ -54,7 +54,7 @@ Settings
   - timestamps (createdAt, columnHistory) to support metrics
 - undo/redo
 - ✅ export board data (import upcoming)
-- import board data
+- ✅ import board data
 - column card count badges
 - multiple boards
 - basic dashboard showing metrics derived from the board
