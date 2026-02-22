@@ -2,10 +2,10 @@
 
 /* Tailwind v4 CSS-first configuration */
 @theme {
-	--color-bg: #f8fafc;
-	--color-surface: #ffffff;
-	--color-text: #0f172a;
-	--color-accent: #6366f1;
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-accent: #6366f1;
 }
 
 /* Use class-based dark mode to match ThemeProvider */
@@ -13,20 +13,20 @@
 
 /* App base styles */
 :root {
-	color-scheme: light dark;
+  color-scheme: light dark;
 }
 
 html,
 body,
 #root {
-	height: 100%;
+  height: 100%;
 }
 
 body {
-	@apply bg-bg text-text antialiased;
+  @apply bg-bg text-text antialiased;
 }
 
 /* Reduce tap highlight on mobile */
 * {
-	-webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }

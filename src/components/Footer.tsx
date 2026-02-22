@@ -2,8 +2,12 @@ import { tc } from "../theme/classNames";
 
 export function Footer() {
   return (
-    <footer className={`fixed inset-x-0 bottom-0 z-10 border-t ${tc.borderSubtle} bg-surface/80 backdrop-blur supports-[backdrop-filter]:bg-surface/60`}>
-      <div className={`mx-auto max-w-6xl px-3 py-2 text-xs ${tc.textMuted} text-center`}>
+    <footer
+      className={`fixed inset-x-0 bottom-0 z-10 border-t ${tc.borderSubtle} bg-surface/80 backdrop-blur supports-[backdrop-filter]:bg-surface/60`}
+    >
+      <div
+        className={`mx-auto max-w-6xl px-3 py-2 text-xs ${tc.textMuted} text-center`}
+      >
         <p>
           Developed with ❤️ by{" "}
           <a

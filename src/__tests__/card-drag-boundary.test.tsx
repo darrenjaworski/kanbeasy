@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("card drag boundary constraints", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("ensures cards stay within column boundaries when dragging", async () => {
@@ -71,7 +68,7 @@ describe("card drag boundary constraints", () => {
 
     // Verify the cards are still present and reorderable (boundary constraint doesn't break this)
     expect(
-      within(column).getAllByRole("button", { name: /drag card/i }).length
+      within(column).getAllByRole("button", { name: /drag card/i }).length,
     ).toBe(2);
   });
 });

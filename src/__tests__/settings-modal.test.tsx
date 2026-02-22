@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("settings modal", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("opens from header button and shows heading", async () => {
@@ -31,7 +28,7 @@ describe("settings modal", () => {
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
     expect(dialog).toBeInTheDocument();
     expect(
-      within(dialog).getByRole("heading", { name: /settings/i })
+      within(dialog).getByRole("heading", { name: /settings/i }),
     ).toBeInTheDocument();
   });
 
@@ -46,7 +43,7 @@ describe("settings modal", () => {
     })[0];
     await user.click(overlay);
     expect(
-      screen.queryByRole("dialog", { name: /settings/i })
+      screen.queryByRole("dialog", { name: /settings/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -58,7 +55,7 @@ describe("settings modal", () => {
     expect(dialog).toBeInTheDocument();
     await user.keyboard("{Escape}");
     expect(
-      screen.queryByRole("dialog", { name: /settings/i })
+      screen.queryByRole("dialog", { name: /settings/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -79,7 +76,7 @@ describe("settings modal", () => {
 
     // Close and unmount, then re-render to ensure persistence via localStorage
     await user.click(
-      within(dlg).getByRole("button", { name: /close settings/i })
+      within(dlg).getByRole("button", { name: /close settings/i }),
     );
     unmount();
     cleanup();
@@ -115,7 +112,7 @@ describe("settings modal", () => {
 
     // Close settings to snapshot spacing comfortably
     await user.click(
-      within(dlg).getByRole("button", { name: /close settings/i })
+      within(dlg).getByRole("button", { name: /close settings/i }),
     );
 
     // default rows should be 2
@@ -127,7 +124,7 @@ describe("settings modal", () => {
     const dlg2 = await screen.findByRole("dialog", { name: /settings/i });
     await user.click(within(dlg2).getByRole("button", { name: /compact/i }));
     await user.click(
-      within(dlg2).getByRole("button", { name: /close settings/i })
+      within(dlg2).getByRole("button", { name: /close settings/i }),
     );
     const textareasAfterCompact = screen.getAllByRole("textbox", {
       name: /card content/i,
@@ -139,7 +136,7 @@ describe("settings modal", () => {
     const dlg3 = await screen.findByRole("dialog", { name: /settings/i });
     await user.click(within(dlg3).getByRole("button", { name: /spacious/i }));
     await user.click(
-      within(dlg3).getByRole("button", { name: /close settings/i })
+      within(dlg3).getByRole("button", { name: /close settings/i }),
     );
     const textareasAfterLarge = screen.getAllByRole("textbox", {
       name: /card content/i,

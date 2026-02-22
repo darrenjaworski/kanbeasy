@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("column add card", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("adds a card to a column using the column's Add card button", async () => {
@@ -42,7 +39,7 @@ describe("column add card", () => {
 
     // Card appears with default title
     expect(
-      within(column as HTMLElement).getByText(/new card/i)
+      within(column as HTMLElement).getByText(/new card/i),
     ).toBeInTheDocument();
   });
 

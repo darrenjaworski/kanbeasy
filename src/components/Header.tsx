@@ -10,7 +10,9 @@ export function Header() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   return (
-    <header className={`sticky top-0 z-10 border-b ${tc.borderSubtle} bg-surface/80 backdrop-blur supports-[backdrop-filter]:bg-surface/60`}>
+    <header
+      className={`sticky top-0 z-10 border-b ${tc.borderSubtle} bg-surface/80 backdrop-blur supports-[backdrop-filter]:bg-surface/60`}
+    >
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
         <h1
           className="text-lg font-semibold tracking-tight"
@@ -39,8 +41,14 @@ export function Header() {
           </button>
         </div>
       </div>
-      <AnalyticsModal open={analyticsOpen} onClose={() => setAnalyticsOpen(false)} />
-      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <AnalyticsModal
+        open={analyticsOpen}
+        onClose={() => setAnalyticsOpen(false)}
+      />
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
     </header>
   );
 }

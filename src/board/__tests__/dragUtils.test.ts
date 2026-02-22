@@ -123,7 +123,7 @@ describe("dragUtils", () => {
         mockColumns,
         "col-1",
         "card-1",
-        "card-3"
+        "card-3",
       );
       expect(result[0].cards[0].id).toBe("card-2");
       expect(result[0].cards[1].id).toBe("card-3");
@@ -135,7 +135,7 @@ describe("dragUtils", () => {
         mockColumns,
         "col-1",
         "card-1",
-        "card-3"
+        "card-3",
       );
       const movedCard = result[0].cards.find((c) => c.id === "card-1")!;
       expect(movedCard.updatedAt).toBe(NOW);
@@ -147,7 +147,7 @@ describe("dragUtils", () => {
         mockColumns,
         "col-1",
         "card-1",
-        "card-3"
+        "card-3",
       );
       const movedCard = result[0].cards.find((c) => c.id === "card-1")!;
       expect(movedCard.columnHistory).toHaveLength(1);
@@ -159,7 +159,7 @@ describe("dragUtils", () => {
         mockColumns,
         "non-existent",
         "card-1",
-        "card-2"
+        "card-2",
       );
       expect(result).toBe(mockColumns);
     });
@@ -169,7 +169,7 @@ describe("dragUtils", () => {
         mockColumns,
         "col-1",
         "non-existent",
-        "card-2"
+        "card-2",
       );
       expect(result).toBe(mockColumns);
     });
@@ -179,7 +179,7 @@ describe("dragUtils", () => {
         mockColumns,
         "col-1",
         "card-1",
-        "card-1"
+        "card-1",
       );
       expect(result).toBe(mockColumns);
     });
@@ -192,7 +192,7 @@ describe("dragUtils", () => {
         "col-1",
         "col-2",
         "card-1",
-        "card-4"
+        "card-4",
       );
 
       expect(result[0].cards.length).toBe(2);
@@ -209,7 +209,7 @@ describe("dragUtils", () => {
         "col-1",
         "col-2",
         "card-1",
-        "card-4"
+        "card-4",
       );
 
       const movedCard = result[1].cards.find((c) => c.id === "card-1")!;
@@ -230,7 +230,7 @@ describe("dragUtils", () => {
         "col-1",
         "col-2",
         "card-1",
-        "card-4"
+        "card-4",
       );
 
       const movedCard = result[1].cards.find((c) => c.id === "card-1")!;
@@ -245,7 +245,7 @@ describe("dragUtils", () => {
         "col-1",
         "col-2",
         "card-1",
-        "non-existent"
+        "non-existent",
       );
 
       expect(result[1].cards.length).toBe(3);
@@ -258,7 +258,7 @@ describe("dragUtils", () => {
         "non-existent",
         "col-2",
         "card-1",
-        "card-4"
+        "card-4",
       );
       expect(result).toBe(mockColumns);
     });
@@ -269,7 +269,7 @@ describe("dragUtils", () => {
         "col-1",
         "non-existent",
         "card-1",
-        "card-4"
+        "card-4",
       );
       expect(result).toBe(mockColumns);
     });
@@ -280,7 +280,7 @@ describe("dragUtils", () => {
         "col-1",
         "col-2",
         "non-existent",
-        "card-4"
+        "card-4",
       );
       expect(result).toBe(mockColumns);
     });
@@ -336,7 +336,7 @@ describe("dragUtils", () => {
         mockColumns,
         "non-existent",
         "col-2",
-        "card-1"
+        "card-1",
       );
       expect(result).toBe(mockColumns);
     });
@@ -346,7 +346,7 @@ describe("dragUtils", () => {
         mockColumns,
         "col-1",
         "non-existent",
-        "card-1"
+        "card-1",
       );
       expect(result).toBe(mockColumns);
     });
@@ -356,7 +356,7 @@ describe("dragUtils", () => {
         mockColumns,
         "col-1",
         "col-2",
-        "non-existent"
+        "non-existent",
       );
       expect(result).toBe(mockColumns);
     });

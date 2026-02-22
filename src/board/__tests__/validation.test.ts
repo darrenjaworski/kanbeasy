@@ -89,8 +89,8 @@ describe("isColumn", () => {
   });
 
   it("returns false when cards contains an invalid card", () => {
-    expect(
-      isColumn({ id: "col1", title: "To Do", cards: [{ id: 123 }] }),
-    ).toBe(false);
+    expect(isColumn({ id: "col1", title: "To Do", cards: [{ id: 123 }] })).toBe(
+      false,
+    );
   });
 });

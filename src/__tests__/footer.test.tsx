@@ -11,16 +11,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("footer", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("renders footer credit", () => {

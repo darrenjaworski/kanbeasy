@@ -52,10 +52,7 @@ function mockMatchMedia(prefersDark: boolean) {
 describe("system theme preference", () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] }),
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("applies dark theme when preference is system and OS is dark", async () => {

@@ -98,9 +98,7 @@ describe("timestamps in BoardProvider", () => {
       expect(card.title).toBe("New Card");
       expect(card.createdAt).toBe(T2);
       expect(card.updatedAt).toBe(T2);
-      expect(card.columnHistory).toEqual([
-        { columnId: colId, enteredAt: T2 },
-      ]);
+      expect(card.columnHistory).toEqual([{ columnId: colId, enteredAt: T2 }]);
     });
 
     it("bumps column updatedAt when card is added", () => {
@@ -213,7 +211,7 @@ describe("timestamps in BoardProvider", () => {
       });
 
       const cardUpdatedAts = result.current.columns[0].cards.map(
-        (c) => c.updatedAt
+        (c) => c.updatedAt,
       );
 
       vi.setSystemTime(new Date(T2));

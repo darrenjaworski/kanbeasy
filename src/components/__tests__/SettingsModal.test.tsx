@@ -14,7 +14,7 @@ describe("SettingsModal", () => {
         <ThemeProvider>
           <SettingsModal open={true} onClose={vi.fn()} />
         </ThemeProvider>
-      </BoardProvider>
+      </BoardProvider>,
     );
     const clearBtn = screen.getByRole("button", { name: /clear/i });
     expect(clearBtn).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe("SettingsModal", () => {
         <ThemeProvider>
           <SettingsModal open={true} onClose={vi.fn()} />
         </ThemeProvider>
-      </BoardProvider>
+      </BoardProvider>,
     );
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -41,11 +41,11 @@ describe("SettingsModal", () => {
         <ThemeProvider>
           <SettingsModal open={true} onClose={onCloseMock} />
         </ThemeProvider>
-      </BoardProvider>
+      </BoardProvider>,
     );
 
     fireEvent.click(
-      screen.getByLabelText("Close settings", { selector: ".ml-auto" })
+      screen.getByLabelText("Close settings", { selector: ".ml-auto" }),
     );
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
@@ -56,10 +56,9 @@ describe("SettingsModal", () => {
         <ThemeProvider>
           <SettingsModal open={false} onClose={vi.fn()} />
         </ThemeProvider>
-      </BoardProvider>
+      </BoardProvider>,
     );
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
-
 });

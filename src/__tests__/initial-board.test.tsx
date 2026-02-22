@@ -11,7 +11,7 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
@@ -26,10 +26,10 @@ describe("initial board seeding", () => {
     const todoColumn = screen.getByRole("region", { name: /to do/i });
     expect(todoColumn).toBeInTheDocument();
     expect(
-      within(todoColumn as HTMLElement).getByText("My first task")
+      within(todoColumn as HTMLElement).getByText("My first task"),
     ).toBeInTheDocument();
     expect(
-      within(todoColumn as HTMLElement).getByText("Another task")
+      within(todoColumn as HTMLElement).getByText("Another task"),
     ).toBeInTheDocument();
 
     const inProgressColumn = screen.getByRole("region", {
@@ -37,32 +37,29 @@ describe("initial board seeding", () => {
     });
     expect(inProgressColumn).toBeInTheDocument();
     expect(
-      within(inProgressColumn as HTMLElement).getByText("A task in progress")
+      within(inProgressColumn as HTMLElement).getByText("A task in progress"),
     ).toBeInTheDocument();
 
     const doneColumn = screen.getByRole("region", { name: /done/i });
     expect(doneColumn).toBeInTheDocument();
     expect(
-      within(doneColumn as HTMLElement).getByText("A completed task")
+      within(doneColumn as HTMLElement).getByText("A completed task"),
     ).toBeInTheDocument();
   });
 
   it("does not re-seed after board is cleared", () => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
 
     renderApp();
 
     expect(
-      screen.queryByRole("region", { name: /to do/i })
+      screen.queryByRole("region", { name: /to do/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("region", { name: /in progress/i })
+      screen.queryByRole("region", { name: /in progress/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("region", { name: /done/i })
+      screen.queryByRole("region", { name: /done/i }),
     ).not.toBeInTheDocument();
   });
 });

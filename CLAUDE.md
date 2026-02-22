@@ -20,6 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **E2E report**: `npm run e2e:report` (view last HTML report)
 
 For deployed environment testing, set `E2E_BASE_URL`:
+
 ```bash
 E2E_BASE_URL=https://darrenjaworski.github.io/kanbeasy npm run e2e
 ```
@@ -29,6 +30,7 @@ E2E_BASE_URL=https://darrenjaworski.github.io/kanbeasy npm run e2e
 This is a minimal kanban board application built with React + TypeScript + Vite, using:
 
 ### Core Stack
+
 - **React 19** with TypeScript and Vite
 - **Tailwind CSS** v4 for styling
 - **@dnd-kit** for drag and drop functionality
@@ -37,6 +39,7 @@ This is a minimal kanban board application built with React + TypeScript + Vite,
 - **Playwright** for end-to-end testing
 
 ### State Management
+
 The app uses React Context for state management with two main providers:
 
 1. **BoardProvider** (`src/board/`): Manages kanban board state
@@ -57,6 +60,7 @@ The app uses React Context for state management with two main providers:
    - Persists to localStorage (`kanbeasy:theme`, `kanbeasy:themePreference`, `kanbeasy:cardDensity`, `kanbeasy:columnResizingEnabled`, `kanbeasy:deleteColumnWarning`)
 
 ### Data Model
+
 Cards and columns carry timestamps and history for analytics:
 
 - **Card**: `id`, `title`, `createdAt`, `updatedAt`, `columnHistory[]` — where `columnHistory` is an array of `{ columnId, enteredAt }` entries tracking every column transition
@@ -64,18 +68,21 @@ Cards and columns carry timestamps and history for analytics:
 - **BoardState**: `{ columns: Column[] }` — the single top-level state object
 
 ### Undo/Redo
+
 - `useUndoableState<T>` maintains a `{ past: T[], present: T, future: T[] }` history stack
 - Every board mutation pushes to the past stack; undo/redo shift between past/present/future
 - No-op mutations (where the setState callback returns the same reference) are skipped to avoid polluting history
 - UI: floating Undo/Redo buttons (`UndoRedoControls.tsx`) + keyboard shortcuts Cmd+Z / Cmd+Shift+Z (`useUndoRedoKeyboard.ts`)
 
 ### Search
+
 - Fuzzy search via Fuse.js with threshold 0.4 and location-independent matching
 - Requires minimum 2 characters before searching
 - Returns a `Set<string>` of matching card IDs; cards are highlighted with a blue ring in the UI
 - Match count displayed in the search input
 
 ### Analytics
+
 - `AnalyticsModal.tsx` displays board metrics computed from card timestamps and column history
 - Metrics in `src/utils/boardMetrics.ts` and `src/utils/cycleTime.ts`:
   - Total cards, cards in flight (not in first or last column)
@@ -85,23 +92,28 @@ Cards and columns carry timestamps and history for analytics:
   - Per-card cycle time and reverse time tables with pagination
 
 ### Feature Flags
+
 - Defined in `src/constants/featureFlags.ts`
 - Set to `import.meta.env.DEV` for dev-only features, `true` for shipped features
 - Currently both `analytics` and `undoRedo` are `true` (shipped)
 
 ### Data Flow
+
 - All data is stored locally using localStorage
 - Type-safe state management with TypeScript interfaces
 - Context providers wrap the entire app in `main.tsx`
 
 ### localStorage Versioning
+
 All localStorage data is part of the export/import system (`src/utils/exportBoard.ts`). The export format includes a `version` field (currently `2`). When making changes to localStorage data structures:
+
 - **Bump the export version number** in `exportBoard.ts` when the shape of stored data changes
 - **Write a migration** in the import tool (`src/utils/importBoard.ts`) that can upgrade older export versions to the current version
 - This ensures users can export on one version and import on a newer version without data loss
 - Storage keys are centralized in `src/constants/storage.ts`
 
 ### Component Structure
+
 - `App.tsx`: Main layout with Header, Board, Footer, WelcomeModal, and UndoRedoControls
 - `components/Board.tsx`: Main drag-and-drop board implementation
 - `components/Column.tsx`: Individual column with inline title editing, card list, resize handle
@@ -117,6 +129,7 @@ All localStorage data is part of the export/import system (`src/utils/exportBoar
 - `hooks/`: Shared hooks with barrel export (`index.ts`) — `useInlineEdit`, `useUndoRedoKeyboard`
 
 ### Key Features
+
 - Drag-and-drop cards between columns and within columns
 - Undo/redo for all board actions (buttons + keyboard shortcuts)
 - Fuzzy card search with highlighting and match count
@@ -133,6 +146,7 @@ All localStorage data is part of the export/import system (`src/utils/exportBoar
 To minimize costs while maintaining quality, follow these guidelines for model selection:
 
 ### Use Haiku (Fast & Cheap) For:
+
 - **Running tests**: Spawn Bash agent with Haiku model
 - **Linting & type checking**: Straightforward validation tasks
 - **Building**: Compilation and build verification
@@ -143,6 +157,7 @@ To minimize costs while maintaining quality, follow these guidelines for model s
 **Example:** `Use Bash agent with Haiku to run npm run test:run`
 
 ### Use Sonnet (Default) For:
+
 - **Implementation**: Writing new features or components
 - **Refactoring**: Restructuring existing code
 - **Bug fixes**: Non-trivial debugging and fixes
@@ -151,6 +166,7 @@ To minimize costs while maintaining quality, follow these guidelines for model s
 - **Moderate complexity tasks**: Anything requiring context understanding
 
 ### Use Opus (Complex Reasoning) For:
+
 - **Architectural decisions**: System design and structure
 - **Complex debugging**: Multi-layered issues requiring deep analysis
 - **Planning**: Breaking down large features into tasks
@@ -158,6 +174,7 @@ To minimize costs while maintaining quality, follow these guidelines for model s
 - **Security reviews**: Identifying vulnerabilities
 
 ### Cost-Saving Strategy:
+
 1. Default to Sonnet for general work
 2. Delegate routine tasks (tests, builds, simple checks) to Haiku agents
 3. Only escalate to Opus when truly needed for complex reasoning
@@ -170,6 +187,7 @@ To minimize costs while maintaining quality, follow these guidelines for model s
 Run `npm run static-checks` routinely as you develop — after implementing changes, after fixing bugs, and before committing. Do not wait until the end of a task to validate; catch issues early and often.
 
 Before making any changes, ensure:
+
 - TypeScript typecheck passes (`npm run type:check`)
 - ESLint passes (`npm run lint`)
 - Unit tests pass (`npm run test:run`)
@@ -207,15 +225,18 @@ Use lowercase, imperative mood, no period at the end. Include scope when helpful
 Follow these steps to prepare a new release:
 
 1. **Determine version bump** by reading commits since the last tag:
+
    ```bash
    git log $(git describe --tags --abbrev=0)..HEAD --oneline
    ```
+
    Apply semver based on conventional commits:
    - `fix:` → patch (e.g. 1.1.0 → 1.1.1)
    - `feat:` → minor (e.g. 1.1.0 → 1.2.0)
    - `BREAKING CHANGE` or `!` after type → major (e.g. 1.1.0 → 2.0.0)
 
 2. **Run all checks** — everything must pass before releasing:
+
    ```bash
    npm run static-checks
    ```
@@ -232,9 +253,11 @@ Follow these steps to prepare a new release:
    - Follow the existing [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format
 
 5. **Bump version and tag**:
+
    ```bash
    npm version <patch|minor|major>
    ```
+
    This updates `package.json`, creates a commit, and creates a git tag.
 
 6. **Verify the build** compiles cleanly at the new version:

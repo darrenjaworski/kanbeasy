@@ -19,10 +19,7 @@ export function ModalHeader({
   return (
     <div className="flex items-center gap-3">
       <Icon className={`size-5 ${tc.textMuted}`} />
-      <h2
-        id={titleId}
-        className="text-base font-semibold tracking-tight"
-      >
+      <h2 id={titleId} className="text-base font-semibold tracking-tight">
         {title}
       </h2>
       <button

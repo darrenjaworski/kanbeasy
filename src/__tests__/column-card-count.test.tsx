@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("column card count badge", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("shows 0 for an empty column", async () => {
@@ -81,15 +78,15 @@ describe("column card count badge", () => {
     const column = screen.getByRole("region", { name: /new column/i });
 
     expect(
-      within(column as HTMLElement).getByLabelText("0 cards")
+      within(column as HTMLElement).getByLabelText("0 cards"),
     ).toBeInTheDocument();
 
     await user.click(
-      within(column as HTMLElement).getByRole("button", { name: /add card/i })
+      within(column as HTMLElement).getByRole("button", { name: /add card/i }),
     );
 
     expect(
-      within(column as HTMLElement).getByLabelText("1 card")
+      within(column as HTMLElement).getByLabelText("1 card"),
     ).toBeInTheDocument();
   });
 });

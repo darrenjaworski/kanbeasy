@@ -23,7 +23,7 @@ test("can select a dark theme", async ({ page }) => {
 
   await expect
     .poll(() =>
-      page.evaluate(() => document.documentElement.classList.contains("dark"))
+      page.evaluate(() => document.documentElement.classList.contains("dark")),
     )
     .toBe(true);
 
@@ -49,7 +49,7 @@ test("has a setting to adjust the size of the cards", async ({ page }) => {
   // rows should be 2 for medium
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(
     "rows",
-    "2"
+    "2",
   );
 
   // Set Compact (rows = 1)
@@ -59,7 +59,7 @@ test("has a setting to adjust the size of the cards", async ({ page }) => {
   await dlg2.getByRole("button", { name: /close settings/i }).click();
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(
     "rows",
-    "1"
+    "1",
   );
 
   // Set Spacious (rows = 3)
@@ -69,7 +69,7 @@ test("has a setting to adjust the size of the cards", async ({ page }) => {
   await dlg3.getByRole("button", { name: /close settings/i }).click();
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(
     "rows",
-    "3"
+    "3",
   );
 });
 
@@ -98,10 +98,10 @@ test("can wipe the board data", async ({ page }) => {
 
   // LocalStorage keys should be cleared
   const themeStored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:theme")
+    localStorage.getItem("kanbeasy:theme"),
   );
   const densityStored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:cardDensity")
+    localStorage.getItem("kanbeasy:cardDensity"),
   );
   expect(themeStored).toBeNull();
   expect(densityStored).toBeNull();

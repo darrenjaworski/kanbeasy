@@ -47,7 +47,7 @@ describe("exportBoard", () => {
   it("exports JSON with correct top-level structure", () => {
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [{ id: "1", title: "Todo", cards: [] }] })
+      JSON.stringify({ columns: [{ id: "1", title: "Todo", cards: [] }] }),
     );
     localStorage.setItem(STORAGE_KEYS.THEME, "midnight");
     localStorage.setItem(STORAGE_KEYS.CARD_DENSITY, "medium");
@@ -91,7 +91,7 @@ describe("exportBoard", () => {
     exportBoard();
 
     expect(createdAnchor.download).toMatch(
-      /^kanbeasy-export-\d{4}-\d{2}-\d{2}\.json$/
+      /^kanbeasy-export-\d{4}-\d{2}-\d{2}\.json$/,
     );
   });
 

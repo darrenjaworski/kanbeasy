@@ -73,7 +73,6 @@ function createInitialBoard(): BoardState {
   };
 }
 
-
 function loadState(): BoardState {
   // When no board data has ever been saved, seed with example columns.
   // After "Clear board data", the key exists with { columns: [] }, so we won't re-seed.
@@ -120,16 +119,10 @@ function saveState(state: BoardState) {
 export function BoardProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const {
-    state,
-    setState,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-  } = useUndoableState<BoardState>(() => loadState(), {
-    maxHistory: 50,
-  });
+  const { state, setState, undo, redo, canUndo, canRedo } =
+    useUndoableState<BoardState>(() => loadState(), {
+      maxHistory: 50,
+    });
 
   useEffect(() => {
     saveState(state);

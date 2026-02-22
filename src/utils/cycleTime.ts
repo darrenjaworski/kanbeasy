@@ -38,8 +38,7 @@ export function computeAverageCycleTime(columns: Column[]): number | null {
   if (cycleTimes.length === 0) return null;
 
   return (
-    cycleTimes.reduce((sum, ct) => sum + ct.cycleTimeMs, 0) /
-    cycleTimes.length
+    cycleTimes.reduce((sum, ct) => sum + ct.cycleTimeMs, 0) / cycleTimes.length
   );
 }
 

@@ -22,7 +22,9 @@ export function CardControls({
   index,
 }: CardControlsProps) {
   return (
-    <div className={`absolute right-1 top-1 z-1 ${tc.buttonGroup} rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}>
+    <div
+      className={`absolute right-1 top-1 z-1 ${tc.buttonGroup} rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
+    >
       {canDrag && (
         <button
           type="button"
@@ -37,9 +39,7 @@ export function CardControls({
           <CardDragIcon className="size-4" />
         </button>
       )}
-      {canDrag && (
-        <span aria-hidden className={`${tc.separator} h-6 w-px`} />
-      )}
+      {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
       <button
         type="button"
         onClick={onRemove}

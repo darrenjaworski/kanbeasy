@@ -23,7 +23,7 @@ export function findCardIndex(cards: Card[], cardId: string): number {
  */
 export function findCardInColumns(
   columns: Column[],
-  cardId: string
+  cardId: string,
 ): Card | null {
   for (const col of columns) {
     const found = col.cards.find((c) => c.id === cardId);
@@ -39,7 +39,7 @@ export function findCardInColumns(
 export function reorderColumns(
   columns: Column[],
   activeId: string,
-  overId: string
+  overId: string,
 ): Column[] {
   const oldIndex = findColumnIndex(columns, activeId);
   const newIndex = findColumnIndex(columns, overId);
@@ -51,7 +51,7 @@ export function reorderColumns(
   const now = Date.now();
   const reordered = arrayMove(columns, oldIndex, newIndex);
   return reordered.map((c) =>
-    c.id === activeId ? { ...c, updatedAt: now } : c
+    c.id === activeId ? { ...c, updatedAt: now } : c,
   );
 }
 
@@ -63,7 +63,7 @@ export function moveCardWithinColumn(
   columns: Column[],
   columnId: string,
   activeCardId: string,
-  overCardId: string
+  overCardId: string,
 ): Column[] {
   const colIdx = findColumnIndex(columns, columnId);
   if (colIdx === -1) return columns;
@@ -79,7 +79,7 @@ export function moveCardWithinColumn(
   const now = Date.now();
   const reordered = arrayMove(col.cards, oldIndex, newIndex);
   const updatedCards = reordered.map((c) =>
-    c.id === activeCardId ? { ...c, updatedAt: now } : c
+    c.id === activeCardId ? { ...c, updatedAt: now } : c,
   );
   const next = columns.slice();
   next[colIdx] = { ...col, cards: updatedCards, updatedAt: now };
@@ -96,7 +96,7 @@ export function moveCardAcrossColumns(
   fromColId: string,
   toColId: string,
   activeCardId: string,
-  overCardId: string
+  overCardId: string,
 ): Column[] {
   const fromIdx = findColumnIndex(columns, fromColId);
   const toIdx = findColumnIndex(columns, toColId);
@@ -144,7 +144,7 @@ export function dropCardOnColumn(
   columns: Column[],
   fromColId: string,
   toColId: string,
-  activeCardId: string
+  activeCardId: string,
 ): Column[] {
   const fromIdx = findColumnIndex(columns, fromColId);
   const toIdx = findColumnIndex(columns, toColId);
@@ -161,7 +161,7 @@ export function dropCardOnColumn(
 
     const reordered = arrayMove(col.cards, oldIndex, col.cards.length - 1);
     const updatedCards = reordered.map((c) =>
-      c.id === activeCardId ? { ...c, updatedAt: now } : c
+      c.id === activeCardId ? { ...c, updatedAt: now } : c,
     );
     const next = columns.slice();
     next[fromIdx] = { ...col, cards: updatedCards, updatedAt: now };

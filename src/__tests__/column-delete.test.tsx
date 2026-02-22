@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("column delete", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("deletes an empty column immediately without confirmation", async () => {
@@ -38,7 +35,7 @@ describe("column delete", () => {
     await user.click(deleteBtn);
 
     expect(
-      screen.queryByRole("region", { name: /new column/i })
+      screen.queryByRole("region", { name: /new column/i }),
     ).not.toBeInTheDocument();
     expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
   });
@@ -51,19 +48,19 @@ describe("column delete", () => {
     const column = screen.getByRole("region", { name: /new column/i });
 
     await user.click(
-      within(column as HTMLElement).getByRole("button", { name: /add card/i })
+      within(column as HTMLElement).getByRole("button", { name: /add card/i }),
     );
 
     await user.click(
       within(column as HTMLElement).getByRole("button", {
         name: /remove column/i,
-      })
+      }),
     );
 
     expect(screen.getByText("Delete column?")).toBeInTheDocument();
     expect(screen.getByText(/this column has 1 card/i)).toBeInTheDocument();
     expect(
-      screen.getByRole("region", { name: /new column/i })
+      screen.getByRole("region", { name: /new column/i }),
     ).toBeInTheDocument();
   });
 
@@ -75,19 +72,19 @@ describe("column delete", () => {
     const column = screen.getByRole("region", { name: /new column/i });
 
     await user.click(
-      within(column as HTMLElement).getByRole("button", { name: /add card/i })
+      within(column as HTMLElement).getByRole("button", { name: /add card/i }),
     );
     await user.click(
       within(column as HTMLElement).getByRole("button", {
         name: /remove column/i,
-      })
+      }),
     );
 
     await user.click(screen.getByRole("button", { name: /cancel/i }));
 
     expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
     expect(
-      screen.getByRole("region", { name: /new column/i })
+      screen.getByRole("region", { name: /new column/i }),
     ).toBeInTheDocument();
   });
 
@@ -99,18 +96,18 @@ describe("column delete", () => {
     const column = screen.getByRole("region", { name: /new column/i });
 
     await user.click(
-      within(column as HTMLElement).getByRole("button", { name: /add card/i })
+      within(column as HTMLElement).getByRole("button", { name: /add card/i }),
     );
     await user.click(
       within(column as HTMLElement).getByRole("button", {
         name: /remove column/i,
-      })
+      }),
     );
 
     await user.click(screen.getByTestId("confirm-delete-button"));
 
     expect(
-      screen.queryByRole("region", { name: /new column/i })
+      screen.queryByRole("region", { name: /new column/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -130,7 +127,7 @@ describe("column delete", () => {
     await user.click(
       within(column as HTMLElement).getByRole("button", {
         name: /remove column/i,
-      })
+      }),
     );
 
     expect(screen.getByText(/this column has 2 cards/i)).toBeInTheDocument();
@@ -145,18 +142,18 @@ describe("column delete", () => {
     const column = screen.getByRole("region", { name: /new column/i });
 
     await user.click(
-      within(column as HTMLElement).getByRole("button", { name: /add card/i })
+      within(column as HTMLElement).getByRole("button", { name: /add card/i }),
     );
 
     await user.click(
       within(column as HTMLElement).getByRole("button", {
         name: /remove column/i,
-      })
+      }),
     );
 
     expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("region", { name: /new column/i })
+      screen.queryByRole("region", { name: /new column/i }),
     ).not.toBeInTheDocument();
   });
 });

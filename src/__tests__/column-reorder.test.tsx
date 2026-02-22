@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("column drag handle", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("renders a drag handle for each column next to the delete button", async () => {
@@ -34,7 +31,7 @@ describe("column drag handle", () => {
 
     // Two columns exist
     expect(screen.getAllByRole("region", { name: /new column/i })).toHaveLength(
-      2
+      2,
     );
     // Two drag handle buttons exist and are labeled
     const handles = screen.getAllByRole("button", { name: /drag column/i });

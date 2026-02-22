@@ -18,16 +18,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("export board integration", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
     vi.mocked(exportBoard).mockClear();
   });
 
@@ -37,7 +34,7 @@ describe("export board integration", () => {
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
     expect(
-      within(dialog).getByRole("button", { name: /export board data/i })
+      within(dialog).getByRole("button", { name: /export board data/i }),
     ).toBeInTheDocument();
   });
 
@@ -47,7 +44,7 @@ describe("export board integration", () => {
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
     await user.click(
-      within(dialog).getByRole("button", { name: /export board data/i })
+      within(dialog).getByRole("button", { name: /export board data/i }),
     );
     expect(exportBoard).toHaveBeenCalledOnce();
   });

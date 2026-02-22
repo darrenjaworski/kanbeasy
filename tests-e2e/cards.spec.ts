@@ -93,7 +93,7 @@ test("can update the card content", async ({ page }) => {
   await content.press("Enter");
 
   await expect(column.getByTestId("card-content-0")).toHaveValue(
-    "Updated title"
+    "Updated title",
   );
 });
 
@@ -172,18 +172,18 @@ test("can drag and drop a card from one column to another", async ({
 
   // Assert left column now has no cards
   await expect(
-    leftColumn.locator('[data-testid^="card-content-"]')
+    leftColumn.locator('[data-testid^="card-content-"]'),
   ).toHaveCount(0);
 
   // Assert right column now has both cards
   const rightCardsContents = rightColumn.locator(
-    '[data-testid^="card-content-"]'
+    '[data-testid^="card-content-"]',
   );
   await expect(rightCardsContents).toHaveCount(2);
 
   // Read values and assert both are present (order can vary by drop position)
   const values = await rightCardsContents.evaluateAll((nodes) =>
-    nodes.map((n) => (n as HTMLTextAreaElement).value)
+    nodes.map((n) => (n as HTMLTextAreaElement).value),
   );
   expect(new Set(values)).toEqual(new Set(["Left Card", "Right Card"]));
 });

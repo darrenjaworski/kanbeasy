@@ -50,7 +50,10 @@ export function WelcomeModal() {
               <CloseIcon className="size-4" />
             </button>
           </div>
-          <div className="mb-4 space-y-3 text-sm" data-testid="welcome-description">
+          <div
+            className="mb-4 space-y-3 text-sm"
+            data-testid="welcome-description"
+          >
             <p>
               Kanban is a visual way to manage work. You organize tasks into
               columns that represent stages — like "To Do," "In Progress," and
@@ -75,6 +78,6 @@ export function WelcomeModal() {
         </div>
       </dialog>
     </div>,
-    document.body
+    document.body,
   );
 }

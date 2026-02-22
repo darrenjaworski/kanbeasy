@@ -27,7 +27,7 @@ test("add a new column to the board", async ({ page }) => {
 
   // Verify the title is updated
   await expect(newColumn.getByTestId("column-title-input-0")).toHaveValue(
-    "test header"
+    "test header",
   );
 });
 
@@ -89,6 +89,6 @@ test("reorder columns by dragging", async ({ page }) => {
 
   // Verify the columns have been reordered
   await expect(page.getByTestId("column-title-input-1")).toHaveValue(
-    "test header"
+    "test header",
   );
 });

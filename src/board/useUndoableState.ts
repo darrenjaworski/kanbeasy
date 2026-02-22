@@ -22,7 +22,7 @@ type UseUndoableStateReturn<T> = {
 
 export function useUndoableState<T>(
   initialState: T | (() => T),
-  options: UseUndoableStateOptions = {}
+  options: UseUndoableStateOptions = {},
 ): UseUndoableStateReturn<T> {
   const { enabled = true, maxHistory = 50 } = options;
 
@@ -63,7 +63,7 @@ export function useUndoableState<T>(
         return { past: newPast, present: next, future: [] };
       });
     },
-    []
+    [],
   );
 
   const undo = useCallback(() => {

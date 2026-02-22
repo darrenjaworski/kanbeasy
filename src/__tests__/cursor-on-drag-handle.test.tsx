@@ -12,7 +12,7 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
@@ -20,10 +20,7 @@ function renderApp() {
 // this guards against regressions in class names.
 describe("drag handle cursor styles", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("applies grab/grabbing cursor classes on card drag handle", async () => {

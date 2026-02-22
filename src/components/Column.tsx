@@ -42,7 +42,8 @@ export function Column({
   const startWidth = useRef(DEFAULT_COLUMN_WIDTH);
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
-  const { cardDensity, columnResizingEnabled, deleteColumnWarningEnabled } = useTheme();
+  const { cardDensity, columnResizingEnabled, deleteColumnWarningEnabled } =
+    useTheme();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -101,15 +102,15 @@ export function Column({
       className={
         `group relative rounded-lg border ${tc.border} p-3` +
         (columnResizingEnabled ? "" : " w-80") +
-        (overlayMode
-          ? ` ${tc.glass} backdrop-blur-md`
-          : " bg-surface")
+        (overlayMode ? ` ${tc.glass} backdrop-blur-md` : " bg-surface")
       }
       style={columnResizingEnabled ? { width } : undefined}
       data-testid={`column-${index}`}
     >
       {/* Combined drag + delete control */}
-      <div className={`absolute right-2 top-2 z-1 ${tc.buttonGroup} rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}>
+      <div
+        className={`absolute right-2 top-2 z-1 ${tc.buttonGroup} rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
+      >
         {canDrag && (
           <button
             type="button"
@@ -123,9 +124,7 @@ export function Column({
             <DragIndicatorIcon className="size-5" />
           </button>
         )}
-        {canDrag && (
-          <span aria-hidden className={`${tc.separator} h-6 w-px`} />
-        )}
+        {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
         <button
           type="button"
           onClick={() =>
@@ -214,7 +213,9 @@ export function Column({
           }}
           data-testid={`resize-handle-${index}`}
         >
-          <div className={`mx-auto h-full w-1 rounded-md ${tc.separator} opacity-60 hover:opacity-100 transition-opacity`} />
+          <div
+            className={`mx-auto h-full w-1 rounded-md ${tc.separator} opacity-60 hover:opacity-100 transition-opacity`}
+          />
         </div>
       )}
     </section>

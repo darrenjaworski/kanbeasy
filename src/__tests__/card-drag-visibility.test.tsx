@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("card drag handle visibility", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("hides drag handle when there is 1 column with only 1 card", async () => {
@@ -40,7 +37,7 @@ describe("card drag handle visibility", () => {
 
     // There should be no drag handle for the only card
     expect(
-      within(column).queryByRole("button", { name: /drag card/i })
+      within(column).queryByRole("button", { name: /drag card/i }),
     ).toBeNull();
   });
 
@@ -68,7 +65,7 @@ describe("card drag handle visibility", () => {
     });
     const cardContainer = textareas[0].parentElement as HTMLElement;
     expect(
-      within(cardContainer).getByRole("button", { name: /drag card/i })
+      within(cardContainer).getByRole("button", { name: /drag card/i }),
     ).toBeInTheDocument();
   });
 });

@@ -68,7 +68,7 @@ export function useBoardDragAndDrop({
       const newColumns = reorderColumns(
         columns,
         String(active.id),
-        String(over.id)
+        String(over.id),
       );
       setColumns(newColumns);
       resetDragState();
@@ -86,7 +86,7 @@ export function useBoardDragAndDrop({
           columns,
           fromColId,
           String(active.id),
-          String(over.id)
+          String(over.id),
         );
         setColumns(newColumns);
       } else {
@@ -96,7 +96,7 @@ export function useBoardDragAndDrop({
           fromColId,
           toColId,
           String(active.id),
-          String(over.id)
+          String(over.id),
         );
         setColumns(newColumns);
       }
@@ -118,7 +118,7 @@ export function useBoardDragAndDrop({
         columns,
         fromColId,
         toColId,
-        String(active.id)
+        String(active.id),
       );
       setColumns(newColumns);
       resetDragState();

@@ -17,7 +17,9 @@ describe("useInlineEdit", () => {
   const onSave = vi.fn();
   const onRevert = vi.fn();
 
-  function setup(overrides: { multiline?: boolean; originalValue?: string } = {}) {
+  function setup(
+    overrides: { multiline?: boolean; originalValue?: string } = {},
+  ) {
     return renderHook(() =>
       useInlineEdit({
         originalValue: overrides.originalValue ?? "Original",
@@ -82,7 +84,9 @@ describe("useInlineEdit", () => {
   describe("onBlur", () => {
     it("calls onSave when value changed", () => {
       const { result } = setup({ originalValue: "Original" });
-      const e = makeEvent({ currentTarget: { value: "Updated", blur: vi.fn() } });
+      const e = makeEvent({
+        currentTarget: { value: "Updated", blur: vi.fn() },
+      });
       result.current.onBlur(e as unknown as React.FocusEvent<HTMLInputElement>);
 
       expect(onSave).toHaveBeenCalledWith("Updated");
@@ -90,7 +94,9 @@ describe("useInlineEdit", () => {
 
     it("does not call onSave when value is unchanged", () => {
       const { result } = setup({ originalValue: "Original" });
-      const e = makeEvent({ currentTarget: { value: "Original", blur: vi.fn() } });
+      const e = makeEvent({
+        currentTarget: { value: "Original", blur: vi.fn() },
+      });
       result.current.onBlur(e as unknown as React.FocusEvent<HTMLInputElement>);
 
       expect(onSave).not.toHaveBeenCalled();
@@ -107,7 +113,9 @@ describe("useInlineEdit", () => {
 
     it("trims whitespace before comparing", () => {
       const { result } = setup({ originalValue: "Hello" });
-      const e = makeEvent({ currentTarget: { value: "  Hello  ", blur: vi.fn() } });
+      const e = makeEvent({
+        currentTarget: { value: "  Hello  ", blur: vi.fn() },
+      });
       result.current.onBlur(e as unknown as React.FocusEvent<HTMLInputElement>);
 
       expect(onSave).not.toHaveBeenCalled();
@@ -121,8 +129,12 @@ describe("useInlineEdit", () => {
       result.current.onKeyDown(keyEvent);
 
       // Then blur fires — should not save
-      const blurEvent = makeEvent({ currentTarget: { value: "Changed", blur: vi.fn() } });
-      result.current.onBlur(blurEvent as unknown as React.FocusEvent<HTMLInputElement>);
+      const blurEvent = makeEvent({
+        currentTarget: { value: "Changed", blur: vi.fn() },
+      });
+      result.current.onBlur(
+        blurEvent as unknown as React.FocusEvent<HTMLInputElement>,
+      );
 
       expect(onSave).not.toHaveBeenCalled();
     });

@@ -79,6 +79,6 @@ test("shows disclaimer text", async ({ page }) => {
   await expect(dlg).toBeVisible();
 
   await expect(
-    dlg.getByText(/reordering columns resets all data/i)
+    dlg.getByText(/reordering columns resets all data/i),
   ).toBeVisible();
 });

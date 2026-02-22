@@ -66,6 +66,6 @@ export function Modal({
         {children}
       </dialog>
     </div>,
-    document.body
+    document.body,
   );
 }

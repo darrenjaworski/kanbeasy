@@ -16,7 +16,7 @@ describe("useUndoRedoKeyboard", () => {
     const undo = vi.fn();
     const redo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo, redo, canUndo: true, canRedo: false })
+      useUndoRedoKeyboard({ undo, redo, canUndo: true, canRedo: false }),
     );
 
     fireKey({ key: "z", metaKey: true });
@@ -27,7 +27,12 @@ describe("useUndoRedoKeyboard", () => {
   it("calls undo on Ctrl+Z", () => {
     const undo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo, redo: vi.fn(), canUndo: true, canRedo: false })
+      useUndoRedoKeyboard({
+        undo,
+        redo: vi.fn(),
+        canUndo: true,
+        canRedo: false,
+      }),
     );
 
     fireKey({ key: "z", ctrlKey: true });
@@ -37,7 +42,12 @@ describe("useUndoRedoKeyboard", () => {
   it("calls redo on Cmd+Shift+Z", () => {
     const redo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo: vi.fn(), redo, canUndo: false, canRedo: true })
+      useUndoRedoKeyboard({
+        undo: vi.fn(),
+        redo,
+        canUndo: false,
+        canRedo: true,
+      }),
     );
 
     fireKey({ key: "z", metaKey: true, shiftKey: true });
@@ -47,7 +57,12 @@ describe("useUndoRedoKeyboard", () => {
   it("calls redo on Ctrl+Shift+Z", () => {
     const redo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo: vi.fn(), redo, canUndo: false, canRedo: true })
+      useUndoRedoKeyboard({
+        undo: vi.fn(),
+        redo,
+        canUndo: false,
+        canRedo: true,
+      }),
     );
 
     fireKey({ key: "z", ctrlKey: true, shiftKey: true });
@@ -57,7 +72,12 @@ describe("useUndoRedoKeyboard", () => {
   it("does not call undo when canUndo is false", () => {
     const undo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo, redo: vi.fn(), canUndo: false, canRedo: false })
+      useUndoRedoKeyboard({
+        undo,
+        redo: vi.fn(),
+        canUndo: false,
+        canRedo: false,
+      }),
     );
 
     fireKey({ key: "z", metaKey: true });
@@ -67,7 +87,12 @@ describe("useUndoRedoKeyboard", () => {
   it("does not call redo when canRedo is false", () => {
     const redo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo: vi.fn(), redo, canUndo: false, canRedo: false })
+      useUndoRedoKeyboard({
+        undo: vi.fn(),
+        redo,
+        canUndo: false,
+        canRedo: false,
+      }),
     );
 
     fireKey({ key: "z", metaKey: true, shiftKey: true });
@@ -77,7 +102,12 @@ describe("useUndoRedoKeyboard", () => {
   it("skips when focus is in an input element", () => {
     const undo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo, redo: vi.fn(), canUndo: true, canRedo: false })
+      useUndoRedoKeyboard({
+        undo,
+        redo: vi.fn(),
+        canUndo: true,
+        canRedo: false,
+      }),
     );
 
     const input = document.createElement("input");
@@ -98,7 +128,12 @@ describe("useUndoRedoKeyboard", () => {
   it("skips when focus is in a textarea", () => {
     const undo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo, redo: vi.fn(), canUndo: true, canRedo: false })
+      useUndoRedoKeyboard({
+        undo,
+        redo: vi.fn(),
+        canUndo: true,
+        canRedo: false,
+      }),
     );
 
     const textarea = document.createElement("textarea");
@@ -119,7 +154,12 @@ describe("useUndoRedoKeyboard", () => {
   it("skips when focus is in a contenteditable element", () => {
     const undo = vi.fn();
     renderHook(() =>
-      useUndoRedoKeyboard({ undo, redo: vi.fn(), canUndo: true, canRedo: false })
+      useUndoRedoKeyboard({
+        undo,
+        redo: vi.fn(),
+        canUndo: true,
+        canRedo: false,
+      }),
     );
 
     const div = document.createElement("div");
@@ -141,7 +181,12 @@ describe("useUndoRedoKeyboard", () => {
   it("cleans up listener on unmount", () => {
     const undo = vi.fn();
     const { unmount } = renderHook(() =>
-      useUndoRedoKeyboard({ undo, redo: vi.fn(), canUndo: true, canRedo: false })
+      useUndoRedoKeyboard({
+        undo,
+        redo: vi.fn(),
+        canUndo: true,
+        canRedo: false,
+      }),
     );
 
     unmount();

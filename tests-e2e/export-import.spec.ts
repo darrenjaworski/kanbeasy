@@ -100,7 +100,7 @@ test("can import board data from JSON file", async ({ page }) => {
 
   // Wait for import to complete (button text changes)
   await expect(
-    dlg.getByRole("button", { name: /import complete/i })
+    dlg.getByRole("button", { name: /import complete/i }),
   ).toBeVisible({ timeout: 5000 });
 
   // Close settings and verify the imported data is on the board
@@ -109,10 +109,10 @@ test("can import board data from JSON file", async ({ page }) => {
   const column = page.getByTestId("column-0");
   await expect(column).toBeVisible();
   await expect(column.getByTestId("column-title-input-0")).toHaveValue(
-    "Imported Column"
+    "Imported Column",
   );
   await expect(column.getByTestId("card-content-0")).toHaveValue(
-    "Imported Card"
+    "Imported Card",
   );
 
   // Cleanup

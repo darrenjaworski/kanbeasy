@@ -12,13 +12,11 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
-function makeExportJson(
-  overrides: Record<string, unknown> = {}
-): string {
+function makeExportJson(overrides: Record<string, unknown> = {}): string {
   return JSON.stringify({
     version: 1,
     exportedAt: "2024-01-01T00:00:00.000Z",
@@ -44,10 +42,7 @@ function makeExportJson(
 
 describe("import board integration", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
     vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 
@@ -61,7 +56,7 @@ describe("import board integration", () => {
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
     expect(
-      within(dialog).getByRole("button", { name: /import board data/i })
+      within(dialog).getByRole("button", { name: /import board data/i }),
     ).toBeInTheDocument();
   });
 
@@ -72,7 +67,7 @@ describe("import board integration", () => {
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
 
     const fileInput = within(dialog).getByTestId(
-      "import-file-input"
+      "import-file-input",
     ) as HTMLInputElement;
 
     const file = new File([makeExportJson()], "export.json", {
@@ -94,7 +89,7 @@ describe("import board integration", () => {
 
     // Should reset to idle
     expect(
-      within(dialog).getByRole("button", { name: /import board data/i })
+      within(dialog).getByRole("button", { name: /import board data/i }),
     ).toBeInTheDocument();
   });
 
@@ -105,7 +100,7 @@ describe("import board integration", () => {
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
 
     const fileInput = within(dialog).getByTestId(
-      "import-file-input"
+      "import-file-input",
     ) as HTMLInputElement;
 
     const file = new File([makeExportJson()], "export.json", {
@@ -118,14 +113,18 @@ describe("import board integration", () => {
 
     // Close the settings modal to see the board
     await user.click(
-      within(dialog).getByRole("button", { name: /close settings/i })
+      within(dialog).getByRole("button", { name: /close settings/i }),
     );
 
     // The imported column title appears in an input
     const columnInputs = screen.getAllByRole("textbox", {
       name: /column title/i,
     });
-    expect(columnInputs.some((el) => (el as HTMLInputElement).value === "Imported Column")).toBe(true);
+    expect(
+      columnInputs.some(
+        (el) => (el as HTMLInputElement).value === "Imported Column",
+      ),
+    ).toBe(true);
     expect(screen.getByText("Imported Card")).toBeInTheDocument();
   });
 
@@ -136,7 +135,7 @@ describe("import board integration", () => {
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
 
     const fileInput = within(dialog).getByTestId(
-      "import-file-input"
+      "import-file-input",
     ) as HTMLInputElement;
 
     const file = new File(["not json"], "bad.json", {
@@ -147,9 +146,9 @@ describe("import board integration", () => {
     // Advance past min delay so error state resolves
     await act(() => vi.advanceTimersByTimeAsync(300));
 
-    expect(
-      within(dialog).getByRole("alert")
-    ).toHaveTextContent("File is not valid JSON.");
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      "File is not valid JSON.",
+    );
   });
 
   it("shows error for wrong version", async () => {
@@ -159,21 +158,19 @@ describe("import board integration", () => {
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
 
     const fileInput = within(dialog).getByTestId(
-      "import-file-input"
+      "import-file-input",
     ) as HTMLInputElement;
 
-    const file = new File(
-      [makeExportJson({ version: 99 })],
-      "future.json",
-      { type: "application/json" }
-    );
+    const file = new File([makeExportJson({ version: 99 })], "future.json", {
+      type: "application/json",
+    });
     await user.upload(fileInput, file);
 
     // Advance past min delay so error state resolves
     await act(() => vi.advanceTimersByTimeAsync(300));
 
-    expect(
-      within(dialog).getByRole("alert")
-    ).toHaveTextContent(/unsupported export version/i);
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      /unsupported export version/i,
+    );
   });
 });

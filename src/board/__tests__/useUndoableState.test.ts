@@ -84,9 +84,7 @@ describe("useUndoableState", () => {
   });
 
   it("caps history at maxHistory", () => {
-    const { result } = renderHook(() =>
-      useUndoableState(0, { maxHistory: 3 })
-    );
+    const { result } = renderHook(() => useUndoableState(0, { maxHistory: 3 }));
     act(() => result.current.setState(1));
     act(() => result.current.setState(2));
     act(() => result.current.setState(3));
@@ -114,7 +112,7 @@ describe("useUndoableState", () => {
 
   it("does not track history when disabled", () => {
     const { result } = renderHook(() =>
-      useUndoableState(0, { enabled: false })
+      useUndoableState(0, { enabled: false }),
     );
     act(() => result.current.setState(1));
     act(() => result.current.setState(2));

@@ -111,7 +111,13 @@ describe("undo/redo through BoardProvider", () => {
 
     const now = Date.now();
     const imported = [
-      { id: "imp-1", title: "Imported", cards: [], createdAt: now, updatedAt: now },
+      {
+        id: "imp-1",
+        title: "Imported",
+        cards: [],
+        createdAt: now,
+        updatedAt: now,
+      },
     ];
     act(() => result.current.setColumns(imported));
     expect(result.current.columns[0].title).toBe("Imported");

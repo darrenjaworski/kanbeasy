@@ -44,7 +44,7 @@ export function SortableCardItem({
       transition,
       zIndex: isDragging ? 5 : undefined,
     }),
-    [transform, transition, isDragging]
+    [transform, transition, isDragging],
   );
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -52,10 +52,7 @@ export function SortableCardItem({
   const revertCard = useCallback(() => {
     if (textareaRef.current) textareaRef.current.value = cardValue;
   }, [cardValue]);
-  const saveCard = useCallback(
-    (value: string) => onUpdate(value),
-    [onUpdate],
-  );
+  const saveCard = useCallback((value: string) => onUpdate(value), [onUpdate]);
   const { onKeyDown: cardKeyDown, onBlur: cardBlur } = useInlineEdit({
     originalValue: card.title,
     onSave: saveCard,

@@ -84,7 +84,7 @@ describe("validateExportData", () => {
             "not an object",
           ],
         },
-      })
+      }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -112,7 +112,7 @@ describe("validateExportData", () => {
           columnResizingEnabled: "false",
           deleteColumnWarning: "true",
         },
-      })
+      }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -129,7 +129,7 @@ describe("validateExportData", () => {
           columnResizingEnabled: "false",
           deleteColumnWarning: "true",
         },
-      })
+      }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -146,7 +146,7 @@ describe("validateExportData", () => {
           columnResizingEnabled: "true",
           deleteColumnWarning: "false",
         },
-      })
+      }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -163,7 +163,7 @@ describe("validateExportData", () => {
           columnResizingEnabled: true,
           deleteColumnWarning: false,
         },
-      })
+      }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -184,7 +184,7 @@ describe("validateExportData", () => {
             },
           ],
         },
-      })
+      }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -223,7 +223,7 @@ describe("validateExportData", () => {
             },
           ],
         },
-      })
+      }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -235,7 +235,9 @@ describe("validateExportData", () => {
     const card = col.cards[0];
     expect(card.createdAt).toBe(5000);
     expect(card.updatedAt).toBe(6000);
-    expect(card.columnHistory).toEqual([{ columnId: "col-1", enteredAt: 5000 }]);
+    expect(card.columnHistory).toEqual([
+      { columnId: "col-1", enteredAt: 5000 },
+    ]);
   });
 });
 

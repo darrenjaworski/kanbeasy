@@ -2,14 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
 import type { CardDensity, ThemeContextValue, ThemePreference } from "./types";
 import type { ThemeId, ThemeMode } from "./themes";
-import {
-  getDefaultThemeForMode,
-  getThemeById,
-} from "./themes";
-import {
-  getStringFromStorage,
-  saveStringToStorage,
-} from "../utils/storage";
+import { getDefaultThemeForMode, getThemeById } from "./themes";
+import { getStringFromStorage, saveStringToStorage } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
 
 function getSystemTheme(): ThemeMode {
@@ -70,8 +64,9 @@ function getInitialDensity(): CardDensity {
 export function ThemeProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [themePreference, setThemePreferenceState] =
-    useState<ThemePreference>(getInitialThemePreference);
+  const [themePreference, setThemePreferenceState] = useState<ThemePreference>(
+    getInitialThemePreference,
+  );
   const [themeId, setThemeId] = useState<ThemeId>(() =>
     getInitialThemeId(themePreference),
   );
@@ -179,7 +174,15 @@ export function ThemeProvider({
       deleteColumnWarningEnabled,
       setDeleteColumnWarningEnabled,
     }),
-    [themeId, theme?.mode, themePreference, setThemePreference, cardDensity, columnResizingEnabled, deleteColumnWarningEnabled],
+    [
+      themeId,
+      theme?.mode,
+      themePreference,
+      setThemePreference,
+      cardDensity,
+      columnResizingEnabled,
+      deleteColumnWarningEnabled,
+    ],
   );
 
   return (

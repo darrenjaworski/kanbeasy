@@ -79,15 +79,15 @@ export function AnalyticsModal({ open, onClose }: Props) {
           />
           <MetricCard
             label="Avg Reverse Time"
-            value={avgReverseTime !== null ? formatDuration(avgReverseTime) : null}
+            value={
+              avgReverseTime !== null ? formatDuration(avgReverseTime) : null
+            }
             description="Average time cards spend moving backwards"
           />
         </div>
 
         {/* Throughput card */}
-        <div
-          className={`mt-3 rounded-lg border ${tc.border} ${tc.glass} p-4`}
-        >
+        <div className={`mt-3 rounded-lg border ${tc.border} ${tc.glass} p-4`}>
           <p
             className={`text-xs font-medium uppercase tracking-wide ${tc.textFaint} mb-2`}
           >
@@ -120,9 +120,7 @@ export function AnalyticsModal({ open, onClose }: Props) {
             >
               Card Cycle Times
             </h3>
-            <div
-              className={`rounded-lg border ${tc.border} overflow-hidden`}
-            >
+            <div className={`rounded-lg border ${tc.border} overflow-hidden`}>
               <table className="w-full text-sm">
                 <thead>
                   <tr className={`${tc.glass} border-b ${tc.border}`}>
@@ -167,12 +165,9 @@ export function AnalyticsModal({ open, onClose }: Props) {
               <button
                 type="button"
                 className={`mt-2 w-full text-sm py-1.5 rounded-lg ${tc.button}`}
-                onClick={() =>
-                  setCycleTimeVisible((v) => v + PAGE_SIZE)
-                }
+                onClick={() => setCycleTimeVisible((v) => v + PAGE_SIZE)}
               >
-                Show more ({cardCycleTimes.length - cycleTimeVisible}{" "}
-                remaining)
+                Show more ({cardCycleTimes.length - cycleTimeVisible} remaining)
               </button>
             )}
           </div>
@@ -186,9 +181,7 @@ export function AnalyticsModal({ open, onClose }: Props) {
             >
               Card Reverse Times
             </h3>
-            <div
-              className={`rounded-lg border ${tc.border} overflow-hidden`}
-            >
+            <div className={`rounded-lg border ${tc.border} overflow-hidden`}>
               <table className="w-full text-sm">
                 <thead>
                   <tr className={`${tc.glass} border-b ${tc.border}`}>
@@ -233,9 +226,7 @@ export function AnalyticsModal({ open, onClose }: Props) {
               <button
                 type="button"
                 className={`mt-2 w-full text-sm py-1.5 rounded-lg ${tc.button}`}
-                onClick={() =>
-                  setReverseTimeVisible((v) => v + PAGE_SIZE)
-                }
+                onClick={() => setReverseTimeVisible((v) => v + PAGE_SIZE)}
               >
                 Show more ({cardReverseTimes.length - reverseTimeVisible}{" "}
                 remaining)

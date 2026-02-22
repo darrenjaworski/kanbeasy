@@ -20,7 +20,7 @@ function ThemeProviderWithColumnResize({
       columnResizingEnabled: true,
       setColumnResizingEnabled: () => {},
     }),
-    []
+    [],
   );
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
@@ -34,7 +34,7 @@ describe("Column resizing", () => {
         <BoardProvider>
           <Column id="col1" title="Test Column" cards={[]} index={0} />
         </BoardProvider>
-      </ThemeProviderWithColumnResize>
+      </ThemeProviderWithColumnResize>,
     );
     const section = getByTestId("column-0");
     const handle = getByTestId("resize-handle-0");
@@ -52,7 +52,7 @@ describe("Column resizing", () => {
         <BoardProvider>
           <Column id="col2" title="Test Column 2" cards={[]} index={1} />
         </BoardProvider>
-      </ThemeProviderWithColumnResize>
+      </ThemeProviderWithColumnResize>,
     );
     const section = getByTestId("column-1");
     const handle = getByTestId("resize-handle-1");
@@ -68,7 +68,7 @@ describe("Column resizing", () => {
         <BoardProvider>
           <Column id="col3" title="Test Column 3" cards={[]} index={2} />
         </BoardProvider>
-      </ThemeProviderWithColumnResize>
+      </ThemeProviderWithColumnResize>,
     );
     const section = getByTestId("column-2");
     const handle = getByTestId("resize-handle-2");

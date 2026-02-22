@@ -34,7 +34,7 @@ test("settings toggle enables column resize and persists", async ({ page }) => {
 
   // localStorage should reflect the setting
   const stored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:columnResizingEnabled")
+    localStorage.getItem("kanbeasy:columnResizingEnabled"),
   );
   expect(stored).toBe("true");
 });

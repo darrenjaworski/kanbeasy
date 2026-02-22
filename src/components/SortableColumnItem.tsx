@@ -36,7 +36,7 @@ export function SortableColumnItem({
       transition,
       zIndex: isDragging ? 10 : undefined,
     }),
-    [style, transform, transition, isDragging]
+    [style, transform, transition, isDragging],
   );
 
   return (

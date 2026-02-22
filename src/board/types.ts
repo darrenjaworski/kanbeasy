@@ -36,7 +36,7 @@ export type BoardContextValue = Readonly<{
   reorderCard: (
     columnId: string,
     activeCardId: string,
-    overCardId: string
+    overCardId: string,
   ) => void;
   resetBoard: () => void;
   searchQuery: string;

@@ -12,7 +12,7 @@ describe("ConfirmDialog", () => {
         onConfirm={vi.fn()}
         title="Delete column?"
         message="This will remove 3 cards."
-      />
+      />,
     );
     expect(screen.getByText("Delete column?")).toBeInTheDocument();
     expect(screen.getByText("This will remove 3 cards.")).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe("ConfirmDialog", () => {
         onConfirm={vi.fn()}
         title="Delete column?"
         message="This will remove 3 cards."
-      />
+      />,
     );
     expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
   });
@@ -41,7 +41,7 @@ describe("ConfirmDialog", () => {
         onConfirm={vi.fn()}
         title="Delete column?"
         message="This will remove 3 cards."
-      />
+      />,
     );
     await user.click(screen.getByRole("button", { name: /cancel/i }));
     expect(onClose).toHaveBeenCalledOnce();
@@ -57,7 +57,7 @@ describe("ConfirmDialog", () => {
         onConfirm={onConfirm}
         title="Delete column?"
         message="This will remove 3 cards."
-      />
+      />,
     );
     await user.click(screen.getByRole("button", { name: /delete/i }));
     expect(onConfirm).toHaveBeenCalledOnce();
@@ -73,9 +73,13 @@ describe("ConfirmDialog", () => {
         message="This action cannot be undone."
         confirmLabel="Yes, remove"
         cancelLabel="Go back"
-      />
+      />,
     );
-    expect(screen.getByRole("button", { name: /yes, remove/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /go back/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /yes, remove/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /go back/i }),
+    ).toBeInTheDocument();
   });
 });

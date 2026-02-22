@@ -19,8 +19,11 @@ export function SearchInput() {
         data-testid="search-input"
       />
       {showMatchCount && (
-        <div className={`pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 text-xs ${tc.textFaint}`}>
-          {matchingCardIds.size} {matchingCardIds.size === 1 ? "match" : "matches"}
+        <div
+          className={`pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 text-xs ${tc.textFaint}`}
+        >
+          {matchingCardIds.size}{" "}
+          {matchingCardIds.size === 1 ? "match" : "matches"}
         </div>
       )}
     </div>

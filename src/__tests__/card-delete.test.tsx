@@ -11,7 +11,7 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
@@ -33,7 +33,7 @@ describe("card delete", () => {
 
     // Two cards exist
     expect(
-      within(column as HTMLElement).getAllByText(/new card/i)
+      within(column as HTMLElement).getAllByText(/new card/i),
     ).toHaveLength(2);
 
     // Click the remove button on the first card in the column
@@ -47,7 +47,7 @@ describe("card delete", () => {
 
     // Only one card remains
     expect(
-      within(column as HTMLElement).getAllByText(/new card/i)
+      within(column as HTMLElement).getAllByText(/new card/i),
     ).toHaveLength(1);
   });
 });

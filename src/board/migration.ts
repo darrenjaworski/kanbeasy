@@ -6,14 +6,12 @@ import type { Card, Column, ColumnHistoryEntry } from "./types";
  */
 export function migrateCard(
   raw: Record<string, unknown>,
-  columnId: string
+  columnId: string,
 ): Card {
   const now = Date.now();
 
-  const createdAt =
-    typeof raw.createdAt === "number" ? raw.createdAt : now;
-  const updatedAt =
-    typeof raw.updatedAt === "number" ? raw.updatedAt : now;
+  const createdAt = typeof raw.createdAt === "number" ? raw.createdAt : now;
+  const updatedAt = typeof raw.updatedAt === "number" ? raw.updatedAt : now;
   const columnHistory = Array.isArray(raw.columnHistory)
     ? (raw.columnHistory as ColumnHistoryEntry[])
     : [{ columnId, enteredAt: now }];
@@ -34,10 +32,8 @@ export function migrateCard(
 export function migrateColumn(raw: Record<string, unknown>): Column {
   const now = Date.now();
 
-  const createdAt =
-    typeof raw.createdAt === "number" ? raw.createdAt : now;
-  const updatedAt =
-    typeof raw.updatedAt === "number" ? raw.updatedAt : now;
+  const createdAt = typeof raw.createdAt === "number" ? raw.createdAt : now;
+  const updatedAt = typeof raw.updatedAt === "number" ? raw.updatedAt : now;
 
   const columnId = raw.id as string;
   const rawCards = Array.isArray(raw.cards)

@@ -59,9 +59,7 @@ export function validateExportData(parsed: unknown): ImportResult {
       const validColumns = (parsed.board.columns as unknown[]).filter(isColumn);
       columns =
         version === 1
-          ? migrateColumns(
-              validColumns as unknown as Record<string, unknown>[]
-            )
+          ? migrateColumns(validColumns as unknown as Record<string, unknown>[])
           : validColumns;
     }
   }

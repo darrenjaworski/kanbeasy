@@ -12,16 +12,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("search cards", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("highlights matching cards when searching", async () => {
@@ -56,7 +53,9 @@ describe("search cards", () => {
     await user.tab();
 
     // Find the search input
-    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
     expect(searchInput).toBeInTheDocument();
 
     // Search for "buy"
@@ -83,7 +82,7 @@ describe("search cards", () => {
     await user.clear(searchInput);
 
     // No cards should be highlighted
-    cards.forEach(card => {
+    cards.forEach((card) => {
       expect(card).not.toHaveClass("border-blue-500");
     });
   });
@@ -96,7 +95,9 @@ describe("search cards", () => {
     await user.click(screen.getByRole("button", { name: /add column/i }));
 
     const column = screen.getByRole("region", { name: /new column/i });
-    const addCardBtn = within(column).getByRole("button", { name: /add card to/i });
+    const addCardBtn = within(column).getByRole("button", {
+      name: /add card to/i,
+    });
     await user.click(addCardBtn);
 
     const textarea = within(column).getByRole("textbox", {
@@ -107,7 +108,9 @@ describe("search cards", () => {
     await user.type(textarea, "Important meeting");
     await user.tab();
 
-    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
 
     // Fuzzy search should match even with typos
     await user.type(searchInput, "meetng"); // Missing 'i'
@@ -125,7 +128,9 @@ describe("search cards", () => {
     await user.click(screen.getByRole("button", { name: /add column/i }));
 
     const column = screen.getByRole("region", { name: /new column/i });
-    const addCardBtn = within(column).getByRole("button", { name: /add card to/i });
+    const addCardBtn = within(column).getByRole("button", {
+      name: /add card to/i,
+    });
     await user.click(addCardBtn);
 
     const textarea = within(column).getByRole("textbox", {
@@ -136,7 +141,9 @@ describe("search cards", () => {
     await user.type(textarea, "Task one");
     await user.tab();
 
-    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
 
     // Search for something that doesn't match
     await user.type(searchInput, "zzzzz");
@@ -157,7 +164,9 @@ describe("search cards", () => {
     await user.click(screen.getByRole("button", { name: /add column/i }));
 
     const column = screen.getByRole("region", { name: /new column/i });
-    const addCardBtn = within(column).getByRole("button", { name: /add card to/i });
+    const addCardBtn = within(column).getByRole("button", {
+      name: /add card to/i,
+    });
     await user.click(addCardBtn);
 
     const textarea = within(column).getByRole("textbox", {
@@ -168,7 +177,9 @@ describe("search cards", () => {
     await user.type(textarea, "Buy groceries");
     await user.tab();
 
-    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
 
     // Type single character that matches
     await user.type(searchInput, "B");
@@ -196,7 +207,9 @@ describe("search cards", () => {
     await user.click(screen.getByRole("button", { name: /add column/i }));
 
     const column = screen.getByRole("region", { name: /new column/i });
-    const addCardBtn = within(column).getByRole("button", { name: /add card to/i });
+    const addCardBtn = within(column).getByRole("button", {
+      name: /add card to/i,
+    });
     await user.click(addCardBtn);
 
     const textarea = within(column).getByRole("textbox", {
@@ -207,7 +220,9 @@ describe("search cards", () => {
     await user.type(textarea, "Buy groceries");
     await user.tab();
 
-    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
 
     // Search with uppercase
     await user.type(searchInput, "GROC");
@@ -228,22 +243,32 @@ describe("search cards", () => {
     const columns = screen.getAllByRole("region", { name: /new column/i });
 
     // Add card to first column
-    const addCardBtn1 = within(columns[0]).getByRole("button", { name: /add card to/i });
+    const addCardBtn1 = within(columns[0]).getByRole("button", {
+      name: /add card to/i,
+    });
     await user.click(addCardBtn1);
-    const textarea1 = within(columns[0]).getByRole("textbox", { name: /card content/i });
+    const textarea1 = within(columns[0]).getByRole("textbox", {
+      name: /card content/i,
+    });
     await user.clear(textarea1);
     await user.type(textarea1, "Backend task");
     await user.tab();
 
     // Add card to second column
-    const addCardBtn2 = within(columns[1]).getByRole("button", { name: /add card to/i });
+    const addCardBtn2 = within(columns[1]).getByRole("button", {
+      name: /add card to/i,
+    });
     await user.click(addCardBtn2);
-    const textarea2 = within(columns[1]).getByRole("textbox", { name: /card content/i });
+    const textarea2 = within(columns[1]).getByRole("textbox", {
+      name: /card content/i,
+    });
     await user.clear(textarea2);
     await user.type(textarea2, "Frontend task");
     await user.tab();
 
-    const searchInput = screen.getByRole("searchbox", { name: /search cards/i });
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
 
     // Search for "task" which appears in both columns
     await user.type(searchInput, "task");

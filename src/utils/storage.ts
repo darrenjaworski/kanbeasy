@@ -53,10 +53,7 @@ export function getFromStorage<T>(key: string, fallback: T): T {
  * @example
  * const theme = getStringFromStorage('theme', 'light');
  */
-export function getStringFromStorage(
-  key: string,
-  fallback: string
-): string {
+export function getStringFromStorage(key: string, fallback: string): string {
   // SSR safety
   if (typeof window === "undefined") {
     return fallback;

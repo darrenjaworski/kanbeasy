@@ -13,16 +13,13 @@ function renderApp() {
       <BoardProvider>
         <App />
       </BoardProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }
 
 describe("app shell", () => {
   beforeEach(() => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [] })
-    );
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
   it("renders header and shows minimal empty-state, allows adding a column", async () => {
@@ -38,14 +35,14 @@ describe("app shell", () => {
     await user.click(addBtn);
     // A new column appears with default title (region named by the column title)
     expect(
-      screen.getByRole("region", { name: /new column/i })
+      screen.getByRole("region", { name: /new column/i }),
     ).toBeInTheDocument();
     // The persistent add tile exists after first column
     const addTile = screen.getByRole("button", { name: /add column/i });
     await user.click(addTile);
     // Two columns now
     expect(
-      screen.getAllByRole("region", { name: /new column/i }).length
+      screen.getAllByRole("region", { name: /new column/i }).length,
     ).toBeGreaterThanOrEqual(2);
   });
 

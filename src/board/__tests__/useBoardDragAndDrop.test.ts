@@ -12,8 +12,20 @@ describe("useBoardDragAndDrop", () => {
       createdAt: 1000,
       updatedAt: 1000,
       cards: [
-        { id: "card-1", title: "Card 1", createdAt: 1000, updatedAt: 1000, columnHistory: [{ columnId: "col-1", enteredAt: 1000 }] },
-        { id: "card-2", title: "Card 2", createdAt: 1000, updatedAt: 1000, columnHistory: [{ columnId: "col-1", enteredAt: 1000 }] },
+        {
+          id: "card-1",
+          title: "Card 1",
+          createdAt: 1000,
+          updatedAt: 1000,
+          columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
+        },
+        {
+          id: "card-2",
+          title: "Card 2",
+          createdAt: 1000,
+          updatedAt: 1000,
+          columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
+        },
       ],
     },
     {
@@ -21,14 +33,22 @@ describe("useBoardDragAndDrop", () => {
       title: "Column 2",
       createdAt: 1000,
       updatedAt: 1000,
-      cards: [{ id: "card-3", title: "Card 3", createdAt: 1000, updatedAt: 1000, columnHistory: [{ columnId: "col-2", enteredAt: 1000 }] }],
+      cards: [
+        {
+          id: "card-3",
+          title: "Card 3",
+          createdAt: 1000,
+          updatedAt: 1000,
+          columnHistory: [{ columnId: "col-2", enteredAt: 1000 }],
+        },
+      ],
     },
   ];
 
   function createDragStartEvent(
     id: string,
     type: "card" | "column",
-    columnId?: string
+    columnId?: string,
   ): DragStartEvent {
     return {
       active: {
@@ -55,7 +75,7 @@ describe("useBoardDragAndDrop", () => {
     overId: string,
     overType: "card" | "column" | "column-drop",
     activeColumnId?: string,
-    overColumnId?: string
+    overColumnId?: string,
   ): DragEndEvent {
     return {
       active: {
@@ -101,7 +121,7 @@ describe("useBoardDragAndDrop", () => {
     it("initializes with null drag state", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       expect(result.current.activeType).toBeNull();
@@ -114,7 +134,7 @@ describe("useBoardDragAndDrop", () => {
     it("sets active state for column drag", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const event = createDragStartEvent("col-1", "column");
@@ -131,7 +151,7 @@ describe("useBoardDragAndDrop", () => {
     it("sets active state for card drag", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const event = createDragStartEvent("card-1", "card", "col-1");
@@ -143,14 +163,14 @@ describe("useBoardDragAndDrop", () => {
       expect(result.current.activeType).toBe("card");
       expect(result.current.activeId).toBe("card-1");
       expect(result.current.activeCard).toEqual(
-        expect.objectContaining({ id: "card-1", title: "Card 1" })
+        expect.objectContaining({ id: "card-1", title: "Card 1" }),
       );
     });
 
     it("handles missing type in drag data", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const event: DragStartEvent = {
@@ -175,7 +195,7 @@ describe("useBoardDragAndDrop", () => {
     it("reorders columns when dragging column to column", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const startEvent = createDragStartEvent("col-1", "column");
@@ -190,7 +210,7 @@ describe("useBoardDragAndDrop", () => {
         expect.arrayContaining([
           expect.objectContaining({ id: "col-2" }),
           expect.objectContaining({ id: "col-1" }),
-        ])
+        ]),
       );
       expect(result.current.activeType).toBeNull();
       expect(result.current.activeId).toBeNull();
@@ -199,7 +219,7 @@ describe("useBoardDragAndDrop", () => {
     it("reorders cards within same column", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const startEvent = createDragStartEvent("card-1", "card", "col-1");
@@ -209,7 +229,7 @@ describe("useBoardDragAndDrop", () => {
         "card-2",
         "card",
         "col-1",
-        "col-1"
+        "col-1",
       );
 
       act(() => {
@@ -226,7 +246,7 @@ describe("useBoardDragAndDrop", () => {
     it("moves card across columns", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const startEvent = createDragStartEvent("card-1", "card", "col-1");
@@ -236,7 +256,7 @@ describe("useBoardDragAndDrop", () => {
         "card-3",
         "card",
         "col-1",
-        "col-2"
+        "col-2",
       );
 
       act(() => {
@@ -249,7 +269,9 @@ describe("useBoardDragAndDrop", () => {
 
       // card-1 removed from col-1
       expect(updatedColumns[0].cards.length).toBe(1);
-      expect(updatedColumns[0].cards.find((c) => c.id === "card-1")).toBeUndefined();
+      expect(
+        updatedColumns[0].cards.find((c) => c.id === "card-1"),
+      ).toBeUndefined();
 
       // card-1 added to col-2
       expect(updatedColumns[1].cards.length).toBe(2);
@@ -259,7 +281,7 @@ describe("useBoardDragAndDrop", () => {
     it("drops card on column area", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const startEvent = createDragStartEvent("card-1", "card", "col-1");
@@ -269,7 +291,7 @@ describe("useBoardDragAndDrop", () => {
         "col-2",
         "column-drop",
         "col-1",
-        "col-2"
+        "col-2",
       );
 
       act(() => {
@@ -290,7 +312,7 @@ describe("useBoardDragAndDrop", () => {
     it("resets state when no over target", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const startEvent = createDragStartEvent("card-1", "card", "col-1");
@@ -320,7 +342,7 @@ describe("useBoardDragAndDrop", () => {
     it("handles drop on column without columnId", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const startEvent = createDragStartEvent("card-1", "card", "col-1");
@@ -354,7 +376,7 @@ describe("useBoardDragAndDrop", () => {
     it("blurs active element after drag end", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const button = document.createElement("button");
@@ -379,7 +401,7 @@ describe("useBoardDragAndDrop", () => {
     it("resets drag state without calling setColumns", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const startEvent = createDragStartEvent("card-1", "card", "col-1");
@@ -403,7 +425,7 @@ describe("useBoardDragAndDrop", () => {
     it("blurs active element after drag cancel", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const button = document.createElement("button");
@@ -427,7 +449,7 @@ describe("useBoardDragAndDrop", () => {
     it("returns null when not dragging", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       expect(result.current.activeCard).toBeNull();
@@ -436,7 +458,7 @@ describe("useBoardDragAndDrop", () => {
     it("returns null when dragging column", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const event = createDragStartEvent("col-1", "column");
@@ -451,7 +473,7 @@ describe("useBoardDragAndDrop", () => {
     it("returns card when dragging card", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const event = createDragStartEvent("card-2", "card", "col-1");
@@ -461,14 +483,14 @@ describe("useBoardDragAndDrop", () => {
       });
 
       expect(result.current.activeCard).toEqual(
-        expect.objectContaining({ id: "card-2", title: "Card 2" })
+        expect.objectContaining({ id: "card-2", title: "Card 2" }),
       );
     });
 
     it("returns null when card not found", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+        useBoardDragAndDrop({ columns: mockColumns, setColumns }),
       );
 
       const event = createDragStartEvent("non-existent", "card", "col-1");
