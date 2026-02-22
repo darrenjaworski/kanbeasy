@@ -1,6 +1,6 @@
 import type { Column } from "../board/types";
 
-export type CardCycleTime = {
+type CardCycleTime = {
   cardTitle: string;
   cycleTimeMs: number;
 };

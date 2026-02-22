@@ -1,6 +1,6 @@
 import { STORAGE_KEYS } from "../constants/storage";
 
-export interface ExportData {
+interface ExportData {
   version: 1 | 2;
   exportedAt: string;
   board: unknown;

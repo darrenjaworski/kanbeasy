@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { tc } from "../theme/classNames";
 
-export type ModalProps = Readonly<{
+type ModalProps = Readonly<{
   open: boolean;
   onClose: () => void;
   "aria-labelledby"?: string;

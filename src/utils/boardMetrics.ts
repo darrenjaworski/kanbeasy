@@ -1,6 +1,6 @@
 import type { Column } from "../board/types";
 
-export type CardReverseTime = {
+type CardReverseTime = {
   cardTitle: string;
   reverseTimeMs: number;
 };

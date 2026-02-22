@@ -4,7 +4,7 @@ import { isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
 import { migrateColumns } from "../board/migration";
 
-export interface ValidatedImport {
+interface ValidatedImport {
   columns: Column[];
   settings: {
     theme: string;
@@ -15,7 +15,7 @@ export interface ValidatedImport {
   };
 }
 
-export type ImportResult =
+type ImportResult =
   | { ok: true; data: ValidatedImport }
   | { ok: false; error: string };
 

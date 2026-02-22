@@ -1,13 +1,13 @@
 export type ThemeMode = "light" | "dark";
 
-export interface ThemeColors {
+interface ThemeColors {
   readonly bg: string;
   readonly surface: string;
   readonly text: string;
   readonly accent: string;
 }
 
-export interface ThemeDefinition {
+interface ThemeDefinition {
   readonly id: string;
   readonly name: string;
   readonly mode: ThemeMode;
@@ -86,8 +86,6 @@ export const themes: readonly ThemeDefinition[] = [
 ] as const;
 
 export type ThemeId = (typeof themes)[number]["id"];
-
-export const DEFAULT_THEME_ID: ThemeId = "light-slate";
 
 export function getThemeById(id: string): ThemeDefinition | undefined {
   return themes.find((t) => t.id === id);

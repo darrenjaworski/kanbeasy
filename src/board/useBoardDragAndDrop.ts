@@ -9,7 +9,7 @@ import {
   findCardInColumns,
 } from "./dragUtils";
 
-export type DragType = "card" | "column" | null;
+type DragType = "card" | "column" | null;
 
 interface UseBoardDragAndDropProps {
   columns: Column[];
