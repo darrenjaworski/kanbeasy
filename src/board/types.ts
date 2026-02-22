@@ -42,4 +42,8 @@ export type BoardContextValue = Readonly<{
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   matchingCardIds: Set<string>;
+  canUndo: boolean;
+  canRedo: boolean;
+  undo: () => void;
+  redo: () => void;
 }>;

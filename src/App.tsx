@@ -2,6 +2,8 @@ import { Board } from "./components/Board";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { WelcomeModal } from "./components/WelcomeModal";
+import { UndoRedoControls } from "./components/UndoRedoControls";
+import { featureFlags } from "./constants/featureFlags";
 
 function App() {
   return (
@@ -9,6 +11,7 @@ function App() {
       <WelcomeModal />
       <Header />
       <Board />
+      {featureFlags.undoRedo && <UndoRedoControls />}
       <Footer />
     </div>
   );

@@ -6,6 +6,8 @@ import { getFromStorage, saveToStorage } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
 import { isColumn } from "./validation";
 import { migrateColumns } from "./migration";
+import { useUndoableState } from "./useUndoableState";
+import { featureFlags } from "../constants/featureFlags";
 
 const defaultState: BoardState = {
   columns: [],
@@ -122,7 +124,17 @@ function saveState(state: BoardState) {
 export function BoardProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [state, setState] = useState<BoardState>(() => loadState());
+  const {
+    state,
+    setState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useUndoableState<BoardState>(() => loadState(), {
+    enabled: featureFlags.undoRedo,
+    maxHistory: 50,
+  });
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -307,6 +319,10 @@ export function BoardProvider({
       searchQuery,
       setSearchQuery,
       matchingCardIds,
+      canUndo,
+      canRedo,
+      undo,
+      redo,
     }),
     [
       state.columns,
@@ -322,6 +338,10 @@ export function BoardProvider({
       resetBoard,
       searchQuery,
       matchingCardIds,
+      canUndo,
+      canRedo,
+      undo,
+      redo,
     ]
   );
 

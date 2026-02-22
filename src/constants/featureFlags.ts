@@ -8,4 +8,6 @@
 export const featureFlags = {
   /** Analytics button and modal in the header. */
   analytics: true,
+  /** Undo/redo for board actions via Cmd+Z / Cmd+Shift+Z and floating controls. */
+  undoRedo: import.meta.env.DEV,
 } as const;
