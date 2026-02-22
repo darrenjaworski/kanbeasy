@@ -7,5 +7,5 @@
  */
 export const featureFlags = {
   /** Analytics button and modal in the header. */
-  analytics: import.meta.env.DEV,
+  analytics: true,
 } as const;
