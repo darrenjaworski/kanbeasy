@@ -7,9 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0]
+
+### Features
+
+- Use theme accent color for focus rings, search card highlights, and drop target indicators
+
 ### Fixed
 
 - Preserve theme choice when switching preferences within the same mode (e.g., "system" to "dark" when OS is dark)
+
+### Changed
+
+- Upgrade testing-library and typescript to latest patch versions
+- Upgrade react and react-dom to 19.2.4
+- Upgrade vitest and @vitest/coverage-v8 to v4
+- Lower lighthouse performance threshold to 0.8
 
 ## [1.11.3]
 
