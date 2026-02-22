@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:analyze": "ANALYZE=true vite build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
@@ -50,6 +51,7 @@
     "jsdom": "^26.1.0",
     "knip": "^5.85.0",
     "prettier": "^3.8.1",
+    "rollup-plugin-visualizer": "^7.0.0",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.39.1",

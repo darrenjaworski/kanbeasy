@@ -1,17 +1,17 @@
-name: static checks
+name: bundle size
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 concurrency:
-  group: static-checks-${{ github.ref }}
+  group: bundle-size-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  pull-requests: write
+
 jobs:
-  checks:
+  size:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,8 +23,8 @@ jobs:
           node-version-file: ".nvmrc"
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run static checks
-        uses: ./.github/actions/static-checks
+      - name: Compressed size
+        uses: preactjs/compressed-size-action@v2
+        with:
+          pattern: "dist/assets/*.{js,css}"
+          build-script: build

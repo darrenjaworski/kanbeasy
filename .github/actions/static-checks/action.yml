@@ -1,0 +1,29 @@
+name: Static Checks
+description: Run format check, lint, knip, type check, build, and unit tests
+
+runs:
+  using: composite
+  steps:
+    - name: Format check
+      shell: bash
+      run: npm run format:check
+
+    - name: Lint
+      shell: bash
+      run: npm run lint
+
+    - name: Unused code check
+      shell: bash
+      run: npm run knip
+
+    - name: Type check
+      shell: bash
+      run: npm run type:check
+
+    - name: Build
+      shell: bash
+      run: npm run build
+
+    - name: Test
+      shell: bash
+      run: npx vitest run --reporter=dot --reporter=github-actions
