@@ -45,4 +45,36 @@ describe("column add card", () => {
       within(column as HTMLElement).getByText(/new card/i)
     ).toBeInTheDocument();
   });
+
+  it("does not retain focus on add card button after clicking it", async () => {
+    const user = userEvent.setup();
+    renderApp();
+
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+    const column = screen.getByRole("region", { name: /new column/i });
+
+    const addCardBtn = within(column as HTMLElement).getByRole("button", {
+      name: /add card/i,
+    });
+    await user.click(addCardBtn);
+
+    expect(document.activeElement).not.toBe(addCardBtn);
+  });
+
+  it("does not keep focus inside the column after adding a card", async () => {
+    const user = userEvent.setup();
+    renderApp();
+
+    await user.click(screen.getByRole("button", { name: /add column/i }));
+    const column = screen.getByRole("region", { name: /new column/i });
+
+    const addCardBtn = within(column as HTMLElement).getByRole("button", {
+      name: /add card/i,
+    });
+    await user.click(addCardBtn);
+
+    // No element inside the column should have focus, otherwise
+    // group-focus-within keeps the column action buttons visible
+    expect(column.contains(document.activeElement)).toBe(false);
+  });
 });

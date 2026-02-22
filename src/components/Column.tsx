@@ -133,7 +133,7 @@ export function Column({
       </div>
       {/* Card count badge — slides left on hover to clear controls */}
       <span
-        className={`absolute right-2 top-2 z-0 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${tc.glass} px-2.5 text-sm font-medium ${tc.textFaint} transition-[right] duration-200 ease-in-out group-hover:right-20`}
+        className={`absolute right-2 top-2 z-0 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${tc.glass} px-2.5 text-sm font-medium ${tc.textFaint} transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20" : "group-hover:right-12"}`}
         aria-label={`${cards.length} card${cards.length === 1 ? "" : "s"}`}
       >
         {cards.length}
@@ -173,7 +173,10 @@ export function Column({
         <button
           type="button"
           className={`${tc.button} w-full rounded-md px-3 py-1.5`}
-          onClick={() => addCard(id, "New card")}
+          onClick={(e) => {
+            addCard(id, "New card");
+            e.currentTarget.blur();
+          }}
           aria-label={`Add card to ${title || "column"}`}
           data-testid={`add-card-button-${index}`}
         >

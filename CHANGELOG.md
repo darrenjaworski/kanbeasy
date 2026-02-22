@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Column controls staying visible after drag-and-drop due to lingering focus.
+- Column controls staying visible after adding a card due to retained button focus.
+- Card count badge position when hovering a single column with no drag handle.
 
 ## [1.6.1]
 
