@@ -347,9 +347,7 @@ describe("useBoardDragAndDrop", () => {
       expect(setColumns).not.toHaveBeenCalled();
       expect(result.current.activeType).toBeNull();
     });
-  });
 
-  describe("blur on drag end", () => {
     it("blurs active element after drag end", () => {
       const setColumns = vi.fn();
       const { result } = renderHook(() =>
@@ -367,28 +365,6 @@ describe("useBoardDragAndDrop", () => {
       act(() => {
         result.current.handleDragStart(startEvent);
         result.current.handleDragEnd(endEvent);
-      });
-
-      expect(document.activeElement).toBe(document.body);
-      document.body.removeChild(button);
-    });
-
-    it("blurs active element after drag cancel", () => {
-      const setColumns = vi.fn();
-      const { result } = renderHook(() =>
-        useBoardDragAndDrop({ columns: mockColumns, setColumns })
-      );
-
-      const button = document.createElement("button");
-      document.body.appendChild(button);
-      button.focus();
-      expect(document.activeElement).toBe(button);
-
-      const startEvent = createDragStartEvent("card-1", "card", "col-1");
-
-      act(() => {
-        result.current.handleDragStart(startEvent);
-        result.current.handleDragCancel();
       });
 
       expect(document.activeElement).toBe(document.body);
@@ -419,6 +395,28 @@ describe("useBoardDragAndDrop", () => {
       expect(setColumns).not.toHaveBeenCalled();
       expect(result.current.activeType).toBeNull();
       expect(result.current.activeId).toBeNull();
+    });
+
+    it("blurs active element after drag cancel", () => {
+      const setColumns = vi.fn();
+      const { result } = renderHook(() =>
+        useBoardDragAndDrop({ columns: mockColumns, setColumns })
+      );
+
+      const button = document.createElement("button");
+      document.body.appendChild(button);
+      button.focus();
+      expect(document.activeElement).toBe(button);
+
+      const startEvent = createDragStartEvent("card-1", "card", "col-1");
+
+      act(() => {
+        result.current.handleDragStart(startEvent);
+        result.current.handleDragCancel();
+      });
+
+      expect(document.activeElement).toBe(document.body);
+      document.body.removeChild(button);
     });
   });
 

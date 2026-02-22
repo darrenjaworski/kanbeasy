@@ -53,11 +53,6 @@ export function useBoardDragAndDrop({
    * Determines the type of drag and delegates to the appropriate handler.
    */
   function handleDragEnd(event: DragEndEvent) {
-    // Blur the drag handle so group-focus-within doesn't keep controls visible
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-
     const { active, over } = event;
 
     if (!over) {
@@ -138,9 +133,6 @@ export function useBoardDragAndDrop({
    * Resets the drag state without making any changes.
    */
   function handleDragCancel() {
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
     resetDragState();
   }
 
@@ -148,6 +140,10 @@ export function useBoardDragAndDrop({
    * Resets the drag state to initial values.
    */
   function resetDragState() {
+    // Blur the drag handle so group-focus-within doesn't keep controls visible
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     setActiveType(null);
     setActiveId(null);
   }
