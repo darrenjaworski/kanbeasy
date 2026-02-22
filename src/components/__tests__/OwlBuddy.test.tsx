@@ -4,10 +4,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { OwlBuddy } from "../OwlBuddy";
 import { owlTips } from "../../constants/owlTips";
 
-const mockSetOwlModeEnabled = vi.fn();
 const mockTheme = {
   owlModeEnabled: false,
-  setOwlModeEnabled: mockSetOwlModeEnabled,
 };
 
 vi.mock("../../theme/useTheme", () => ({
@@ -17,7 +15,6 @@ vi.mock("../../theme/useTheme", () => ({
 describe("OwlBuddy", () => {
   beforeEach(() => {
     mockTheme.owlModeEnabled = false;
-    mockSetOwlModeEnabled.mockClear();
   });
 
   it("does not render when owl mode is disabled", () => {
@@ -46,7 +43,7 @@ describe("OwlBuddy", () => {
       return owlTips.includes(element.textContent ?? "");
     });
     expect(tipText).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Got it" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Thanks!" })).toBeInTheDocument();
   });
 
   it("closes speech bubble on dismiss", async () => {
@@ -55,28 +52,34 @@ describe("OwlBuddy", () => {
     render(<OwlBuddy />);
 
     await user.click(screen.getByRole("button", { name: "Owl buddy" }));
-    expect(screen.getByRole("button", { name: "Got it" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Thanks!" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Got it" }));
+    await user.click(screen.getByRole("button", { name: "Thanks!" }));
     expect(
-      screen.queryByRole("button", { name: "Got it" }),
+      screen.queryByRole("button", { name: "Thanks!" }),
     ).not.toBeInTheDocument();
   });
 
-  it("disables owl mode when 'Don't show again' is clicked", async () => {
+  it("shows a new tip when 'One more' is clicked", async () => {
     mockTheme.owlModeEnabled = true;
     const user = userEvent.setup();
     render(<OwlBuddy />);
 
     await user.click(screen.getByRole("button", { name: "Owl buddy" }));
-    await user.click(
-      screen.getByRole("button", { name: "Don't show again" }),
-    );
+    const firstTip = screen.getByText((_content, element) => {
+      if (!element || element.tagName !== "P") return false;
+      return owlTips.includes(element.textContent ?? "");
+    }).textContent;
 
-    expect(mockSetOwlModeEnabled).toHaveBeenCalledWith(false);
-    expect(
-      screen.queryByRole("button", { name: "Got it" }),
-    ).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "One more" }));
+    const secondTip = screen.getByText((_content, element) => {
+      if (!element || element.tagName !== "P") return false;
+      return owlTips.includes(element.textContent ?? "");
+    }).textContent;
+
+    expect(firstTip).not.toBe(secondTip);
+    // Dialog should still be open
+    expect(screen.getByRole("button", { name: "Thanks!" })).toBeInTheDocument();
   });
 
   it("closes speech bubble when clicking outside", async () => {
@@ -85,11 +88,11 @@ describe("OwlBuddy", () => {
     render(<OwlBuddy />);
 
     await user.click(screen.getByRole("button", { name: "Owl buddy" }));
-    expect(screen.getByRole("button", { name: "Got it" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Thanks!" })).toBeInTheDocument();
 
     await user.click(document.body);
     expect(
-      screen.queryByRole("button", { name: "Got it" }),
+      screen.queryByRole("button", { name: "Thanks!" }),
     ).not.toBeInTheDocument();
   });
 
@@ -107,7 +110,7 @@ describe("OwlBuddy", () => {
         return owlTips.includes(element.textContent ?? "");
       });
       seen.push(tipEl.textContent ?? "");
-      await user.click(screen.getByRole("button", { name: "Got it" }));
+      await user.click(screen.getByRole("button", { name: "Thanks!" }));
     }
 
     // Every tip should appear exactly once in a full cycle
@@ -122,11 +125,13 @@ describe("OwlBuddy", () => {
     // Exhaust the entire deck
     for (let i = 0; i < owlTips.length; i++) {
       await user.click(screen.getByRole("button", { name: "Owl buddy" }));
-      await user.click(screen.getByRole("button", { name: "Got it" }));
+      await user.click(screen.getByRole("button", { name: "Thanks!" }));
     }
 
     // Next click should show the end-of-deck message
     await user.click(screen.getByRole("button", { name: "Owl buddy" }));
-    expect(screen.getByText(/You've seen every single tip/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/You've seen every single tip/),
+    ).toBeInTheDocument();
   });
 });

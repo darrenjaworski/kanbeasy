@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.1]
+
+### Changed
+
+- Simplify owl assistant dialog to two buttons ("One more" / "Thanks!") and add spacing between text and buttons
+
+### Tests
+
+- Add e2e tests for owl assistant (enable via settings, show tip, dismiss, one more)
+
 ## [1.13.0]
 
 ### Features

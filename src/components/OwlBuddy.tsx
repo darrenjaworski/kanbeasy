@@ -18,7 +18,7 @@ function shuffle<T>(arr: readonly T[]): T[] {
 }
 
 export function OwlBuddy() {
-  const { owlModeEnabled, setOwlModeEnabled } = useTheme();
+  const { owlModeEnabled } = useTheme();
   const [open, setOpen] = useState(false);
   const [tip, setTip] = useState("");
   const deckRef = useRef<string[]>([]);
@@ -39,9 +39,11 @@ export function OwlBuddy() {
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  const handleOpen = useCallback(() => {
-    // Show special message when the deck is exhausted, then reshuffle
-    if (deckRef.current.length > 0 && posRef.current >= deckRef.current.length) {
+  const advanceTip = useCallback(() => {
+    if (
+      deckRef.current.length > 0 &&
+      posRef.current >= deckRef.current.length
+    ) {
       setTip(END_OF_DECK_TIP);
       const lastTip = deckRef.current[deckRef.current.length - 1];
       let newDeck: string[];
@@ -50,27 +52,24 @@ export function OwlBuddy() {
       } while (newDeck[0] === lastTip && owlTips.length > 1);
       deckRef.current = newDeck;
       posRef.current = 0;
-      setOpen(true);
       return;
     }
-    // Initialize on first open
     if (deckRef.current.length === 0) {
       deckRef.current = shuffle(owlTips);
       posRef.current = 0;
     }
     setTip(deckRef.current[posRef.current]);
     posRef.current += 1;
-    setOpen(true);
   }, []);
+
+  const handleOpen = useCallback(() => {
+    advanceTip();
+    setOpen(true);
+  }, [advanceTip]);
 
   const handleDismiss = useCallback(() => {
     setOpen(false);
   }, []);
-
-  const handleDisable = useCallback(() => {
-    setOpen(false);
-    setOwlModeEnabled(false);
-  }, [setOwlModeEnabled]);
 
   if (!owlModeEnabled) return null;
 
@@ -80,21 +79,21 @@ export function OwlBuddy() {
         <div
           className={`absolute bottom-full left-0 mb-2 w-64 rounded-lg border p-3 backdrop-blur ${tc.glass} ${tc.border}`}
         >
-          <p className={`text-sm ${tc.text} mb-2`}>{tip}</p>
+          <p className={`text-sm ${tc.text} mb-4`}>{tip}</p>
           <div className="flex justify-end gap-1.5">
             <button
               type="button"
-              onClick={handleDisable}
+              onClick={advanceTip}
               className={`${tc.button} rounded-md px-2 py-1 text-xs`}
             >
-              Don&apos;t show again
+              One more
             </button>
             <button
               type="button"
               onClick={handleDismiss}
               className={`${tc.button} rounded-md px-2 py-1 text-xs`}
             >
-              Got it
+              Thanks!
             </button>
           </div>
           {/* Triangle pointer — overflow-hidden clips the rotated square to a clean triangle */}
