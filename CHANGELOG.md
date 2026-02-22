@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Add average cycle time metric to analytics modal
 - Add development-only feature flag system for gating in-progress features
 - Add analytics button and modal shell in header
 - Add timestamps (createdAt, updatedAt) and column history tracking to cards and columns
