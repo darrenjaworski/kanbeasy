@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.2]
+
+### Changed
+
+- Add Lighthouse score thresholds for accessibility (error), performance, best practices, and SEO (warn)
+- Parse bundle size badge from Vite build output for accurate reporting
+- Remove bundle-size PR comment workflow
+
 ## [1.11.1]
 
 ### Changed
