@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update CLAUDE.md architecture overview with undo/redo, data model, search, analytics, feature flags, and all extracted components/hooks
+- Update CLAUDE.md commit conventions to require changelog entries before every commit
+- Expand roadmap with new feature ideas and mobile/tablet usability
+- Deploy to GitHub Pages only on tagged releases instead of every push to main
+
 ## [1.11.0]
 
 ### Features
