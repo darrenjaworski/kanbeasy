@@ -27,5 +27,6 @@ jobs:
         with:
           urls: |
             https://darrenjaworski.github.io/kanbeasy
+          configPath: lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
