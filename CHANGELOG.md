@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.3]
+
+### Fixed
+
+- Fix bundle size badge showing literal `${SIZE}` due to ANSI color codes in CI build output
+
 ## [1.11.2]
 
 ### Changed
