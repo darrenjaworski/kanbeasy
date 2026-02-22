@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0]
+
 ### Features
 
 - Add total cards, cards in flight, throughput, and reverse time metrics to analytics modal
@@ -17,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add analytics button and modal shell in header
 - Add timestamps (createdAt, updatedAt) and column history tracking to cards and columns
 - Bump export format to v2 with seamless v1 import migration
+
+### Fixed
+
+- Chrome warning about missing id attribute on search input
 
 ## [1.8.0]
 
