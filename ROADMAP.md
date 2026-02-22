@@ -78,3 +78,7 @@ Settings
   - touch-friendly drag and drop
   - mobile-optimized column layout (stacked or swipeable)
   - appropriately sized tap targets and spacing
+- fun & easter eggs
+  - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
+  - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)
+  - rubber duck mode — toggle in settings that places a rubber duck in the corner; clicking it gives random productivity advice or programming jokes
