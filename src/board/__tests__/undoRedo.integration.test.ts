@@ -1,13 +1,8 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
 import { BoardProvider } from "../BoardProvider";
 import { useBoard } from "../useBoard";
-
-// Enable the feature flag for these tests
-vi.mock("../../constants/featureFlags", () => ({
-  featureFlags: { undoRedo: true, analytics: true },
-}));
 
 function wrapper({ children }: { children: React.ReactNode }) {
   return React.createElement(BoardProvider, null, children);
@@ -16,10 +11,6 @@ function wrapper({ children }: { children: React.ReactNode }) {
 describe("undo/redo through BoardProvider", () => {
   beforeEach(() => {
     localStorage.clear();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   it("can undo addColumn", () => {
