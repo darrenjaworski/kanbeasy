@@ -61,5 +61,16 @@ Settings
   - due dates with visual overdue indicator
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
+  - card archive (soft-delete with browse/restore)
+- card sorting UI (alphabetical, by date created, by last updated)
+- column collapse/expand to save horizontal space
+- column WIP limits with visual warning when exceeded
+- drag to trash drop zone for card deletion
+- quick add with Enter (inline input at top of column)
 - limit the number of columns
 - multiple boards
+- saved filters/views (presets beyond search, e.g., "older than 7 days")
+- swimlanes (horizontal grouping across columns by project or person)
+- activity log (timeline of card movements, edits, deletions)
+- offline PWA (service worker + manifest for standalone install)
+- print/PDF view (clean print stylesheet for standups and sharing)
