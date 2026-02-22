@@ -41,10 +41,14 @@ jobs:
       - run: npm ci
 
       - name: Build
+        env:
+          NO_COLOR: "1"
         run: |
           BUILD_OUTPUT=$(PUBLIC_URL="https://darrenjaworski.github.io/kanbeasy" npm run build 2>&1)
           echo "$BUILD_OUTPUT"
-          SIZE=$(echo "$BUILD_OUTPUT" | grep -E '\.(js|css) ' | sed 's/.*gzip: *\([0-9.]*\) kB/\1/' | awk '{sum += $1} END {printf "%.1f", sum}')
+          CLEAN_OUTPUT=$(echo "$BUILD_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
+          SIZE=$(echo "$CLEAN_OUTPUT" | grep -E '\.(js|css) ' | sed 's/.*gzip: *\([0-9.]*\) kB/\1/' | awk '{sum += $1} END {printf "%.1f", sum}')
+          echo "Parsed bundle size: ${SIZE} kB"
           echo "{\"schemaVersion\":1,\"label\":\"bundle size (gzip)\",\"message\":\"${SIZE} kB\",\"color\":\"blue\"}" > dist/bundle-size.json
 
       - name: Deploy 🚀
