@@ -10,6 +10,7 @@ import { DensityLargeIcon } from "./icons/DensityLargeIcon";
 import { SettingsGearIcon } from "./icons/SettingsGearIcon";
 import { CloseIcon } from "./icons/CloseIcon";
 import { tc } from "../theme/classNames";
+import { exportBoard } from "../utils/exportBoard";
 
 type Props = Readonly<{
   open: boolean;
@@ -229,6 +230,13 @@ export function SettingsModal({ open, onClose }: Props) {
 
         {/* Actions */}
         <div className="space-y-2">
+          <button
+            type="button"
+            onClick={exportBoard}
+            className={`${tc.button} w-full rounded-md px-3 py-1.5`}
+          >
+            Export board data
+          </button>
           <button
             type="button"
             onClick={handleClearLocalStorage}
