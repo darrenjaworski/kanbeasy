@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deploy to GitHub Pages only on tagged releases instead of every push to main
 - Harden ESLint config with eqeqeq, no-console, prefer-const, consistent-type-imports, and stricter no-unused-vars rules
 - Fix all lint warnings: add coverage to global ignores, correct React hook dependency arrays, enforce strict equality across codebase, replace inline import() types with proper type imports
+- Update CLAUDE.md to require routine static checks during development and tests alongside every feature or fix
 
 ## [1.11.0]
 

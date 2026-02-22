@@ -167,6 +167,8 @@ To minimize costs while maintaining quality, follow these guidelines for model s
 
 ## Quality Standards
 
+Run `npm run static-checks` routinely as you develop — after implementing changes, after fixing bugs, and before committing. Do not wait until the end of a task to validate; catch issues early and often.
+
 Before making any changes, ensure:
 - TypeScript typecheck passes (`npm run type:check`)
 - ESLint passes (`npm run lint`)
@@ -181,6 +183,7 @@ Before making any changes, ensure:
 - Use `@testing-library/react` and `@testing-library/user-event` for UI tests
 - Focus on black-box testing of observable behavior
 - Test setup is configured in `src/test/setup.ts`
+- **Write tests alongside code**: Every new feature or bug fix should include corresponding unit tests and/or e2e tests in the same commit. Do not defer test writing to a separate task.
 
 ## Commit Conventions
 
