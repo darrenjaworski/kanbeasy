@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.3]
+
+### Changed
+
+- Update kanban favicon with twilight purple theme colors
+
+### Tests
+
+- Add unit tests for MetricCard and AnalyticsModal components
+
 ## [1.12.2]
 
 ### Changed
