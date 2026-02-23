@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Add text labels ("Analytics", "Settings") to header icon buttons for better discoverability
+- Differentiate "Add card" button with dashed border, muted text, and "+" prefix
 
 ## [1.13.1]
 

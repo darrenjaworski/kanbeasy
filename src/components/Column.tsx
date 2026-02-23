@@ -165,7 +165,7 @@ export function Column({
       <div className="mb-3">
         <button
           type="button"
-          className={`${tc.button} w-full rounded-md px-3 py-1.5`}
+          className={`w-full rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
           onClick={(e) => {
             addCard(id, "New card");
             e.currentTarget.blur();
@@ -173,7 +173,7 @@ export function Column({
           aria-label={`Add card to ${title || "column"}`}
           data-testid={`add-card-button-${index}`}
         >
-          Add card
+          + Add card
         </button>
       </div>
       <CardList
