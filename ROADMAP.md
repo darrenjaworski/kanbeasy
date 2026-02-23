@@ -53,6 +53,7 @@ Settings
 
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
+- tooltips on all buttons for improved discoverability and accessibility
 - keyboard shortcuts
 - card enhancements
   - markdown description with rendered preview
