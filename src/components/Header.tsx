@@ -22,22 +22,24 @@ export function Header() {
           Kanbeasy
         </h1>
         <SearchInput />
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-2">
           <button
             type="button"
-            className={`${tc.button} rounded-md p-2 inline-flex items-center justify-center`}
+            className={`${tc.button} rounded-md p-2 inline-flex items-center gap-2 justify-center`}
             aria-label="Open analytics"
             onClick={() => setAnalyticsOpen(true)}
           >
             <AnalyticsIcon className="size-5" />
+            <span className="text-sm font-medium">Analytics</span>
           </button>
           <button
             type="button"
-            className={`${tc.button} rounded-md p-2 inline-flex items-center justify-center`}
+            className={`${tc.button} rounded-md p-2 inline-flex items-center gap-2 justify-center`}
             aria-label="Open settings"
             onClick={() => setSettingsOpen(true)}
           >
             <SettingsGearIcon className="size-5" />
+            <span className="text-sm font-medium">Settings</span>
           </button>
         </div>
       </div>

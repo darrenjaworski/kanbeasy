@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add text labels ("Analytics", "Settings") to header icon buttons for better discoverability
+
 ## [1.13.1]
 
 ### Changed
