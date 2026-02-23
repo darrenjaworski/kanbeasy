@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+## [1.14.0]
+
+### Features
 
 - Add text labels ("Analytics", "Settings") to header icon buttons for better discoverability
+
+### Changed
+
 - Differentiate "Add card" button with dashed border, muted text, and "+" prefix
 - Hide card textarea resize handle by default, show only on hover/focus
 

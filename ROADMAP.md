@@ -39,6 +39,9 @@ an ultra simple task organizer
   - ✅ time spent in each column
   - ✅ throughput and cycle time
 - ✅ undo/redo for board actions
+- ✅ add text labels to header icon buttons (analytics, settings) for clarity
+- ✅ differentiate "Add card" button styling from cards (dashed border, muted text, "+" icon)
+- ✅ hide card textarea resize handle by default, show only on hover/focus
 
 Settings
 
@@ -54,9 +57,6 @@ Settings
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - tooltips on all buttons for improved discoverability and accessibility
-- add text labels to header icon buttons (analytics, settings) for clarity
-- differentiate "Add card" button styling from cards (e.g., dashed border, muted text, or "+" icon)
-- hide card textarea resize handle by default, show only on hover/focus
 - keyboard shortcuts
 - card enhancements
   - markdown description with rendered preview
