@@ -42,52 +42,59 @@ export function ListView() {
           No cards yet. Switch to the board view to add some.
         </p>
       ) : (
-        <div className={`rounded-lg border ${tc.border} overflow-hidden`}>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className={`${tc.glass} border-b ${tc.border}`}>
-                <th
-                  className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
-                  scope="col"
-                >
-                  Title
-                </th>
-                <th
-                  className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
-                  scope="col"
-                >
-                  Column
-                </th>
-                <th
-                  className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
-                  scope="col"
-                >
-                  Created
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, i) => {
-                const highlighted = hasSearch && matchingCardIds.has(row.id);
-                return (
-                  <tr
-                    key={row.id}
-                    className={`${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
+        <div
+          className={`rounded-lg border ${tc.border} bg-surface p-3`}
+        >
+          <div className={`overflow-hidden rounded-lg border ${tc.border}`}>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className={`${tc.glass} border-b ${tc.border}`}>
+                  <th
+                    className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
+                    scope="col"
                   >
-                    <td className={`px-3 py-2 ${tc.text}`}>{row.title}</td>
-                    <td className={`px-3 py-2 ${tc.textMuted}`}>
-                      {row.columnTitle}
-                    </td>
-                    <td
-                      className={`px-3 py-2 ${tc.textFaint} whitespace-nowrap`}
+                    Title
+                  </th>
+                  <th
+                    className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
+                    scope="col"
+                  >
+                    Column
+                  </th>
+                  <th
+                    className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
+                    scope="col"
+                  >
+                    Created
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row, i) => {
+                  const highlighted =
+                    hasSearch && matchingCardIds.has(row.id);
+                  return (
+                    <tr
+                      key={row.id}
+                      className={`${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
                     >
-                      {formatDate(row.createdAt)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      <td className={`px-3 py-2 ${tc.text}`}>
+                        {row.title}
+                      </td>
+                      <td className={`px-3 py-2 ${tc.textMuted}`}>
+                        {row.columnTitle}
+                      </td>
+                      <td
+                        className={`px-3 py-2 ${tc.textFaint} whitespace-nowrap`}
+                      >
+                        {formatDate(row.createdAt)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </main>

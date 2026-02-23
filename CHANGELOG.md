@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Style list view table inside a card matching column styles
+
 ## [1.15.0]
 
 ### Features
