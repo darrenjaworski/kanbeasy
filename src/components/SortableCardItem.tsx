@@ -96,7 +96,7 @@ export function SortableCardItem({
         id={`${columnId}-${card.id}-content`}
         aria-label="Card content"
         defaultValue={cardValue}
-        className={`${tc.input} w-full resize-y rounded-xs`}
+        className={`${tc.input} w-full resize-none hover:resize-y focus:resize-y rounded-xs`}
         rows={rowsForDensity}
         onKeyDown={cardKeyDown}
         onBlur={cardBlur}
