@@ -45,6 +45,7 @@ export function SettingsModal({ open, onClose }: Props) {
     setDeleteColumnWarningEnabled,
     owlModeEnabled,
     setOwlModeEnabled,
+    setViewMode,
   } = useTheme();
   const { setColumns, resetBoard } = useBoard();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -95,6 +96,7 @@ export function SettingsModal({ open, onClose }: Props) {
     setColumnResizingEnabled(settings.columnResizingEnabled);
     setDeleteColumnWarningEnabled(settings.deleteColumnWarning);
     setOwlModeEnabled(settings.owlModeEnabled);
+    setViewMode(settings.viewMode);
 
     setImportStatus("complete");
     setTimeout(() => setImportStatus("idle"), 600);

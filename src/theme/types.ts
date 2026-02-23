@@ -4,6 +4,8 @@ export type CardDensity = "small" | "medium" | "large";
 
 export type ThemePreference = "light" | "dark" | "system";
 
+export type ViewMode = "board" | "list";
+
 export type ThemeContextValue = Readonly<{
   themeId: ThemeId;
   setThemeId: (id: ThemeId) => void;
@@ -19,4 +21,6 @@ export type ThemeContextValue = Readonly<{
   setDeleteColumnWarningEnabled: (enabled: boolean) => void;
   owlModeEnabled: boolean;
   setOwlModeEnabled: (enabled: boolean) => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
 }>;

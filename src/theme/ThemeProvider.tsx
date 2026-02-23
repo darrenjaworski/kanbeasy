@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
-import type { CardDensity, ThemeContextValue, ThemePreference } from "./types";
+import type {
+  CardDensity,
+  ThemeContextValue,
+  ThemePreference,
+  ViewMode,
+} from "./types";
 import type { ThemeId, ThemeMode } from "./themes";
 import { getDefaultThemeForMode, getThemeById } from "./themes";
 import { getStringFromStorage, saveStringToStorage } from "../utils/storage";
@@ -61,6 +66,14 @@ function getInitialDensity(): CardDensity {
   return "medium";
 }
 
+function getInitialViewMode(): ViewMode {
+  const stored = getStringFromStorage(STORAGE_KEYS.VIEW_MODE, "board");
+  if (stored === "board" || stored === "list") {
+    return stored;
+  }
+  return "board";
+}
+
 export function ThemeProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -93,6 +106,7 @@ export function ThemeProvider({
     const stored = getStringFromStorage(STORAGE_KEYS.OWL_MODE_ENABLED, "false");
     return stored === "true";
   });
+  const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -168,6 +182,10 @@ export function ThemeProvider({
     saveStringToStorage(STORAGE_KEYS.OWL_MODE_ENABLED, String(owlModeEnabled));
   }, [owlModeEnabled]);
 
+  useEffect(() => {
+    saveStringToStorage(STORAGE_KEYS.VIEW_MODE, viewMode);
+  }, [viewMode]);
+
   const theme = getThemeById(themeId);
 
   const value = useMemo<ThemeContextValue>(
@@ -186,6 +204,8 @@ export function ThemeProvider({
       setDeleteColumnWarningEnabled,
       owlModeEnabled,
       setOwlModeEnabled,
+      viewMode,
+      setViewMode,
     }),
     [
       themeId,
@@ -196,6 +216,7 @@ export function ThemeProvider({
       columnResizingEnabled,
       deleteColumnWarningEnabled,
       owlModeEnabled,
+      viewMode,
     ],
   );
 

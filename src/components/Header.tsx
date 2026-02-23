@@ -4,6 +4,7 @@ import { SettingsModal } from "./SettingsModal";
 import { AnalyticsModal } from "./AnalyticsModal";
 import { SettingsGearIcon, AnalyticsIcon } from "./icons";
 import { SearchInput } from "./SearchInput";
+import { ViewToggle } from "./ViewToggle";
 import { tc } from "../theme/classNames";
 
 export function Header() {
@@ -22,6 +23,7 @@ export function Header() {
           Kanbeasy
         </h1>
         <SearchInput />
+        <ViewToggle />
         <div className="ml-auto flex items-center gap-2">
           <button
             type="button"

@@ -11,6 +11,7 @@ interface ExportData {
     columnResizingEnabled: string;
     deleteColumnWarning: string;
     owlModeEnabled: string;
+    viewMode: string;
   };
 }
 
@@ -40,6 +41,7 @@ function buildExportData(): ExportData {
       columnResizingEnabled: readRaw(STORAGE_KEYS.COLUMN_RESIZING_ENABLED),
       deleteColumnWarning: readRaw(STORAGE_KEYS.DELETE_COLUMN_WARNING),
       owlModeEnabled: readRaw(STORAGE_KEYS.OWL_MODE_ENABLED),
+      viewMode: readRaw(STORAGE_KEYS.VIEW_MODE),
     },
   };
 }

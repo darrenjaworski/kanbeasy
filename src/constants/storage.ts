@@ -24,4 +24,7 @@ export const STORAGE_KEYS = {
 
   /** Owl mode easter egg */
   OWL_MODE_ENABLED: "kanbeasy:owlModeEnabled",
+
+  /** View mode preference (board/list) */
+  VIEW_MODE: "kanbeasy:viewMode",
 } as const;

@@ -1,5 +1,5 @@
 import type { Column } from "../board/types";
-import type { CardDensity, ThemePreference } from "../theme/types";
+import type { CardDensity, ThemePreference, ViewMode } from "../theme/types";
 import { isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
 import { migrateColumns } from "../board/migration";
@@ -13,6 +13,7 @@ interface ValidatedImport {
     columnResizingEnabled: boolean;
     deleteColumnWarning: boolean;
     owlModeEnabled: boolean;
+    viewMode: ViewMode;
   };
 }
 
@@ -30,6 +31,7 @@ const VALID_PREFERENCES: ReadonlySet<string> = new Set([
   "dark",
   "system",
 ]);
+const VALID_VIEW_MODES: ReadonlySet<string> = new Set(["board", "list"]);
 
 function isObject(x: unknown): x is Record<string, unknown> {
   return !!x && typeof x === "object" && !Array.isArray(x);
@@ -109,6 +111,11 @@ export function validateExportData(parsed: unknown): ImportResult {
         ? s.owlModeEnabled
         : false;
 
+  const viewMode: ViewMode =
+    typeof s.viewMode === "string" && VALID_VIEW_MODES.has(s.viewMode)
+      ? (s.viewMode as ViewMode)
+      : "board";
+
   return {
     ok: true,
     data: {
@@ -120,6 +127,7 @@ export function validateExportData(parsed: unknown): ImportResult {
         columnResizingEnabled,
         deleteColumnWarning,
         owlModeEnabled,
+        viewMode,
       },
     },
   };

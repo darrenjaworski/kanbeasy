@@ -85,6 +85,7 @@ describe("exportBoard", () => {
       columnResizingEnabled: "true",
       deleteColumnWarning: "true",
       owlModeEnabled: "",
+      viewMode: "",
     });
   });
 

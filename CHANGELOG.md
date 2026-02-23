@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add read-only list view with board/list toggle in header
+- Persist view mode preference in localStorage
+- Include view mode in board export/import
+
+### Tests
+
+- Add ViewToggle unit tests and view toggle integration tests
+
 ## [1.14.0]
 
 ### Features
