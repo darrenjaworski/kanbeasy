@@ -54,6 +54,9 @@ Settings
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - tooltips on all buttons for improved discoverability and accessibility
+- add text labels to header icon buttons (analytics, settings) for clarity
+- differentiate "Add card" button styling from cards (e.g., dashed border, muted text, or "+" icon)
+- hide card textarea resize handle by default, show only on hover/focus
 - keyboard shortcuts
 - card enhancements
   - markdown description with rendered preview
