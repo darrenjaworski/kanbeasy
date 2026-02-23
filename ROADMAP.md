@@ -42,6 +42,7 @@ an ultra simple task organizer
 - ✅ add text labels to header icon buttons (analytics, settings) for clarity
 - ✅ differentiate "Add card" button styling from cards (dashed border, muted text, "+" icon)
 - ✅ hide card textarea resize handle by default, show only on hover/focus
+- ✅ view toggle (switch between kanban board and read-only list view)
 
 Settings
 
@@ -73,7 +74,6 @@ Settings
 - quick add with Enter (inline input at top of column)
 - limit the number of columns
 - multiple boards
-- view toggle (switch between kanban board and tabular/list view)
 - saved filters/views (presets beyond search, e.g., "older than 7 days")
 - swimlanes (horizontal grouping across columns by project or person)
 - activity log (timeline of card movements, edits, deletions)
