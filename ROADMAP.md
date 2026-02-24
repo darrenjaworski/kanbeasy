@@ -45,6 +45,7 @@ an ultra simple task organizer
 - ✅ view toggle (switch between kanban board and read-only list view)
 - ✅ card detail modal with description field and column selector
 - ✅ markdown description with rendered preview (click-to-edit UX, GFM support)
+- ✅ auto-select new card title text on add for quick editing
 
 Settings
 
@@ -73,7 +74,6 @@ Settings
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded
 - drag to trash drop zone for card deletion
-- auto-select new card title text on add for quick editing
 - quick add with Enter (inline input at top of column)
 - limit the number of columns
 - multiple boards
