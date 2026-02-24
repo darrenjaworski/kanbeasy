@@ -62,10 +62,15 @@ describe("validateExportData", () => {
   });
 
   it("rejects wrong version number", () => {
-    const result = validateExportData(makeExportData({ version: 3 }));
+    const result = validateExportData(makeExportData({ version: 99 }));
     expect(result.ok).toBe(false);
     if (result.ok) return;
-    expect(result.error).toContain("Unsupported export version: 3");
+    expect(result.error).toContain("Unsupported export version: 99");
+  });
+
+  it("accepts v3 export data", () => {
+    const result = validateExportData(makeExportData({ version: 3 }));
+    expect(result.ok).toBe(true);
   });
 
   it("accepts v2 export data", () => {
@@ -198,6 +203,67 @@ describe("validateExportData", () => {
     expect(typeof card.updatedAt).toBe("number");
     expect(card.columnHistory).toHaveLength(1);
     expect(card.columnHistory[0].columnId).toBe("col-1");
+  });
+
+  it("v3 import preserves description", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 3,
+        board: {
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: 5000,
+              updatedAt: 6000,
+              cards: [
+                {
+                  id: "card-1",
+                  title: "Task 1",
+                  description: "Some notes",
+                  createdAt: 5000,
+                  updatedAt: 6000,
+                  columnHistory: [{ columnId: "col-1", enteredAt: 5000 }],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.columns[0].cards[0].description).toBe("Some notes");
+  });
+
+  it("v2 import backfills description to empty string", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 2,
+        board: {
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: 5000,
+              updatedAt: 6000,
+              cards: [
+                {
+                  id: "card-1",
+                  title: "Task 1",
+                  createdAt: 5000,
+                  updatedAt: 6000,
+                  columnHistory: [{ columnId: "col-1", enteredAt: 5000 }],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.columns[0].cards[0].description).toBe("");
   });
 
   it("v2 import preserves existing timestamps", () => {

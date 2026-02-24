@@ -10,6 +10,8 @@ export function migrateCard(
 ): Card {
   const now = Date.now();
 
+  const description =
+    typeof raw.description === "string" ? raw.description : "";
   const createdAt = typeof raw.createdAt === "number" ? raw.createdAt : now;
   const updatedAt = typeof raw.updatedAt === "number" ? raw.updatedAt : now;
   const columnHistory = Array.isArray(raw.columnHistory)
@@ -19,6 +21,7 @@ export function migrateCard(
   return {
     id: raw.id as string,
     title: raw.title as string,
+    description,
     createdAt,
     updatedAt,
     columnHistory,

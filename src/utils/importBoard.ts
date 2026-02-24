@@ -43,11 +43,11 @@ export function validateExportData(parsed: unknown): ImportResult {
   }
 
   const version = parsed.version;
-  if (version !== 1 && version !== 2) {
+  if (version !== 1 && version !== 2 && version !== 3) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${String(version)}. Only versions 1 and 2 are supported.`
+        ? `Unsupported export version: ${String(version)}. Only versions 1, 2, and 3 are supported.`
         : "Missing export version.",
     };
   }
@@ -60,10 +60,9 @@ export function validateExportData(parsed: unknown): ImportResult {
     }
     if (Array.isArray(parsed.board.columns)) {
       const validColumns = (parsed.board.columns as unknown[]).filter(isColumn);
-      columns =
-        version === 1
-          ? migrateColumns(validColumns as unknown as Record<string, unknown>[])
-          : validColumns;
+      columns = migrateColumns(
+        validColumns as unknown as Record<string, unknown>[],
+      );
     }
   }
 

@@ -21,6 +21,7 @@ describe("migration", () => {
       expect(result).toEqual({
         id: "card-1",
         title: "Task 1",
+        description: "",
         createdAt: NOW,
         updatedAt: NOW,
         columnHistory: [{ columnId: "col-1", enteredAt: NOW }],
@@ -59,6 +60,7 @@ describe("migration", () => {
       const migrated = {
         id: "card-1",
         title: "Task 1",
+        description: "Some notes",
         createdAt: 1000,
         updatedAt: 2000,
         columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
@@ -66,6 +68,29 @@ describe("migration", () => {
       const result = migrateCard(migrated, "col-1");
 
       expect(result).toEqual(migrated);
+    });
+
+    it("backfills description to empty string when missing", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        createdAt: 1000,
+        updatedAt: 2000,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result.description).toBe("");
+    });
+
+    it("preserves existing description", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        description: "Important notes",
+        createdAt: 1000,
+        updatedAt: 2000,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result.description).toBe("Important notes");
     });
   });
 

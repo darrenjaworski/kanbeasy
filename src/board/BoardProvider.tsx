@@ -26,6 +26,7 @@ function createInitialBoard(): BoardState {
           {
             id: crypto.randomUUID(),
             title: "My first task",
+            description: "",
             createdAt: now,
             updatedAt: now,
             columnHistory: [{ columnId: todoId, enteredAt: now }],
@@ -33,6 +34,7 @@ function createInitialBoard(): BoardState {
           {
             id: crypto.randomUUID(),
             title: "Another task",
+            description: "",
             createdAt: now,
             updatedAt: now,
             columnHistory: [{ columnId: todoId, enteredAt: now }],
@@ -48,6 +50,7 @@ function createInitialBoard(): BoardState {
           {
             id: crypto.randomUUID(),
             title: "A task in progress",
+            description: "",
             createdAt: now,
             updatedAt: now,
             columnHistory: [{ columnId: inProgressId, enteredAt: now }],
@@ -63,6 +66,7 @@ function createInitialBoard(): BoardState {
           {
             id: crypto.randomUUID(),
             title: "A completed task",
+            description: "",
             createdAt: now,
             updatedAt: now,
             columnHistory: [{ columnId: doneId, enteredAt: now }],

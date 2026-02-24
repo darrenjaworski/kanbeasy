@@ -149,7 +149,7 @@ describe("timestamps in BoardProvider", () => {
       vi.setSystemTime(new Date(T2));
 
       act(() => {
-        result.current.updateCard(colId, card.id, "Updated");
+        result.current.updateCard(colId, card.id, { title: "Updated" });
       });
 
       const updatedCard = result.current.columns[0].cards[0];

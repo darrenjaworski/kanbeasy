@@ -1,11 +1,12 @@
 import React from "react";
-import { CardDragIcon, CloseIcon } from "./icons";
+import { CardDragIcon, CloseIcon, ExpandIcon } from "./icons";
 import { tc } from "../theme/classNames";
 
 interface CardControlsProps {
   readonly canDrag: boolean;
   readonly cardTitle: string;
   readonly onRemove: () => void;
+  readonly onOpenDetail: () => void;
   readonly setActivatorNodeRef: (node: HTMLElement | null) => void;
   readonly attributes: React.HTMLAttributes<HTMLButtonElement>;
   readonly listeners?: Record<string, unknown>;
@@ -16,6 +17,7 @@ export function CardControls({
   canDrag,
   cardTitle,
   onRemove,
+  onOpenDetail,
   setActivatorNodeRef,
   attributes,
   listeners,
@@ -23,7 +25,7 @@ export function CardControls({
 }: CardControlsProps) {
   return (
     <div
-      className={`absolute right-1 top-1 z-1 ${tc.buttonGroup} rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
+      className={`absolute right-1 top-1 z-1 inline-flex items-center overflow-hidden border ${tc.border} bg-white/40 dark:bg-black/10 backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
     >
       {canDrag && (
         <button
@@ -40,6 +42,17 @@ export function CardControls({
         </button>
       )}
       {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
+      <button
+        type="button"
+        onClick={onOpenDetail}
+        aria-label={`Open details for ${cardTitle || "Untitled"}`}
+        title="Open card details"
+        className={`${tc.iconButton} h-6 w-6`}
+        data-testid={`card-detail-${index}`}
+      >
+        <ExpandIcon className="size-4" />
+      </button>
+      <span aria-hidden className={`${tc.separator} h-6 w-px`} />
       <button
         type="button"
         onClick={onRemove}

@@ -81,11 +81,29 @@ describe("undo/redo through BoardProvider", () => {
     act(() => result.current.addCard(colId, "Original"));
     const cardId = result.current.columns[0].cards[0].id;
 
-    act(() => result.current.updateCard(colId, cardId, "Updated"));
+    act(() => result.current.updateCard(colId, cardId, { title: "Updated" }));
     expect(result.current.columns[0].cards[0].title).toBe("Updated");
 
     act(() => result.current.undo());
     expect(result.current.columns[0].cards[0].title).toBe("Original");
+  });
+
+  it("can undo updateCard description", () => {
+    const { result } = renderHook(() => useBoard(), { wrapper });
+
+    act(() => result.current.resetBoard());
+    act(() => result.current.addColumn("Col"));
+    const colId = result.current.columns[0].id;
+    act(() => result.current.addCard(colId, "Card"));
+    const cardId = result.current.columns[0].cards[0].id;
+
+    act(() =>
+      result.current.updateCard(colId, cardId, { description: "Notes" }),
+    );
+    expect(result.current.columns[0].cards[0].description).toBe("Notes");
+
+    act(() => result.current.undo());
+    expect(result.current.columns[0].cards[0].description).toBe("");
   });
 
   it("can undo resetBoard", () => {

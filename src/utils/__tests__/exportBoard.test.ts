@@ -75,7 +75,7 @@ describe("exportBoard", () => {
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(2);
+    expect(data.version).toBe(3);
     expect(data.exportedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(data.board).toEqual(boardData);
     expect(data.settings).toEqual({
@@ -102,7 +102,7 @@ describe("exportBoard", () => {
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(2);
+    expect(data.version).toBe(3);
     expect(data.board).toBeNull();
     expect(data.settings.theme).toBe("");
     expect(data.settings.cardDensity).toBe("");

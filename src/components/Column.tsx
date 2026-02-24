@@ -179,9 +179,10 @@ export function Column({
       <CardList
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
-        onUpdate={(cardId, title) => updateCard(id, cardId, title)}
+        onUpdate={(cardId, updates) => updateCard(id, cardId, updates)}
         density={cardDensity}
         columnId={id}
+        columnTitle={title}
       />
       <ConfirmDialog
         open={showDeleteConfirm}

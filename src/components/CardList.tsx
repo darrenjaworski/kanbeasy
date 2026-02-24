@@ -5,7 +5,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableCardItem } from "./SortableCardItem";
-import type { Card } from "../board/types";
+import type { Card, CardUpdates } from "../board/types";
 import type { CardDensity } from "../theme/types";
 
 export function CardList({
@@ -14,12 +14,14 @@ export function CardList({
   onUpdate,
   density,
   columnId,
+  columnTitle,
 }: Readonly<{
   cards: Card[];
   onRemove: (cardId: string) => void;
-  onUpdate: (cardId: string, title: string) => void;
+  onUpdate: (cardId: string, updates: CardUpdates) => void;
   density: CardDensity;
   columnId: string;
+  columnTitle: string;
 }>) {
   const { columns, matchingCardIds } = useBoard();
   // Register the column list as a droppable target (works even when empty)
@@ -58,10 +60,11 @@ export function CardList({
               key={card.id}
               card={card}
               onRemove={() => onRemove(card.id)}
-              onUpdate={(title) => onUpdate(card.id, title)}
+              onUpdate={(updates) => onUpdate(card.id, updates)}
               canDrag={cards.length > 1 || columns.length > 1}
               density={density}
               columnId={columnId}
+              columnTitle={columnTitle}
               isSearchMatch={matchingCardIds.has(card.id)}
             />
           ))

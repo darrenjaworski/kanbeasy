@@ -6,6 +6,7 @@ export { DensityLargeIcon } from "./DensityLargeIcon";
 export { DensityMediumIcon } from "./DensityMediumIcon";
 export { DensitySmallIcon } from "./DensitySmallIcon";
 export { DragIndicatorIcon } from "./DragIndicatorIcon";
+export { ExpandIcon } from "./ExpandIcon";
 export { ListViewIcon } from "./ListViewIcon";
 export { OwlIcon } from "./OwlIcon";
 export { RedoIcon } from "./RedoIcon";

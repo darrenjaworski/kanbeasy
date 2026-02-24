@@ -1,19 +1,27 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useCallback, useMemo, useRef, type CSSProperties } from "react";
-import type { Card } from "../board/types";
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import type { Card, CardUpdates } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { CardControls } from "./CardControls";
+import { CardDetailModal } from "./CardDetailModal";
 import { tc } from "../theme/classNames";
 import { useInlineEdit } from "../hooks";
 
 type SortableCardItemProps = Readonly<{
   card: Card;
   onRemove: () => void;
-  onUpdate: (title: string) => void;
+  onUpdate: (updates: CardUpdates) => void;
   canDrag?: boolean;
   density: CardDensity;
   columnId: string;
+  columnTitle: string;
   index: number;
   isSearchMatch?: boolean;
 }>;
@@ -25,6 +33,7 @@ export function SortableCardItem({
   canDrag = true,
   density,
   columnId,
+  columnTitle,
   index,
   isSearchMatch = false,
 }: SortableCardItemProps) {
@@ -47,12 +56,27 @@ export function SortableCardItem({
     [transform, transition, isDragging],
   );
 
+  const [detailOpen, setDetailOpen] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const cardValue = card.title || "New card";
+
+  // Sync uncontrolled textarea when title changes externally (e.g. from modal)
+  const prevTitle = useRef(card.title);
+  if (prevTitle.current !== card.title) {
+    prevTitle.current = card.title;
+    if (textareaRef.current && document.activeElement !== textareaRef.current) {
+      textareaRef.current.value = cardValue;
+    }
+  }
+
   const revertCard = useCallback(() => {
     if (textareaRef.current) textareaRef.current.value = cardValue;
   }, [cardValue]);
-  const saveCard = useCallback((value: string) => onUpdate(value), [onUpdate]);
+  const saveCard = useCallback(
+    (value: string) => onUpdate({ title: value }),
+    [onUpdate],
+  );
   const { onKeyDown: cardKeyDown, onBlur: cardBlur } = useInlineEdit({
     originalValue: card.title,
     onSave: saveCard,
@@ -70,7 +94,7 @@ export function SortableCardItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group/card relative rounded-md border pr-14 p-2 text-sm ${
+      className={`group/card relative rounded-md border p-2 text-sm ${
         isSearchMatch
           ? "border-accent bg-accent/5 dark:bg-accent/10 ring-2 ring-accent/50"
           : `${tc.border} ${tc.glass}`
@@ -86,6 +110,7 @@ export function SortableCardItem({
         canDrag={canDrag}
         cardTitle={card.title}
         onRemove={onRemove}
+        onOpenDetail={() => setDetailOpen(true)}
         setActivatorNodeRef={setActivatorNodeRef}
         attributes={attributes}
         listeners={listeners}
@@ -101,6 +126,14 @@ export function SortableCardItem({
         onKeyDown={cardKeyDown}
         onBlur={cardBlur}
         data-testid={`card-content-${index}`}
+      />
+
+      <CardDetailModal
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        card={card}
+        columnTitle={columnTitle}
+        onUpdate={onUpdate}
       />
     </div>
   );

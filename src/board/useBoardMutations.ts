@@ -54,6 +54,7 @@ export function useBoardMutations(
       const card: Card = {
         id: crypto.randomUUID(),
         title,
+        description: "",
         createdAt: now,
         updatedAt: now,
         columnHistory: [{ columnId, enteredAt: now }],
@@ -87,7 +88,7 @@ export function useBoardMutations(
   );
 
   const updateCard = useCallback<BoardContextValue["updateCard"]>(
-    (columnId, cardId, title) => {
+    (columnId, cardId, updates) => {
       setState((prev) => {
         const idx = prev.columns.findIndex((c) => c.id === columnId);
         if (idx === -1) return prev;
@@ -96,7 +97,11 @@ export function useBoardMutations(
         if (cardIdx === -1) return prev;
         const now = Date.now();
         const newCards = col.cards.slice();
-        newCards[cardIdx] = { ...newCards[cardIdx], title, updatedAt: now };
+        newCards[cardIdx] = {
+          ...newCards[cardIdx],
+          ...updates,
+          updatedAt: now,
+        };
         const newColumns = prev.columns.slice();
         newColumns[idx] = { ...col, cards: newCards, updatedAt: now };
         return { columns: newColumns };

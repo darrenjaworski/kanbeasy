@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add card detail modal with description field, accessible via expand button on cards
+- Add `description` field to card data model with extensible `CardUpdates` partial update pattern
+- Extend fuzzy search to cover card descriptions
+- Add description column to list view
+- Bump export version to 3 with backward-compatible import migration for v1/v2 data
+
 ### Changed
 
 - Style list view table inside a card matching column styles
+- Card controls use translucent backdrop-blur background to reduce text overlap
 
 ## [1.15.0]
 

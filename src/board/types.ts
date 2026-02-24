@@ -6,10 +6,13 @@ export type ColumnHistoryEntry = Readonly<{
 export type Card = Readonly<{
   id: string;
   title: string;
+  description: string;
   createdAt: number;
   updatedAt: number;
   columnHistory: ColumnHistoryEntry[];
 }>;
+
+export type CardUpdates = Partial<Pick<Card, "title" | "description">>;
 
 export type Column = Readonly<{
   id: string;
@@ -30,7 +33,7 @@ export type BoardContextValue = Readonly<{
   removeColumn: (id: string) => void;
   addCard: (columnId: string, title?: string) => void;
   removeCard: (columnId: string, cardId: string) => void;
-  updateCard: (columnId: string, cardId: string, title: string) => void;
+  updateCard: (columnId: string, cardId: string, updates: CardUpdates) => void;
   setColumns: (cols: Column[]) => void;
   sortCards: (columnId: string) => void;
   reorderCard: (

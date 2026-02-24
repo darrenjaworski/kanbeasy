@@ -5,6 +5,7 @@ import { tc } from "../theme/classNames";
 interface CardRow {
   id: string;
   title: string;
+  description: string;
   columnTitle: string;
   createdAt: number;
 }
@@ -26,6 +27,7 @@ export function ListView() {
         col.cards.map((card) => ({
           id: card.id,
           title: card.title,
+          description: card.description,
           columnTitle: col.title,
           createdAt: card.createdAt,
         })),
@@ -42,9 +44,7 @@ export function ListView() {
           No cards yet. Switch to the board view to add some.
         </p>
       ) : (
-        <div
-          className={`rounded-lg border ${tc.border} bg-surface p-3`}
-        >
+        <div className={`rounded-lg border ${tc.border} bg-surface p-3`}>
           <div className={`overflow-hidden rounded-lg border ${tc.border}`}>
             <table className="w-full text-sm">
               <thead>
@@ -54,6 +54,12 @@ export function ListView() {
                     scope="col"
                   >
                     Title
+                  </th>
+                  <th
+                    className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
+                    scope="col"
+                  >
+                    Description
                   </th>
                   <th
                     className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
@@ -71,15 +77,17 @@ export function ListView() {
               </thead>
               <tbody>
                 {rows.map((row, i) => {
-                  const highlighted =
-                    hasSearch && matchingCardIds.has(row.id);
+                  const highlighted = hasSearch && matchingCardIds.has(row.id);
                   return (
                     <tr
                       key={row.id}
                       className={`${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
                     >
-                      <td className={`px-3 py-2 ${tc.text}`}>
-                        {row.title}
+                      <td className={`px-3 py-2 ${tc.text}`}>{row.title}</td>
+                      <td
+                        className={`px-3 py-2 ${tc.textMuted} max-w-xs truncate`}
+                      >
+                        {row.description || "\u2014"}
                       </td>
                       <td className={`px-3 py-2 ${tc.textMuted}`}>
                         {row.columnTitle}
