@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.0]
+
 ### Features
 
 - Add markdown rendering for card descriptions with click-to-edit UX
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix card detail modal title textarea losing visible border due to Tailwind class conflict
+- Preserve description container height across edit/preview transitions to prevent size jumps
 
 ## [1.16.1]
 

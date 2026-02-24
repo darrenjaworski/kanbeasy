@@ -44,6 +44,7 @@ an ultra simple task organizer
 - ✅ hide card textarea resize handle by default, show only on hover/focus
 - ✅ view toggle (switch between kanban board and read-only list view)
 - ✅ card detail modal with description field and column selector
+- ✅ markdown description with rendered preview (click-to-edit UX, GFM support)
 
 Settings
 
@@ -61,7 +62,6 @@ Settings
 - tooltips on all buttons for improved discoverability and accessibility
 - keyboard shortcuts
 - card enhancements
-  - markdown description with rendered preview
   - checklists with inline progress (e.g., "3/5")
   - labels/tags with custom colors, filterable from search
   - due dates with visual overdue indicator
