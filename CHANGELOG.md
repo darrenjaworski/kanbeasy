@@ -7,18 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.1]
+
 ### Fixed
 
 - Fix e2e test hangs: attach anchor element to DOM before triggering download in `exportBoard` to ensure download event fires reliably in headless browsers
 - Fix owl assistant e2e tests: replace overly broad `page.locator("p").first()` with `data-testid="owl-tip"` to avoid matching unrelated page elements
 - Fix owl assistant toggle click intercepted by decorative overlay span in e2e tests
 - Fix stale version assertion in export e2e test (v2 → v3)
+- Fix e2e tests badge in README pointing to wrong workflow file
 
 ### Changed
 
 - Replace `react-markdown` + `remark-gfm` (96 transitive deps) with `marked` (0 transitive deps) for smaller bundle size
 - Add dependency evaluation guidelines to CLAUDE.md (bundle size, maintenance, transitive deps)
 - Split post-deploy e2e workflow into install and run jobs with Playwright browser caching
+- Bump `actions/checkout` and `actions/setup-node` to v5 in CI workflows
 
 ## [1.17.0]
 
