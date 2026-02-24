@@ -1,7 +1,7 @@
 # Kanbeasy
 
 [![static checks](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/static-checks.yml)
-[![post-deploy e2e](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/post-deploy-e2e.yml)
+[![e2e tests](https://github.com/darrenjaworski/kanbeasy/actions/workflows/e2e.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/e2e.yml)
 [![lighthouse audit](https://github.com/darrenjaworski/kanbeasy/actions/workflows/lighthouse.yml/badge.svg)](https://github.com/darrenjaworski/kanbeasy/actions/workflows/lighthouse.yml)
 ![bundle size](https://img.shields.io/endpoint?url=https://darrenjaworski.github.io/kanbeasy/bundle-size.json)
 
