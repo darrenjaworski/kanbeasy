@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replace `react-markdown` + `remark-gfm` (96 transitive deps) with `marked` (0 transitive deps) for smaller bundle size
+- Add dependency evaluation guidelines to CLAUDE.md (bundle size, maintenance, transitive deps)
 - Split post-deploy e2e workflow into install and run jobs with Playwright browser caching
 
 ## [1.17.0]

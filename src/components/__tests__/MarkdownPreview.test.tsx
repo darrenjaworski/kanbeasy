@@ -72,7 +72,7 @@ describe("MarkdownPreview", () => {
       <MarkdownPreview content='<script>alert("xss")</script><b>safe</b>' />,
     );
     expect(container.querySelector("script")).not.toBeInTheDocument();
-    // react-markdown strips HTML by default — <b> is also stripped
+    // Custom html renderer strips all raw HTML tags
     expect(container.querySelector("b")).not.toBeInTheDocument();
   });
 

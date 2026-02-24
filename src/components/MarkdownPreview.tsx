@@ -1,5 +1,5 @@
-import ReactMarkdown, { type Components } from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Marked, type RendererObject } from "marked";
+import { useMemo } from "react";
 import { tc } from "../theme/classNames";
 
 type Props = Readonly<{
@@ -7,95 +7,99 @@ type Props = Readonly<{
   className?: string;
 }>;
 
-const components: Components = {
-  h1: ({ children }) => <h1 className="text-lg font-bold mb-2">{children}</h1>,
-  h2: ({ children }) => (
-    <h2 className="text-base font-bold mb-2">{children}</h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className="text-sm font-semibold mb-1">{children}</h3>
-  ),
-  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-  ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
-  ol: ({ children }) => <ol className="list-decimal pl-4 mb-2">{children}</ol>,
-  li: ({ children }) => <li className="mb-0.5">{children}</li>,
-  a: ({ href, children }) => (
-    <a
-      href={href}
-      className="text-accent underline"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
-  ),
-  code: ({ className, children }) => {
-    const isBlock = className?.includes("language-");
-    if (isBlock) {
-      return (
-        <code className={`text-xs font-mono ${className ?? ""}`}>
-          {children}
-        </code>
-      );
-    }
-    return (
-      <code className="bg-black/10 dark:bg-white/10 px-1 rounded text-xs font-mono">
-        {children}
-      </code>
-    );
+const renderer: RendererObject = {
+  // Strip raw HTML (block and inline) for security
+  html() {
+    return "";
   },
-  pre: ({ children }) => (
-    <pre className="bg-black/10 dark:bg-white/10 p-2 rounded overflow-x-auto mb-2 text-xs">
-      {children}
-    </pre>
-  ),
-  blockquote: ({ children }) => (
-    <blockquote
-      className={`border-l-2 ${tc.border} pl-3 ${tc.textMuted} italic mb-2`}
-    >
-      {children}
-    </blockquote>
-  ),
-  hr: () => <hr className={`${tc.separator} border-0 h-px my-3`} />,
-  table: ({ children }) => (
-    <div className="overflow-x-auto mb-2">
-      <table className={`w-full border-collapse border ${tc.border} text-xs`}>
-        {children}
-      </table>
-    </div>
-  ),
-  thead: ({ children }) => <thead className={tc.glass}>{children}</thead>,
-  th: ({ children }) => (
-    <th className={`border ${tc.border} px-2 py-1 text-left font-semibold`}>
-      {children}
-    </th>
-  ),
-  td: ({ children }) => (
-    <td className={`border ${tc.border} px-2 py-1`}>{children}</td>
-  ),
-  input: (props) => {
-    if (props.type === "checkbox") {
-      return (
-        <input
-          type="checkbox"
-          checked={props.checked}
-          disabled
-          className="mr-1.5 align-middle"
-        />
-      );
-    }
-    return <input {...props} />;
+  heading({ tokens, depth }) {
+    const text = this.parser.parseInline(tokens);
+    const styles: Record<number, string> = {
+      1: "text-lg font-bold mb-2",
+      2: "text-base font-bold mb-2",
+      3: "text-sm font-semibold mb-1",
+    };
+    return `<h${depth} class="${styles[depth] ?? ""}">${text}</h${depth}>`;
+  },
+  paragraph({ tokens }) {
+    const text = this.parser.parseInline(tokens);
+    return `<p class="mb-2 last:mb-0">${text}</p>`;
+  },
+  list(token) {
+    const items = token.items.map((item) => this.listitem(item)).join("");
+    const tag = token.ordered ? "ol" : "ul";
+    const cls = token.ordered ? "list-decimal" : "list-disc";
+    return `<${tag} class="${cls} pl-4 mb-2">${items}</${tag}>`;
+  },
+  listitem(item) {
+    return `<li class="mb-0.5">${this.parser.parse(item.tokens)}</li>`;
+  },
+  checkbox({ checked }) {
+    return `<input type="checkbox" ${checked ? 'checked="" ' : ""}disabled="" class="mr-1.5 align-middle"> `;
+  },
+  link({ href, title, tokens }) {
+    const text = this.parser.parseInline(tokens);
+    const titleAttr = title ? ` title="${title}"` : "";
+    return `<a href="${href}"${titleAttr} class="text-accent underline" target="_blank" rel="noopener noreferrer">${text}</a>`;
+  },
+  code({ text, lang, escaped }) {
+    const langClass = lang ? ` language-${lang}` : "";
+    const content = escaped
+      ? text
+      : text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return `<pre class="bg-black/10 dark:bg-white/10 p-2 rounded overflow-x-auto mb-2 text-xs"><code class="text-xs font-mono${langClass}">${content}</code></pre>`;
+  },
+  codespan({ text }) {
+    return `<code class="bg-black/10 dark:bg-white/10 px-1 rounded text-xs font-mono">${text}</code>`;
+  },
+  blockquote({ tokens }) {
+    const body = this.parser.parse(tokens);
+    return `<blockquote class="border-l-2 ${tc.border} pl-3 ${tc.textMuted} italic mb-2">${body}</blockquote>`;
+  },
+  hr() {
+    return `<hr class="${tc.separator} border-0 h-px my-3">`;
+  },
+  table(token) {
+    const headerCells = token.header
+      .map((cell) => this.tablecell(cell))
+      .join("");
+    const headerRow = this.tablerow({ text: headerCells });
+    const bodyRows = token.rows
+      .map((row) => {
+        const cells = row.map((cell) => this.tablecell(cell)).join("");
+        return this.tablerow({ text: cells });
+      })
+      .join("");
+    const body = bodyRows ? `<tbody>${bodyRows}</tbody>` : "";
+    return `<div class="overflow-x-auto mb-2"><table class="w-full border-collapse border ${tc.border} text-xs"><thead class="${tc.glass}">${headerRow}</thead>${body}</table></div>`;
+  },
+  tablerow({ text }) {
+    return `<tr>${text}</tr>`;
+  },
+  tablecell(token) {
+    const content = this.parser.parseInline(token.tokens);
+    const tag = token.header ? "th" : "td";
+    const cls = token.header
+      ? `border ${tc.border} px-2 py-1 text-left font-semibold`
+      : `border ${tc.border} px-2 py-1`;
+    return `<${tag} class="${cls}">${content}</${tag}>`;
   },
 };
 
+const md = new Marked({ renderer, gfm: true, async: false });
+
 export function MarkdownPreview({ content, className = "" }: Props) {
-  if (!content) return null;
+  const html = useMemo(
+    () => (content ? (md.parse(content) as string) : null),
+    [content],
+  );
+
+  if (!html) return null;
 
   return (
-    <div className={`text-sm ${tc.text} ${className}`}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-        {content}
-      </ReactMarkdown>
-    </div>
+    <div
+      className={`text-sm ${tc.text} ${className}`}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }

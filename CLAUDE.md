@@ -268,6 +268,17 @@ Follow these steps to prepare a new release:
    npm run build
    ```
 
+## Dependencies
+
+Minimize the number of dependencies. Before adding any new package, evaluate:
+
+- **Bundle size**: Check the gzipped size on [bundlephobia.com](https://bundlephobia.com). Prefer smaller libraries — every kilobyte counts for a client-side app. Use `npm run build:analyze` to verify actual impact after adding.
+- **Maintenance**: Check the npm page and GitHub repo. Prefer packages that are actively maintained (recent commits, responsive issues), have a healthy contributor base, and are not deprecated.
+- **Transitive dependencies**: Fewer is better. A package that pulls in dozens of sub-dependencies adds supply-chain risk and bloat. Prefer packages with zero or minimal dependencies.
+- **Necessity**: Before reaching for a library, consider whether the functionality can be implemented in a small amount of code. A 20-line utility is better than a 20 KB dependency.
+
+When proposing a new dependency, state the gzipped size and dependency count so we can make an informed decision.
+
 ## Code Conventions
 
 - Strict TypeScript with no implicit `any`
