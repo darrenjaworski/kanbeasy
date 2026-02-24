@@ -1,6 +1,12 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  type CSSProperties,
+} from "react";
 import type { Card, CardUpdates } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { CardControls } from "./CardControls";
