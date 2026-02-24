@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Auto-select new card title text on add for quick editing — clicking "Add card" now focuses the textarea with the default title selected so you can immediately type to replace it
+
 ## [1.17.1]
 
 ### Fixed

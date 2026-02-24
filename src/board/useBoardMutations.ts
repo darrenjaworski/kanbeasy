@@ -67,6 +67,7 @@ export function useBoardMutations(
             : c,
         ),
       }));
+      return card.id;
     },
     [setState],
   );

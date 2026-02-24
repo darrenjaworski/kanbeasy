@@ -15,6 +15,8 @@ export function CardList({
   onOpenDetail,
   density,
   columnId,
+  autoFocusCardId,
+  onAutoFocused,
 }: Readonly<{
   cards: Card[];
   onRemove: (cardId: string) => void;
@@ -22,6 +24,8 @@ export function CardList({
   onOpenDetail: (cardId: string) => void;
   density: CardDensity;
   columnId: string;
+  autoFocusCardId?: string | null;
+  onAutoFocused?: () => void;
 }>) {
   const { columns, matchingCardIds } = useBoard();
   // Register the column list as a droppable target (works even when empty)
@@ -66,6 +70,8 @@ export function CardList({
               density={density}
               columnId={columnId}
               isSearchMatch={matchingCardIds.has(card.id)}
+              autoFocus={card.id === autoFocusCardId}
+              onAutoFocused={onAutoFocused}
             />
           ))
         )}

@@ -58,7 +58,7 @@ describe("column add card", () => {
     expect(document.activeElement).not.toBe(addCardBtn);
   });
 
-  it("does not keep focus inside the column after adding a card", async () => {
+  it("auto-focuses and selects the new card title after adding a card", async () => {
     const user = userEvent.setup();
     renderApp();
 
@@ -70,8 +70,16 @@ describe("column add card", () => {
     });
     await user.click(addCardBtn);
 
-    // No element inside the column should have focus, otherwise
-    // group-focus-within keeps the column action buttons visible
-    expect(column.contains(document.activeElement)).toBe(false);
+    // Focus should be on the new card's textarea
+    const cardTextarea = within(column as HTMLElement).getByRole("textbox", {
+      name: /card content/i,
+    });
+    expect(document.activeElement).toBe(cardTextarea);
+
+    // The default title text should be selected so the user can type to replace
+    expect((cardTextarea as HTMLTextAreaElement).selectionStart).toBe(0);
+    expect((cardTextarea as HTMLTextAreaElement).selectionEnd).toBe(
+      "New card".length,
+    );
   });
 });

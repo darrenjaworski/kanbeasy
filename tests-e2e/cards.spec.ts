@@ -26,6 +26,30 @@ test("add a card to a column", async ({ page }) => {
   await expect(column.getByTestId("card-content-0")).toHaveValue("New card");
 });
 
+test("auto-focuses and selects new card title for quick editing", async ({
+  page,
+}) => {
+  await page.getByTestId("add-column-button").click();
+  const column = page.getByTestId("column-0");
+
+  await column.getByTestId("add-card-button-0").click();
+
+  const textarea = column.getByTestId("card-content-0");
+  await expect(textarea).toBeFocused();
+
+  // The default title should be fully selected so typing replaces it
+  const selection = await textarea.evaluate((el) => {
+    const ta = el as HTMLTextAreaElement;
+    return { start: ta.selectionStart, end: ta.selectionEnd, value: ta.value };
+  });
+  expect(selection.start).toBe(0);
+  expect(selection.end).toBe(selection.value.length);
+
+  // Typing should replace the selected text entirely
+  await page.keyboard.type("My task");
+  await expect(textarea).toHaveValue("My task");
+});
+
 test("can reorder cards within a column", async ({ page }) => {
   // Add a column and three cards
   await page.getByTestId("add-column-button").click();

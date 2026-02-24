@@ -47,6 +47,7 @@ export function Column({
   const { cardDensity, columnResizingEnabled, deleteColumnWarningEnabled } =
     useTheme();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [autoFocusCardId, setAutoFocusCardId] = useState<string | null>(null);
   const [tempTitle, setTempTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -169,7 +170,8 @@ export function Column({
           type="button"
           className={`w-full rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
           onClick={(e) => {
-            addCard(id, "New card");
+            const cardId = addCard(id, "New card");
+            setAutoFocusCardId(cardId);
             e.currentTarget.blur();
           }}
           aria-label={`Add card to ${title || "column"}`}
@@ -185,6 +187,8 @@ export function Column({
         onOpenDetail={onOpenDetail ?? (() => {})}
         density={cardDensity}
         columnId={id}
+        autoFocusCardId={autoFocusCardId}
+        onAutoFocused={() => setAutoFocusCardId(null)}
       />
       <ConfirmDialog
         open={showDeleteConfirm}

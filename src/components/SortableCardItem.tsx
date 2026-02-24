@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useCallback, useMemo, useRef, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from "react";
 import type { Card, CardUpdates } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { CardControls } from "./CardControls";
@@ -17,6 +17,8 @@ type SortableCardItemProps = Readonly<{
   columnId: string;
   index: number;
   isSearchMatch?: boolean;
+  autoFocus?: boolean;
+  onAutoFocused?: () => void;
 }>;
 
 export function SortableCardItem({
@@ -29,6 +31,8 @@ export function SortableCardItem({
   columnId,
   index,
   isSearchMatch = false,
+  autoFocus = false,
+  onAutoFocused,
 }: SortableCardItemProps) {
   const {
     attributes,
@@ -74,6 +78,14 @@ export function SortableCardItem({
     onRevert: revertCard,
     multiline: true,
   });
+
+  useEffect(() => {
+    if (autoFocus && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.select();
+      onAutoFocused?.();
+    }
+  }, [autoFocus, onAutoFocused]);
 
   const rowsForDensity = (() => {
     if (density === "small") return 1;
