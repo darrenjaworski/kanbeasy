@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix owl assistant toggle click intercepted by decorative overlay span in e2e tests
 - Fix stale version assertion in export e2e test (v2 → v3)
 
+### Changed
+
+- Split post-deploy e2e workflow into install and run jobs with Playwright browser caching
+
 ## [1.17.0]
 
 ### Features
