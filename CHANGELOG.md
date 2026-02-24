@@ -7,13 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.1]
+
+### Changed
+
+- Restrict card search to titles only (exclude descriptions)
+
 ## [1.16.0]
 
 ### Features
 
 - Add card detail modal with description field, accessible via detail button on cards
 - Add `description` field to card data model with extensible `CardUpdates` partial update pattern
-- Extend fuzzy search to cover card descriptions
 - Add description column to list view
 - Bump export version to 3 with backward-compatible import migration for v1/v2 data
 - Add column selector dropdown in card detail modal to move cards between columns

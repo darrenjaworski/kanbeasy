@@ -44,7 +44,6 @@ an ultra simple task organizer
 - ✅ hide card textarea resize handle by default, show only on hover/focus
 - ✅ view toggle (switch between kanban board and read-only list view)
 - ✅ card detail modal with description field and column selector
-- ✅ search covers card descriptions
 
 Settings
 
