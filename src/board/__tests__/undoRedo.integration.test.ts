@@ -204,7 +204,13 @@ describe("undo/redo through BoardProvider", () => {
     act(() => result.current.addCard(colAId, "Card 1"));
 
     // Move to same column — should be a no-op
-    act(() => result.current.moveCard(colAId, colAId, result.current.columns[0].cards[0].id));
+    act(() =>
+      result.current.moveCard(
+        colAId,
+        colAId,
+        result.current.columns[0].cards[0].id,
+      ),
+    );
     expect(result.current.columns[0].cards).toHaveLength(1);
 
     // Undo should go back to addCard, not moveCard
