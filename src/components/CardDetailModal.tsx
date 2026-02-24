@@ -70,27 +70,44 @@ export function CardDetailModal({
   const [editingDescription, setEditingDescription] = useState(false);
   const descEscaping = useRef(false);
   const descRef = useRef<HTMLTextAreaElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const descHeight = useRef<number>(0);
 
   useEffect(() => {
     setTempDescription(card.description);
   }, [card.description]);
 
   useEffect(() => {
-    if (editingDescription) {
-      descRef.current?.focus();
+    if (editingDescription && descRef.current) {
+      descRef.current.style.height = `${Math.max(descHeight.current, 72)}px`;
+      descRef.current.focus();
     }
   }, [editingDescription]);
+
+  const captureDescHeight = useCallback(() => {
+    if (descRef.current) {
+      descHeight.current = descRef.current.offsetHeight;
+    }
+  }, []);
+
+  const enterDescEdit = useCallback(() => {
+    if (previewRef.current) {
+      descHeight.current = previewRef.current.offsetHeight;
+    }
+    setEditingDescription(true);
+  }, []);
 
   const handleDescriptionKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Escape") {
         descEscaping.current = true;
+        captureDescHeight();
         setTempDescription(card.description);
         setEditingDescription(false);
         e.currentTarget.blur();
       }
     },
-    [card.description],
+    [card.description, captureDescHeight],
   );
 
   const handleDescriptionBlur = useCallback(() => {
@@ -98,12 +115,13 @@ export function CardDetailModal({
       descEscaping.current = false;
       return;
     }
+    captureDescHeight();
     const next = tempDescription.trim();
     if (next !== card.description) {
       onUpdate({ description: next });
     }
     setEditingDescription(false);
-  }, [tempDescription, card.description, onUpdate]);
+  }, [tempDescription, card.description, onUpdate, captureDescHeight]);
 
   return (
     <Modal
@@ -190,8 +208,7 @@ export function CardDetailModal({
               <textarea
                 ref={descRef}
                 id="card-detail-description"
-                className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
-                rows={4}
+                className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y min-h-[4.5rem]`}
                 value={tempDescription}
                 onChange={(e) => setTempDescription(e.target.value)}
                 onKeyDown={handleDescriptionKeyDown}
@@ -206,14 +223,20 @@ export function CardDetailModal({
             </>
           ) : tempDescription ? (
             <div
+              ref={previewRef}
               role="button"
               tabIndex={0}
               className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 cursor-pointer min-h-[4.5rem]`}
-              onClick={() => setEditingDescription(true)}
+              style={
+                descHeight.current
+                  ? { minHeight: descHeight.current }
+                  : undefined
+              }
+              onClick={enterDescEdit}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  setEditingDescription(true);
+                  enterDescEdit();
                 }
               }}
               data-testid="card-detail-description-preview"
@@ -225,11 +248,11 @@ export function CardDetailModal({
               role="button"
               tabIndex={0}
               className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 cursor-pointer min-h-[4.5rem] ${tc.textFaint} text-sm`}
-              onClick={() => setEditingDescription(true)}
+              onClick={enterDescEdit}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  setEditingDescription(true);
+                  enterDescEdit();
                 }
               }}
               data-testid="card-detail-description-placeholder"
