@@ -19,6 +19,12 @@ const baseCard: Card = {
   ],
 };
 
+const emptyDescCard: Card = {
+  ...baseCard,
+  id: "card-2",
+  description: "",
+};
+
 const baseColumns: Column[] = [
   {
     id: "col-1",
@@ -48,13 +54,24 @@ function renderModal(
   return { ...result, ...props };
 }
 
+/** Click the markdown preview to enter edit mode, returns the textarea */
+async function enterDescriptionEditMode(
+  user: ReturnType<typeof userEvent.setup>,
+) {
+  const preview = screen.getByTestId("card-detail-description-preview");
+  await user.click(preview);
+  return screen.getByTestId("card-detail-description");
+}
+
 describe("CardDetailModal", () => {
-  it("renders title and description", () => {
+  it("renders title and description preview", () => {
     renderModal();
     expect(screen.getByTestId("card-detail-title")).toHaveValue("Test Card");
-    expect(screen.getByTestId("card-detail-description")).toHaveValue(
-      "Test description",
-    );
+    // Description shows as rendered markdown preview, not a textarea
+    expect(
+      screen.getByTestId("card-detail-description-preview"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
   it("displays column selector and metadata timestamps", () => {
@@ -88,49 +105,99 @@ describe("CardDetailModal", () => {
     expect(onUpdate).toHaveBeenCalledWith({ title: "New Title" });
   });
 
-  it("saves description on blur", async () => {
+  it("shows placeholder when description is empty", () => {
+    renderModal({ card: emptyDescCard });
+    const placeholder = screen.getByTestId(
+      "card-detail-description-placeholder",
+    );
+    expect(placeholder).toHaveTextContent("Add a description...");
+  });
+
+  it("clicking placeholder enters edit mode", async () => {
+    const user = userEvent.setup();
+    renderModal({ card: emptyDescCard });
+
+    const placeholder = screen.getByTestId(
+      "card-detail-description-placeholder",
+    );
+    await user.click(placeholder);
+
+    expect(screen.getByTestId("card-detail-description")).toBeInTheDocument();
+  });
+
+  it("renders markdown preview when description exists", () => {
+    renderModal({
+      card: { ...baseCard, description: "**bold text**" },
+    });
+    const preview = screen.getByTestId("card-detail-description-preview");
+    expect(preview).toBeInTheDocument();
+    // Check that bold text is rendered
+    const strong = preview.querySelector("strong");
+    expect(strong).toHaveTextContent("bold text");
+  });
+
+  it("clicking preview enters edit mode with textarea", async () => {
+    const user = userEvent.setup();
+    renderModal();
+
+    const descInput = await enterDescriptionEditMode(user);
+    expect(descInput).toBeInTheDocument();
+    expect(descInput.tagName).toBe("TEXTAREA");
+    expect(descInput).toHaveValue("Test description");
+  });
+
+  it("saves description on blur and returns to preview", async () => {
     const user = userEvent.setup();
     const { onUpdate } = renderModal();
 
-    const descInput = screen.getByTestId("card-detail-description");
+    const descInput = await enterDescriptionEditMode(user);
     await user.clear(descInput);
     await user.type(descInput, "New description");
     fireEvent.blur(descInput);
 
     expect(onUpdate).toHaveBeenCalledWith({ description: "New description" });
+    // Should return to preview mode
+    expect(
+      screen.queryByTestId("card-detail-description"),
+    ).not.toBeInTheDocument();
   });
 
   it("allows clearing description", async () => {
     const user = userEvent.setup();
     const { onUpdate } = renderModal();
 
-    const descInput = screen.getByTestId("card-detail-description");
+    const descInput = await enterDescriptionEditMode(user);
     await user.clear(descInput);
     fireEvent.blur(descInput);
 
     expect(onUpdate).toHaveBeenCalledWith({ description: "" });
   });
 
-  it("does not call onUpdate when description is unchanged", () => {
+  it("does not call onUpdate when description is unchanged", async () => {
+    const user = userEvent.setup();
     const { onUpdate } = renderModal();
 
-    const descInput = screen.getByTestId("card-detail-description");
+    const descInput = await enterDescriptionEditMode(user);
     fireEvent.blur(descInput);
 
     expect(onUpdate).not.toHaveBeenCalled();
   });
 
-  it("reverts description on Escape", async () => {
+  it("reverts description on Escape and returns to preview", async () => {
     const user = userEvent.setup();
     const { onUpdate } = renderModal();
 
-    const descInput = screen.getByTestId("card-detail-description");
+    const descInput = await enterDescriptionEditMode(user);
     await user.clear(descInput);
     await user.type(descInput, "Changed");
     await user.keyboard("{Escape}");
 
     expect(onUpdate).not.toHaveBeenCalled();
-    expect(descInput).toHaveValue("Test description");
+    // Should return to preview mode with original text
+    expect(
+      screen.getByTestId("card-detail-description-preview"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
   it("calls onClose when close button is clicked", async () => {

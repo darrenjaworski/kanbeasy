@@ -3,6 +3,7 @@ import type { Card, CardUpdates, Column } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { Modal } from "./Modal";
 import { ModalHeader } from "./ModalHeader";
+import { MarkdownPreview } from "./MarkdownPreview";
 import { MoreIcon } from "./icons";
 import { tc } from "../theme/classNames";
 import { useInlineEdit } from "../hooks";
@@ -64,19 +65,28 @@ export function CardDetailModal({
     multiline: true,
   });
 
-  // Description editing — direct onBlur (allows clearing)
+  // Description editing — click-to-edit with markdown preview
   const [tempDescription, setTempDescription] = useState(card.description);
+  const [editingDescription, setEditingDescription] = useState(false);
   const descEscaping = useRef(false);
+  const descRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     setTempDescription(card.description);
   }, [card.description]);
+
+  useEffect(() => {
+    if (editingDescription) {
+      descRef.current?.focus();
+    }
+  }, [editingDescription]);
 
   const handleDescriptionKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Escape") {
         descEscaping.current = true;
         setTempDescription(card.description);
+        setEditingDescription(false);
         e.currentTarget.blur();
       }
     },
@@ -92,6 +102,7 @@ export function CardDetailModal({
     if (next !== card.description) {
       onUpdate({ description: next });
     }
+    setEditingDescription(false);
   }, [tempDescription, card.description, onUpdate]);
 
   return (
@@ -158,7 +169,7 @@ export function CardDetailModal({
           <textarea
             ref={titleRef}
             id="card-detail-title-input"
-            className={`${tc.input} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
+            className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
             rows={ROWS_FOR_DENSITY[density]}
             value={tempTitle}
             onChange={(e) => setTempTitle(e.target.value)}
@@ -171,23 +182,61 @@ export function CardDetailModal({
 
         {/* Description */}
         <div>
-          <label
-            htmlFor="card-detail-description"
-            className={`block text-xs font-medium ${tc.textMuted} mb-1`}
-          >
+          <label className={`block text-xs font-medium ${tc.textMuted} mb-1`}>
             Description
           </label>
-          <textarea
-            id="card-detail-description"
-            className={`${tc.input} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
-            rows={4}
-            value={tempDescription}
-            onChange={(e) => setTempDescription(e.target.value)}
-            onKeyDown={handleDescriptionKeyDown}
-            onBlur={handleDescriptionBlur}
-            placeholder="Add a description..."
-            data-testid="card-detail-description"
-          />
+          {editingDescription ? (
+            <>
+              <textarea
+                ref={descRef}
+                id="card-detail-description"
+                className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
+                rows={4}
+                value={tempDescription}
+                onChange={(e) => setTempDescription(e.target.value)}
+                onKeyDown={handleDescriptionKeyDown}
+                onBlur={handleDescriptionBlur}
+                placeholder="Add a description..."
+                data-testid="card-detail-description"
+              />
+              <p className={`text-xs ${tc.textFaint} mt-1`}>
+                Supports Markdown: **bold**, *italic*, - lists, [links](url),
+                and more
+              </p>
+            </>
+          ) : tempDescription ? (
+            <div
+              role="button"
+              tabIndex={0}
+              className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 cursor-pointer min-h-[4.5rem]`}
+              onClick={() => setEditingDescription(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setEditingDescription(true);
+                }
+              }}
+              data-testid="card-detail-description-preview"
+            >
+              <MarkdownPreview content={tempDescription} />
+            </div>
+          ) : (
+            <div
+              role="button"
+              tabIndex={0}
+              className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 cursor-pointer min-h-[4.5rem] ${tc.textFaint} text-sm`}
+              onClick={() => setEditingDescription(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setEditingDescription(true);
+                }
+              }}
+              data-testid="card-detail-description-placeholder"
+            >
+              Add a description...
+            </div>
+          )}
         </div>
 
         {/* Timestamps footer */}

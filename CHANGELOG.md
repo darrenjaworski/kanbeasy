@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add markdown rendering for card descriptions with click-to-edit UX
+- Add `MarkdownPreview` component using `react-markdown` + `remark-gfm` (GFM tables, task lists, strikethrough)
+- Render markdown descriptions in list view (truncated to one line)
+- Show helper text in description editor indicating markdown support
+
+### Fixed
+
+- Fix card detail modal title textarea losing visible border due to Tailwind class conflict
+
 ## [1.16.1]
 
 ### Changed

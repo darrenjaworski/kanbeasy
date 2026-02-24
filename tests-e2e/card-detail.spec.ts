@@ -21,9 +21,11 @@ test("open card detail modal via detail button", async ({ page }) => {
   await card.hover();
   await column.getByTestId("card-detail-0").click();
 
-  // Modal should be visible with title and description fields
+  // Modal should be visible with title field and description placeholder
   await expect(page.getByTestId("card-detail-title")).toBeVisible();
-  await expect(page.getByTestId("card-detail-description")).toBeVisible();
+  await expect(
+    page.getByTestId("card-detail-description-placeholder"),
+  ).toBeVisible();
   await expect(page.getByTestId("card-detail-column")).toBeVisible();
   await expect(page.getByTestId("card-detail-metadata")).toBeVisible();
 });
@@ -42,8 +44,8 @@ test("edit title in modal updates card on board", async ({ page }) => {
   const titleField = page.getByTestId("card-detail-title");
   await titleField.click();
   await titleField.fill("Updated from modal");
-  // Blur to save by clicking elsewhere in modal
-  await page.getByTestId("card-detail-description").click();
+  // Blur to save by clicking the description placeholder
+  await page.getByTestId("card-detail-description-placeholder").click();
 
   // Close modal
   await page.getByRole("button", { name: /close card details/i }).click();
@@ -64,21 +66,60 @@ test("edit description in modal persists across reopen", async ({ page }) => {
   await card.hover();
   await column.getByTestId("card-detail-0").click();
 
+  // Click placeholder to enter edit mode
+  await page.getByTestId("card-detail-description-placeholder").click();
+
   const descField = page.getByTestId("card-detail-description");
-  await descField.click();
   await descField.fill("My description");
   // Blur to save
   await page.getByTestId("card-detail-title").click();
 
+  // Should now show markdown preview
+  await expect(
+    page.getByTestId("card-detail-description-preview"),
+  ).toBeVisible();
+
   // Close modal
   await page.getByRole("button", { name: /close card details/i }).click();
 
-  // Reopen modal and verify description persisted
+  // Reopen modal and verify description persisted as markdown preview
   await card.hover();
   await column.getByTestId("card-detail-0").click();
+  await expect(
+    page.getByTestId("card-detail-description-preview"),
+  ).toContainText("My description");
+
+  // Click preview to verify raw text is still accessible
+  await page.getByTestId("card-detail-description-preview").click();
   await expect(page.getByTestId("card-detail-description")).toHaveValue(
     "My description",
   );
+});
+
+test("markdown renders in description preview", async ({ page }) => {
+  await page.getByTestId("add-column-button").click();
+  const column = page.getByTestId("column-0");
+  await column.getByTestId("add-card-button-0").click();
+
+  // Open modal
+  const card = column.getByTestId("card-0");
+  await card.hover();
+  await column.getByTestId("card-detail-0").click();
+
+  // Click placeholder to enter edit mode
+  await page.getByTestId("card-detail-description-placeholder").click();
+
+  // Type markdown
+  const descField = page.getByTestId("card-detail-description");
+  await descField.fill("**bold** and *italic*");
+  // Blur to save and switch to preview
+  await page.getByTestId("card-detail-title").click();
+
+  // Preview should render markdown
+  const preview = page.getByTestId("card-detail-description-preview");
+  await expect(preview).toBeVisible();
+  await expect(preview.locator("strong")).toHaveText("bold");
+  await expect(preview.locator("em")).toHaveText("italic");
 });
 
 test("move card via column selector keeps modal open", async ({ page }) => {
@@ -113,7 +154,6 @@ test("move card via column selector keeps modal open", async ({ page }) => {
 
   // Modal should still be open
   await expect(page.getByTestId("card-detail-title")).toBeVisible();
-  await expect(page.getByTestId("card-detail-description")).toBeVisible();
 
   // Column selector should now show the right column
   await expect(columnSelect).toHaveValue(rightColId!);

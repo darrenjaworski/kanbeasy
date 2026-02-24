@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useBoard } from "../board/useBoard";
 import { tc } from "../theme/classNames";
+import { MarkdownPreview } from "./MarkdownPreview";
 
 interface CardRow {
   id: string;
@@ -84,10 +85,14 @@ export function ListView() {
                       className={`${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
                     >
                       <td className={`px-3 py-2 ${tc.text}`}>{row.title}</td>
-                      <td
-                        className={`px-3 py-2 ${tc.textMuted} max-w-xs truncate`}
-                      >
-                        {row.description || "\u2014"}
+                      <td className={`px-3 py-2 ${tc.textMuted} max-w-xs`}>
+                        {row.description ? (
+                          <div className="overflow-hidden max-h-6 line-clamp-1">
+                            <MarkdownPreview content={row.description} />
+                          </div>
+                        ) : (
+                          "\u2014"
+                        )}
                       </td>
                       <td className={`px-3 py-2 ${tc.textMuted}`}>
                         {row.columnTitle}
