@@ -1,13 +1,14 @@
-name: post-deploy e2e
+name: e2e tests
 
 on:
   workflow_run:
     workflows: [gh page deploy]
     types:
       - completed
+  workflow_dispatch:
 
 concurrency:
-  group: post-deploy-e2e-${{ github.ref }}
+  group: e2e-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -15,7 +16,7 @@ permissions:
 
 jobs:
   install:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
