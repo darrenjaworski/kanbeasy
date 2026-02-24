@@ -12,16 +12,16 @@ export function CardList({
   cards,
   onRemove,
   onUpdate,
+  onOpenDetail,
   density,
   columnId,
-  columnTitle,
 }: Readonly<{
   cards: Card[];
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, updates: CardUpdates) => void;
+  onOpenDetail: (cardId: string) => void;
   density: CardDensity;
   columnId: string;
-  columnTitle: string;
 }>) {
   const { columns, matchingCardIds } = useBoard();
   // Register the column list as a droppable target (works even when empty)
@@ -61,10 +61,10 @@ export function CardList({
               card={card}
               onRemove={() => onRemove(card.id)}
               onUpdate={(updates) => onUpdate(card.id, updates)}
+              onOpenDetail={() => onOpenDetail(card.id)}
               canDrag={cards.length > 1 || columns.length > 1}
               density={density}
               columnId={columnId}
-              columnTitle={columnTitle}
               isSearchMatch={matchingCardIds.has(card.id)}
             />
           ))

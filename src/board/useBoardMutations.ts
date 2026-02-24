@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import type { BoardContextValue, BoardState, Card } from "./types";
+import { dropCardOnColumn } from "./dragUtils";
 
 const defaultState: BoardState = {
   columns: [],
@@ -151,6 +152,21 @@ export function useBoardMutations(
     [setState],
   );
 
+  const moveCard = useCallback<BoardContextValue["moveCard"]>(
+    (fromColumnId, toColumnId, cardId) => {
+      if (fromColumnId === toColumnId) return;
+      setState((prev) => ({
+        columns: dropCardOnColumn(
+          prev.columns,
+          fromColumnId,
+          toColumnId,
+          cardId,
+        ),
+      }));
+    },
+    [setState],
+  );
+
   const resetBoard = useCallback<BoardContextValue["resetBoard"]>(() => {
     setState(defaultState);
   }, [setState]);
@@ -163,6 +179,7 @@ export function useBoardMutations(
     addCard,
     removeCard,
     updateCard,
+    moveCard,
     sortCards,
     reorderCard,
     resetBoard,

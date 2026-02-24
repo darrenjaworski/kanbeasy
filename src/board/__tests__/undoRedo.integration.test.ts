@@ -171,6 +171,47 @@ describe("undo/redo through BoardProvider", () => {
     expect(result.current.canRedo).toBe(false);
   });
 
+  it("can undo moveCard", () => {
+    const { result } = renderHook(() => useBoard(), { wrapper });
+
+    act(() => result.current.resetBoard());
+    act(() => result.current.addColumn("Col A"));
+    act(() => result.current.addColumn("Col B"));
+    const colAId = result.current.columns[0].id;
+    const colBId = result.current.columns[1].id;
+    act(() => result.current.addCard(colAId, "Card 1"));
+    const cardId = result.current.columns[0].cards[0].id;
+
+    // Move card from Col A to Col B
+    act(() => result.current.moveCard(colAId, colBId, cardId));
+    expect(result.current.columns[0].cards).toHaveLength(0);
+    expect(result.current.columns[1].cards).toHaveLength(1);
+    expect(result.current.columns[1].cards[0].title).toBe("Card 1");
+
+    // Undo should move it back
+    act(() => result.current.undo());
+    expect(result.current.columns[0].cards).toHaveLength(1);
+    expect(result.current.columns[1].cards).toHaveLength(0);
+    expect(result.current.columns[0].cards[0].title).toBe("Card 1");
+  });
+
+  it("moveCard to same column is a no-op", () => {
+    const { result } = renderHook(() => useBoard(), { wrapper });
+
+    act(() => result.current.resetBoard());
+    act(() => result.current.addColumn("Col A"));
+    const colAId = result.current.columns[0].id;
+    act(() => result.current.addCard(colAId, "Card 1"));
+
+    // Move to same column — should be a no-op
+    act(() => result.current.moveCard(colAId, colAId, result.current.columns[0].cards[0].id));
+    expect(result.current.columns[0].cards).toHaveLength(1);
+
+    // Undo should go back to addCard, not moveCard
+    act(() => result.current.undo());
+    expect(result.current.columns[0].cards).toHaveLength(0);
+  });
+
   it("no-op mutation does not create history entry", () => {
     const { result } = renderHook(() => useBoard(), { wrapper });
 

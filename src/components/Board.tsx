@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BoardDragOverlay } from "./BoardDragOverlay";
 import { BoardScrollGradients } from "./BoardScrollGradients";
+import { CardDetailModal } from "./CardDetailModal";
 import { useBoard } from "../board/useBoard";
+import { useTheme } from "../theme/useTheme";
 import { useBoardDragAndDrop } from "../board/useBoardDragAndDrop";
 import { AddColumn } from "./AddColumn";
 import {
@@ -21,11 +23,30 @@ import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import { SortableColumnItem } from "./SortableColumnItem";
 
 export function Board() {
-  const { columns, addColumn, setColumns } = useBoard();
+  const { columns, addColumn, setColumns, updateCard, moveCard } = useBoard();
+  const { cardDensity } = useTheme();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const prevLenRef = useRef<number | null>(null);
+
+  // Card detail modal state — lifted here so it survives cross-column moves
+  const [detailCardId, setDetailCardId] = useState<string | null>(null);
+
+  const handleOpenDetail = useCallback((cardId: string) => {
+    setDetailCardId(cardId);
+  }, []);
+
+  // Find the card and its current column for the modal
+  const detailCard = detailCardId
+    ? (() => {
+        for (const col of columns) {
+          const card = col.cards.find((c) => c.id === detailCardId);
+          if (card) return { card, columnId: col.id };
+        }
+        return null;
+      })()
+    : null;
 
   const {
     activeType,
@@ -123,6 +144,7 @@ export function Board() {
                       title={c.title}
                       cards={c.cards}
                       canDrag={columns.length > 1}
+                      onOpenDetail={handleOpenDetail}
                     />
                   ))}
                   {/* Add Column tile at the end */}
@@ -140,6 +162,22 @@ export function Board() {
             canScrollRight={canScrollRight}
           />
         </div>
+      )}
+      {detailCard && (
+        <CardDetailModal
+          open={!!detailCard}
+          onClose={() => setDetailCardId(null)}
+          card={detailCard.card}
+          columnId={detailCard.columnId}
+          columns={columns}
+          density={cardDensity}
+          onUpdate={(updates) =>
+            updateCard(detailCard.columnId, detailCard.card.id, updates)
+          }
+          onMoveCard={(toColumnId) =>
+            moveCard(detailCard.columnId, toColumnId, detailCard.card.id)
+          }
+        />
       )}
     </main>
   );

@@ -1,16 +1,9 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
+import { useCallback, useMemo, useRef, type CSSProperties } from "react";
 import type { Card, CardUpdates } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { CardControls } from "./CardControls";
-import { CardDetailModal } from "./CardDetailModal";
 import { tc } from "../theme/classNames";
 import { useInlineEdit } from "../hooks";
 
@@ -18,10 +11,10 @@ type SortableCardItemProps = Readonly<{
   card: Card;
   onRemove: () => void;
   onUpdate: (updates: CardUpdates) => void;
+  onOpenDetail: () => void;
   canDrag?: boolean;
   density: CardDensity;
   columnId: string;
-  columnTitle: string;
   index: number;
   isSearchMatch?: boolean;
 }>;
@@ -30,10 +23,10 @@ export function SortableCardItem({
   card,
   onRemove,
   onUpdate,
+  onOpenDetail,
   canDrag = true,
   density,
   columnId,
-  columnTitle,
   index,
   isSearchMatch = false,
 }: SortableCardItemProps) {
@@ -55,8 +48,6 @@ export function SortableCardItem({
     }),
     [transform, transition, isDragging],
   );
-
-  const [detailOpen, setDetailOpen] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const cardValue = card.title || "New card";
@@ -110,7 +101,7 @@ export function SortableCardItem({
         canDrag={canDrag}
         cardTitle={card.title}
         onRemove={onRemove}
-        onOpenDetail={() => setDetailOpen(true)}
+        onOpenDetail={onOpenDetail}
         setActivatorNodeRef={setActivatorNodeRef}
         attributes={attributes}
         listeners={listeners}
@@ -126,14 +117,6 @@ export function SortableCardItem({
         onKeyDown={cardKeyDown}
         onBlur={cardBlur}
         data-testid={`card-content-${index}`}
-      />
-
-      <CardDetailModal
-        open={detailOpen}
-        onClose={() => setDetailOpen(false)}
-        card={card}
-        columnTitle={columnTitle}
-        onUpdate={onUpdate}
       />
     </div>
   );

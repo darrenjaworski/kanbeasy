@@ -9,16 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
-- Add card detail modal with description field, accessible via expand button on cards
+- Add card detail modal with description field, accessible via detail button on cards
 - Add `description` field to card data model with extensible `CardUpdates` partial update pattern
 - Extend fuzzy search to cover card descriptions
 - Add description column to list view
 - Bump export version to 3 with backward-compatible import migration for v1/v2 data
+- Add column selector dropdown in card detail modal to move cards between columns
+- Add `moveCard` mutation to board context for programmatic cross-column moves
+- Card detail modal stays open when moving card to a different column
 
 ### Changed
 
 - Style list view table inside a card matching column styles
 - Card controls use translucent backdrop-blur background to reduce text overlap
+- Replace expand icon with document icon for card detail button
+- Card detail modal title rows match card density setting
+- Lift card detail modal state to Board component for cross-column persistence
+
+### Tests
+
+- Add unit tests for `moveCard` undo/redo and same-column no-op
+- Add unit tests for column selector and `onMoveCard` callback in CardDetailModal
+- Add e2e tests for card detail modal (open, edit title/description, move card, close via Escape/backdrop)
 
 ## [1.15.0]
 

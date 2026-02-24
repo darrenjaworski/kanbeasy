@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect } from "vitest";
 import { CardDetailModal } from "../CardDetailModal";
-import type { Card } from "../../board/types";
+import type { Card, Column } from "../../board/types";
 
 const baseCard: Card = {
   id: "card-1",
@@ -19,6 +19,17 @@ const baseCard: Card = {
   ],
 };
 
+const baseColumns: Column[] = [
+  {
+    id: "col-1",
+    title: "To Do",
+    cards: [baseCard],
+    createdAt: 0,
+    updatedAt: 0,
+  },
+  { id: "col-2", title: "Done", cards: [], createdAt: 0, updatedAt: 0 },
+];
+
 function renderModal(
   overrides: Partial<Parameters<typeof CardDetailModal>[0]> = {},
 ) {
@@ -26,8 +37,11 @@ function renderModal(
     open: true,
     onClose: vi.fn(),
     card: baseCard,
-    columnTitle: "To Do",
+    columnId: "col-1",
+    columns: baseColumns,
+    density: "medium" as const,
     onUpdate: vi.fn(),
+    onMoveCard: vi.fn(),
     ...overrides,
   };
   const result = render(<CardDetailModal {...props} />);
@@ -43,12 +57,23 @@ describe("CardDetailModal", () => {
     );
   });
 
-  it("displays metadata", () => {
+  it("displays column selector and metadata timestamps", () => {
     renderModal();
+    const select = screen.getByTestId("card-detail-column");
+    expect(select).toHaveValue("col-1");
     const metadata = screen.getByTestId("card-detail-metadata");
-    expect(metadata).toHaveTextContent("To Do");
     expect(metadata).toHaveTextContent("Created:");
     expect(metadata).toHaveTextContent("Updated:");
+  });
+
+  it("calls onMoveCard when column is changed", async () => {
+    const user = userEvent.setup();
+    const { onMoveCard } = renderModal();
+
+    const select = screen.getByTestId("card-detail-column");
+    await user.selectOptions(select, "col-2");
+
+    expect(onMoveCard).toHaveBeenCalledWith("col-2");
   });
 
   it("saves title on blur", async () => {

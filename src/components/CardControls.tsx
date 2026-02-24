@@ -1,5 +1,5 @@
 import React from "react";
-import { CardDragIcon, CloseIcon, ExpandIcon } from "./icons";
+import { CardDragIcon, CloseIcon, MoreIcon } from "./icons";
 import { tc } from "../theme/classNames";
 
 interface CardControlsProps {
@@ -45,12 +45,12 @@ export function CardControls({
       <button
         type="button"
         onClick={onOpenDetail}
-        aria-label={`Open details for ${cardTitle || "Untitled"}`}
-        title="Open card details"
+        aria-label={`More details for ${cardTitle || "Untitled"}`}
+        title="More details"
         className={`${tc.iconButton} h-6 w-6`}
         data-testid={`card-detail-${index}`}
       >
-        <ExpandIcon className="size-4" />
+        <MoreIcon className="size-4" />
       </button>
       <span aria-hidden className={`${tc.separator} h-6 w-px`} />
       <button

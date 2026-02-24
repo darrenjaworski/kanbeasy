@@ -23,6 +23,7 @@ type Props = Readonly<{
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
   overlayMode?: boolean;
   index?: number;
+  onOpenDetail?: (cardId: string) => void;
 }>;
 
 export function Column({
@@ -34,6 +35,7 @@ export function Column({
   dragHandleProps,
   overlayMode = false,
   index,
+  onOpenDetail,
 }: Props) {
   // Column resizing state
   const [width, setWidth] = useState<number>(DEFAULT_COLUMN_WIDTH);
@@ -180,9 +182,9 @@ export function Column({
         cards={cards}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, updates) => updateCard(id, cardId, updates)}
+        onOpenDetail={onOpenDetail ?? (() => {})}
         density={cardDensity}
         columnId={id}
-        columnTitle={title}
       />
       <ConfirmDialog
         open={showDeleteConfirm}
