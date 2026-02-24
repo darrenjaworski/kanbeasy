@@ -22,7 +22,7 @@ test("can enable owl assistant from settings", async ({ page }) => {
   await expect(dlg).toBeVisible();
 
   // Toggle on owl assistant
-  await dlg.getByLabel(/owl assistant/i).click();
+  await dlg.getByText(/owl assistant/i).click();
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
   // Owl button should now be visible
@@ -35,7 +35,7 @@ test("owl shows a tip on click and dismisses with Thanks!", async ({
   // Enable owl mode
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
-  await dlg.getByLabel(/owl assistant/i).click();
+  await dlg.getByText(/owl assistant/i).click();
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
   // Click the owl
@@ -56,16 +56,18 @@ test("'One more' shows the next tip without closing", async ({ page }) => {
   // Enable owl mode
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
-  await dlg.getByLabel(/owl assistant/i).click();
+  await dlg.getByText(/owl assistant/i).click();
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
   // Open and read the first tip
   await page.getByRole("button", { name: /owl buddy/i }).click();
-  const firstTip = await page.locator("p").first().textContent();
+  const tipEl = page.getByTestId("owl-tip");
+  await expect(tipEl).toBeVisible();
+  const firstTip = await tipEl.textContent();
 
   // Click "One more" and verify the tip changed
   await page.getByRole("button", { name: /one more/i }).click();
-  const secondTip = await page.locator("p").first().textContent();
+  const secondTip = await tipEl.textContent();
 
   expect(firstTip).not.toBe(secondTip);
 

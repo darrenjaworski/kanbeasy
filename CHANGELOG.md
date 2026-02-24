@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix e2e test hangs: attach anchor element to DOM before triggering download in `exportBoard` to ensure download event fires reliably in headless browsers
+- Fix owl assistant e2e tests: replace overly broad `page.locator("p").first()` with `data-testid="owl-tip"` to avoid matching unrelated page elements
+- Fix owl assistant toggle click intercepted by decorative overlay span in e2e tests
+- Fix stale version assertion in export e2e test (v2 → v3)
+
 ## [1.17.0]
 
 ### Features

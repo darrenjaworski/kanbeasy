@@ -12,6 +12,7 @@ describe("exportBoard", () => {
   const OriginalBlob = globalThis.Blob;
 
   beforeEach(() => {
+    vi.useFakeTimers();
     localStorage.clear();
     capturedJson = "";
 
@@ -40,6 +41,7 @@ describe("exportBoard", () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     globalThis.Blob = OriginalBlob;
     vi.restoreAllMocks();
   });
@@ -56,6 +58,7 @@ describe("exportBoard", () => {
 
     expect(clickSpy).toHaveBeenCalledOnce();
     expect(createObjectURLSpy).toHaveBeenCalledOnce();
+    vi.advanceTimersByTime(100);
     expect(revokeObjectURLSpy).toHaveBeenCalledOnce();
 
     const blob = createObjectURLSpy.mock.calls[0][0] as Blob;
@@ -110,6 +113,7 @@ describe("exportBoard", () => {
 
   it("cleans up object URL after download", () => {
     exportBoard();
+    vi.advanceTimersByTime(100);
 
     expect(revokeObjectURLSpy).toHaveBeenCalledWith("blob:mock-url");
   });

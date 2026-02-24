@@ -79,7 +79,9 @@ export function OwlBuddy() {
         <div
           className={`absolute bottom-full left-0 mb-2 w-64 rounded-lg border p-3 backdrop-blur ${tc.glass} ${tc.border}`}
         >
-          <p className={`text-sm ${tc.text} mb-4`}>{tip}</p>
+          <p data-testid="owl-tip" className={`text-sm ${tc.text} mb-4`}>
+            {tip}
+          </p>
           <div className="flex justify-end gap-1.5">
             <button
               type="button"

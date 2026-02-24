@@ -63,7 +63,10 @@ export function exportBoard(): void {
   const a = document.createElement("a");
   a.href = url;
   a.download = `kanbeasy-export-${formatDate()}.json`;
+  a.style.display = "none";
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
 
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
 }
