@@ -10,6 +10,7 @@ import type { CardDensity } from "../theme/types";
 
 export function CardList({
   cards,
+  onCopy,
   onRemove,
   onUpdate,
   onOpenDetail,
@@ -19,6 +20,7 @@ export function CardList({
   onAutoFocused,
 }: Readonly<{
   cards: Card[];
+  onCopy: (cardId: string) => void;
   onRemove: (cardId: string) => void;
   onUpdate: (cardId: string, updates: CardUpdates) => void;
   onOpenDetail: (cardId: string) => void;
@@ -63,6 +65,7 @@ export function CardList({
               index={index}
               key={card.id}
               card={card}
+              onCopy={() => onCopy(card.id)}
               onRemove={() => onRemove(card.id)}
               onUpdate={(updates) => onUpdate(card.id, updates)}
               onOpenDetail={() => onOpenDetail(card.id)}

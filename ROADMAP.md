@@ -46,6 +46,7 @@ an ultra simple task organizer
 - ✅ card detail modal with description field and column selector
 - ✅ markdown description with rendered preview (click-to-edit UX, GFM support)
 - ✅ auto-select new card title text on add for quick editing
+- ✅ copy and paste cards (duplicate within or across columns)
 
 Settings
 
@@ -69,7 +70,6 @@ Settings
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
   - card archive (soft-delete with browse/restore)
-- copy and paste cards (duplicate within or across columns)
 - card sorting UI (alphabetical, by date created, by last updated)
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded

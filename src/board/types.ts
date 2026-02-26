@@ -42,6 +42,10 @@ export type BoardContextValue = Readonly<{
     overCardId: string,
   ) => void;
   moveCard: (fromColumnId: string, toColumnId: string, cardId: string) => void;
+  duplicateCard: (
+    columnId: string,
+    source: Pick<Card, "title" | "description">,
+  ) => string;
   resetBoard: () => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;

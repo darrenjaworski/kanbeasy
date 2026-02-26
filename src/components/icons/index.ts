@@ -2,6 +2,7 @@ export { AnalyticsIcon } from "./AnalyticsIcon";
 export { BoardViewIcon } from "./BoardViewIcon";
 export { CardDragIcon } from "./CardDragIcon";
 export { CloseIcon } from "./CloseIcon";
+export { CopyIcon } from "./CopyIcon";
 export { DensityLargeIcon } from "./DensityLargeIcon";
 export { DensityMediumIcon } from "./DensityMediumIcon";
 export { DensitySmallIcon } from "./DensitySmallIcon";

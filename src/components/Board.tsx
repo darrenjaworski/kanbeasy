@@ -21,9 +21,23 @@ import {
 } from "@dnd-kit/sortable";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import { SortableColumnItem } from "./SortableColumnItem";
+import type { Card } from "../board/types";
 
 export function Board() {
-  const { columns, addColumn, setColumns, updateCard, moveCard } = useBoard();
+  const {
+    columns,
+    addColumn,
+    setColumns,
+    updateCard,
+    moveCard,
+    duplicateCard,
+  } = useBoard();
+
+  // Clipboard state — lifted here so all columns see the copied card
+  const [copiedCard, setCopiedCard] = useState<Pick<
+    Card,
+    "title" | "description"
+  > | null>(null);
   const { cardDensity } = useTheme();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -145,6 +159,12 @@ export function Board() {
                       cards={c.cards}
                       canDrag={columns.length > 1}
                       onOpenDetail={handleOpenDetail}
+                      copiedCard={copiedCard}
+                      onCopyCard={setCopiedCard}
+                      onPasteCard={(columnId) => {
+                        if (!copiedCard) return null;
+                        return duplicateCard(columnId, copiedCard);
+                      }}
                     />
                   ))}
                   {/* Add Column tile at the end */}

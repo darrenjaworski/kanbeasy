@@ -15,6 +15,7 @@ import { useInlineEdit } from "../hooks";
 
 type SortableCardItemProps = Readonly<{
   card: Card;
+  onCopy: () => void;
   onRemove: () => void;
   onUpdate: (updates: CardUpdates) => void;
   onOpenDetail: () => void;
@@ -29,6 +30,7 @@ type SortableCardItemProps = Readonly<{
 
 export function SortableCardItem({
   card,
+  onCopy,
   onRemove,
   onUpdate,
   onOpenDetail,
@@ -118,6 +120,7 @@ export function SortableCardItem({
         index={index}
         canDrag={canDrag}
         cardTitle={card.title}
+        onCopy={onCopy}
         onRemove={onRemove}
         onOpenDetail={onOpenDetail}
         setActivatorNodeRef={setActivatorNodeRef}

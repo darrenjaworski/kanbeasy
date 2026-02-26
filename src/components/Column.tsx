@@ -24,6 +24,9 @@ type Props = Readonly<{
   overlayMode?: boolean;
   index?: number;
   onOpenDetail?: (cardId: string) => void;
+  copiedCard?: Pick<Card, "title" | "description"> | null;
+  onCopyCard?: (source: Pick<Card, "title" | "description">) => void;
+  onPasteCard?: (columnId: string) => string | null;
 }>;
 
 export function Column({
@@ -36,6 +39,9 @@ export function Column({
   overlayMode = false,
   index,
   onOpenDetail,
+  copiedCard,
+  onCopyCard,
+  onPasteCard,
 }: Props) {
   // Column resizing state
   const [width, setWidth] = useState<number>(DEFAULT_COLUMN_WIDTH);
@@ -165,10 +171,10 @@ export function Column({
           data-testid={`column-title-input-${index}`}
         />
       </div>
-      <div className="mb-3">
+      <div className="mb-3 flex gap-2">
         <button
           type="button"
-          className={`w-full rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
+          className={`flex-1 rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
           onClick={(e) => {
             const cardId = addCard(id, "New card");
             setAutoFocusCardId(cardId);
@@ -177,11 +183,31 @@ export function Column({
           aria-label={`Add card to ${title || "column"}`}
           data-testid={`add-card-button-${index}`}
         >
-          + Add card
+          {copiedCard ? "+ New" : "+ Add card"}
         </button>
+        {copiedCard && onPasteCard && (
+          <button
+            type="button"
+            className={`flex-1 rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
+            onClick={(e) => {
+              const cardId = onPasteCard(id);
+              if (cardId) setAutoFocusCardId(cardId);
+              e.currentTarget.blur();
+            }}
+            aria-label={`Paste card to ${title || "column"}`}
+            data-testid={`paste-card-button-${index}`}
+          >
+            + Paste
+          </button>
+        )}
       </div>
       <CardList
         cards={cards}
+        onCopy={(cardId) => {
+          const card = cards.find((c) => c.id === cardId);
+          if (card && onCopyCard)
+            onCopyCard({ title: card.title, description: card.description });
+        }}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, updates) => updateCard(id, cardId, updates)}
         onOpenDetail={onOpenDetail ?? (() => {})}

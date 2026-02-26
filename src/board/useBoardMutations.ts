@@ -153,6 +153,29 @@ export function useBoardMutations(
     [setState],
   );
 
+  const duplicateCard = useCallback<BoardContextValue["duplicateCard"]>(
+    (columnId, source) => {
+      const now = Date.now();
+      const card: Card = {
+        id: crypto.randomUUID(),
+        title: source.title,
+        description: source.description,
+        createdAt: now,
+        updatedAt: now,
+        columnHistory: [{ columnId, enteredAt: now }],
+      };
+      setState((s) => ({
+        columns: s.columns.map((c) =>
+          c.id === columnId
+            ? { ...c, cards: [card, ...c.cards], updatedAt: now }
+            : c,
+        ),
+      }));
+      return card.id;
+    },
+    [setState],
+  );
+
   const moveCard = useCallback<BoardContextValue["moveCard"]>(
     (fromColumnId, toColumnId, cardId) => {
       if (fromColumnId === toColumnId) return;
@@ -180,6 +203,7 @@ export function useBoardMutations(
     addCard,
     removeCard,
     updateCard,
+    duplicateCard,
     moveCard,
     sortCards,
     reorderCard,

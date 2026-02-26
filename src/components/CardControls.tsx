@@ -1,10 +1,11 @@
 import React from "react";
-import { CardDragIcon, CloseIcon, MoreIcon } from "./icons";
+import { CardDragIcon, CloseIcon, CopyIcon, MoreIcon } from "./icons";
 import { tc } from "../theme/classNames";
 
 interface CardControlsProps {
   readonly canDrag: boolean;
   readonly cardTitle: string;
+  readonly onCopy: () => void;
   readonly onRemove: () => void;
   readonly onOpenDetail: () => void;
   readonly setActivatorNodeRef: (node: HTMLElement | null) => void;
@@ -16,6 +17,7 @@ interface CardControlsProps {
 export function CardControls({
   canDrag,
   cardTitle,
+  onCopy,
   onRemove,
   onOpenDetail,
   setActivatorNodeRef,
@@ -42,6 +44,17 @@ export function CardControls({
         </button>
       )}
       {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
+      <button
+        type="button"
+        onClick={onCopy}
+        aria-label={`Copy card ${cardTitle || "Untitled"}`}
+        title="Copy card"
+        className={`${tc.iconButton} h-6 w-6`}
+        data-testid={`card-copy-${index}`}
+      >
+        <CopyIcon className="size-4" />
+      </button>
+      <span aria-hidden className={`${tc.separator} h-6 w-px`} />
       <button
         type="button"
         onClick={onOpenDetail}
