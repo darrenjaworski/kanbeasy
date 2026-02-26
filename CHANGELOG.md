@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.19.0]
+
 ### Features
 
 - Copy and paste cards — copy a card via card controls, then paste into any column as a duplicate with fresh ID and timestamps
