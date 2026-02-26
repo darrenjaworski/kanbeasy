@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Stretch column header input to full width with action buttons and badge overlaid using frosted glass background
+- Unify column action buttons and card count badge styling to match card controls (frosted glass with backdrop blur)
+
 ## [1.18.0]
 
 ### Features
