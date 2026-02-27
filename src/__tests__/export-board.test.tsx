@@ -1,10 +1,7 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "../App";
-import { ThemeProvider } from "../theme/ThemeProvider";
-import { BoardProvider } from "../board/BoardProvider";
-import { ClipboardProvider } from "../board/ClipboardProvider";
 import { STORAGE_KEYS } from "../constants/storage";
+import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 vi.mock("../utils/exportBoard", () => ({
@@ -12,18 +9,6 @@ vi.mock("../utils/exportBoard", () => ({
 }));
 
 import { exportBoard } from "../utils/exportBoard";
-
-function renderApp() {
-  return render(
-    <ThemeProvider>
-      <BoardProvider>
-        <ClipboardProvider>
-          <App />
-        </ClipboardProvider>
-      </BoardProvider>
-    </ThemeProvider>,
-  );
-}
 
 describe("export board integration", () => {
   beforeEach(() => {

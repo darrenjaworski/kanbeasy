@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useBoard } from "../board/useBoard";
 import { tc } from "../theme/classNames";
 import { MarkdownPreview } from "./MarkdownPreview";
+import { formatDate } from "../utils/formatDate";
 
 interface CardRow {
   id: string;
@@ -9,14 +10,6 @@ interface CardRow {
   description: string;
   columnTitle: string;
   createdAt: number;
-}
-
-function formatDate(ts: number): string {
-  return new Date(ts).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }
 
 export function ListView() {

@@ -3,10 +3,11 @@ import type { Card, CardUpdates, Column } from "../board/types";
 import type { CardDensity } from "../theme/types";
 import { Modal } from "./Modal";
 import { ModalHeader } from "./ModalHeader";
-import { MarkdownPreview } from "./MarkdownPreview";
+import { DescriptionField } from "./DescriptionField";
 import { MoreIcon } from "./icons";
 import { tc } from "../theme/classNames";
 import { useInlineEdit } from "../hooks";
+import { formatDateTime } from "../utils/formatDate";
 
 type Props = Readonly<{
   open: boolean;
@@ -18,16 +19,6 @@ type Props = Readonly<{
   onUpdate: (updates: CardUpdates) => void;
   onMoveCard: (toColumnId: string) => void;
 }>;
-
-function formatDate(ts: number): string {
-  return new Date(ts).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
 
 const ROWS_FOR_DENSITY: Record<CardDensity, number> = {
   small: 1,
@@ -65,63 +56,10 @@ export function CardDetailModal({
     multiline: true,
   });
 
-  // Description editing — click-to-edit with markdown preview
-  const [tempDescription, setTempDescription] = useState(card.description);
-  const [editingDescription, setEditingDescription] = useState(false);
-  const descEscaping = useRef(false);
-  const descRef = useRef<HTMLTextAreaElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
-  const descHeight = useRef<number>(0);
-
-  useEffect(() => {
-    setTempDescription(card.description);
-  }, [card.description]);
-
-  useEffect(() => {
-    if (editingDescription && descRef.current) {
-      descRef.current.style.height = `${Math.max(descHeight.current, 72)}px`;
-      descRef.current.focus();
-    }
-  }, [editingDescription]);
-
-  const captureDescHeight = useCallback(() => {
-    if (descRef.current) {
-      descHeight.current = descRef.current.offsetHeight;
-    }
-  }, []);
-
-  const enterDescEdit = useCallback(() => {
-    if (previewRef.current) {
-      descHeight.current = previewRef.current.offsetHeight;
-    }
-    setEditingDescription(true);
-  }, []);
-
-  const handleDescriptionKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === "Escape") {
-        descEscaping.current = true;
-        captureDescHeight();
-        setTempDescription(card.description);
-        setEditingDescription(false);
-        e.currentTarget.blur();
-      }
-    },
-    [card.description, captureDescHeight],
+  const handleDescriptionSave = useCallback(
+    (value: string) => onUpdate({ description: value }),
+    [onUpdate],
   );
-
-  const handleDescriptionBlur = useCallback(() => {
-    if (descEscaping.current) {
-      descEscaping.current = false;
-      return;
-    }
-    captureDescHeight();
-    const next = tempDescription.trim();
-    if (next !== card.description) {
-      onUpdate({ description: next });
-    }
-    setEditingDescription(false);
-  }, [tempDescription, card.description, onUpdate, captureDescHeight]);
 
   return (
     <Modal
@@ -203,63 +141,10 @@ export function CardDetailModal({
           <label className={`block text-xs font-medium ${tc.textMuted} mb-1`}>
             Description
           </label>
-          {editingDescription ? (
-            <>
-              <textarea
-                ref={descRef}
-                id="card-detail-description"
-                className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y min-h-[4.5rem]`}
-                value={tempDescription}
-                onChange={(e) => setTempDescription(e.target.value)}
-                onKeyDown={handleDescriptionKeyDown}
-                onBlur={handleDescriptionBlur}
-                placeholder="Add a description..."
-                data-testid="card-detail-description"
-              />
-              <p className={`text-xs ${tc.textFaint} mt-1`}>
-                Supports Markdown: **bold**, *italic*, - lists, [links](url),
-                and more
-              </p>
-            </>
-          ) : tempDescription ? (
-            <div
-              ref={previewRef}
-              role="button"
-              tabIndex={0}
-              className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 cursor-pointer min-h-[4.5rem]`}
-              style={
-                descHeight.current
-                  ? { minHeight: descHeight.current }
-                  : undefined
-              }
-              onClick={enterDescEdit}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  enterDescEdit();
-                }
-              }}
-              data-testid="card-detail-description-preview"
-            >
-              <MarkdownPreview content={tempDescription} />
-            </div>
-          ) : (
-            <div
-              role="button"
-              tabIndex={0}
-              className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 cursor-pointer min-h-[4.5rem] ${tc.textFaint} text-sm`}
-              onClick={enterDescEdit}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  enterDescEdit();
-                }
-              }}
-              data-testid="card-detail-description-placeholder"
-            >
-              Add a description...
-            </div>
-          )}
+          <DescriptionField
+            description={card.description}
+            onSave={handleDescriptionSave}
+          />
         </div>
 
         {/* Timestamps footer */}
@@ -267,8 +152,10 @@ export function CardDetailModal({
           className={`border-t ${tc.border} pt-3 flex flex-wrap gap-y-1 text-xs ${tc.textFaint}`}
           data-testid="card-detail-metadata"
         >
-          <span>Created: {formatDate(card.createdAt)}</span>
-          <span className="ml-auto">Updated: {formatDate(card.updatedAt)}</span>
+          <span>Created: {formatDateTime(card.createdAt)}</span>
+          <span className="ml-auto">
+            Updated: {formatDateTime(card.updatedAt)}
+          </span>
         </div>
       </div>
     </Modal>

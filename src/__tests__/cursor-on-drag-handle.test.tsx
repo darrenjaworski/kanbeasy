@@ -1,23 +1,8 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "../App";
-import { ThemeProvider } from "../theme/ThemeProvider";
-import { BoardProvider } from "../board/BoardProvider";
-import { ClipboardProvider } from "../board/ClipboardProvider";
 import { STORAGE_KEYS } from "../constants/storage";
+import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach } from "vitest";
-
-function renderApp() {
-  return render(
-    <ThemeProvider>
-      <BoardProvider>
-        <ClipboardProvider>
-          <App />
-        </ClipboardProvider>
-      </BoardProvider>
-    </ThemeProvider>,
-  );
-}
 
 // Note: we assert classList contains cursor utility classes; jsdom won't compute CSS, but
 // this guards against regressions in class names.

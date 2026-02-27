@@ -10,11 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extract clipboard state into ClipboardContext to eliminate prop drilling through SortableColumnItem
+- Extract shared `renderApp()` test utility to `src/test/renderApp.tsx`, removing duplicated function and provider imports from 22 test files
+- Extract shared `formatDate` and `formatDateTime` utilities to `src/utils/formatDate.ts`, replacing duplicate definitions in CardDetailModal and ListView
+- Extract `DescriptionField` component from CardDetailModal, encapsulating ~100 lines of description editing state, refs, effects, and callbacks
+- Extract `MetricsTable` component from AnalyticsModal, replacing two structurally identical table blocks (~120 duplicate lines)
+- Decompose `SettingsModal` into `ThemeSection`, `BoardSettingsSection`, and `DataSection` sub-components, reducing it from 333 to ~40 lines
 
 ### Tests
 
 - Add unit tests for ClipboardProvider (useClipboard hook, copyCard, pasteCard, multiple pastes)
 - Add e2e tests for copy/paste cards (hover controls, same-column paste, cross-column paste, multiple pastes, button text change)
+- Add unit tests for `formatDate` and `formatDateTime` utilities
 
 ## [1.19.0]
 

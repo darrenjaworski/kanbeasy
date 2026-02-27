@@ -1,22 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
-import App from "../App";
-import { ThemeProvider } from "../theme/ThemeProvider";
-import { BoardProvider } from "../board/BoardProvider";
-import { ClipboardProvider } from "../board/ClipboardProvider";
 import { STORAGE_KEYS } from "../constants/storage";
-
-function renderApp() {
-  return render(
-    <ThemeProvider>
-      <BoardProvider>
-        <ClipboardProvider>
-          <App />
-        </ClipboardProvider>
-      </BoardProvider>
-    </ThemeProvider>,
-  );
-}
+import { renderApp } from "../test/renderApp";
 
 describe("footer", () => {
   beforeEach(() => {

@@ -1,22 +1,7 @@
-import { render, screen, within } from "@testing-library/react";
-import App from "../App";
-import { ThemeProvider } from "../theme/ThemeProvider";
-import { BoardProvider } from "../board/BoardProvider";
-import { ClipboardProvider } from "../board/ClipboardProvider";
+import { screen, within } from "@testing-library/react";
 import { STORAGE_KEYS } from "../constants/storage";
+import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach } from "vitest";
-
-function renderApp() {
-  return render(
-    <ThemeProvider>
-      <BoardProvider>
-        <ClipboardProvider>
-          <App />
-        </ClipboardProvider>
-      </BoardProvider>
-    </ThemeProvider>,
-  );
-}
 
 describe("initial board seeding", () => {
   beforeEach(() => {

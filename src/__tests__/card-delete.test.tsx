@@ -1,22 +1,7 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "../App";
-import { ThemeProvider } from "../theme/ThemeProvider";
-import { BoardProvider } from "../board/BoardProvider";
-import { ClipboardProvider } from "../board/ClipboardProvider";
+import { renderApp } from "../test/renderApp";
 import { describe, it, expect } from "vitest";
-
-function renderApp() {
-  return render(
-    <ThemeProvider>
-      <BoardProvider>
-        <ClipboardProvider>
-          <App />
-        </ClipboardProvider>
-      </BoardProvider>
-    </ThemeProvider>,
-  );
-}
 
 describe("card delete", () => {
   it("removes a card from a column using the card's remove button", async () => {

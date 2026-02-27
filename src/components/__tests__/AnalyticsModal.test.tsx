@@ -1,24 +1,9 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
-import App from "../../App";
-import { ThemeProvider } from "../../theme/ThemeProvider";
-import { BoardProvider } from "../../board/BoardProvider";
-import { ClipboardProvider } from "../../board/ClipboardProvider";
 import { STORAGE_KEYS } from "../../constants/storage";
+import { renderApp } from "../../test/renderApp";
 import type { Column } from "../../board/types";
-
-function renderApp() {
-  return render(
-    <ThemeProvider>
-      <BoardProvider>
-        <ClipboardProvider>
-          <App />
-        </ClipboardProvider>
-      </BoardProvider>
-    </ThemeProvider>,
-  );
-}
 
 function makeColumn(
   id: string,
@@ -35,7 +20,14 @@ function makeCard(
   columnHistory: { columnId: string; enteredAt: number }[] = [],
 ) {
   const now = Date.now();
-  return { id, title, createdAt: now, updatedAt: now, columnHistory };
+  return {
+    id,
+    title,
+    description: "",
+    createdAt: now,
+    updatedAt: now,
+    columnHistory,
+  };
 }
 
 async function openAnalytics(user: ReturnType<typeof userEvent.setup>) {
