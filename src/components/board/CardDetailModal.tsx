@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Card, CardUpdates, Column } from "../../board/types";
-import type { CardDensity } from "../../theme/types";
+import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { Modal } from "../shared/Modal";
 import { ModalHeader } from "../shared/ModalHeader";
 import { DescriptionField } from "./DescriptionField";
@@ -19,12 +19,6 @@ type Props = Readonly<{
   onUpdate: (updates: CardUpdates) => void;
   onMoveCard: (toColumnId: string) => void;
 }>;
-
-const ROWS_FOR_DENSITY: Record<CardDensity, number> = {
-  small: 1,
-  medium: 2,
-  large: 3,
-};
 
 export function CardDetailModal({
   open,

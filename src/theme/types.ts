@@ -2,6 +2,12 @@ import type { ThemeId, ThemeMode } from "./themes";
 
 export type CardDensity = "small" | "medium" | "large";
 
+export const ROWS_FOR_DENSITY: Record<CardDensity, number> = {
+  small: 1,
+  medium: 2,
+  large: 3,
+};
+
 export type ThemePreference = "light" | "dark" | "system";
 
 export type ViewMode = "board" | "list";

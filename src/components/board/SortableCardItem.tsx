@@ -8,7 +8,7 @@ import {
   type CSSProperties,
 } from "react";
 import type { Card, CardUpdates } from "../../board/types";
-import type { CardDensity } from "../../theme/types";
+import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
@@ -95,11 +95,7 @@ export function SortableCardItem({
     }
   }, [autoFocus, onAutoFocused]);
 
-  const rowsForDensity = (() => {
-    if (density === "small") return 1;
-    if (density === "large") return 3;
-    return 2;
-  })();
+  const rowsForDensity = ROWS_FOR_DENSITY[density];
 
   return (
     <div
