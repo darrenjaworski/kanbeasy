@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.20.1]
+
 ### Fixed
 
 - Column reorder now resets all card analytics data (columnHistory, createdAt, updatedAt) as the analytics modal warning promises
