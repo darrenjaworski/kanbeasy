@@ -7,9 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add auto-incrementing card numbers (`#1`, `#2`, ...) displayed on board cards, card detail modal, list view, and analytics tables
+- Card numbers persist outside the undo stack to prevent number reuse on undo/redo
+- Duplicated cards receive fresh numbers
+- Migration assigns sequential numbers to existing cards by `createdAt` order
+- Export/import preserves card numbers (export format bumped to v4)
+
 ### Changed
 
 - Replace `import React from "react"` with named type imports across icon components, tests, and CardControls
+- Optimize `migrateColumnsWithNumbering` conflict-avoidance from O(n²) to O(n) using Set-based lookups
+- Simplify `setNextCardNumber` in BoardProvider by removing redundant wrapper around `saveCounter`
+
+### Tests
+
+- Add e2e tests for card numbering (ascending numbers on board, modal header, list view, localStorage persistence, duplicate fresh numbers, no number reuse after deletion)
+- Fix card detail modal close button e2e tests to match `#N Card Details` header format
 
 ## [1.20.1]
 

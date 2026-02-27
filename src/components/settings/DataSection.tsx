@@ -16,7 +16,7 @@ export function DataSection() {
     setOwlModeEnabled,
     setViewMode,
   } = useTheme();
-  const { setColumns, resetBoard } = useBoard();
+  const { setColumns, resetBoard, setNextCardNumber } = useBoard();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importError, setImportError] = useState("");
   const [importStatus, setImportStatus] = useState<
@@ -49,9 +49,10 @@ export function DataSection() {
       return;
     }
 
-    const { columns, settings } = result.data;
+    const { columns, nextCardNumber, settings } = result.data;
 
     setColumns(columns);
+    setNextCardNumber(nextCardNumber);
     setThemePreference(settings.themePreference);
     if (settings.theme) {
       setThemeId(settings.theme as ThemeId);

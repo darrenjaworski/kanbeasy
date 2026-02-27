@@ -68,6 +68,11 @@ describe("validateExportData", () => {
     expect(result.error).toContain("Unsupported export version: 99");
   });
 
+  it("accepts v4 export data", () => {
+    const result = validateExportData(makeExportData({ version: 4 }));
+    expect(result.ok).toBe(true);
+  });
+
   it("accepts v3 export data", () => {
     const result = validateExportData(makeExportData({ version: 3 }));
     expect(result.ok).toBe(true);
@@ -264,6 +269,71 @@ describe("validateExportData", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.data.columns[0].cards[0].description).toBe("");
+  });
+
+  it("v3 data gets numbers backfilled", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 3,
+        board: {
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: 5000,
+              updatedAt: 6000,
+              cards: [
+                {
+                  id: "card-1",
+                  title: "Task 1",
+                  description: "",
+                  createdAt: 5000,
+                  updatedAt: 6000,
+                  columnHistory: [{ columnId: "col-1", enteredAt: 5000 }],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.columns[0].cards[0].number).toBeGreaterThan(0);
+    expect(result.data.nextCardNumber).toBeGreaterThan(1);
+  });
+
+  it("v4 data preserves existing card numbers", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 4,
+        board: {
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: 5000,
+              updatedAt: 6000,
+              cards: [
+                {
+                  id: "card-1",
+                  number: 42,
+                  title: "Task 1",
+                  description: "",
+                  createdAt: 5000,
+                  updatedAt: 6000,
+                  columnHistory: [{ columnId: "col-1", enteredAt: 5000 }],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.columns[0].cards[0].number).toBe(42);
+    expect(result.data.nextCardNumber).toBe(43);
   });
 
   it("v2 import preserves existing timestamps", () => {

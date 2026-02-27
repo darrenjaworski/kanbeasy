@@ -5,6 +5,7 @@ export type ColumnHistoryEntry = Readonly<{
 
 export type Card = Readonly<{
   id: string;
+  number: number;
   title: string;
   description: string;
   createdAt: number;
@@ -46,6 +47,7 @@ export type BoardContextValue = Readonly<{
   moveCard: (fromColumnId: string, toColumnId: string, cardId: string) => void;
   duplicateCard: (columnId: string, source: CardClipboard) => string;
   resetBoard: () => void;
+  setNextCardNumber: (n: number) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   matchingCardIds: Set<string>;

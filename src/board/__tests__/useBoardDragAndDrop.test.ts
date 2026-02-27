@@ -14,14 +14,18 @@ describe("useBoardDragAndDrop", () => {
       cards: [
         {
           id: "card-1",
+          number: 1,
           title: "Card 1",
+          description: "",
           createdAt: 1000,
           updatedAt: 1000,
           columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
         },
         {
           id: "card-2",
+          number: 2,
           title: "Card 2",
+          description: "",
           createdAt: 1000,
           updatedAt: 1000,
           columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
@@ -36,7 +40,9 @@ describe("useBoardDragAndDrop", () => {
       cards: [
         {
           id: "card-3",
+          number: 3,
           title: "Card 3",
+          description: "",
           createdAt: 1000,
           updatedAt: 1000,
           columnHistory: [{ columnId: "col-2", enteredAt: 1000 }],

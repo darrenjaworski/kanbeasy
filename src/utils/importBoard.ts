@@ -2,10 +2,11 @@ import type { Column } from "../board/types";
 import type { CardDensity, ThemePreference, ViewMode } from "../theme/types";
 import { isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
-import { migrateColumns } from "../board/migration";
+import { migrateColumnsWithNumbering } from "../board/migration";
 
 interface ValidatedImport {
   columns: Column[];
+  nextCardNumber: number;
   settings: {
     theme: string;
     themePreference: ThemePreference;
@@ -43,26 +44,29 @@ export function validateExportData(parsed: unknown): ImportResult {
   }
 
   const version = parsed.version;
-  if (version !== 1 && version !== 2 && version !== 3) {
+  if (version !== 1 && version !== 2 && version !== 3 && version !== 4) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${String(version)}. Only versions 1, 2, and 3 are supported.`
+        ? `Unsupported export version: ${String(version)}. Only versions 1–4 are supported.`
         : "Missing export version.",
     };
   }
 
   // Validate board
   let columns: Column[] = [];
+  let nextCardNumber = 1;
   if (parsed.board !== null && parsed.board !== undefined) {
     if (!isObject(parsed.board)) {
       return { ok: false, error: "Invalid board data." };
     }
     if (Array.isArray(parsed.board.columns)) {
       const validColumns = (parsed.board.columns as unknown[]).filter(isColumn);
-      columns = migrateColumns(
+      const result = migrateColumnsWithNumbering(
         validColumns as unknown as Record<string, unknown>[],
       );
+      columns = result.columns;
+      nextCardNumber = result.nextCardNumber;
     }
   }
 
@@ -119,6 +123,7 @@ export function validateExportData(parsed: unknown): ImportResult {
     ok: true,
     data: {
       columns,
+      nextCardNumber,
       settings: {
         theme,
         themePreference,

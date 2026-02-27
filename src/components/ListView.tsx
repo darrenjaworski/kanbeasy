@@ -6,6 +6,7 @@ import { formatDate } from "../utils/formatDate";
 
 interface CardRow {
   id: string;
+  number: number;
   title: string;
   description: string;
   columnTitle: string;
@@ -20,6 +21,7 @@ export function ListView() {
       columns.flatMap((col) =>
         col.cards.map((card) => ({
           id: card.id,
+          number: card.number,
           title: card.title,
           description: card.description,
           columnTitle: col.title,
@@ -43,6 +45,12 @@ export function ListView() {
             <table className="w-full text-sm">
               <thead>
                 <tr className={`${tc.glass} border-b ${tc.border}`}>
+                  <th
+                    className={`text-left px-3 py-2 font-medium ${tc.textMuted} w-12`}
+                    scope="col"
+                  >
+                    #
+                  </th>
                   <th
                     className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
                     scope="col"
@@ -77,6 +85,11 @@ export function ListView() {
                       key={row.id}
                       className={`${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
                     >
+                      <td
+                        className={`px-3 py-2 tabular-nums font-mono ${tc.textFaint}`}
+                      >
+                        {row.number}
+                      </td>
                       <td className={`px-3 py-2 ${tc.text}`}>{row.title}</td>
                       <td className={`px-3 py-2 ${tc.textMuted} max-w-xs`}>
                         {row.description ? (

@@ -65,7 +65,7 @@ export function CardDetailModal({
       <div className="p-5 space-y-4">
         <ModalHeader
           icon={MoreIcon}
-          title="Card Details"
+          title={`#${card.number} Card Details`}
           titleId="card-detail-title"
           onClose={onClose}
         />
@@ -141,15 +141,13 @@ export function CardDetailModal({
           />
         </div>
 
-        {/* Timestamps footer */}
+        {/* Metadata footer */}
         <div
-          className={`border-t ${tc.border} pt-3 flex flex-wrap gap-y-1 text-xs ${tc.textFaint}`}
+          className={`border-t ${tc.border} pt-3 flex flex-col gap-1 text-xs ${tc.textFaint}`}
           data-testid="card-detail-metadata"
         >
           <span>Created: {formatDateTime(card.createdAt)}</span>
-          <span className="ml-auto">
-            Updated: {formatDateTime(card.updatedAt)}
-          </span>
+          <span>Updated: {formatDateTime(card.updatedAt)}</span>
         </div>
       </div>
     </Modal>

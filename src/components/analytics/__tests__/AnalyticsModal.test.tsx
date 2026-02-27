@@ -14,6 +14,7 @@ function makeColumn(
   return { id, title, cards, createdAt: now, updatedAt: now };
 }
 
+let cardNum = 1;
 function makeCard(
   id: string,
   title: string,
@@ -22,6 +23,7 @@ function makeCard(
   const now = Date.now();
   return {
     id,
+    number: cardNum++,
     title,
     description: "",
     createdAt: now,
@@ -38,6 +40,7 @@ async function openAnalytics(user: ReturnType<typeof userEvent.setup>) {
 describe("AnalyticsModal", () => {
   beforeEach(() => {
     localStorage.clear();
+    cardNum = 1;
   });
 
   it("opens and displays metric cards for an empty board", async () => {
@@ -143,7 +146,10 @@ describe("AnalyticsModal", () => {
     const dlg = await openAnalytics(user);
 
     expect(within(dlg).getByText("Card Cycle Times")).toBeInTheDocument();
-    expect(within(dlg).getByText("Completed task")).toBeInTheDocument();
+    // Card title now includes #N prefix from card number
+    expect(
+      within(dlg).getByText((text) => text.includes("Completed task")),
+    ).toBeInTheDocument();
     // "1h" appears in both the avg metric card and the table row
     expect(within(dlg).getAllByText("1h").length).toBeGreaterThanOrEqual(1);
   });
@@ -217,9 +223,12 @@ describe("AnalyticsModal", () => {
     // Click show more to reveal remaining entries
     await user.click(showMore);
 
-    // All 12 tasks should now be visible
+    // All 12 tasks should now be visible (card titles include #N prefix)
     for (let i = 0; i < 12; i++) {
-      expect(within(dlg).getByText(`Task ${i + 1}`)).toBeInTheDocument();
+      const label = `Task ${i + 1}`;
+      expect(
+        within(dlg).getByText((text) => text.endsWith(label) || text === label),
+      ).toBeInTheDocument();
     }
 
     // Show more button should be gone

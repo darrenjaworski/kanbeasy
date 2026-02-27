@@ -10,9 +10,11 @@ import {
 } from "../dragUtils";
 import type { Card, Column } from "../types";
 
+let cardCounter = 0;
 function makeCard(id: string, title: string, columnId: string): Card {
   return {
     id,
+    number: ++cardCounter,
     title,
     description: "",
     createdAt: 1000,
@@ -79,12 +81,16 @@ describe("dragUtils", () => {
   describe("findCardInColumns", () => {
     it("finds card in the first column", () => {
       const card = findCardInColumns(mockColumns, "card-1");
-      expect(card).toEqual(makeCard("card-1", "Card 1", "col-1"));
+      expect(card).toEqual(
+        expect.objectContaining({ id: "card-1", title: "Card 1" }),
+      );
     });
 
     it("finds card in the second column", () => {
       const card = findCardInColumns(mockColumns, "card-4");
-      expect(card).toEqual(makeCard("card-4", "Card 4", "col-2"));
+      expect(card).toEqual(
+        expect.objectContaining({ id: "card-4", title: "Card 4" }),
+      );
     });
 
     it("returns null when card does not exist", () => {

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, type RefObject } from "react";
 import type { BoardContextValue, BoardState, Card } from "./types";
 import { dropCardOnColumn } from "./dragUtils";
 
@@ -8,6 +8,8 @@ const defaultState: BoardState = {
 
 export function useBoardMutations(
   setState: React.Dispatch<React.SetStateAction<BoardState>>,
+  nextCardNumberRef: RefObject<number>,
+  saveCounter: (n: number) => void,
 ) {
   const addColumn = useCallback<BoardContextValue["addColumn"]>(
     (title = "") => {
@@ -52,8 +54,11 @@ export function useBoardMutations(
   const addCard = useCallback<BoardContextValue["addCard"]>(
     (columnId, title = "") => {
       const now = Date.now();
+      const number = nextCardNumberRef.current;
+      saveCounter(number + 1);
       const card: Card = {
         id: crypto.randomUUID(),
+        number,
         title,
         description: "",
         createdAt: now,
@@ -69,7 +74,7 @@ export function useBoardMutations(
       }));
       return card.id;
     },
-    [setState],
+    [setState, nextCardNumberRef, saveCounter],
   );
 
   const removeCard = useCallback<BoardContextValue["removeCard"]>(
@@ -156,8 +161,11 @@ export function useBoardMutations(
   const duplicateCard = useCallback<BoardContextValue["duplicateCard"]>(
     (columnId, source) => {
       const now = Date.now();
+      const number = nextCardNumberRef.current;
+      saveCounter(number + 1);
       const card: Card = {
         id: crypto.randomUUID(),
+        number,
         title: source.title,
         description: source.description,
         createdAt: now,
@@ -173,7 +181,7 @@ export function useBoardMutations(
       }));
       return card.id;
     },
-    [setState],
+    [setState, nextCardNumberRef, saveCounter],
   );
 
   const moveCard = useCallback<BoardContextValue["moveCard"]>(

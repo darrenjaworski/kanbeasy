@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { migrateCard, migrateColumn, migrateColumns } from "../migration";
+import {
+  migrateCard,
+  migrateColumn,
+  migrateColumns,
+  migrateColumnsWithNumbering,
+} from "../migration";
 
 describe("migration", () => {
   beforeEach(() => {
@@ -20,6 +25,7 @@ describe("migration", () => {
 
       expect(result).toEqual({
         id: "card-1",
+        number: 0,
         title: "Task 1",
         description: "",
         createdAt: NOW,
@@ -59,6 +65,7 @@ describe("migration", () => {
     it("is idempotent on already-migrated data", () => {
       const migrated = {
         id: "card-1",
+        number: 5,
         title: "Task 1",
         description: "Some notes",
         createdAt: 1000,
@@ -70,7 +77,7 @@ describe("migration", () => {
       expect(result).toEqual(migrated);
     });
 
-    it("backfills description to empty string when missing", () => {
+    it("backfills description and number when missing", () => {
       const raw = {
         id: "card-1",
         title: "Task 1",
@@ -79,6 +86,7 @@ describe("migration", () => {
       };
       const result = migrateCard(raw, "col-1");
       expect(result.description).toBe("");
+      expect(result.number).toBe(0);
     });
 
     it("preserves existing description", () => {
@@ -169,6 +177,92 @@ describe("migration", () => {
       expect(result[0].createdAt).toBe(NOW);
       expect(result[1].createdAt).toBe(NOW);
       expect(result[0].cards[0].columnHistory[0].columnId).toBe("col-1");
+    });
+  });
+
+  describe("migrateColumnsWithNumbering", () => {
+    it("assigns sequential numbers by createdAt order", () => {
+      const raw = [
+        {
+          id: "col-1",
+          title: "To Do",
+          cards: [
+            { id: "card-a", title: "Second", createdAt: 2000, updatedAt: 2000 },
+            { id: "card-b", title: "First", createdAt: 1000, updatedAt: 1000 },
+          ],
+        },
+      ];
+      const { columns, nextCardNumber } = migrateColumnsWithNumbering(raw);
+
+      // card-b (createdAt=1000) should be #1, card-a (createdAt=2000) should be #2
+      const cardB = columns[0].cards.find((c) => c.id === "card-b")!;
+      const cardA = columns[0].cards.find((c) => c.id === "card-a")!;
+      expect(cardB.number).toBe(1);
+      expect(cardA.number).toBe(2);
+      expect(nextCardNumber).toBe(3);
+    });
+
+    it("is idempotent on already-numbered cards", () => {
+      const raw = [
+        {
+          id: "col-1",
+          title: "To Do",
+          cards: [
+            {
+              id: "card-a",
+              title: "A",
+              number: 5,
+              createdAt: 1000,
+              updatedAt: 1000,
+            },
+            {
+              id: "card-b",
+              title: "B",
+              number: 10,
+              createdAt: 2000,
+              updatedAt: 2000,
+            },
+          ],
+        },
+      ];
+      const { columns, nextCardNumber } = migrateColumnsWithNumbering(raw);
+
+      expect(columns[0].cards.find((c) => c.id === "card-a")!.number).toBe(5);
+      expect(columns[0].cards.find((c) => c.id === "card-b")!.number).toBe(10);
+      expect(nextCardNumber).toBe(11);
+    });
+
+    it("returns nextCardNumber=1 for empty columns", () => {
+      const { columns, nextCardNumber } = migrateColumnsWithNumbering([
+        { id: "col-1", title: "Empty", cards: [] },
+      ]);
+      expect(columns).toHaveLength(1);
+      expect(nextCardNumber).toBe(1);
+    });
+
+    it("breaks createdAt ties by column index then card index", () => {
+      const raw = [
+        {
+          id: "col-1",
+          title: "A",
+          cards: [
+            { id: "card-1", title: "A1", createdAt: 1000, updatedAt: 1000 },
+          ],
+        },
+        {
+          id: "col-2",
+          title: "B",
+          cards: [
+            { id: "card-2", title: "B1", createdAt: 1000, updatedAt: 1000 },
+          ],
+        },
+      ];
+      const { columns } = migrateColumnsWithNumbering(raw);
+
+      // Same createdAt — col-1 card should get lower number
+      const card1 = columns[0].cards[0];
+      const card2 = columns[1].cards[0];
+      expect(card1.number).toBeLessThan(card2.number);
     });
   });
 });

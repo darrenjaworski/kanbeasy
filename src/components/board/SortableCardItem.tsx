@@ -112,6 +112,12 @@ export function SortableCardItem({
       }`}
       data-testid={`card-${index}`}
     >
+      <span
+        className={`text-xs tabular-nums font-mono ${tc.textFaint} select-none`}
+      >
+        #{card.number}
+      </span>
+
       <CardControls
         index={index}
         canDrag={canDrag}

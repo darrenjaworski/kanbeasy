@@ -27,4 +27,7 @@ export const STORAGE_KEYS = {
 
   /** View mode preference (board/list) */
   VIEW_MODE: "kanbeasy:viewMode",
+
+  /** Next auto-increment card number counter */
+  NEXT_CARD_NUMBER: "kanbeasy:nextCardNumber",
 } as const;

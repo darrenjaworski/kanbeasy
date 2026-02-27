@@ -7,6 +7,7 @@ import type { Card, Column } from "../../../board/types";
 
 const baseCard: Card = {
   id: "card-1",
+  number: 1,
   title: "Test Card",
   description: "Test description",
   createdAt: new Date("2025-06-15T12:00:00Z").getTime(),
@@ -205,7 +206,7 @@ describe("CardDetailModal", () => {
     const { onClose } = renderModal();
 
     const closeBtn = screen.getByRole("button", {
-      name: /close card details/i,
+      name: /close #1 card details/i,
     });
     await user.click(closeBtn);
 

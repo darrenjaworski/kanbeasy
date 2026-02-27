@@ -18,7 +18,7 @@ export function getCardCycleTimes(columns: Column[]): CardCycleTime[] {
       const first = card.columnHistory[0];
       const last = card.columnHistory[card.columnHistory.length - 1];
       results.push({
-        cardTitle: card.title,
+        cardTitle: `#${card.number} ${card.title}`,
         cycleTimeMs: last.enteredAt - first.enteredAt,
       });
     }

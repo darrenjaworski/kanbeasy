@@ -48,7 +48,7 @@ test("edit title in modal updates card on board", async ({ page }) => {
   await page.getByTestId("card-detail-description-placeholder").click();
 
   // Close modal
-  await page.getByRole("button", { name: /close card details/i }).click();
+  await page.getByRole("button", { name: /close #\d+ card details/i }).click();
 
   // Board card should reflect updated title
   await expect(column.getByTestId("card-content-0")).toHaveValue(
@@ -80,7 +80,7 @@ test("edit description in modal persists across reopen", async ({ page }) => {
   ).toBeVisible();
 
   // Close modal
-  await page.getByRole("button", { name: /close card details/i }).click();
+  await page.getByRole("button", { name: /close #\d+ card details/i }).click();
 
   // Reopen modal and verify description persisted as markdown preview
   await card.hover();
@@ -159,7 +159,7 @@ test("move card via column selector keeps modal open", async ({ page }) => {
   await expect(columnSelect).toHaveValue(rightColId!);
 
   // Close modal
-  await page.getByRole("button", { name: /close card details/i }).click();
+  await page.getByRole("button", { name: /close #\d+ card details/i }).click();
 
   // Card should now be in the right column
   await expect(

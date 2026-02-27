@@ -98,7 +98,10 @@ export function getCardReverseTimes(
       }
 
       if (reverseTimeMs > 0) {
-        results.push({ cardTitle: card.title, reverseTimeMs });
+        results.push({
+          cardTitle: `#${card.number} ${card.title}`,
+          reverseTimeMs,
+        });
       }
     }
   }
