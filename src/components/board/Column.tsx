@@ -14,6 +14,7 @@ import { CardList } from "./CardList";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
+import { getBadgeHeat } from "./badgeHeat";
 
 type Props = Readonly<{
   id: string;
@@ -24,6 +25,7 @@ type Props = Readonly<{
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
   overlayMode?: boolean;
   index?: number;
+  columnCount?: number;
   onOpenDetail?: (cardId: string) => void;
 }>;
 
@@ -36,6 +38,7 @@ export function Column({
   dragHandleProps,
   overlayMode = false,
   index,
+  columnCount,
   onOpenDetail,
 }: Props) {
   // Column resizing state
@@ -146,12 +149,24 @@ export function Column({
         </button>
       </div>
       {/* Card count badge — slides left on hover to clear controls */}
-      <span
-        className={`absolute right-2 top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} bg-white/40 dark:bg-black/10 backdrop-blur-sm px-2.5 text-sm font-medium ${tc.textFaint} transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}
-        aria-label={`${cards.length} card${cards.length === 1 ? "" : "s"}`}
-      >
-        {cards.length}
-      </span>
+      {(() => {
+        const heat = getBadgeHeat(cards.length, index, columnCount);
+        return (
+          <span
+            className={`absolute right-2 top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : "bg-white/40 dark:bg-black/10"} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}
+            style={
+              heat
+                ? {
+                    backgroundColor: `color-mix(in srgb, var(--color-accent) ${heat.accentPercent}%, transparent)`,
+                  }
+                : undefined
+            }
+            aria-label={`${cards.length} card${cards.length === 1 ? "" : "s"}`}
+          >
+            {cards.length}
+          </span>
+        );
+      })()}
       <div className="mb-3 mr-8">
         <input
           ref={inputRef}

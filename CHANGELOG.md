@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add WIP badge heat indicator on middle columns — card count badge progressively shifts to accent color as card count rises (3–4: light, 5–6: medium, 7–9: strong, 10+: full)
+
 ### Changed
 
 - Extract shared `ROWS_FOR_DENSITY` constant to `src/theme/types.ts`, replacing duplicate density-to-rows mappings in CardDetailModal and SortableCardItem
@@ -23,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add unit tests for ClipboardProvider (useClipboard hook, copyCard, pasteCard, multiple pastes)
 - Add e2e tests for copy/paste cards (hover controls, same-column paste, cross-column paste, multiple pastes, button text change)
 - Add unit tests for `formatDate` and `formatDateTime` utilities
+- Add unit tests for `getBadgeHeat` utility (all branches: null returns, accent percentages, bold threshold)
+- Add integration tests for badge heat rendering in Column component (background-color, font-bold)
+- Add e2e tests for badge heat indicator (first/last column no heat, middle column heat at 3+, bold at 10+)
 
 ## [1.19.0]
 

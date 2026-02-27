@@ -11,6 +11,7 @@ export function SortableColumnItem({
   canDrag,
   style,
   index,
+  columnCount,
   onOpenDetail,
 }: Readonly<{
   id: string;
@@ -19,6 +20,7 @@ export function SortableColumnItem({
   canDrag: boolean;
   style?: React.CSSProperties;
   index?: number;
+  columnCount?: number;
   onOpenDetail?: (cardId: string) => void;
 }>) {
   const {
@@ -49,6 +51,7 @@ export function SortableColumnItem({
         title={title}
         cards={cards}
         canDrag={canDrag}
+        columnCount={columnCount}
         onOpenDetail={onOpenDetail}
         dragHandleRef={setActivatorNodeRef}
         dragHandleProps={{

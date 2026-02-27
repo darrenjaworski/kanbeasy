@@ -144,6 +144,7 @@ export function Board() {
                       title={c.title}
                       cards={c.cards}
                       canDrag={columns.length > 1}
+                      columnCount={columns.length}
                       onOpenDetail={handleOpenDetail}
                     />
                   ))}
