@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Column reorder now resets all card analytics data (columnHistory, createdAt, updatedAt) as the analytics modal warning promises
+
 ### Documentation
 
-- Add known bug to roadmap: column reorder does not reset analytics data as warning promises
+- Remove known bug from roadmap: column reorder analytics reset is now implemented
 
 ## [1.20.0]
 

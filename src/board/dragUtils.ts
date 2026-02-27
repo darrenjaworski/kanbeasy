@@ -50,9 +50,16 @@ export function reorderColumns(
 
   const now = Date.now();
   const reordered = arrayMove(columns, oldIndex, newIndex);
-  return reordered.map((c) =>
-    c.id === activeId ? { ...c, updatedAt: now } : c,
-  );
+  return reordered.map((col) => ({
+    ...col,
+    updatedAt: now,
+    cards: col.cards.map((card) => ({
+      ...card,
+      createdAt: now,
+      updatedAt: now,
+      columnHistory: [{ columnId: col.id, enteredAt: now }],
+    })),
+  }));
 }
 
 /**

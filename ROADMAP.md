@@ -61,7 +61,7 @@ Settings
 
 ### known bugs
 
-- column reorder does not reset analytics data — the analytics modal warns "Reordering columns resets all data" but dragging columns only moves them without clearing card `columnHistory` or timestamps
+(none)
 
 ### upcoming
 
