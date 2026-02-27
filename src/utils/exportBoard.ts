@@ -1,7 +1,7 @@
 import { STORAGE_KEYS } from "../constants/storage";
 
 interface ExportData {
-  version: 1 | 2 | 3 | 4;
+  version: 1 | 2 | 3 | 4 | 5;
   exportedAt: string;
   board: unknown;
   settings: {
@@ -12,6 +12,8 @@ interface ExportData {
     deleteColumnWarning: string;
     owlModeEnabled: string;
     viewMode: string;
+    ticketTypePreset: string;
+    ticketTypes: string;
   };
 }
 
@@ -31,7 +33,7 @@ function buildExportData(): ExportData {
   }
 
   return {
-    version: 4,
+    version: 5,
     exportedAt: new Date().toISOString(),
     board,
     settings: {
@@ -42,6 +44,8 @@ function buildExportData(): ExportData {
       deleteColumnWarning: readRaw(STORAGE_KEYS.DELETE_COLUMN_WARNING),
       owlModeEnabled: readRaw(STORAGE_KEYS.OWL_MODE_ENABLED),
       viewMode: readRaw(STORAGE_KEYS.VIEW_MODE),
+      ticketTypePreset: readRaw(STORAGE_KEYS.TICKET_TYPE_PRESET),
+      ticketTypes: readRaw(STORAGE_KEYS.TICKET_TYPES),
     },
   };
 }

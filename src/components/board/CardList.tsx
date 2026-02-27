@@ -1,4 +1,5 @@
 import { useBoard } from "../../board/useBoard";
+import { useTheme } from "../../theme/useTheme";
 import { useDroppable, useDndContext } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -30,6 +31,7 @@ export function CardList({
   onAutoFocused?: () => void;
 }>) {
   const { columns, matchingCardIds } = useBoard();
+  const { ticketTypes } = useTheme();
   // Register the column list as a droppable target (works even when empty)
   const { setNodeRef, isOver } = useDroppable({
     id: `col:${columnId}`,
@@ -75,6 +77,7 @@ export function CardList({
               isSearchMatch={matchingCardIds.has(card.id)}
               autoFocus={card.id === autoFocusCardId}
               onAutoFocused={onAutoFocused}
+              ticketTypes={ticketTypes}
             />
           ))
         )}

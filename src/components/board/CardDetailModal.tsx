@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Card, CardUpdates, Column } from "../../board/types";
+import type { TicketType } from "../../constants/ticketTypes";
 import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { Modal } from "../shared/Modal";
 import { ModalHeader } from "../shared/ModalHeader";
@@ -8,6 +9,7 @@ import { MoreIcon } from "../icons";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
 import { formatDateTime } from "../../utils/formatDate";
+import { formatCardId } from "../../utils/formatCardId";
 
 type Props = Readonly<{
   open: boolean;
@@ -18,6 +20,7 @@ type Props = Readonly<{
   density: CardDensity;
   onUpdate: (updates: CardUpdates) => void;
   onMoveCard: (toColumnId: string) => void;
+  ticketTypes: TicketType[];
 }>;
 
 export function CardDetailModal({
@@ -29,6 +32,7 @@ export function CardDetailModal({
   density,
   onUpdate,
   onMoveCard,
+  ticketTypes,
 }: Props) {
   // Title editing — uses useInlineEdit (reverts on empty)
   const [tempTitle, setTempTitle] = useState(card.title);
@@ -62,14 +66,16 @@ export function CardDetailModal({
       aria-labelledby="card-detail-title"
       className="max-w-lg"
     >
-      <div className="p-5 space-y-4">
+      <div className="p-4 pb-2 shrink-0">
         <ModalHeader
           icon={MoreIcon}
-          title={`#${card.number} Card Details`}
+          title={`${formatCardId(card.number, card.ticketTypeId, ticketTypes)} Card Details`}
           titleId="card-detail-title"
           onClose={onClose}
         />
+      </div>
 
+      <div className="p-4 pt-3 space-y-4 overflow-y-auto">
         {/* Column selector */}
         <div>
           <label
@@ -89,6 +95,49 @@ export function CardDetailModal({
               {columns.map((col) => (
                 <option key={col.id} value={col.id}>
                   {col.title || "Untitled"}
+                </option>
+              ))}
+            </select>
+            <svg
+              className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-4 ${tc.textFaint}`}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Type selector */}
+        <div>
+          <label
+            htmlFor="card-detail-type"
+            className={`block text-xs font-medium ${tc.textMuted} mb-1`}
+          >
+            Type
+          </label>
+          <div className="relative">
+            <select
+              id="card-detail-type"
+              value={card.ticketTypeId ?? ""}
+              onChange={(e) =>
+                onUpdate({
+                  ticketTypeId: e.target.value || null,
+                })
+              }
+              className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
+              data-testid="card-detail-type"
+            >
+              <option value="">None</option>
+              {ticketTypes.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.label} ({t.id})
                 </option>
               ))}
             </select>

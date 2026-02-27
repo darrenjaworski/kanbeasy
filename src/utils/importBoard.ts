@@ -1,8 +1,13 @@
 import type { Column } from "../board/types";
 import type { CardDensity, ThemePreference, ViewMode } from "../theme/types";
+import type { TicketType } from "../constants/ticketTypes";
 import { isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
 import { migrateColumnsWithNumbering } from "../board/migration";
+import {
+  DEFAULT_PRESET_ID,
+  TICKET_TYPE_PRESETS,
+} from "../constants/ticketTypes";
 
 interface ValidatedImport {
   columns: Column[];
@@ -15,6 +20,8 @@ interface ValidatedImport {
     deleteColumnWarning: boolean;
     owlModeEnabled: boolean;
     viewMode: ViewMode;
+    ticketTypePresetId: string;
+    ticketTypes: TicketType[];
   };
 }
 
@@ -44,11 +51,17 @@ export function validateExportData(parsed: unknown): ImportResult {
   }
 
   const version = parsed.version;
-  if (version !== 1 && version !== 2 && version !== 3 && version !== 4) {
+  if (
+    version !== 1 &&
+    version !== 2 &&
+    version !== 3 &&
+    version !== 4 &&
+    version !== 5
+  ) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${String(version)}. Only versions 1–4 are supported.`
+        ? `Unsupported export version: ${String(version)}. Only versions 1–5 are supported.`
         : "Missing export version.",
     };
   }
@@ -119,6 +132,49 @@ export function validateExportData(parsed: unknown): ImportResult {
       ? (s.viewMode as ViewMode)
       : "board";
 
+  // Ticket type settings (v5+). Fall back to Development preset for older versions.
+  const defaultPreset = TICKET_TYPE_PRESETS.find(
+    (p) => p.id === DEFAULT_PRESET_ID,
+  )!;
+
+  let ticketTypePresetId = DEFAULT_PRESET_ID;
+  let ticketTypes: TicketType[] = [...defaultPreset.types];
+
+  if (version >= 5) {
+    // Parse preset ID
+    const rawPreset =
+      typeof s.ticketTypePreset === "string" ? s.ticketTypePreset : "";
+    if (
+      TICKET_TYPE_PRESETS.some((p) => p.id === rawPreset) ||
+      rawPreset === "custom"
+    ) {
+      ticketTypePresetId = rawPreset;
+    }
+
+    // Parse ticket types JSON
+    let parsedTypes: unknown = null;
+    if (typeof s.ticketTypes === "string" && s.ticketTypes) {
+      try {
+        parsedTypes = JSON.parse(s.ticketTypes);
+      } catch {
+        // invalid JSON, use default
+      }
+    }
+    if (
+      Array.isArray(parsedTypes) &&
+      parsedTypes.every(
+        (t) =>
+          !!t &&
+          typeof t === "object" &&
+          typeof (t as { id?: unknown }).id === "string" &&
+          typeof (t as { label?: unknown }).label === "string" &&
+          typeof (t as { color?: unknown }).color === "string",
+      )
+    ) {
+      ticketTypes = parsedTypes as TicketType[];
+    }
+  }
+
   return {
     ok: true,
     data: {
@@ -132,6 +188,8 @@ export function validateExportData(parsed: unknown): ImportResult {
         deleteColumnWarning,
         owlModeEnabled,
         viewMode,
+        ticketTypePresetId,
+        ticketTypes,
       },
     },
   };

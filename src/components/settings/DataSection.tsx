@@ -15,6 +15,8 @@ export function DataSection() {
     setDeleteColumnWarningEnabled,
     setOwlModeEnabled,
     setViewMode,
+    setTicketTypePresetId,
+    setTicketTypes,
   } = useTheme();
   const { setColumns, resetBoard, setNextCardNumber } = useBoard();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,6 +64,8 @@ export function DataSection() {
     setDeleteColumnWarningEnabled(settings.deleteColumnWarning);
     setOwlModeEnabled(settings.owlModeEnabled);
     setViewMode(settings.viewMode);
+    setTicketTypePresetId(settings.ticketTypePresetId);
+    setTicketTypes(settings.ticketTypes);
 
     setImportStatus("complete");
     setTimeout(() => setImportStatus("idle"), 600);

@@ -9,7 +9,13 @@ import type {
 import type { ThemeId, ThemeMode } from "./themes";
 import { getDefaultThemeForMode, getThemeById } from "./themes";
 import { getStringFromStorage, saveStringToStorage } from "../utils/storage";
+import { getFromStorage, saveToStorage } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
+import type { TicketType } from "../constants/ticketTypes";
+import {
+  DEFAULT_PRESET_ID,
+  TICKET_TYPE_PRESETS,
+} from "../constants/ticketTypes";
 
 function getSystemTheme(): ThemeMode {
   if (
@@ -74,6 +80,26 @@ function getInitialViewMode(): ViewMode {
   return "board";
 }
 
+function getInitialTicketTypePresetId(): string {
+  const stored = getStringFromStorage(STORAGE_KEYS.TICKET_TYPE_PRESET, "");
+  if (TICKET_TYPE_PRESETS.some((p) => p.id === stored) || stored === "custom") {
+    return stored;
+  }
+  return DEFAULT_PRESET_ID;
+}
+
+function getInitialTicketTypes(presetId: string): TicketType[] {
+  const stored = getFromStorage<TicketType[] | null>(
+    STORAGE_KEYS.TICKET_TYPES,
+    null,
+  );
+  if (Array.isArray(stored) && stored.length > 0) {
+    return stored;
+  }
+  const preset = TICKET_TYPE_PRESETS.find((p) => p.id === presetId);
+  return preset ? [...preset.types] : [];
+}
+
 export function ThemeProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -107,6 +133,12 @@ export function ThemeProvider({
     return stored === "true";
   });
   const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
+  const [ticketTypePresetId, setTicketTypePresetId] = useState<string>(
+    getInitialTicketTypePresetId,
+  );
+  const [ticketTypes, setTicketTypes] = useState<TicketType[]>(() =>
+    getInitialTicketTypes(ticketTypePresetId),
+  );
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -186,6 +218,14 @@ export function ThemeProvider({
     saveStringToStorage(STORAGE_KEYS.VIEW_MODE, viewMode);
   }, [viewMode]);
 
+  useEffect(() => {
+    saveStringToStorage(STORAGE_KEYS.TICKET_TYPE_PRESET, ticketTypePresetId);
+  }, [ticketTypePresetId]);
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.TICKET_TYPES, ticketTypes);
+  }, [ticketTypes]);
+
   const theme = getThemeById(themeId);
 
   const value = useMemo<ThemeContextValue>(
@@ -206,6 +246,10 @@ export function ThemeProvider({
       setOwlModeEnabled,
       viewMode,
       setViewMode,
+      ticketTypes,
+      setTicketTypes,
+      ticketTypePresetId,
+      setTicketTypePresetId,
     }),
     [
       themeId,
@@ -217,6 +261,8 @@ export function ThemeProvider({
       deleteColumnWarningEnabled,
       owlModeEnabled,
       viewMode,
+      ticketTypes,
+      ticketTypePresetId,
     ],
   );
 

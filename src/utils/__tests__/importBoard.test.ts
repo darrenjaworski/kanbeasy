@@ -68,6 +68,11 @@ describe("validateExportData", () => {
     expect(result.error).toContain("Unsupported export version: 99");
   });
 
+  it("accepts v5 export data", () => {
+    const result = validateExportData(makeExportData({ version: 5 }));
+    expect(result.ok).toBe(true);
+  });
+
   it("accepts v4 export data", () => {
     const result = validateExportData(makeExportData({ version: 4 }));
     expect(result.ok).toBe(true);
@@ -334,6 +339,90 @@ describe("validateExportData", () => {
     if (!result.ok) return;
     expect(result.data.columns[0].cards[0].number).toBe(42);
     expect(result.data.nextCardNumber).toBe(43);
+  });
+
+  it("v1-4 imports default ticketTypePresetId to development", () => {
+    const result = validateExportData(makeExportData({ version: 4 }));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.ticketTypePresetId).toBe("development");
+    expect(result.data.settings.ticketTypes.length).toBeGreaterThan(0);
+  });
+
+  it("v5 import preserves ticket type settings", () => {
+    const types = [{ id: "task", label: "Task", color: "#6366f1" }];
+    const result = validateExportData(
+      makeExportData({
+        version: 5,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "medium",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+          ticketTypePreset: "custom",
+          ticketTypes: JSON.stringify(types),
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.ticketTypePresetId).toBe("custom");
+    expect(result.data.settings.ticketTypes).toEqual(types);
+  });
+
+  it("v5 import with invalid ticketTypes JSON defaults to development preset", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 5,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "medium",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+          ticketTypePreset: "development",
+          ticketTypes: "not-valid-json",
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.ticketTypePresetId).toBe("development");
+    // Falls back to default types
+    expect(result.data.settings.ticketTypes.length).toBeGreaterThan(0);
+  });
+
+  it("v4 import backfills ticketTypeId to null on cards", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 4,
+        board: {
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: 5000,
+              updatedAt: 6000,
+              cards: [
+                {
+                  id: "card-1",
+                  number: 1,
+                  title: "Task 1",
+                  description: "",
+                  createdAt: 5000,
+                  updatedAt: 6000,
+                  columnHistory: [{ columnId: "col-1", enteredAt: 5000 }],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.columns[0].cards[0].ticketTypeId).toBeNull();
   });
 
   it("v2 import preserves existing timestamps", () => {

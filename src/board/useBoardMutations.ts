@@ -61,6 +61,7 @@ export function useBoardMutations(
         number,
         title,
         description: "",
+        ticketTypeId: null,
         createdAt: now,
         updatedAt: now,
         columnHistory: [{ columnId, enteredAt: now }],
@@ -168,6 +169,7 @@ export function useBoardMutations(
         number,
         title: source.title,
         description: source.description,
+        ticketTypeId: null,
         createdAt: now,
         updatedAt: now,
         columnHistory: [{ columnId, enteredAt: now }],
@@ -199,6 +201,44 @@ export function useBoardMutations(
     [setState],
   );
 
+  const renameTicketType = useCallback<BoardContextValue["renameTicketType"]>(
+    (oldId, newId) => {
+      setState((prev) => {
+        const now = Date.now();
+        const columns = prev.columns.map((col) => ({
+          ...col,
+          updatedAt: now,
+          cards: col.cards.map((card) =>
+            card.ticketTypeId === oldId
+              ? { ...card, ticketTypeId: newId, updatedAt: now }
+              : card,
+          ),
+        }));
+        return { columns };
+      });
+    },
+    [setState],
+  );
+
+  const clearTicketType = useCallback<BoardContextValue["clearTicketType"]>(
+    (typeId) => {
+      setState((prev) => {
+        const now = Date.now();
+        const columns = prev.columns.map((col) => ({
+          ...col,
+          updatedAt: now,
+          cards: col.cards.map((card) =>
+            card.ticketTypeId === typeId
+              ? { ...card, ticketTypeId: null, updatedAt: now }
+              : card,
+          ),
+        }));
+        return { columns };
+      });
+    },
+    [setState],
+  );
+
   const resetBoard = useCallback<BoardContextValue["resetBoard"]>(() => {
     setState(defaultState);
   }, [setState]);
@@ -215,6 +255,8 @@ export function useBoardMutations(
     moveCard,
     sortCards,
     reorderCard,
+    renameTicketType,
+    clearTicketType,
     resetBoard,
   };
 }

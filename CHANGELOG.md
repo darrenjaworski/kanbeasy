@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Add ticket type field to cards with configurable types (e.g. `feat-42`, `fix-13`) and colored badge display
+- Add ticket type settings with preset selector (Development, Personal) and full customization (add/remove/rename/recolor)
+- Add type selector dropdown in card detail modal
+- Display ticket type badges on board cards, list view, and card detail modal header
+- Export/import preserves ticket type data (export format bumped to v5)
+- Bulk rename and clear ticket type mutations participate in undo/redo
 - Add auto-incrementing card numbers (`#1`, `#2`, ...) displayed on board cards, card detail modal, list view, and analytics tables
 - Card numbers persist outside the undo stack to prevent number reuse on undo/redo
 - Duplicated cards receive fresh numbers
@@ -17,12 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Standardize modal layout: fixed header with scrollable body and consistent `p-4` spacing across all modals
+- Add `max-h-[85vh]` constraint to Modal component with flex column layout
 - Replace `import React from "react"` with named type imports across icon components, tests, and CardControls
 - Optimize `migrateColumnsWithNumbering` conflict-avoidance from O(n²) to O(n) using Set-based lookups
 - Simplify `setNextCardNumber` in BoardProvider by removing redundant wrapper around `saveCounter`
 
 ### Tests
 
+- Add unit tests for `formatCardId`, `findTicketType`, migration `ticketTypeId` backfill, v5 import/export
 - Add e2e tests for card numbering (ascending numbers on board, modal header, list view, localStorage persistence, duplicate fresh numbers, no number reuse after deletion)
 - Fix card detail modal close button e2e tests to match `#N Card Details` header format
 

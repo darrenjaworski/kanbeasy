@@ -28,6 +28,7 @@ describe("migration", () => {
         number: 0,
         title: "Task 1",
         description: "",
+        ticketTypeId: null,
         createdAt: NOW,
         updatedAt: NOW,
         columnHistory: [{ columnId: "col-1", enteredAt: NOW }],
@@ -68,6 +69,7 @@ describe("migration", () => {
         number: 5,
         title: "Task 1",
         description: "Some notes",
+        ticketTypeId: null,
         createdAt: 1000,
         updatedAt: 2000,
         columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
@@ -87,6 +89,24 @@ describe("migration", () => {
       const result = migrateCard(raw, "col-1");
       expect(result.description).toBe("");
       expect(result.number).toBe(0);
+    });
+
+    it("backfills ticketTypeId to null when missing", () => {
+      const raw = { id: "card-1", title: "Task 1" };
+      const result = migrateCard(raw, "col-1");
+      expect(result.ticketTypeId).toBeNull();
+    });
+
+    it("preserves existing ticketTypeId", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        ticketTypeId: "feat",
+        createdAt: 1000,
+        updatedAt: 2000,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result.ticketTypeId).toBe("feat");
     });
 
     it("preserves existing description", () => {

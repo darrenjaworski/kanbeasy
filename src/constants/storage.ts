@@ -30,4 +30,10 @@ export const STORAGE_KEYS = {
 
   /** Next auto-increment card number counter */
   NEXT_CARD_NUMBER: "kanbeasy:nextCardNumber",
+
+  /** Active ticket type preset ID */
+  TICKET_TYPE_PRESET: "kanbeasy:ticketTypePreset",
+
+  /** Custom ticket types JSON */
+  TICKET_TYPES: "kanbeasy:ticketTypes",
 } as const;

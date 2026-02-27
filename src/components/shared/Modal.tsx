@@ -61,7 +61,7 @@ export function Modal({
         aria-modal="true"
         aria-labelledby={ariaLabelledby}
         aria-label={ariaLabelledby ? undefined : "Settings"}
-        className={`relative z-10 w-full max-w-md rounded-lg border ${tc.border} bg-surface text-text p-0 shadow-xl ${className}`}
+        className={`relative z-10 w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden rounded-lg border ${tc.border} bg-surface text-text p-0 shadow-xl ${className}`}
       >
         {children}
       </dialog>

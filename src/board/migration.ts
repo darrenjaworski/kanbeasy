@@ -19,12 +19,15 @@ export function migrateCard(
     : [{ columnId, enteredAt: now }];
 
   const number = typeof raw.number === "number" ? raw.number : 0;
+  const ticketTypeId =
+    typeof raw.ticketTypeId === "string" ? raw.ticketTypeId : null;
 
   return {
     id: raw.id as string,
     number,
     title: raw.title as string,
     description,
+    ticketTypeId,
     createdAt,
     updatedAt,
     columnHistory,

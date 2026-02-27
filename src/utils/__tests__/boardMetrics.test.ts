@@ -19,6 +19,7 @@ function makeCard(
     number: cardNum++,
     title,
     description: "",
+    ticketTypeId: null,
     createdAt: 0,
     updatedAt: 0,
     columnHistory,

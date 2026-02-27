@@ -3,6 +3,7 @@ import { SettingsGearIcon } from "../icons";
 import { tc } from "../../theme/classNames";
 import { ModalHeader } from "../shared/ModalHeader";
 import { ThemeSection } from "./ThemeSection";
+import { TicketTypeSection } from "./TicketTypeSection";
 import { BoardSettingsSection } from "./BoardSettingsSection";
 import { DataSection } from "./DataSection";
 
@@ -16,16 +17,18 @@ export function SettingsModal({ open, onClose }: Props) {
 
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="settings-title">
-      <div className="p-4">
-        <div className="mb-3">
-          <ModalHeader
-            icon={SettingsGearIcon}
-            title="Settings"
-            titleId="settings-title"
-            onClose={onClose}
-          />
-        </div>
+      <div className="p-4 pb-2 shrink-0">
+        <ModalHeader
+          icon={SettingsGearIcon}
+          title="Settings"
+          titleId="settings-title"
+          onClose={onClose}
+        />
+      </div>
+
+      <div className="p-4 pt-3 overflow-y-auto">
         <ThemeSection />
+        <TicketTypeSection />
         <BoardSettingsSection />
         <DataSection />
 

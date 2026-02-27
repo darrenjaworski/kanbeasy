@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import { useBoard } from "../board/useBoard";
+import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 import { MarkdownPreview } from "./shared/MarkdownPreview";
+import { TicketTypeBadge } from "./shared/TicketTypeBadge";
 import { formatDate } from "../utils/formatDate";
 
 interface CardRow {
@@ -9,12 +11,14 @@ interface CardRow {
   number: number;
   title: string;
   description: string;
+  ticketTypeId: string | null;
   columnTitle: string;
   createdAt: number;
 }
 
 export function ListView() {
   const { columns, matchingCardIds, searchQuery } = useBoard();
+  const { ticketTypes } = useTheme();
 
   const rows = useMemo<CardRow[]>(
     () =>
@@ -24,6 +28,7 @@ export function ListView() {
           number: card.number,
           title: card.title,
           description: card.description,
+          ticketTypeId: card.ticketTypeId,
           columnTitle: col.title,
           createdAt: card.createdAt,
         })),
@@ -85,10 +90,12 @@ export function ListView() {
                       key={row.id}
                       className={`${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
                     >
-                      <td
-                        className={`px-3 py-2 tabular-nums font-mono ${tc.textFaint}`}
-                      >
-                        {row.number}
+                      <td className="px-3 py-2">
+                        <TicketTypeBadge
+                          number={row.number}
+                          ticketTypeId={row.ticketTypeId}
+                          ticketTypes={ticketTypes}
+                        />
                       </td>
                       <td className={`px-3 py-2 ${tc.text}`}>{row.title}</td>
                       <td className={`px-3 py-2 ${tc.textMuted} max-w-xs`}>

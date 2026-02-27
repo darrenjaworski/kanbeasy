@@ -10,6 +10,7 @@ const baseCard: Card = {
   number: 1,
   title: "Test Card",
   description: "Test description",
+  ticketTypeId: null,
   createdAt: new Date("2025-06-15T12:00:00Z").getTime(),
   updatedAt: new Date("2025-06-16T12:00:00Z").getTime(),
   columnHistory: [
@@ -40,7 +41,7 @@ const baseColumns: Column[] = [
 function renderModal(
   overrides: Partial<Parameters<typeof CardDetailModal>[0]> = {},
 ) {
-  const props = {
+  const defaults = {
     open: true,
     onClose: vi.fn(),
     card: baseCard,
@@ -49,8 +50,9 @@ function renderModal(
     density: "medium" as const,
     onUpdate: vi.fn(),
     onMoveCard: vi.fn(),
-    ...overrides,
+    ticketTypes: [] as Parameters<typeof CardDetailModal>[0]["ticketTypes"],
   };
+  const props = { ...defaults, ...overrides };
   const result = render(<CardDetailModal {...props} />);
   return { ...result, ...props };
 }

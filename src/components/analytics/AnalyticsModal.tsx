@@ -43,7 +43,7 @@ export function AnalyticsModal({ open, onClose }: Props) {
 
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="analytics-title">
-      <div className="p-4 pb-2">
+      <div className="p-4 pb-2 shrink-0">
         <ModalHeader
           icon={AnalyticsIcon}
           title="Analytics"
@@ -52,7 +52,7 @@ export function AnalyticsModal({ open, onClose }: Props) {
         />
       </div>
 
-      <div className="p-4 pt-3 max-h-[60vh] overflow-y-auto">
+      <div className="p-4 pt-3 overflow-y-auto">
         <p className={`text-xs ${tc.textFaint} mb-3`}>
           Reordering columns resets all data. Deleted cards are not included in
           these metrics.

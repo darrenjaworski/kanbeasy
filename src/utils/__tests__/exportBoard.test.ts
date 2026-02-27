@@ -78,7 +78,7 @@ describe("exportBoard", () => {
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(4);
+    expect(data.version).toBe(5);
     expect(data.exportedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(data.board).toEqual(boardData);
     expect(data.settings).toEqual({
@@ -89,6 +89,8 @@ describe("exportBoard", () => {
       deleteColumnWarning: "true",
       owlModeEnabled: "",
       viewMode: "",
+      ticketTypePreset: "",
+      ticketTypes: "",
     });
   });
 
@@ -105,7 +107,7 @@ describe("exportBoard", () => {
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(4);
+    expect(data.version).toBe(5);
     expect(data.board).toBeNull();
     expect(data.settings.theme).toBe("");
     expect(data.settings.cardDensity).toBe("");

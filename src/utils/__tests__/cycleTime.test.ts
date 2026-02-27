@@ -21,6 +21,7 @@ function makeCard(
     number: cardNum++,
     title,
     description: "",
+    ticketTypeId: null,
     createdAt: opts.createdAt ?? 0,
     updatedAt: opts.updatedAt ?? 0,
     columnHistory: opts.columnHistory ?? [],
