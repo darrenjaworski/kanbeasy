@@ -47,6 +47,7 @@ an ultra simple task organizer
 - ✅ markdown description with rendered preview (click-to-edit UX, GFM support)
 - ✅ auto-select new card title text on add for quick editing
 - ✅ copy and paste cards (duplicate within or across columns)
+- ✅ owl assistant — toggle in settings that places an owl in the corner; clicking it gives random productivity advice, programming jokes, and owl puns
 
 Settings
 
@@ -87,7 +88,6 @@ Settings
   - mobile-optimized column layout (stacked or swipeable)
   - appropriately sized tap targets and spacing
 - fun & easter eggs
-  - ✅ owl assistant — toggle in settings that places an owl in the corner; clicking it gives random productivity advice, programming jokes, and owl puns
   - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
   - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)
   - night owl mode — if the user is using the app between midnight and 5am, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
