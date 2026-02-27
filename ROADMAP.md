@@ -76,11 +76,11 @@ Settings
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
   - card archive (soft-delete with browse/restore)
-  - card numbering — auto-incrementing IDs (e.g., #42) for easy reference
+  - card numbering — auto-incrementing IDs (e.g., #42) for easy reference; pairs with ticket type for prefixed IDs (e.g., feat-42, fix-13)
   - pinned cards — stick important cards to the top of a column
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
-  - ticket type field — categorize cards by type (feat, fix, refactor, chore, test, docs, style, perf); defaults to conventional commit types, user-customizable
+  - ticket type field — single-select card category (distinct from multi-select labels/tags); colored badge on card; type presets in settings (default: "Development" with feat, fix, refactor, chore, test); analytics breakdown by type
 - card sorting UI (alphabetical, by date created, by last updated)
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded
@@ -101,3 +101,12 @@ Settings
   - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
   - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)
   - night owl mode — if the user is using the app between midnight and 5am, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
+
+### design notes
+
+These decisions were made during planning and should be followed during implementation:
+
+- **Ticket types vs labels/tags**: These are two distinct features. Ticket type is a single-select category ("what kind of work"), labels/tags are multi-select ("what does this relate to"). Implement them as separate data fields on the Card model.
+- **Ticket type presets**: Ship with a "Development" preset (feat, fix, refactor, chore, test) as the default. Support additional presets (e.g., "Personal" with task, idea, errand, goal). Users can also fully customize types (add/remove/rename/recolor). Store preset and custom types in settings/localStorage.
+- **Card numbering + ticket type**: These features are designed to work together. Card numbers are global auto-incrementing integers. When a card has a ticket type, display as `type-number` (e.g., feat-42). When no type is set, display as `#42`. The counter should never reset or reuse numbers.
+- **Export version**: Adding ticket type or card number fields to the Card model will require bumping the export version and writing an import migration.
