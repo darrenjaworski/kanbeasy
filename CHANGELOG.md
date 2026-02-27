@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.20.0]
+
 ### Features
 
 - Add WIP badge heat indicator on middle columns — card count badge progressively shifts to accent color as card count rises (3–4: light, 5–6: medium, 7–9: strong, 10+: full)

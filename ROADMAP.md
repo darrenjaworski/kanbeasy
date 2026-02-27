@@ -48,6 +48,7 @@ an ultra simple task organizer
 - ✅ auto-select new card title text on add for quick editing
 - ✅ copy and paste cards (duplicate within or across columns)
 - ✅ owl assistant — toggle in settings that places an owl in the corner; clicking it gives random productivity advice, programming jokes, and owl puns
+- ✅ WIP badge heat indicator — middle column card count badges progressively shift to accent color as card count rises
 
 Settings
 
