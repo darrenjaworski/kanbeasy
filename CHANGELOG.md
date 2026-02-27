@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Extract clipboard state into ClipboardContext to eliminate prop drilling through SortableColumnItem
+
+### Tests
+
+- Add unit tests for ClipboardProvider (useClipboard hook, copyCard, pasteCard, multiple pastes)
+- Add e2e tests for copy/paste cards (hover controls, same-column paste, cross-column paste, multiple pastes, button text change)
+
 ## [1.19.0]
 
 ### Features

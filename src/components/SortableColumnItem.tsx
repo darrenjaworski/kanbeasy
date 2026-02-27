@@ -12,9 +12,6 @@ export function SortableColumnItem({
   style,
   index,
   onOpenDetail,
-  copiedCard,
-  onCopyCard,
-  onPasteCard,
 }: Readonly<{
   id: string;
   title: string;
@@ -23,9 +20,6 @@ export function SortableColumnItem({
   style?: React.CSSProperties;
   index?: number;
   onOpenDetail?: (cardId: string) => void;
-  copiedCard?: Pick<Card, "title" | "description"> | null;
-  onCopyCard?: (source: Pick<Card, "title" | "description">) => void;
-  onPasteCard?: (columnId: string) => string | null;
 }>) {
   const {
     attributes,
@@ -56,9 +50,6 @@ export function SortableColumnItem({
         cards={cards}
         canDrag={canDrag}
         onOpenDetail={onOpenDetail}
-        copiedCard={copiedCard}
-        onCopyCard={onCopyCard}
-        onPasteCard={onPasteCard}
         dragHandleRef={setActivatorNodeRef}
         dragHandleProps={{
           ...(attributes as unknown as ButtonHTMLAttributes<HTMLButtonElement>),

@@ -8,6 +8,7 @@ import {
 } from "../constants/column";
 
 import { useBoard } from "../board/useBoard";
+import { useClipboard } from "../board/useClipboard";
 import { DragIndicatorIcon, CloseIcon } from "./icons";
 import { CardList } from "./CardList";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -24,9 +25,6 @@ type Props = Readonly<{
   overlayMode?: boolean;
   index?: number;
   onOpenDetail?: (cardId: string) => void;
-  copiedCard?: Pick<Card, "title" | "description"> | null;
-  onCopyCard?: (source: Pick<Card, "title" | "description">) => void;
-  onPasteCard?: (columnId: string) => string | null;
 }>;
 
 export function Column({
@@ -39,9 +37,6 @@ export function Column({
   overlayMode = false,
   index,
   onOpenDetail,
-  copiedCard,
-  onCopyCard,
-  onPasteCard,
 }: Props) {
   // Column resizing state
   const [width, setWidth] = useState<number>(DEFAULT_COLUMN_WIDTH);
@@ -50,6 +45,7 @@ export function Column({
   const startWidth = useRef(DEFAULT_COLUMN_WIDTH);
   const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
     useBoard();
+  const { copiedCard, copyCard, pasteCard } = useClipboard();
   const { cardDensity, columnResizingEnabled, deleteColumnWarningEnabled } =
     useTheme();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -185,12 +181,12 @@ export function Column({
         >
           {copiedCard ? "+ New" : "+ Add card"}
         </button>
-        {copiedCard && onPasteCard && (
+        {copiedCard && (
           <button
             type="button"
             className={`flex-1 rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
             onClick={(e) => {
-              const cardId = onPasteCard(id);
+              const cardId = pasteCard(id);
               if (cardId) setAutoFocusCardId(cardId);
               e.currentTarget.blur();
             }}
@@ -205,8 +201,8 @@ export function Column({
         cards={cards}
         onCopy={(cardId) => {
           const card = cards.find((c) => c.id === cardId);
-          if (card && onCopyCard)
-            onCopyCard({ title: card.title, description: card.description });
+          if (card)
+            copyCard({ title: card.title, description: card.description });
         }}
         onRemove={(cardId) => removeCard(id, cardId)}
         onUpdate={(cardId, updates) => updateCard(id, cardId, updates)}

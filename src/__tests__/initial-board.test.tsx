@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import App from "../App";
 import { ThemeProvider } from "../theme/ThemeProvider";
 import { BoardProvider } from "../board/BoardProvider";
+import { ClipboardProvider } from "../board/ClipboardProvider";
 import { STORAGE_KEYS } from "../constants/storage";
 import { describe, it, expect, beforeEach } from "vitest";
 
@@ -9,7 +10,9 @@ function renderApp() {
   return render(
     <ThemeProvider>
       <BoardProvider>
-        <App />
+        <ClipboardProvider>
+          <App />
+        </ClipboardProvider>
       </BoardProvider>
     </ThemeProvider>,
   );

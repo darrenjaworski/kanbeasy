@@ -12,7 +12,9 @@ export type Card = Readonly<{
   columnHistory: ColumnHistoryEntry[];
 }>;
 
-export type CardUpdates = Partial<Pick<Card, "title" | "description">>;
+export type CardClipboard = Pick<Card, "title" | "description">;
+
+export type CardUpdates = Partial<CardClipboard>;
 
 export type Column = Readonly<{
   id: string;
@@ -42,10 +44,7 @@ export type BoardContextValue = Readonly<{
     overCardId: string,
   ) => void;
   moveCard: (fromColumnId: string, toColumnId: string, cardId: string) => void;
-  duplicateCard: (
-    columnId: string,
-    source: Pick<Card, "title" | "description">,
-  ) => string;
+  duplicateCard: (columnId: string, source: CardClipboard) => string;
   resetBoard: () => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;

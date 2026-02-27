@@ -1,6 +1,7 @@
 import * as React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { BoardProvider } from "../../board/BoardProvider";
+import { ClipboardProvider } from "../../board/ClipboardProvider";
 import { Column } from "../Column";
 import { ThemeContext } from "../../theme/ThemeContext";
 import type { ThemeContextValue } from "../../theme/types";
@@ -32,7 +33,9 @@ describe("Column resizing", () => {
     const { getByTestId } = render(
       <ThemeProviderWithColumnResize>
         <BoardProvider>
-          <Column id="col1" title="Test Column" cards={[]} index={0} />
+          <ClipboardProvider>
+            <Column id="col1" title="Test Column" cards={[]} index={0} />
+          </ClipboardProvider>
         </BoardProvider>
       </ThemeProviderWithColumnResize>,
     );
@@ -50,7 +53,9 @@ describe("Column resizing", () => {
     const { getByTestId } = render(
       <ThemeProviderWithColumnResize>
         <BoardProvider>
-          <Column id="col2" title="Test Column 2" cards={[]} index={1} />
+          <ClipboardProvider>
+            <Column id="col2" title="Test Column 2" cards={[]} index={1} />
+          </ClipboardProvider>
         </BoardProvider>
       </ThemeProviderWithColumnResize>,
     );
@@ -66,7 +71,9 @@ describe("Column resizing", () => {
     const { getByTestId } = render(
       <ThemeProviderWithColumnResize>
         <BoardProvider>
-          <Column id="col3" title="Test Column 3" cards={[]} index={2} />
+          <ClipboardProvider>
+            <Column id="col3" title="Test Column 3" cards={[]} index={2} />
+          </ClipboardProvider>
         </BoardProvider>
       </ThemeProviderWithColumnResize>,
     );
