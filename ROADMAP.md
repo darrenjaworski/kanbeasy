@@ -76,6 +76,11 @@ Settings
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
   - card archive (soft-delete with browse/restore)
+  - card numbering — auto-incrementing IDs (e.g., #42) for easy reference
+  - pinned cards — stick important cards to the top of a column
+  - compact vs expanded toggle — per-card override of global density setting
+  - aging indicator — visual fade or badge showing how long a card has sat idle
+  - ticket type field — categorize cards by type (feat, fix, refactor, chore, test, docs, style, perf); defaults to conventional commit types, user-customizable
 - card sorting UI (alphabetical, by date created, by last updated)
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded
