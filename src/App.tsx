@@ -1,4 +1,4 @@
-import { Board } from "./components/Board";
+import { Board } from "./components/board/Board";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { WelcomeModal } from "./components/WelcomeModal";

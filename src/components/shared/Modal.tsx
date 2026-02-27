@@ -1,7 +1,7 @@
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import type { ReactNode } from "react";
-import { tc } from "../theme/classNames";
+import { tc } from "../../theme/classNames";
 
 type ModalProps = Readonly<{
   open: boolean;

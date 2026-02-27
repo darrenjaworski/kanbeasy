@@ -1,6 +1,6 @@
 import { Marked, type RendererObject } from "marked";
 import { useMemo } from "react";
-import { tc } from "../theme/classNames";
+import { tc } from "../../theme/classNames";
 
 type Props = Readonly<{
   content: string;

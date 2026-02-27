@@ -1,12 +1,12 @@
-import { useBoard } from "../board/useBoard";
+import { useBoard } from "../../board/useBoard";
 import { useDroppable, useDndContext } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableCardItem } from "./SortableCardItem";
-import type { Card, CardUpdates } from "../board/types";
-import type { CardDensity } from "../theme/types";
+import type { Card, CardUpdates } from "../../board/types";
+import type { CardDensity } from "../../theme/types";
 
 export function CardList({
   cards,

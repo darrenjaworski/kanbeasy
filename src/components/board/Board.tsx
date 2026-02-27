@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { BoardDragOverlay } from "./BoardDragOverlay";
 import { BoardScrollGradients } from "./BoardScrollGradients";
 import { CardDetailModal } from "./CardDetailModal";
-import { useBoard } from "../board/useBoard";
-import { useTheme } from "../theme/useTheme";
-import { useBoardDragAndDrop } from "../board/useBoardDragAndDrop";
+import { useBoard } from "../../board/useBoard";
+import { useTheme } from "../../theme/useTheme";
+import { useBoardDragAndDrop } from "../../board/useBoardDragAndDrop";
 import { AddColumn } from "./AddColumn";
 import {
   DndContext,

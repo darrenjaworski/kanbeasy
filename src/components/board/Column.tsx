@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Card } from "../board/types";
-import { useTheme } from "../theme/useTheme";
+import type { Card } from "../../board/types";
+import { useTheme } from "../../theme/useTheme";
 import {
   DEFAULT_COLUMN_WIDTH,
   MIN_COLUMN_WIDTH,
   MAX_COLUMN_WIDTH,
-} from "../constants/column";
+} from "../../constants/column";
 
-import { useBoard } from "../board/useBoard";
-import { useClipboard } from "../board/useClipboard";
-import { DragIndicatorIcon, CloseIcon } from "./icons";
+import { useBoard } from "../../board/useBoard";
+import { useClipboard } from "../../board/useClipboard";
+import { DragIndicatorIcon, CloseIcon } from "../icons";
 import { CardList } from "./CardList";
-import { ConfirmDialog } from "./ConfirmDialog";
-import { tc } from "../theme/classNames";
-import { useInlineEdit } from "../hooks";
+import { ConfirmDialog } from "../shared/ConfirmDialog";
+import { tc } from "../../theme/classNames";
+import { useInlineEdit } from "../../hooks";
 
 type Props = Readonly<{
   id: string;

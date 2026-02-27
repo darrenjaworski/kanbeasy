@@ -1,4 +1,4 @@
-import { tc } from "../theme/classNames";
+import { tc } from "../../theme/classNames";
 
 type Props = Readonly<{
   label: string;

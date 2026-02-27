@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { tc } from "../theme/classNames";
-import { MarkdownPreview } from "./MarkdownPreview";
+import { tc } from "../../theme/classNames";
+import { MarkdownPreview } from "../shared/MarkdownPreview";
 
 type Props = Readonly<{
   description: string;

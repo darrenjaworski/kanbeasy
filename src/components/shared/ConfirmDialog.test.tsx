@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import { ConfirmDialog } from "../components/ConfirmDialog";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 describe("ConfirmDialog", () => {
   it("renders title and message when open", () => {

@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Card, CardUpdates, Column } from "../board/types";
-import type { CardDensity } from "../theme/types";
-import { Modal } from "./Modal";
-import { ModalHeader } from "./ModalHeader";
+import type { Card, CardUpdates, Column } from "../../board/types";
+import type { CardDensity } from "../../theme/types";
+import { Modal } from "../shared/Modal";
+import { ModalHeader } from "../shared/ModalHeader";
 import { DescriptionField } from "./DescriptionField";
-import { MoreIcon } from "./icons";
-import { tc } from "../theme/classNames";
-import { useInlineEdit } from "../hooks";
-import { formatDateTime } from "../utils/formatDate";
+import { MoreIcon } from "../icons";
+import { tc } from "../../theme/classNames";
+import { useInlineEdit } from "../../hooks";
+import { formatDateTime } from "../../utils/formatDate";
 
 type Props = Readonly<{
   open: boolean;

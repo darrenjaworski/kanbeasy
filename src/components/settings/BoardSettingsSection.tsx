@@ -5,7 +5,7 @@ import {
   DensityLargeIcon,
 } from "../icons";
 import { tc } from "../../theme/classNames";
-import { ToggleSwitch } from "../ToggleSwitch";
+import { ToggleSwitch } from "../shared/ToggleSwitch";
 
 export function BoardSettingsSection() {
   const {

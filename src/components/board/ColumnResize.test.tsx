@@ -2,7 +2,7 @@ import * as React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { BoardProvider } from "../../board/BoardProvider";
 import { ClipboardProvider } from "../../board/ClipboardProvider";
-import { Column } from "../Column";
+import { Column } from "./Column";
 import { ThemeContext } from "../../theme/ThemeContext";
 import type { ThemeContextValue } from "../../theme/types";
 

@@ -1,5 +1,5 @@
 import { Modal } from "./Modal";
-import { tc } from "../theme/classNames";
+import { tc } from "../../theme/classNames";
 
 type Props = Readonly<{
   open: boolean;

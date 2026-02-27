@@ -1,5 +1,5 @@
-import { CloseIcon } from "./icons";
-import { tc } from "../theme/classNames";
+import { CloseIcon } from "../icons";
+import { tc } from "../../theme/classNames";
 
 type Props = Readonly<{
   icon: React.ComponentType<{ className?: string }>;

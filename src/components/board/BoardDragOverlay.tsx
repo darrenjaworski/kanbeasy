@@ -1,6 +1,6 @@
 import { DragOverlay } from "@dnd-kit/core";
-import type { Card as BoardCard } from "../board/types";
-import { tc } from "../theme/classNames";
+import type { Card as BoardCard } from "../../board/types";
+import { tc } from "../../theme/classNames";
 
 interface BoardDragOverlayProps {
   readonly activeType: "card" | "column" | null;

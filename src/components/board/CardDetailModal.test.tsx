@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect } from "vitest";
-import { CardDetailModal } from "../CardDetailModal";
+import { CardDetailModal } from "./CardDetailModal";
 import type { Card, Column } from "../../board/types";
 
 const baseCard: Card = {

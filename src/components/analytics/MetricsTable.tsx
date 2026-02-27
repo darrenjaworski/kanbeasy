@@ -1,5 +1,5 @@
-import { tc } from "../theme/classNames";
-import { formatDuration } from "../utils/cycleTime";
+import { tc } from "../../theme/classNames";
+import { formatDuration } from "../../utils/cycleTime";
 
 type Props = Readonly<{
   title: string;

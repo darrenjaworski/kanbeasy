@@ -1,10 +1,10 @@
-import { Modal } from "./Modal";
-import { SettingsGearIcon } from "./icons";
-import { tc } from "../theme/classNames";
-import { ModalHeader } from "./ModalHeader";
-import { ThemeSection } from "./settings/ThemeSection";
-import { BoardSettingsSection } from "./settings/BoardSettingsSection";
-import { DataSection } from "./settings/DataSection";
+import { Modal } from "../shared/Modal";
+import { SettingsGearIcon } from "../icons";
+import { tc } from "../../theme/classNames";
+import { ModalHeader } from "../shared/ModalHeader";
+import { ThemeSection } from "./ThemeSection";
+import { BoardSettingsSection } from "./BoardSettingsSection";
+import { DataSection } from "./DataSection";
 
 type Props = Readonly<{
   open: boolean;

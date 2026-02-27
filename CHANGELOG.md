@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Reorganize `src/components/` into domain-based subdirectories (`board/`, `analytics/`, `shared/`, `settings/`) and colocate tests next to their components
 - Extract clipboard state into ClipboardContext to eliminate prop drilling through SortableColumnItem
 - Extract shared `renderApp()` test utility to `src/test/renderApp.tsx`, removing duplicated function and provider imports from 22 test files
 - Extract shared `formatDate` and `formatDateTime` utilities to `src/utils/formatDate.ts`, replacing duplicate definitions in CardDetailModal and ListView

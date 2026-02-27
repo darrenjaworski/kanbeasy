@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { SettingsModal } from "./SettingsModal";
-import { AnalyticsModal } from "./AnalyticsModal";
+import { SettingsModal } from "./settings/SettingsModal";
+import { AnalyticsModal } from "./analytics/AnalyticsModal";
 import { SettingsGearIcon, AnalyticsIcon } from "./icons";
 import { SearchInput } from "./SearchInput";
 import { ViewToggle } from "./ViewToggle";

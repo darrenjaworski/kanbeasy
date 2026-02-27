@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useBoard } from "../board/useBoard";
 import { tc } from "../theme/classNames";
-import { MarkdownPreview } from "./MarkdownPreview";
+import { MarkdownPreview } from "./shared/MarkdownPreview";
 import { formatDate } from "../utils/formatDate";
 
 interface CardRow {

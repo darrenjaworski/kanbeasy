@@ -7,11 +7,11 @@ import {
   useRef,
   type CSSProperties,
 } from "react";
-import type { Card, CardUpdates } from "../board/types";
-import type { CardDensity } from "../theme/types";
+import type { Card, CardUpdates } from "../../board/types";
+import type { CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
-import { tc } from "../theme/classNames";
-import { useInlineEdit } from "../hooks";
+import { tc } from "../../theme/classNames";
+import { useInlineEdit } from "../../hooks";
 
 type SortableCardItemProps = Readonly<{
   card: Card;

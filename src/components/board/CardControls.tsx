@@ -1,6 +1,6 @@
 import React from "react";
-import { CardDragIcon, CloseIcon, CopyIcon, MoreIcon } from "./icons";
-import { tc } from "../theme/classNames";
+import { CardDragIcon, CloseIcon, CopyIcon, MoreIcon } from "../icons";
+import { tc } from "../../theme/classNames";
 
 interface CardControlsProps {
   readonly canDrag: boolean;

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { MetricCard } from "../MetricCard";
+import { MetricCard } from "./MetricCard";
 import { ThemeProvider } from "../../theme/ThemeProvider";
 
 function renderMetricCard(

@@ -1,23 +1,23 @@
 import { useState } from "react";
-import { Modal } from "./Modal";
-import { AnalyticsIcon } from "./icons";
-import { tc } from "../theme/classNames";
-import { ModalHeader } from "./ModalHeader";
+import { Modal } from "../shared/Modal";
+import { AnalyticsIcon } from "../icons";
+import { tc } from "../../theme/classNames";
+import { ModalHeader } from "../shared/ModalHeader";
 import { MetricCard } from "./MetricCard";
 import { MetricsTable } from "./MetricsTable";
-import { useBoard } from "../board/useBoard";
+import { useBoard } from "../../board/useBoard";
 import {
   computeAverageCycleTime,
   formatDuration,
   getCardCycleTimes,
-} from "../utils/cycleTime";
+} from "../../utils/cycleTime";
 import {
   computeAverageReverseTime,
   getCardReverseTimes,
   getCardsInFlight,
   getThroughput,
   getTotalCards,
-} from "../utils/boardMetrics";
+} from "../../utils/boardMetrics";
 
 const PAGE_SIZE = 10;
 
