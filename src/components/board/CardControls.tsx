@@ -1,4 +1,4 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { CardDragIcon, CloseIcon, CopyIcon, MoreIcon } from "../icons";
 import { tc } from "../../theme/classNames";
 
@@ -9,7 +9,7 @@ interface CardControlsProps {
   readonly onRemove: () => void;
   readonly onOpenDetail: () => void;
   readonly setActivatorNodeRef: (node: HTMLElement | null) => void;
-  readonly attributes: React.HTMLAttributes<HTMLButtonElement>;
+  readonly attributes: HTMLAttributes<HTMLButtonElement>;
   readonly listeners?: Record<string, unknown>;
   readonly index: number;
 }
@@ -33,8 +33,8 @@ export function CardControls({
         <button
           type="button"
           ref={setActivatorNodeRef}
-          {...(attributes as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-          {...(listeners as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+          {...(attributes as unknown as HTMLAttributes<HTMLButtonElement>)}
+          {...(listeners as unknown as HTMLAttributes<HTMLButtonElement>)}
           aria-label={`Drag card ${cardTitle || "Untitled"}`}
           title="Drag to reorder"
           className={`${tc.iconButton} h-6 w-6 hover:cursor-grab active:cursor-grabbing`}

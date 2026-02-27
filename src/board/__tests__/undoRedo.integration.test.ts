@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import React from "react";
+import { createElement, type ReactNode } from "react";
 import { BoardProvider } from "../BoardProvider";
 import { useBoard } from "../useBoard";
 
-function wrapper({ children }: { children: React.ReactNode }) {
-  return React.createElement(BoardProvider, null, children);
+function wrapper({ children }: { children: ReactNode }) {
+  return createElement(BoardProvider, null, children);
 }
 
 describe("undo/redo through BoardProvider", () => {
