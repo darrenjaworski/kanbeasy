@@ -1,9 +1,9 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
-import { STORAGE_KEYS } from "../../constants/storage";
-import { renderApp } from "../../test/renderApp";
-import type { Column } from "../../board/types";
+import { STORAGE_KEYS } from "../../../constants/storage";
+import { renderApp } from "../../../test/renderApp";
+import type { Column } from "../../../board/types";
 
 function makeColumn(
   id: string,

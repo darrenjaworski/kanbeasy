@@ -2,9 +2,9 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
-import { ViewToggle } from "./ViewToggle";
-import { ThemeProvider } from "../theme/ThemeProvider";
-import { STORAGE_KEYS } from "../constants/storage";
+import { ViewToggle } from "../ViewToggle";
+import { ThemeProvider } from "../../theme/ThemeProvider";
+import { STORAGE_KEYS } from "../../constants/storage";
 
 function renderToggle() {
   return render(

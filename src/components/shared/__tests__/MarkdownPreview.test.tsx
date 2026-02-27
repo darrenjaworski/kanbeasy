@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { MarkdownPreview } from "./MarkdownPreview";
+import { MarkdownPreview } from "../MarkdownPreview";
 
 describe("MarkdownPreview", () => {
   it("renders nothing for empty content", () => {

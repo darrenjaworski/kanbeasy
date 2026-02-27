@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { SettingsModal } from "./SettingsModal";
-import { ThemeProvider } from "../../theme/ThemeProvider";
-import { BoardProvider } from "../../board/BoardProvider";
+import { SettingsModal } from "../SettingsModal";
+import { ThemeProvider } from "../../../theme/ThemeProvider";
+import { BoardProvider } from "../../../board/BoardProvider";
 import { vi, describe, it, expect } from "vitest";
 
 describe("SettingsModal", () => {

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extract shared `ROWS_FOR_DENSITY` constant to `src/theme/types.ts`, replacing duplicate density-to-rows mappings in CardDetailModal and SortableCardItem
-- Reorganize `src/components/` into domain-based subdirectories (`board/`, `analytics/`, `shared/`, `settings/`) and colocate tests next to their components
+- Reorganize `src/components/` into domain-based subdirectories (`board/`, `analytics/`, `shared/`, `settings/`) with per-subdirectory `__tests__/` folders
 - Extract clipboard state into ClipboardContext to eliminate prop drilling through SortableColumnItem
 - Extract shared `renderApp()` test utility to `src/test/renderApp.tsx`, removing duplicated function and provider imports from 22 test files
 - Extract shared `formatDate` and `formatDateTime` utilities to `src/utils/formatDate.ts`, replacing duplicate definitions in CardDetailModal and ListView
