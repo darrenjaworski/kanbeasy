@@ -59,6 +59,10 @@ Settings
   - ✅ three lines of details
 - ✅ turn off warnings when deleting columns with cards
 
+### known bugs
+
+- column reorder does not reset analytics data — the analytics modal warns "Reordering columns resets all data" but dragging columns only moves them without clearing card `columnHistory` or timestamps
+
 ### upcoming
 
 - ability to specify column background color
