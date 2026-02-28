@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add local Lighthouse audit (`npm run lighthouse`) and include it in `kitchen-sink` pipeline between static-checks and e2e
+
 ## [1.25.0]
 
 ### Features
