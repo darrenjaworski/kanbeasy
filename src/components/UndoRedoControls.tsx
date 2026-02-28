@@ -9,7 +9,7 @@ export function UndoRedoControls() {
   useUndoRedoKeyboard({ undo, redo, canUndo, canRedo });
 
   return (
-    <div className="fixed bottom-12 right-4 z-10 flex gap-1">
+    <div className="fixed bottom-4 right-4 z-10 flex gap-1">
       <button
         type="button"
         onClick={undo}

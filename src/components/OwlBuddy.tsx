@@ -95,7 +95,7 @@ export function OwlBuddy() {
   const dismissLabel = isNight ? "Good night!" : "Thanks!";
 
   return (
-    <div ref={containerRef} className="fixed bottom-12 left-4 z-10">
+    <div ref={containerRef} className="fixed bottom-4 left-4 z-10">
       {open && (
         <div
           className={`absolute bottom-full left-0 mb-2 w-64 rounded-lg border p-3 backdrop-blur ${tc.glass} ${tc.border}`}

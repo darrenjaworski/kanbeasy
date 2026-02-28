@@ -116,7 +116,7 @@ export function Board() {
   }, [columns.length]);
 
   return (
-    <main className="mx-auto p-6 pb-14">
+    <main className="mx-auto p-6">
       {columns.length === 0 ? (
         <AddColumn handleOnClick={() => addColumn("New Column")} />
       ) : (
