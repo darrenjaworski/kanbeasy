@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generate HTML report in CI so Playwright report artifact is uploaded correctly
 - Fix high severity vulnerabilities in minimatch and rollup dependencies
 
+### Tests
+
+- Implement skipped e2e test for welcome modal "show once" behavior
+
 ## [1.21.1]
 
 ### Fixed
