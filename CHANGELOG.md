@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add visible text labels ("Board" / "List") to view mode toggle buttons for improved discoverability
+
 ### Documentation
 
 - Add UI polish roadmap items: view toggle labels, compact default density, settings modal reorganization, ticket type disclosure, owl assistant description, footer relocation

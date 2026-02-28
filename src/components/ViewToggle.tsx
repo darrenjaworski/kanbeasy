@@ -6,10 +6,16 @@ import type { ViewMode } from "../theme/types";
 const modes: readonly {
   mode: ViewMode;
   label: string;
+  shortLabel: string;
   Icon: typeof BoardViewIcon;
 }[] = [
-  { mode: "board", label: "Board view", Icon: BoardViewIcon },
-  { mode: "list", label: "List view", Icon: ListViewIcon },
+  {
+    mode: "board",
+    label: "Board view",
+    shortLabel: "Board",
+    Icon: BoardViewIcon,
+  },
+  { mode: "list", label: "List view", shortLabel: "List", Icon: ListViewIcon },
 ];
 
 export function ViewToggle() {
@@ -21,7 +27,7 @@ export function ViewToggle() {
       role="radiogroup"
       aria-label="View mode"
     >
-      {modes.map(({ mode, label, Icon }) => {
+      {modes.map(({ mode, label, shortLabel, Icon }) => {
         const active = viewMode === mode;
         return (
           <button
@@ -30,10 +36,11 @@ export function ViewToggle() {
             role="radio"
             aria-checked={active}
             aria-label={label}
-            className={`p-1.5 transition-colors ${tc.focusRing} ${active ? tc.pressed : tc.bgHover}`}
+            className={`p-1.5 px-2.5 inline-flex items-center gap-1.5 transition-colors ${tc.focusRing} ${active ? tc.pressed : tc.bgHover}`}
             onClick={() => setViewMode(mode)}
           >
             <Icon className="size-4" />
+            <span className="text-xs font-medium">{shortLabel}</span>
           </button>
         );
       })}
