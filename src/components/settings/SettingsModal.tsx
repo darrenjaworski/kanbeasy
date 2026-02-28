@@ -52,7 +52,7 @@ export function SettingsModal({ open, onClose }: Props) {
             kanbeasy v{__APP_VERSION__}
           </a>
           <p>
-            Made with care by{" "}
+            Made with ❤️ by{" "}
             <a
               href="https://github.com/darrenjaworski"
               target="_blank"

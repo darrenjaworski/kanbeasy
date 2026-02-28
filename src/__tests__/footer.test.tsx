@@ -15,7 +15,7 @@ describe("credit in settings modal", () => {
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
 
-    expect(within(dlg).getByText(/Made with care by/i)).toBeInTheDocument();
+    expect(within(dlg).getByText(/Made with ❤️ by/i)).toBeInTheDocument();
     const link = within(dlg).getByRole("link", { name: /darrenjaworski/i });
     expect(link).toHaveAttribute("href", "https://github.com/darrenjaworski");
     expect(link).toHaveAttribute("target", "_blank");
