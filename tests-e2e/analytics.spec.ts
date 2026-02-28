@@ -32,7 +32,7 @@ test("shows metric cards with empty board", async ({ page }) => {
   await expect(dlg.getByText("Total Cards")).toBeVisible();
   await expect(dlg.getByText("Cards in Flight")).toBeVisible();
   await expect(dlg.getByText("Avg Cycle Time")).toBeVisible();
-  await expect(dlg.getByText("Throughput")).toBeVisible();
+  await expect(dlg.getByText("Throughput", { exact: true })).toBeVisible();
 
   // Cycle time should show "Not enough data" with no cards
   await expect(dlg.getByText("Not enough data").first()).toBeVisible();

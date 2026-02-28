@@ -352,3 +352,102 @@ describe("computeAverageReverseTime", () => {
     expect(computeAverageReverseTime([colA, colB], now)).toBe(4000);
   });
 });
+
+describe("additionalCards", () => {
+  it("getThroughput includes additional cards referencing the final column", () => {
+    const now = 100_000_000;
+    const ms1Day = 24 * 60 * 60 * 1000;
+    const doneId = "done";
+
+    const col = makeColumn(
+      [
+        makeCard("c1", "Board card", [
+          { columnId: doneId, enteredAt: now - ms1Day * 3 },
+        ]),
+      ],
+      doneId,
+    );
+
+    const archivedCard = makeCard("c2", "Archived card", [
+      { columnId: doneId, enteredAt: now - ms1Day * 5 },
+    ]);
+
+    expect(getThroughput([col], now, [archivedCard])).toEqual({
+      last7Days: 2,
+      last30Days: 2,
+    });
+  });
+
+  it("getThroughput ignores additional cards not referencing the final column", () => {
+    const now = 100_000_000;
+    const doneId = "done";
+
+    const col = makeColumn([], doneId);
+    const archivedCard = makeCard("c1", "Wrong col ref", [
+      { columnId: "other", enteredAt: now - 1000 },
+    ]);
+
+    expect(getThroughput([col], now, [archivedCard])).toEqual({
+      last7Days: 0,
+      last30Days: 0,
+    });
+  });
+
+  it("getCardReverseTimes includes additional cards with backward moves", () => {
+    const now = 10000;
+    const colA = makeColumn([], "colA");
+    const colB = makeColumn([], "colB");
+
+    const archivedCard = makeCard("c1", "Archived bounced", [
+      { columnId: "colA", enteredAt: 1000 },
+      { columnId: "colB", enteredAt: 2000 },
+      { columnId: "colA", enteredAt: 3000 }, // backward
+      { columnId: "colB", enteredAt: 5000 },
+    ]);
+
+    const result = getCardReverseTimes([colA, colB], now, [archivedCard]);
+    expect(result).toHaveLength(1);
+    expect(result[0].reverseTimeMs).toBe(2000);
+    expect(result[0].cardTitle).toContain("Archived bounced");
+  });
+
+  it("computeAverageReverseTime includes additional cards", () => {
+    const now = 20000;
+    const colA = makeColumn([], "colA");
+    const colB = makeColumn(
+      [
+        makeCard("c1", "Board card", [
+          { columnId: "colB", enteredAt: 1000 },
+          { columnId: "colA", enteredAt: 2000 },
+          { columnId: "colB", enteredAt: 4000 }, // 2000ms reverse
+        ]),
+      ],
+      "colB",
+    );
+
+    const archivedCard = makeCard("c2", "Archived card", [
+      { columnId: "colB", enteredAt: 1000 },
+      { columnId: "colA", enteredAt: 2000 },
+      { columnId: "colB", enteredAt: 8000 }, // 6000ms reverse
+    ]);
+
+    // Average: (2000 + 6000) / 2 = 4000
+    expect(computeAverageReverseTime([colA, colB], now, [archivedCard])).toBe(
+      4000,
+    );
+  });
+
+  it("getTotalCards does not include additional cards", () => {
+    const col = makeColumn([makeCard("c1", "A")]);
+    // getTotalCards has no additionalCards parameter — snapshot metric only
+    expect(getTotalCards([col])).toBe(1);
+  });
+
+  it("getCardsInFlight does not include additional cards", () => {
+    const first = makeColumn([makeCard("c1", "A")]);
+    const middle = makeColumn([makeCard("c2", "B")]);
+    const last = makeColumn([]);
+    // getCardsInFlight has no additionalCards parameter — snapshot metric only
+    expect(getCardsInFlight([first, middle, last])).toBe(1);
+  });
+});

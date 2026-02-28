@@ -177,6 +177,62 @@ describe("getCardCycleTimes", () => {
   });
 });
 
+describe("getCardCycleTimes with additionalCards", () => {
+  it("includes additional cards in cycle time results", () => {
+    const col = makeColumn([
+      makeCard("c1", "Board Card", {
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 3000 },
+        ],
+      }),
+    ]);
+    const archivedCard = makeCard("c2", "Archived Card", {
+      columnHistory: [
+        { columnId: "a", enteredAt: 1000 },
+        { columnId: "b", enteredAt: 6000 },
+      ],
+    });
+
+    const result = getCardCycleTimes([col], [archivedCard]);
+    expect(result).toHaveLength(2);
+    // Sorted descending: archived (5000) then board (2000)
+    expect(result[0].cycleTimeMs).toBe(5000);
+    expect(result[0].cardTitle).toContain("Archived Card");
+    expect(result[1].cycleTimeMs).toBe(2000);
+    expect(result[1].cardTitle).toContain("Board Card");
+  });
+
+  it("excludes additional cards with fewer than 2 history entries", () => {
+    const col = makeColumn([]);
+    const archivedCard = makeCard("c1", "Unmoved Archived", {
+      columnHistory: [{ columnId: "a", enteredAt: 1000 }],
+    });
+
+    expect(getCardCycleTimes([col], [archivedCard])).toEqual([]);
+  });
+
+  it("computes average including additional cards", () => {
+    const col = makeColumn([
+      makeCard("c1", "Board Card", {
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 3000 },
+        ],
+      }),
+    ]);
+    const archivedCard = makeCard("c2", "Archived Card", {
+      columnHistory: [
+        { columnId: "a", enteredAt: 1000 },
+        { columnId: "b", enteredAt: 7000 },
+      ],
+    });
+
+    // Board: 2000, Archived: 6000, Average: 4000
+    expect(computeAverageCycleTime([col], [archivedCard])).toBe(4000);
+  });
+});
+
 describe("formatDuration", () => {
   it("formats sub-minute durations as seconds", () => {
     expect(formatDuration(0)).toBe("0s");

@@ -1,4 +1,4 @@
-import type { Column } from "../board/types";
+import type { Card, Column } from "../board/types";
 
 type CardReverseTime = {
   cardTitle: string;
@@ -27,10 +27,12 @@ export function getCardsInFlight(columns: Column[]): number {
  * Count of cards completed (in the final column) within the last 7 and 30 days.
  * A card counts if its last columnHistory entry references the final column
  * and its enteredAt is within the time window.
+ * Includes additional cards (e.g. archived) whose last history entry references the final column.
  */
 export function getThroughput(
   columns: Column[],
   now: number = Date.now(),
+  additionalCards: Card[] = [],
 ): { last7Days: number; last30Days: number } {
   if (columns.length === 0) return { last7Days: 0, last30Days: 0 };
 
@@ -41,7 +43,9 @@ export function getThroughput(
   let last7Days = 0;
   let last30Days = 0;
 
-  for (const card of finalColumn.cards) {
+  const allCards = [...finalColumn.cards, ...additionalCards];
+
+  for (const card of allCards) {
     if (card.columnHistory.length === 0) continue;
     const lastEntry = card.columnHistory[card.columnHistory.length - 1];
     if (lastEntry.columnId !== finalColumn.id) continue;
@@ -61,11 +65,13 @@ export function getThroughput(
 /**
  * For each card that has moved backwards (to a lower-indexed column),
  * compute the total time spent in reverse positions.
+ * Includes additional cards (e.g. archived) in the calculation.
  * Returns cards sorted descending by reverse time.
  */
 export function getCardReverseTimes(
   columns: Column[],
   now: number = Date.now(),
+  additionalCards: Card[] = [],
 ): CardReverseTime[] {
   const columnIndexMap = new Map<string, number>();
   for (let i = 0; i < columns.length; i++) {
@@ -74,35 +80,43 @@ export function getCardReverseTimes(
 
   const results: CardReverseTime[] = [];
 
+  const allCards: Card[] = [];
   for (const col of columns) {
     for (const card of col.cards) {
-      if (card.columnHistory.length < 2) continue;
+      allCards.push(card);
+    }
+  }
+  for (const card of additionalCards) {
+    allCards.push(card);
+  }
 
-      let reverseTimeMs = 0;
+  for (const card of allCards) {
+    if (card.columnHistory.length < 2) continue;
 
-      for (let i = 0; i < card.columnHistory.length - 1; i++) {
-        const fromIndex = columnIndexMap.get(card.columnHistory[i].columnId);
-        const toIndex = columnIndexMap.get(card.columnHistory[i + 1].columnId);
+    let reverseTimeMs = 0;
 
-        if (fromIndex === undefined || toIndex === undefined) continue;
+    for (let i = 0; i < card.columnHistory.length - 1; i++) {
+      const fromIndex = columnIndexMap.get(card.columnHistory[i].columnId);
+      const toIndex = columnIndexMap.get(card.columnHistory[i + 1].columnId);
 
-        if (toIndex < fromIndex) {
-          // This is a backward move. Accumulate time spent in the reverse position.
-          const enteredReverse = card.columnHistory[i + 1].enteredAt;
-          const exitedReverse =
-            i + 2 < card.columnHistory.length
-              ? card.columnHistory[i + 2].enteredAt
-              : now;
-          reverseTimeMs += exitedReverse - enteredReverse;
-        }
+      if (fromIndex === undefined || toIndex === undefined) continue;
+
+      if (toIndex < fromIndex) {
+        // This is a backward move. Accumulate time spent in the reverse position.
+        const enteredReverse = card.columnHistory[i + 1].enteredAt;
+        const exitedReverse =
+          i + 2 < card.columnHistory.length
+            ? card.columnHistory[i + 2].enteredAt
+            : now;
+        reverseTimeMs += exitedReverse - enteredReverse;
       }
+    }
 
-      if (reverseTimeMs > 0) {
-        results.push({
-          cardTitle: `#${card.number} ${card.title}`,
-          reverseTimeMs,
-        });
-      }
+    if (reverseTimeMs > 0) {
+      results.push({
+        cardTitle: `#${card.number} ${card.title}`,
+        reverseTimeMs,
+      });
     }
   }
 
@@ -112,13 +126,15 @@ export function getCardReverseTimes(
 
 /**
  * Average reverse time across all cards that have moved backwards.
+ * Includes additional cards (e.g. archived) in the calculation.
  * Returns null if no cards have reverse time.
  */
 export function computeAverageReverseTime(
   columns: Column[],
   now: number = Date.now(),
+  additionalCards: Card[] = [],
 ): number | null {
-  const reverseTimes = getCardReverseTimes(columns, now);
+  const reverseTimes = getCardReverseTimes(columns, now, additionalCards);
   if (reverseTimes.length === 0) return null;
 
   return (

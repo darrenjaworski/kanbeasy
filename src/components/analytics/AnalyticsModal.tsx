@@ -27,7 +27,7 @@ type Props = Readonly<{
 }>;
 
 export function AnalyticsModal({ open, onClose }: Props) {
-  const { columns } = useBoard();
+  const { columns, archive } = useBoard();
   const [cycleTimeVisible, setCycleTimeVisible] = useState(PAGE_SIZE);
   const [reverseTimeVisible, setReverseTimeVisible] = useState(PAGE_SIZE);
 
@@ -35,11 +35,11 @@ export function AnalyticsModal({ open, onClose }: Props) {
 
   const totalCards = getTotalCards(columns);
   const cardsInFlight = getCardsInFlight(columns);
-  const avgCycleTime = computeAverageCycleTime(columns);
-  const avgReverseTime = computeAverageReverseTime(columns);
-  const throughput = getThroughput(columns);
-  const cardCycleTimes = getCardCycleTimes(columns);
-  const cardReverseTimes = getCardReverseTimes(columns);
+  const avgCycleTime = computeAverageCycleTime(columns, archive);
+  const avgReverseTime = computeAverageReverseTime(columns, undefined, archive);
+  const throughput = getThroughput(columns, undefined, archive);
+  const cardCycleTimes = getCardCycleTimes(columns, archive);
+  const cardReverseTimes = getCardReverseTimes(columns, undefined, archive);
 
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="analytics-title">
@@ -54,8 +54,9 @@ export function AnalyticsModal({ open, onClose }: Props) {
 
       <div className="p-4 pt-3 overflow-y-auto">
         <p className={`text-xs ${tc.textFaint} mb-3`}>
-          Reordering columns resets all data. Deleted cards are not included in
-          these metrics.
+          Reordering columns resets all data. Archived cards are included in
+          cycle time, throughput, and reverse time metrics. Permanently deleted
+          cards are excluded.
         </p>
 
         {/* Metric cards grid */}

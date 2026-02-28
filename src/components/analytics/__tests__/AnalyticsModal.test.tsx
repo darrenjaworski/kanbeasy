@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../../../constants/storage";
 import { renderApp } from "../../../test/renderApp";
-import type { Column } from "../../../board/types";
+import type { ArchivedCard, Column } from "../../../board/types";
 
 function makeColumn(
   id: string,
@@ -196,6 +196,91 @@ describe("AnalyticsModal", () => {
     expect(
       screen.queryByRole("dialog", { name: /analytics/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("includes archived cards in cycle time metrics", async () => {
+    const now = Date.now();
+    const twoHoursAgo = now - 2 * 60 * 60 * 1000;
+
+    const columns = [makeColumn("c1", "Todo"), makeColumn("c2", "Done")];
+    const archive: ArchivedCard[] = [
+      {
+        ...makeCard("archived1", "Archived task", [
+          { columnId: "c1", enteredAt: twoHoursAgo },
+          { columnId: "c2", enteredAt: now },
+        ]),
+        ticketTypeId: null,
+        archivedAt: now,
+        archivedFromColumnId: "c2",
+      },
+    ];
+
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns, archive }),
+    );
+
+    const user = userEvent.setup();
+    renderApp();
+
+    const dlg = await openAnalytics(user);
+
+    // The archived card should appear in the cycle time table
+    expect(within(dlg).getByText("Card Cycle Times")).toBeInTheDocument();
+    expect(
+      within(dlg).getByText((text) => text.includes("Archived task")),
+    ).toBeInTheDocument();
+  });
+
+  it("does not include archived cards in total card count", async () => {
+    const now = Date.now();
+
+    const columns = [
+      makeColumn("c1", "Todo", [
+        makeCard("a", "Board Card", [{ columnId: "c1", enteredAt: now }]),
+      ]),
+    ];
+    const archive: ArchivedCard[] = [
+      {
+        ...makeCard("archived1", "Archived Card", [
+          { columnId: "c1", enteredAt: now },
+        ]),
+        ticketTypeId: null,
+        archivedAt: now,
+        archivedFromColumnId: "c1",
+      },
+    ];
+
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns, archive }),
+    );
+
+    const user = userEvent.setup();
+    renderApp();
+
+    const dlg = await openAnalytics(user);
+
+    // Total Cards should only count board cards (1), not archived
+    const totalCardsMetric = within(dlg).getByText("Total Cards");
+    const metricCard = totalCardsMetric.closest("div")!;
+    expect(within(metricCard).getByText("1")).toBeInTheDocument();
+  });
+
+  it("shows updated disclaimer text about archived cards", async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns: [makeColumn("c1", "Todo")] }),
+    );
+
+    const user = userEvent.setup();
+    renderApp();
+
+    const dlg = await openAnalytics(user);
+
+    expect(
+      within(dlg).getByText(/archived cards are included/i),
+    ).toBeInTheDocument();
   });
 
   it("shows 'show more' button when more than 10 cycle time entries", async () => {
