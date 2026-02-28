@@ -1,6 +1,7 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { useClipboard } from "../useClipboard";
+import { useBoard } from "../useBoard";
 import { ClipboardProvider } from "../ClipboardProvider";
 import { BoardProvider } from "../BoardProvider";
 import type { CardClipboard } from "../types";
@@ -29,7 +30,11 @@ describe("useClipboard", () => {
   it("copies a card", () => {
     const { result } = renderHook(() => useClipboard(), { wrapper });
 
-    const source: CardClipboard = { title: "Test", description: "Desc" };
+    const source: CardClipboard = {
+      title: "Test",
+      description: "Desc",
+      ticketTypeId: null,
+    };
     act(() => result.current.copyCard(source));
 
     expect(result.current.copiedCard).toEqual(source);
@@ -70,6 +75,7 @@ describe("useClipboard", () => {
     const source: CardClipboard = {
       title: "Copied card",
       description: "Some description",
+      ticketTypeId: null,
     };
     act(() => result.current.copyCard(source));
 
@@ -80,6 +86,47 @@ describe("useClipboard", () => {
 
     expect(pasteResult).not.toBeNull();
     expect(typeof pasteResult).toBe("string");
+  });
+
+  it("preserves ticketTypeId when copying and pasting a card", () => {
+    const now = Date.now();
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({
+        columns: [
+          {
+            id: "col-1",
+            title: "Todo",
+            cards: [],
+            createdAt: now,
+            updatedAt: now,
+          },
+        ],
+      }),
+    );
+
+    const { result } = renderHook(
+      () => ({ clipboard: useClipboard(), board: useBoard() }),
+      { wrapper },
+    );
+
+    const source: CardClipboard = {
+      title: "Typed card",
+      description: "Has a type",
+      ticketTypeId: "feat",
+    };
+    act(() => result.current.clipboard.copyCard(source));
+
+    let pastedId: string | null = null;
+    act(() => {
+      pastedId = result.current.clipboard.pasteCard("col-1");
+    });
+
+    const pastedCard = result.current.board.columns[0].cards.find(
+      (c) => c.id === pastedId,
+    );
+    expect(pastedCard).toBeDefined();
+    expect(pastedCard!.ticketTypeId).toBe("feat");
   });
 
   it("preserves copied card after pasting (allows multiple pastes)", () => {
@@ -101,7 +148,11 @@ describe("useClipboard", () => {
 
     const { result } = renderHook(() => useClipboard(), { wrapper });
 
-    const source: CardClipboard = { title: "Test", description: "" };
+    const source: CardClipboard = {
+      title: "Test",
+      description: "",
+      ticketTypeId: null,
+    };
     act(() => result.current.copyCard(source));
     act(() => {
       result.current.pasteCard("col-1");

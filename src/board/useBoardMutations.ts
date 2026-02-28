@@ -195,7 +195,7 @@ export function useBoardMutations(
         number,
         title: source.title,
         description: source.description,
-        ticketTypeId: null,
+        ticketTypeId: source.ticketTypeId ?? null,
         createdAt: now,
         updatedAt: now,
         columnHistory: [{ columnId, enteredAt: now }],

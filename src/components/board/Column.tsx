@@ -217,7 +217,11 @@ export function Column({
         onCopy={(cardId) => {
           const card = cards.find((c) => c.id === cardId);
           if (card)
-            copyCard({ title: card.title, description: card.description });
+            copyCard({
+              title: card.title,
+              description: card.description,
+              ticketTypeId: card.ticketTypeId,
+            });
         }}
         onArchive={(cardId) => archiveCard(id, cardId)}
         onUpdate={(cardId, updates) => updateCard(id, cardId, updates)}

@@ -79,7 +79,7 @@ Settings
 
 ### known bugs
 
-(none)
+- ~~copy/paste card does not preserve ticket type~~ (fixed)
 
 ### upcoming
 

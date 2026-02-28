@@ -20,7 +20,10 @@ export type ArchivedCard = Card &
     archivedFromColumnId: string;
   }>;
 
-export type CardClipboard = Pick<Card, "title" | "description">;
+export type CardClipboard = Pick<
+  Card,
+  "title" | "description" | "ticketTypeId"
+>;
 
 export type CardUpdates = Partial<CardClipboard & Pick<Card, "ticketTypeId">>;
 

@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move footer credit into settings modal next to version link; remove fixed footer to reclaim vertical space
 - Move card density control from Preferences to Appearance section in settings
 
+### Fixed
+
+- Copy/paste card now preserves the ticket type
+
 ### Tests
 
 - Fix e2e tests for collapsible settings sections (Appearance, Preferences, Data must be expanded before interacting)
