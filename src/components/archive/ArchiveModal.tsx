@@ -122,7 +122,7 @@ export function ArchiveModal({ open, onClose }: Props) {
               className={`rounded-lg border ${tc.border} overflow-hidden`}
               data-testid="archive-list"
             >
-              <table className="w-full text-sm">
+              <table className="w-full text-sm table-fixed">
                 <thead>
                   <tr className={`${tc.glass} border-b ${tc.border}`}>
                     <th className="px-3 py-2 w-8" scope="col">
@@ -149,7 +149,7 @@ export function ArchiveModal({ open, onClose }: Props) {
                       Title
                     </th>
                     <th
-                      className={`text-right px-3 py-2 font-medium ${tc.textMuted}`}
+                      className={`text-right px-3 py-2 font-medium ${tc.textMuted} w-48`}
                       scope="col"
                     >
                       Archived

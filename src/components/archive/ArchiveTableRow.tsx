@@ -28,7 +28,7 @@ export function ArchiveTableRow({ card, selected, onToggle, isLast }: Props) {
       <td className={`px-3 py-2 ${tc.textFaint} tabular-nums text-right w-12`}>
         #{card.number}
       </td>
-      <td className={`px-3 py-2 ${tc.text} truncate max-w-xs`}>
+      <td className={`px-3 py-2 ${tc.text} truncate`}>
         {card.title || "Untitled"}
       </td>
       <td className={`px-3 py-2 ${tc.textFaint} whitespace-nowrap text-right`}>
