@@ -42,7 +42,7 @@ test("can export board data as JSON", async ({ page }) => {
   // Read and verify the exported content (v2 format: { version, board, settings })
   const filePath = await download.path();
   const content = JSON.parse(fs.readFileSync(filePath!, "utf-8"));
-  expect(content).toHaveProperty("version", 4);
+  expect(content).toHaveProperty("version", 5);
   expect(content).toHaveProperty("board");
   expect(content.board).toHaveProperty("columns");
   expect(content.board.columns).toHaveLength(1);

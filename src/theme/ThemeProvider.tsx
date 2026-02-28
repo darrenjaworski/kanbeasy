@@ -227,6 +227,19 @@ export function ThemeProvider({
   }, [ticketTypes]);
 
   const resetSettings = useCallback(() => {
+    // Clear all localStorage keys
+    localStorage.removeItem(STORAGE_KEYS.THEME);
+    localStorage.removeItem(STORAGE_KEYS.THEME_PREFERENCE);
+    localStorage.removeItem(STORAGE_KEYS.CARD_DENSITY);
+    localStorage.removeItem(STORAGE_KEYS.COLUMN_RESIZING_ENABLED);
+    localStorage.removeItem(STORAGE_KEYS.DELETE_COLUMN_WARNING);
+    localStorage.removeItem(STORAGE_KEYS.OWL_MODE_ENABLED);
+    localStorage.removeItem(STORAGE_KEYS.VIEW_MODE);
+    localStorage.removeItem(STORAGE_KEYS.TICKET_TYPE_PRESET);
+    localStorage.removeItem(STORAGE_KEYS.TICKET_TYPES);
+    localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
+
+    // Reset state to defaults
     setThemePreferenceState("system");
     setThemeId(getDefaultThemeForMode(getSystemTheme()).id as ThemeId);
     setCardDensity("medium");
@@ -237,7 +250,6 @@ export function ThemeProvider({
     setTicketTypePresetId(DEFAULT_PRESET_ID);
     const preset = TICKET_TYPE_PRESETS.find((p) => p.id === DEFAULT_PRESET_ID);
     if (preset) setTicketTypes([...preset.types]);
-    localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
   }, []);
 
   const theme = getThemeById(themeId);

@@ -91,7 +91,7 @@ test("can wipe the board data", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
-  await dlg.getByRole("button", { name: /clear board data/i }).click();
+  await dlg.getByRole("button", { name: /clear all data/i }).click();
 
   // Board should be empty
   await expect(page.locator('[data-testid^="column-"]')).toHaveCount(0);

@@ -65,8 +65,8 @@ test("card numbers display in list view", async ({ page }) => {
   // Cards are shown in column order (newest first since prepended)
   const firstRowNumber = rows.nth(0).locator("td").first();
   const secondRowNumber = rows.nth(1).locator("td").first();
-  await expect(firstRowNumber).toHaveText("2");
-  await expect(secondRowNumber).toHaveText("1");
+  await expect(firstRowNumber).toHaveText("#2");
+  await expect(secondRowNumber).toHaveText("#1");
 });
 
 test("card numbers persist to localStorage", async ({ page }) => {
