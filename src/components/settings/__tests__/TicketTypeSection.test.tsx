@@ -16,6 +16,10 @@ function renderSection() {
   );
 }
 
+function expandEditor() {
+  fireEvent.click(screen.getByTestId("ticket-type-editor-toggle"));
+}
+
 const devPreset = TICKET_TYPE_PRESETS.find((p) => p.id === "development")!;
 const personalPreset = TICKET_TYPE_PRESETS.find((p) => p.id === "personal")!;
 
@@ -33,6 +37,7 @@ describe("TicketTypeSection", () => {
 
     it("renders all default development ticket types", () => {
       renderSection();
+      expandEditor();
       for (const type of devPreset.types) {
         expect(screen.getByDisplayValue(type.id)).toBeInTheDocument();
         expect(screen.getByDisplayValue(type.label)).toBeInTheDocument();
@@ -41,11 +46,13 @@ describe("TicketTypeSection", () => {
 
     it("renders add type button", () => {
       renderSection();
+      expandEditor();
       expect(screen.getByTestId("ticket-type-add")).toBeInTheDocument();
     });
 
     it("renders a color swatch for each type", () => {
       renderSection();
+      expandEditor();
       for (const type of devPreset.types) {
         expect(
           screen.getByLabelText(`Change color for ${type.label}`),
@@ -55,6 +62,7 @@ describe("TicketTypeSection", () => {
 
     it("renders a remove button for each type", () => {
       renderSection();
+      expandEditor();
       for (const type of devPreset.types) {
         expect(
           screen.getByLabelText(`Remove ${type.label} type`),
@@ -66,6 +74,7 @@ describe("TicketTypeSection", () => {
   describe("preset selection", () => {
     it("switches to personal preset", () => {
       renderSection();
+      expandEditor();
       fireEvent.change(screen.getByTestId("ticket-type-preset"), {
         target: { value: "personal" },
       });
@@ -78,6 +87,7 @@ describe("TicketTypeSection", () => {
 
     it("switches to custom without changing types", () => {
       renderSection();
+      expandEditor();
       fireEvent.change(screen.getByTestId("ticket-type-preset"), {
         target: { value: "custom" },
       });
@@ -94,6 +104,7 @@ describe("TicketTypeSection", () => {
     it("updates label and switches to custom preset", async () => {
       const user = userEvent.setup();
       renderSection();
+      expandEditor();
 
       const labelInput = screen.getByTestId("ticket-type-label-0");
       await user.clear(labelInput);
@@ -106,6 +117,7 @@ describe("TicketTypeSection", () => {
     it("updates type ID and switches to custom preset", async () => {
       const user = userEvent.setup();
       renderSection();
+      expandEditor();
 
       const idInput = screen.getByTestId("ticket-type-id-0");
       await user.clear(idInput);
@@ -119,6 +131,7 @@ describe("TicketTypeSection", () => {
   describe("removing types", () => {
     it("removes a type and switches to custom preset", () => {
       renderSection();
+      expandEditor();
       const initialCount = devPreset.types.length;
 
       fireEvent.click(screen.getByTestId("ticket-type-remove-0"));
@@ -137,6 +150,7 @@ describe("TicketTypeSection", () => {
   describe("adding types", () => {
     it("adds a new type with default values and switches to custom preset", () => {
       renderSection();
+      expandEditor();
       const initialCount = devPreset.types.length;
 
       fireEvent.click(screen.getByTestId("ticket-type-add"));
@@ -151,6 +165,7 @@ describe("TicketTypeSection", () => {
 
     it("picks the first unused color for a new type", () => {
       renderSection();
+      expandEditor();
 
       fireEvent.click(screen.getByTestId("ticket-type-add"));
 
@@ -163,6 +178,7 @@ describe("TicketTypeSection", () => {
   describe("color picker", () => {
     it("opens color picker when swatch is clicked", () => {
       renderSection();
+      expandEditor();
       const swatch = screen.getByLabelText(
         `Change color for ${devPreset.types[0].label}`,
       );
@@ -176,6 +192,7 @@ describe("TicketTypeSection", () => {
 
     it("closes color picker when swatch is clicked again", () => {
       renderSection();
+      expandEditor();
       const swatch = screen.getByLabelText(
         `Change color for ${devPreset.types[0].label}`,
       );
@@ -189,6 +206,7 @@ describe("TicketTypeSection", () => {
 
     it("changes color and closes picker when a color is selected", () => {
       renderSection();
+      expandEditor();
       const swatch = screen.getByLabelText(
         `Change color for ${devPreset.types[0].label}`,
       );
@@ -207,6 +225,7 @@ describe("TicketTypeSection", () => {
 
     it("only shows one color picker at a time", () => {
       renderSection();
+      expandEditor();
       const swatch0 = screen.getByLabelText(
         `Change color for ${devPreset.types[0].label}`,
       );
