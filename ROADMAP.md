@@ -114,6 +114,11 @@ Settings
   - touch-friendly drag and drop
   - mobile-optimized column layout (stacked or swipeable)
   - appropriately sized tap targets and spacing
+- codebase health
+  - add unit tests for `useBoardMutations.ts` — core CRUD logic (434 LOC) has no direct unit test coverage
+  - add isolated unit tests for major components (`Board.tsx`, `Column.tsx`, `CardList.tsx`)
+  - enable type-aware ESLint rules (`parserOptions.project`) to catch unsafe promises, optional chaining, and type-unsafe comparisons
+  - consistent use of `tc` class helper — replace inline Tailwind class strings with centralized theme tokens (e.g., `CardList.tsx`)
 - fun & easter eggs
   - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
   - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)
