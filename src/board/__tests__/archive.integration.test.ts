@@ -154,6 +154,97 @@ describe("card archive through BoardProvider", () => {
     expect(result.current.columns[0].cards).toHaveLength(0);
   });
 
+  it("restoreCards bulk-restores multiple cards to their original columns", () => {
+    const { result } = renderHook(() => useBoard(), { wrapper });
+
+    act(() => result.current.resetBoard());
+    act(() => result.current.addColumn("Col A"));
+    act(() => result.current.addColumn("Col B"));
+    const colAId = result.current.columns[0].id;
+    const colBId = result.current.columns[1].id;
+    act(() => result.current.addCard(colAId, "Task 1"));
+    act(() => result.current.addCard(colBId, "Task 2"));
+    const card1Id = result.current.columns[0].cards[0].id;
+    const card2Id = result.current.columns[1].cards[0].id;
+
+    // Archive both
+    act(() => result.current.archiveCard(colAId, card1Id));
+    act(() => result.current.archiveCard(colBId, card2Id));
+    expect(result.current.archive).toHaveLength(2);
+
+    // Bulk restore
+    act(() => result.current.restoreCards([card1Id, card2Id]));
+
+    expect(result.current.archive).toHaveLength(0);
+    expect(result.current.columns[0].cards).toHaveLength(1);
+    expect(result.current.columns[1].cards).toHaveLength(1);
+    expect(result.current.columns[0].cards[0].id).toBe(card1Id);
+    expect(result.current.columns[1].cards[0].id).toBe(card2Id);
+  });
+
+  it("restoreCards falls back to first column when original column is gone", () => {
+    const { result } = renderHook(() => useBoard(), { wrapper });
+
+    act(() => result.current.resetBoard());
+    act(() => result.current.addColumn("Col A"));
+    act(() => result.current.addColumn("Col B"));
+    const colBId = result.current.columns[1].id;
+    act(() => result.current.addCard(colBId, "Task 1"));
+    const cardId = result.current.columns[1].cards[0].id;
+
+    // Archive from Col B, then remove Col B
+    act(() => result.current.archiveCard(colBId, cardId));
+    act(() => result.current.removeColumn(colBId));
+    expect(result.current.columns).toHaveLength(1);
+    expect(result.current.archive).toHaveLength(1);
+
+    // Bulk restore — original column is gone, should go to first column
+    act(() => result.current.restoreCards([cardId]));
+
+    expect(result.current.archive).toHaveLength(0);
+    expect(result.current.columns[0].cards).toHaveLength(1);
+    expect(result.current.columns[0].cards[0].id).toBe(cardId);
+  });
+
+  it("restoreCards is a no-op when no matching archived cards", () => {
+    const { result } = renderHook(() => useBoard(), { wrapper });
+
+    act(() => result.current.resetBoard());
+    act(() => result.current.addColumn("Col"));
+    const colId = result.current.columns[0].id;
+
+    act(() => result.current.restoreCards(["nonexistent"]));
+    expect(result.current.columns[0].cards).toHaveLength(0);
+    expect(result.current.archive).toHaveLength(0);
+    // Verify no undo entry was added (state unchanged)
+    expect(result.current.columns[0].id).toBe(colId);
+  });
+
+  it("permanentlyDeleteCards bulk-deletes multiple archived cards", () => {
+    const { result } = renderHook(() => useBoard(), { wrapper });
+
+    act(() => result.current.resetBoard());
+    act(() => result.current.addColumn("Col"));
+    const colId = result.current.columns[0].id;
+    act(() => result.current.addCard(colId, "Task 1"));
+    act(() => result.current.addCard(colId, "Task 2"));
+    act(() => result.current.addCard(colId, "Task 3"));
+    const card1Id = result.current.columns[0].cards[0].id;
+    const card2Id = result.current.columns[0].cards[1].id;
+    const card3Id = result.current.columns[0].cards[2].id;
+
+    act(() => result.current.archiveCard(colId, card1Id));
+    act(() => result.current.archiveCard(colId, card2Id));
+    act(() => result.current.archiveCard(colId, card3Id));
+    expect(result.current.archive).toHaveLength(3);
+
+    // Bulk delete first two
+    act(() => result.current.permanentlyDeleteCards([card1Id, card2Id]));
+
+    expect(result.current.archive).toHaveLength(1);
+    expect(result.current.archive[0].id).toBe(card3Id);
+  });
+
   it("resetBoard clears both columns and archive", () => {
     const { result } = renderHook(() => useBoard(), { wrapper });
 

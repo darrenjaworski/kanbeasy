@@ -335,6 +335,50 @@ describe("AnalyticsModal", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows reverse time table with show more pagination", async () => {
+    const now = Date.now();
+    // Cards that move forward then backward create reverse time
+    // c1 (index 0), c2 (index 1), c3 (index 2)
+    // History: c1 → c3 → c1 → c3 means the c3→c1 move is backwards
+    const cards = Array.from({ length: 12 }, (_, i) =>
+      makeCard(`rt-${i}`, `Rev ${i + 1}`, [
+        { columnId: "c1", enteredAt: now - (i + 3) * 60 * 60 * 1000 },
+        { columnId: "c3", enteredAt: now - (i + 2) * 60 * 60 * 1000 },
+        { columnId: "c1", enteredAt: now - (i + 1) * 60 * 60 * 1000 },
+        { columnId: "c3", enteredAt: now - i * 60 * 60 * 1000 },
+      ]),
+    );
+
+    const columns = [
+      makeColumn("c1", "Todo"),
+      makeColumn("c2", "In Progress"),
+      makeColumn("c3", "Done", cards),
+    ];
+    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+
+    const user = userEvent.setup();
+    renderApp();
+
+    const dlg = await openAnalytics(user);
+
+    expect(within(dlg).getByText("Card Reverse Times")).toBeInTheDocument();
+
+    // Both cycle time and reverse time tables should have show more buttons
+    const showMoreButtons = within(dlg).getAllByRole("button", {
+      name: /show more/i,
+    });
+    expect(showMoreButtons).toHaveLength(2);
+
+    // Click the last show more button (reverse time table is rendered after cycle times)
+    await user.click(showMoreButtons[1]);
+
+    // Only one show more button should remain (for cycle times)
+    const remaining = within(dlg).getAllByRole("button", {
+      name: /show more/i,
+    });
+    expect(remaining).toHaveLength(1);
+  });
+
   it("shows 'show more' button when more than 10 cycle time entries", async () => {
     const now = Date.now();
     const cards = Array.from({ length: 12 }, (_, i) =>
