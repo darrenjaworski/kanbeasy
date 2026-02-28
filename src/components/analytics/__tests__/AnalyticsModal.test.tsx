@@ -44,10 +44,30 @@ describe("AnalyticsModal", () => {
     cardNum = 1;
   });
 
-  it("opens and displays metric cards for an empty board", async () => {
+  it("disables analytics button when there are no cards", () => {
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
       JSON.stringify({ columns: [makeColumn("c1", "Todo")] }),
+    );
+    renderApp();
+
+    expect(
+      screen.getByRole("button", { name: /open analytics/i }),
+    ).toBeDisabled();
+  });
+
+  it("opens and displays metric cards for a board with one card", async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({
+        columns: [
+          makeColumn("c1", "Todo", [
+            makeCard("x", "Placeholder", [
+              { columnId: "c1", enteredAt: Date.now() },
+            ]),
+          ]),
+        ],
+      }),
     );
 
     const user = userEvent.setup();
@@ -60,8 +80,6 @@ describe("AnalyticsModal", () => {
     expect(within(dlg).getByText("Avg Cycle Time")).toBeInTheDocument();
     expect(within(dlg).getByText("Avg Reverse Time")).toBeInTheDocument();
     expect(within(dlg).getByText("Throughput")).toBeInTheDocument();
-    // Multiple metrics show "0" — verify at least one is present
-    expect(within(dlg).getAllByText("0").length).toBeGreaterThanOrEqual(1);
   });
 
   it("shows total card count", async () => {
@@ -183,7 +201,15 @@ describe("AnalyticsModal", () => {
   it("closes when close button is clicked", async () => {
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")] }),
+      JSON.stringify({
+        columns: [
+          makeColumn("c1", "Todo", [
+            makeCard("x", "Placeholder", [
+              { columnId: "c1", enteredAt: Date.now() },
+            ]),
+          ]),
+        ],
+      }),
     );
 
     const user = userEvent.setup();
@@ -203,7 +229,12 @@ describe("AnalyticsModal", () => {
     const now = Date.now();
     const twoHoursAgo = now - 2 * 60 * 60 * 1000;
 
-    const columns = [makeColumn("c1", "Todo"), makeColumn("c2", "Done")];
+    const columns = [
+      makeColumn("c1", "Todo", [
+        makeCard("board1", "Board card", [{ columnId: "c1", enteredAt: now }]),
+      ]),
+      makeColumn("c2", "Done"),
+    ];
     const archive: ArchivedCard[] = [
       {
         ...makeCard("archived1", "Archived task", [
@@ -322,7 +353,15 @@ describe("AnalyticsModal", () => {
   it("shows updated disclaimer text about archived cards", async () => {
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")] }),
+      JSON.stringify({
+        columns: [
+          makeColumn("c1", "Todo", [
+            makeCard("x", "Placeholder", [
+              { columnId: "c1", enteredAt: Date.now() },
+            ]),
+          ]),
+        ],
+      }),
     );
 
     const user = userEvent.setup();

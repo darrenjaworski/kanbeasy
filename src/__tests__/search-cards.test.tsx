@@ -9,6 +9,15 @@ describe("search cards", () => {
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
   });
 
+  it("disables search input when there are no cards", () => {
+    renderApp();
+
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
+    expect(searchInput).toBeDisabled();
+  });
+
   it("highlights matching cards when searching", async () => {
     const user = userEvent.setup();
     renderApp();

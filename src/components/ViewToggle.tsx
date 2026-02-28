@@ -1,4 +1,5 @@
 import { useTheme } from "../theme/useTheme";
+import { useBoard } from "../board/useBoard";
 import { BoardViewIcon, ListViewIcon } from "./icons";
 import { tc } from "../theme/classNames";
 import type { ViewMode } from "../theme/types";
@@ -20,6 +21,8 @@ const modes: readonly {
 
 export function ViewToggle() {
   const { viewMode, setViewMode } = useTheme();
+  const { columns } = useBoard();
+  const hasCards = columns.some((c) => c.cards.length > 0);
 
   return (
     <div
@@ -29,6 +32,7 @@ export function ViewToggle() {
     >
       {modes.map(({ mode, label, shortLabel, Icon }) => {
         const active = viewMode === mode;
+        const disabled = mode === "list" && !hasCards;
         return (
           <button
             key={mode}
@@ -36,7 +40,8 @@ export function ViewToggle() {
             role="radio"
             aria-checked={active}
             aria-label={label}
-            className={`p-1.5 px-2.5 inline-flex items-center gap-1.5 transition-colors ${tc.focusRing} ${active ? tc.pressed : tc.bgHover}`}
+            disabled={disabled}
+            className={`p-1.5 px-2.5 inline-flex items-center gap-1.5 transition-colors ${tc.focusRing} ${active ? tc.pressed : tc.bgHover} disabled:opacity-40 disabled:pointer-events-none`}
             onClick={() => setViewMode(mode)}
           >
             <Icon className="size-4" />

@@ -2,8 +2,9 @@ import { useBoard } from "../board/useBoard";
 import { tc } from "../theme/classNames";
 
 export function SearchInput() {
-  const { searchQuery, setSearchQuery, matchingCardIds } = useBoard();
+  const { columns, searchQuery, setSearchQuery, matchingCardIds } = useBoard();
 
+  const hasCards = columns.some((c) => c.cards.length > 0);
   const showMatchCount = searchQuery && matchingCardIds.size > 0;
 
   return (
@@ -14,7 +15,8 @@ export function SearchInput() {
         placeholder="Search cards..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-3 ${showMatchCount ? "pr-18" : ""} py-1.5 text-sm placeholder:text-black/40 dark:placeholder:text-white/40 focus:outline-hidden focus:ring-2 focus:ring-accent`}
+        disabled={!hasCards}
+        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-3 ${showMatchCount ? "pr-18" : ""} py-1.5 text-sm placeholder:text-black/40 dark:placeholder:text-white/40 focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-40`}
         aria-label="Search cards"
         data-testid="search-input"
       />

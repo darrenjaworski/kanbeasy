@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Disable analytics button, search input, and list view toggle when there are no cards on the board
+- Disable archive button when archive is empty
 - Move owl assistant and undo/redo buttons to bottom of page now that footer is removed
 - Add visible text labels ("Board" / "List") to view mode toggle buttons for improved discoverability
 - Switch default card density from "Comfortable" (medium) to "Compact" (small) to reduce dead space; existing users who previously set a density preference are unaffected

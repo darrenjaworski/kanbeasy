@@ -48,18 +48,14 @@ describe("ArchiveModal", () => {
     cardNum = 1;
   });
 
-  it("shows empty state when archive is empty", async () => {
+  it("disables archive button when archive is empty", () => {
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
       JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive: [] }),
     );
-    const user = userEvent.setup();
     renderApp();
 
-    const dlg = await openArchive(user);
-    expect(within(dlg).getByTestId("archive-empty")).toHaveTextContent(
-      "No archived cards.",
-    );
+    expect(screen.getByTestId("archive-button")).toBeDisabled();
   });
 
   it("displays archived cards in the table", async () => {
@@ -212,9 +208,10 @@ describe("ArchiveModal", () => {
   });
 
   it("closes when close button is clicked", async () => {
+    const archive = [makeArchivedCard("a1", "Task A", "c1", 1)];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive: [] }),
+      JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive }),
     );
     const user = userEvent.setup();
     renderApp();

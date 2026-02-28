@@ -54,6 +54,7 @@ an ultra simple task organizer
 - ✅ granular clear data controls — separate actions for clearing board, settings, or all data
 - ✅ night owl mode — between 10 PM and 4 AM, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
 - ✅ card archive (soft-delete with browse/restore)
+  - ✅ auto-archive cards when deleting a column instead of permanently destroying them
 - ✅ list view type column — ticket type displayed in list view table
 - ✅ archived card analytics — archived cards included in historical metrics (cycle time, throughput, reverse time) with "(archived)" indicator in per-card tables
 - ✅ UI polish pass
@@ -64,6 +65,8 @@ an ultra simple task organizer
   - ✅ add descriptive subtitle to "Owl assistant" toggle
   - ✅ move footer credit into settings modal; remove fixed footer
   - ✅ move card density control to Appearance section
+  - ✅ dynamic favicon — browser tab icon updates to reflect the active theme colors
+  - ✅ move floating buttons (owl assistant, undo/redo) to bottom of page after footer removal
 
 Settings
 
@@ -81,7 +84,6 @@ Settings
 ### upcoming
 
 - revisit "warn before deleting columns with cards" — columns now archive cards instead of permanently deleting them, so the warning may be unnecessary or should be reworded
-- dynamic favicon — update the browser tab icon to reflect the active theme accent color
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - tooltips on all buttons for improved discoverability and accessibility
