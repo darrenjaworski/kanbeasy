@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.23.0]
+
 ### Features
 
 - Add type column to list view table showing ticket type label with color

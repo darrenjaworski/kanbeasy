@@ -53,6 +53,8 @@ an ultra simple task organizer
 - ✅ ticket type field — single-select card category with colored badge; type presets (Development, Personal) and full customization in settings; combined display as `feat-42`, `fix-13`
 - ✅ granular clear data controls — separate actions for clearing board, settings, or all data
 - ✅ night owl mode — between 10 PM and 4 AM, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
+- ✅ card archive (soft-delete with browse/restore)
+- ✅ list view type column — ticket type displayed in list view table
 
 Settings
 
@@ -79,7 +81,6 @@ Settings
   - due dates with visual overdue indicator
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
-  - card archive (soft-delete with browse/restore)
   - pinned cards — stick important cards to the top of a column
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
