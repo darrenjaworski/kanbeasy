@@ -56,6 +56,14 @@ an ultra simple task organizer
 - ✅ card archive (soft-delete with browse/restore)
 - ✅ list view type column — ticket type displayed in list view table
 - ✅ archived card analytics — archived cards included in historical metrics (cycle time, throughput, reverse time) with "(archived)" indicator in per-card tables
+- ✅ UI polish pass
+  - ✅ add text labels ("Board" / "List") to view mode toggle icons for clarity
+  - ✅ switch default card density from "Comfortable" to "Compact" to reduce dead space
+  - ✅ reorganize settings modal into collapsible sections (Appearance, Ticket Types, Preferences, Data)
+  - ✅ collapse ticket type editor behind a disclosure
+  - ✅ add descriptive subtitle to "Owl assistant" toggle
+  - ✅ move footer credit into settings modal; remove fixed footer
+  - ✅ move card density control to Appearance section
 
 Settings
 
@@ -72,13 +80,6 @@ Settings
 
 ### upcoming
 
-- UI polish pass
-  - add text labels ("Board" / "List") to view mode toggle icons for clarity
-  - switch default card density from "Comfortable" to "Compact" to reduce dead space
-  - reorganize settings modal into collapsible sections with visible dividers (Appearance, Ticket Types, Preferences, Data Management)
-  - collapse ticket type editor behind a disclosure — show only the preset dropdown by default, expand to full editor on click
-  - add descriptive subtitle to "Owl assistant" toggle explaining what it does
-  - move footer credit into settings modal (near version number) to reclaim vertical space on every page
 - revisit "warn before deleting columns with cards" — columns now archive cards instead of permanently deleting them, so the warning may be unnecessary or should be reworded
 - dynamic favicon — update the browser tab icon to reflect the active theme accent color
 - ability to specify column background color
