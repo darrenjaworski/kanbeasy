@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Clarify analytics disclaimer to explain which metrics include archived cards vs board-only
 
+### Tests
+
+- Fix analytics e2e strict mode violations from disclaimer text matching metric headings
+
 ## [1.24.0]
 
 ### Features

@@ -29,8 +29,8 @@ test("shows metric cards with empty board", async ({ page }) => {
   await expect(dlg).toBeVisible();
 
   // With an empty board, Total Cards and Cards in Flight should be 0
-  await expect(dlg.getByText("Total Cards")).toBeVisible();
-  await expect(dlg.getByText("Cards in Flight")).toBeVisible();
+  await expect(dlg.getByText("Total Cards", { exact: true })).toBeVisible();
+  await expect(dlg.getByText("Cards in Flight", { exact: true })).toBeVisible();
   await expect(dlg.getByText("Avg Cycle Time")).toBeVisible();
   await expect(dlg.getByText("Throughput", { exact: true })).toBeVisible();
 
@@ -50,7 +50,9 @@ test("shows correct total card count", async ({ page }) => {
   await expect(dlg).toBeVisible();
 
   // The "2" should appear as the total card count
-  const totalCardsSection = dlg.getByText("Total Cards").locator("..");
+  const totalCardsSection = dlg
+    .getByText("Total Cards", { exact: true })
+    .locator("..");
   await expect(totalCardsSection.getByText("2")).toBeVisible();
 });
 
