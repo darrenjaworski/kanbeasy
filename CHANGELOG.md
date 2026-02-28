@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.24.1]
+
 ### Changed
 
 - Clarify analytics disclaimer to explain which metrics include archived cards vs board-only
