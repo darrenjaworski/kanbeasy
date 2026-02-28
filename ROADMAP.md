@@ -72,6 +72,13 @@ Settings
 
 ### upcoming
 
+- UI polish pass
+  - add text labels ("Board" / "List") to view mode toggle icons for clarity
+  - switch default card density from "Comfortable" to "Compact" to reduce dead space
+  - reorganize settings modal into collapsible sections with visible dividers (Appearance, Ticket Types, Preferences, Data Management)
+  - collapse ticket type editor behind a disclosure — show only the preset dropdown by default, expand to full editor on click
+  - add descriptive subtitle to "Owl assistant" toggle explaining what it does
+  - move footer credit into settings modal (near version number) to reclaim vertical space on every page
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - tooltips on all buttons for improved discoverability and accessibility
