@@ -67,6 +67,7 @@ an ultra simple task organizer
   - ✅ move card density control to Appearance section
   - ✅ dynamic favicon — browser tab icon updates to reflect the active theme colors
   - ✅ move floating buttons (owl assistant, undo/redo) to bottom of page after footer removal
+  - ✅ disable navigation controls (analytics, search, list view toggle, archive) when board or archive is empty
 
 Settings
 
