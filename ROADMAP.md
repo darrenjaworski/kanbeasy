@@ -55,6 +55,7 @@ an ultra simple task organizer
 - ✅ night owl mode — between 10 PM and 4 AM, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
 - ✅ card archive (soft-delete with browse/restore)
 - ✅ list view type column — ticket type displayed in list view table
+- ✅ archived card analytics — archived cards included in historical metrics (cycle time, throughput, reverse time) with "(archived)" indicator in per-card tables
 
 Settings
 

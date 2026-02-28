@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.24.0]
+
 ### Features
 
 - Include archived cards in historical analytics (cycle time, throughput, reverse time); snapshot metrics (total cards, cards in flight) remain board-only
