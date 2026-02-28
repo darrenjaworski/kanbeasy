@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.21.1]
+
+### Fixed
+
+- Clear all localStorage keys (theme, density, preferences, etc.) when resetting settings
+
 ### Changed
 
 - Add e2e tests to quality standards checklist and release process in CLAUDE.md
+- Remove design notes
 
 ## [1.21.0]
 
