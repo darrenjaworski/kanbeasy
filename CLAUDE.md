@@ -242,8 +242,7 @@ Follow these steps to prepare a new release:
 2. **Run all checks** — everything must pass before releasing:
 
    ```bash
-   npm run static-checks
-   npm run e2e
+   npm run kitchen-sink
    ```
 
 3. **Update ROADMAP.md**:

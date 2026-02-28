@@ -20,7 +20,7 @@ Present the proposed version bump to the user and wait for confirmation before p
 
 ## 2. Run all checks
 
-Run `npm run static-checks` and `npm run e2e`. Both must pass. If either fails, diagnose and fix the issue, then re-run. If you cannot fix after 3 attempts, stop and report.
+Run `npm run kitchen-sink`. This runs static-checks (format, lint, knip, typecheck, build, unit tests) followed by e2e tests. Everything must pass. If anything fails, diagnose and fix the issue, then re-run. If you cannot fix after 3 attempts, stop and report.
 
 ## 3. Update ROADMAP.md
 
