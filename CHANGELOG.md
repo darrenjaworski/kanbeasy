@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.22.0]
+
 ### Features
 
 - Add night owl mode: between 10 PM and 4 AM, the owl assistant shows sleepy eyes, "go to bed!" style tips, and a "Good night!" dismiss button
@@ -26,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Tests
 
 - Implement skipped e2e test for welcome modal "show once" behavior
+- Add unit tests for `isNightOwlHour` utility and night owl mode in OwlBuddy
+- Update e2e owl assistant tests to handle time-dependent dismiss button text
 
 ## [1.21.1]
 

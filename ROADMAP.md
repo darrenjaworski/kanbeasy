@@ -52,6 +52,7 @@ an ultra simple task organizer
 - ✅ auto-incrementing card numbers (`#1`, `#2`, ...) displayed on board cards, card detail modal, list view, and analytics tables
 - ✅ ticket type field — single-select card category with colored badge; type presets (Development, Personal) and full customization in settings; combined display as `feat-42`, `fix-13`
 - ✅ granular clear data controls — separate actions for clearing board, settings, or all data
+- ✅ night owl mode — between 10 PM and 4 AM, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
 
 Settings
 
@@ -101,4 +102,3 @@ Settings
 - fun & easter eggs
   - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
   - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)
-  - night owl mode — if the user is using the app between midnight and 5am, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
