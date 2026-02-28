@@ -75,6 +75,7 @@ export function CardList({
               density={density}
               columnId={columnId}
               isSearchMatch={matchingCardIds.has(card.id)}
+              // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: auto-select new card title for immediate editing
               autoFocus={card.id === autoFocusCardId}
               onAutoFocused={onAutoFocused}
               ticketTypes={ticketTypes}

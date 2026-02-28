@@ -181,9 +181,9 @@ export function CardDetailModal({
 
         {/* Description */}
         <div>
-          <label className={`block text-xs font-medium ${tc.textMuted} mb-1`}>
+          <span className={`block text-xs font-medium ${tc.textMuted} mb-1`}>
             Description
-          </label>
+          </span>
           <DescriptionField
             description={card.description}
             onSave={handleDescriptionSave}

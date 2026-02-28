@@ -238,6 +238,7 @@ export function Column({
         message={`This column has ${cards.length} card${cards.length === 1 ? "" : "s"}. Deleting it will remove them permanently.`}
       />
       {/* Resize handle (feature-flagged) */}
+      {/* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- separator with tabIndex is an interactive resize widget */}
       {columnResizingEnabled && (
         <div
           className="absolute top-0 pt-[8px] pb-[8px] right-0 h-full w-2 cursor-col-resize z-10 group/resizer"
@@ -262,6 +263,7 @@ export function Column({
           />
         </div>
       )}
+      {/* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */}
     </section>
   );
 }

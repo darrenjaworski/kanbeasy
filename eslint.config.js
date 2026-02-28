@@ -2,6 +2,8 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import jsxA11y from "eslint-plugin-jsx-a11y";
+import { importX } from "eslint-plugin-import-x";
 import tseslint from "typescript-eslint";
 import { globalIgnores } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier";
@@ -15,10 +17,18 @@ export default tseslint.config([
       tseslint.configs.recommended,
       reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
+      jsxA11y.flatConfigs.recommended,
+      importX.flatConfigs.recommended,
+      importX.flatConfigs.typescript,
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    settings: {
+      "import-x/resolver": {
+        typescript: true,
+      },
     },
     rules: {
       // Enforce strict equality
@@ -41,6 +51,10 @@ export default tseslint.config([
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+      // TypeScript already catches unresolved imports; this rule has false positives with bundler moduleResolution
+      "import-x/no-unresolved": "off",
+      // Project uses allowImportingTsExtensions
+      "import-x/extensions": "off",
     },
   },
   // Node environment for config and e2e files

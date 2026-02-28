@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add `eslint-plugin-jsx-a11y` for accessibility linting (recommended preset)
+- Add `eslint-plugin-import-x` for import hygiene checks (recommended + typescript presets)
+- Fix duplicate import from `utils/storage` in ThemeProvider
+- Replace unassociated `<label>` with `<span>` for description heading in CardDetailModal
+
 ### Fixed
 
 - Generate HTML report in CI so Playwright report artifact is uploaded correctly

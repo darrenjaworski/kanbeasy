@@ -8,8 +8,12 @@ import type {
 } from "./types";
 import type { ThemeId, ThemeMode } from "./themes";
 import { getDefaultThemeForMode, getThemeById } from "./themes";
-import { getStringFromStorage, saveStringToStorage } from "../utils/storage";
-import { getFromStorage, saveToStorage } from "../utils/storage";
+import {
+  getStringFromStorage,
+  saveStringToStorage,
+  getFromStorage,
+  saveToStorage,
+} from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
 import type { TicketType } from "../constants/ticketTypes";
 import {
