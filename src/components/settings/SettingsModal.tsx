@@ -41,8 +41,8 @@ export function SettingsModal({ open, onClose }: Props) {
           <DataSection />
         </SettingsSection>
 
-        {/* Version */}
-        <div className={`mt-4 text-center text-xs ${tc.textFaint}`}>
+        {/* Version & credit */}
+        <div className={`mt-4 text-center text-xs ${tc.textFaint} space-y-1`}>
           <a
             href="https://github.com/darrenjaworski/kanbeasy"
             target="_blank"
@@ -51,6 +51,18 @@ export function SettingsModal({ open, onClose }: Props) {
           >
             kanbeasy v{__APP_VERSION__}
           </a>
+          <p>
+            Made with care by{" "}
+            <a
+              href="https://github.com/darrenjaworski"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`underline underline-offset-2 ${tc.textHover} transition-colors`}
+            >
+              darrenjaworski
+            </a>
+            , Copilot, and Claude.
+          </p>
         </div>
       </div>
     </Modal>

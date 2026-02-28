@@ -1,6 +1,5 @@
 import { Board } from "./components/board/Board";
 import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
 import { WelcomeModal } from "./components/WelcomeModal";
 import { UndoRedoControls } from "./components/UndoRedoControls";
 import { OwlBuddy } from "./components/OwlBuddy";
@@ -17,7 +16,6 @@ function App() {
       {viewMode === "board" ? <Board /> : <ListView />}
       {viewMode === "board" && <UndoRedoControls />}
       <OwlBuddy />
-      <Footer />
     </div>
   );
 }
