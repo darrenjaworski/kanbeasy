@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Auto-archive cards when deleting a column instead of permanently destroying them; cards can be restored from the archive
+- Dynamic theme-based favicon that updates to match the active theme's colors
 
 ### Changed
 

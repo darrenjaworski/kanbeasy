@@ -15,6 +15,7 @@ import {
   saveToStorage,
 } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
+import { updateFavicon } from "./favicon";
 import type { TicketType } from "../constants/ticketTypes";
 import {
   DEFAULT_PRESET_ID,
@@ -191,6 +192,9 @@ export function ThemeProvider({
 
     // Set color-scheme for native browser UI
     root.style.colorScheme = theme.mode;
+
+    // Update favicon to match theme
+    updateFavicon(theme.colors.surface, theme.colors.accent);
 
     // Persist
     saveStringToStorage(STORAGE_KEYS.THEME, themeId);
