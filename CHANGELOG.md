@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Copy/paste card now preserves the ticket type
 
+### Changed
+
+- Add `kitchen-sink` npm script that runs static-checks and e2e tests in one command
+
 ### Tests
 
 - Fix e2e tests for collapsible settings sections (Appearance, Preferences, Data must be expanded before interacting)
