@@ -7,15 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- Replace single "Clear board data" button with three separate actions: clear board, clear settings, and clear all
-- Centralize `hasSeenWelcome` localStorage key into `STORAGE_KEYS` constant
-- Add `resetSettings` to ThemeProvider for resetting all settings to defaults
-
-### Tests
-
-- Add comprehensive tests for TicketTypeSection (preset selection, editing, adding, removing types, color picker)
+## [1.21.0]
 
 ### Features
 
@@ -33,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replace single "Clear board data" button with three separate actions: clear board, clear settings, and clear all
+- Centralize `hasSeenWelcome` localStorage key into `STORAGE_KEYS` constant
+- Add `resetSettings` to ThemeProvider for resetting all settings to defaults
 - Standardize modal layout: fixed header with scrollable body and consistent `p-4` spacing across all modals
 - Add `max-h-[85vh]` constraint to Modal component with flex column layout
 - Replace `import React from "react"` with named type imports across icon components, tests, and CardControls
@@ -41,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tests
 
+- Add comprehensive tests for TicketTypeSection (preset selection, editing, adding, removing types, color picker)
 - Add unit tests for `formatCardId`, `findTicketType`, migration `ticketTypeId` backfill, v5 import/export
 - Add e2e tests for card numbering (ascending numbers on board, modal header, list view, localStorage persistence, duplicate fresh numbers, no number reuse after deletion)
 - Fix card detail modal close button e2e tests to match `#N Card Details` header format

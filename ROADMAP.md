@@ -49,6 +49,9 @@ an ultra simple task organizer
 - ✅ copy and paste cards (duplicate within or across columns)
 - ✅ owl assistant — toggle in settings that places an owl in the corner; clicking it gives random productivity advice, programming jokes, and owl puns
 - ✅ WIP badge heat indicator — middle column card count badges progressively shift to accent color as card count rises
+- ✅ auto-incrementing card numbers (`#1`, `#2`, ...) displayed on board cards, card detail modal, list view, and analytics tables
+- ✅ ticket type field — single-select card category with colored badge; type presets (Development, Personal) and full customization in settings; combined display as `feat-42`, `fix-13`
+- ✅ granular clear data controls — separate actions for clearing board, settings, or all data
 
 Settings
 
@@ -76,11 +79,9 @@ Settings
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
   - card archive (soft-delete with browse/restore)
-  - card numbering — auto-incrementing IDs (e.g., #42) for easy reference; pairs with ticket type for prefixed IDs (e.g., feat-42, fix-13)
   - pinned cards — stick important cards to the top of a column
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
-  - ticket type field — single-select card category (distinct from multi-select labels/tags); colored badge on card; type presets in settings (default: "Development" with feat, fix, refactor, chore, test); analytics breakdown by type
 - card sorting UI (alphabetical, by date created, by last updated)
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded
