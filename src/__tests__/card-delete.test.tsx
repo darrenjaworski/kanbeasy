@@ -4,7 +4,7 @@ import { renderApp } from "../test/renderApp";
 import { describe, it, expect } from "vitest";
 
 describe("card delete", () => {
-  it("removes a card from a column using the card's remove button", async () => {
+  it("archives a card from a column using the card's archive button", async () => {
     const user = userEvent.setup();
     renderApp();
 
@@ -24,14 +24,14 @@ describe("card delete", () => {
       within(column as HTMLElement).getAllByText(/new card/i),
     ).toHaveLength(2);
 
-    // Click the remove button on the first card in the column
+    // Click the archive button on the first card in the column
     const firstCard = within(column as HTMLElement)
       .getAllByText(/new card/i)[0]
       .closest("div");
-    const removeBtn = within(firstCard as HTMLElement).getByRole("button", {
-      name: /remove card/i,
+    const archiveBtn = within(firstCard as HTMLElement).getByRole("button", {
+      name: /archive card/i,
     });
-    await user.click(removeBtn);
+    await user.click(archiveBtn);
 
     // Only one card remains
     expect(

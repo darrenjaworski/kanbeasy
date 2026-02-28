@@ -51,7 +51,7 @@ test("badge updates when a card is removed", async ({ page }) => {
   // Remove one card
   const card = column.getByTestId("card-0");
   await card.hover();
-  await column.getByTestId("card-remove-0").click();
+  await column.getByTestId("card-archive-0").click();
 
   // Should now show 1
   await expect(column.getByLabel(/1 card$/i)).toHaveText("1");

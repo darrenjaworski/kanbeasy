@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import { SettingsModal } from "./settings/SettingsModal";
 import { AnalyticsModal } from "./analytics/AnalyticsModal";
-import { SettingsGearIcon, AnalyticsIcon } from "./icons";
+import { ArchiveModal } from "./archive/ArchiveModal";
+import { SettingsGearIcon, AnalyticsIcon, ArchiveIcon } from "./icons";
 import { SearchInput } from "./SearchInput";
 import { ViewToggle } from "./ViewToggle";
 import { tc } from "../theme/classNames";
@@ -10,6 +11,7 @@ import { tc } from "../theme/classNames";
 export function Header() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [archiveOpen, setArchiveOpen] = useState(false);
   return (
     <header
       className={`sticky top-0 z-10 border-b ${tc.borderSubtle} bg-surface/80 backdrop-blur supports-[backdrop-filter]:bg-surface/60`}
@@ -37,6 +39,16 @@ export function Header() {
           <button
             type="button"
             className={`${tc.button} rounded-md p-2 inline-flex items-center gap-2 justify-center`}
+            aria-label="Open archive"
+            onClick={() => setArchiveOpen(true)}
+            data-testid="archive-button"
+          >
+            <ArchiveIcon className="size-5" />
+            <span className="text-sm font-medium">Archive</span>
+          </button>
+          <button
+            type="button"
+            className={`${tc.button} rounded-md p-2 inline-flex items-center gap-2 justify-center`}
             aria-label="Open settings"
             onClick={() => setSettingsOpen(true)}
           >
@@ -49,6 +61,7 @@ export function Header() {
         open={analyticsOpen}
         onClose={() => setAnalyticsOpen(false)}
       />
+      <ArchiveModal open={archiveOpen} onClose={() => setArchiveOpen(false)} />
       <SettingsModal
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}

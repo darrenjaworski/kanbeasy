@@ -1,7 +1,7 @@
-import type { Column } from "../board/types";
+import type { ArchivedCard, Column } from "../board/types";
 import type { CardDensity, ThemePreference, ViewMode } from "../theme/types";
 import type { TicketType } from "../constants/ticketTypes";
-import { isColumn } from "../board/validation";
+import { isArchivedCard, isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
 import { migrateColumnsWithNumbering } from "../board/migration";
 import {
@@ -11,6 +11,7 @@ import {
 
 interface ValidatedImport {
   columns: Column[];
+  archive: ArchivedCard[];
   nextCardNumber: number;
   settings: {
     theme: string;
@@ -56,29 +57,37 @@ export function validateExportData(parsed: unknown): ImportResult {
     version !== 2 &&
     version !== 3 &&
     version !== 4 &&
-    version !== 5
+    version !== 5 &&
+    version !== 6
   ) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${String(version)}. Only versions 1–5 are supported.`
+        ? `Unsupported export version: ${String(version)}. Only versions 1–6 are supported.`
         : "Missing export version.",
     };
   }
 
   // Validate board
   let columns: Column[] = [];
+  let archive: ArchivedCard[] = [];
   let nextCardNumber = 1;
   if (parsed.board !== null && parsed.board !== undefined) {
     if (!isObject(parsed.board)) {
       return { ok: false, error: "Invalid board data." };
     }
+    const rawArchive =
+      version >= 6 && Array.isArray(parsed.board.archive)
+        ? (parsed.board.archive as unknown[]).filter(isArchivedCard)
+        : [];
     if (Array.isArray(parsed.board.columns)) {
       const validColumns = (parsed.board.columns as unknown[]).filter(isColumn);
       const result = migrateColumnsWithNumbering(
         validColumns as unknown as Record<string, unknown>[],
+        rawArchive as unknown as Record<string, unknown>[],
       );
       columns = result.columns;
+      archive = result.archive;
       nextCardNumber = result.nextCardNumber;
     }
   }
@@ -179,6 +188,7 @@ export function validateExportData(parsed: unknown): ImportResult {
     ok: true,
     data: {
       columns,
+      archive,
       nextCardNumber,
       settings: {
         theme,

@@ -18,7 +18,7 @@ import { TicketTypeBadge } from "../shared/TicketTypeBadge";
 type SortableCardItemProps = Readonly<{
   card: Card;
   onCopy: () => void;
-  onRemove: () => void;
+  onArchive: () => void;
   onUpdate: (updates: CardUpdates) => void;
   onOpenDetail: () => void;
   canDrag?: boolean;
@@ -34,7 +34,7 @@ type SortableCardItemProps = Readonly<{
 export function SortableCardItem({
   card,
   onCopy,
-  onRemove,
+  onArchive,
   onUpdate,
   onOpenDetail,
   canDrag = true,
@@ -127,7 +127,7 @@ export function SortableCardItem({
         canDrag={canDrag}
         cardTitle={card.title}
         onCopy={onCopy}
-        onRemove={onRemove}
+        onArchive={onArchive}
         onOpenDetail={onOpenDetail}
         setActivatorNodeRef={setActivatorNodeRef}
         attributes={attributes}

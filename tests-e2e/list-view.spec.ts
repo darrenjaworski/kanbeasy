@@ -51,13 +51,10 @@ function seedBoard() {
 test.describe("List view", () => {
   test.beforeEach(async ({ page }) => {
     const board = seedBoard();
-    await page.addInitScript(
-      (b: string) => {
-        localStorage.setItem("kanbeasy:board", b);
-        localStorage.setItem("kanbeasy:nextCardNumber", "4");
-      },
-      board,
-    );
+    await page.addInitScript((b: string) => {
+      localStorage.setItem("kanbeasy:board", b);
+      localStorage.setItem("kanbeasy:nextCardNumber", "4");
+    }, board);
     const target = process.env.CI === "true" ? "/kanbeasy" : "/";
     await page.goto(target);
     await page.getByTestId("get-started-button").click();
@@ -128,7 +125,6 @@ test.describe("List view", () => {
     const secondRowDesc = rows.nth(1).locator("td").nth(3);
     await expect(secondRowDesc).toHaveText("\u2014");
   });
-
 });
 
 test("list view shows empty state when board has no cards", async ({

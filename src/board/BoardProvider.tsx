@@ -3,7 +3,7 @@ import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState } from "./types";
 import { getFromStorage, saveToStorage } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
-import { isColumn } from "./validation";
+import { isArchivedCard, isColumn } from "./validation";
 import { migrateColumnsWithNumbering } from "./migration";
 import { useUndoableState } from "./useUndoableState";
 import { useBoardMutations } from "./useBoardMutations";
@@ -19,6 +19,7 @@ function createInitialBoard(): LoadResult {
 
   return {
     state: {
+      archive: [],
       columns: [
         {
           id: todoId,
@@ -102,7 +103,10 @@ function loadState(): LoadResult {
     return createInitialBoard();
   }
 
-  const stored = getFromStorage<{ columns?: unknown }>(STORAGE_KEYS.BOARD, {});
+  const stored = getFromStorage<{ columns?: unknown; archive?: unknown }>(
+    STORAGE_KEYS.BOARD,
+    {},
+  );
 
   const cols = Array.isArray(stored.columns)
     ? (stored.columns as unknown[])
@@ -123,9 +127,14 @@ function loadState(): LoadResult {
         .filter(isColumn)
     : [];
 
+  const rawArchive = Array.isArray(stored.archive)
+    ? (stored.archive as unknown[]).filter(isArchivedCard)
+    : [];
+
   // Migrate timestamps and assign card numbers
-  const { columns, nextCardNumber } = migrateColumnsWithNumbering(
+  const { columns, archive, nextCardNumber } = migrateColumnsWithNumbering(
     cols as unknown as Record<string, unknown>[],
+    rawArchive as unknown as Record<string, unknown>[],
   );
 
   // Reconcile with persisted counter (take the max)
@@ -135,7 +144,7 @@ function loadState(): LoadResult {
   );
 
   return {
-    state: { columns },
+    state: { columns, archive },
     nextCardNumber: Math.max(nextCardNumber, persistedCounter),
   };
 }
@@ -177,6 +186,7 @@ export function BoardProvider({
   const value = useMemo<BoardContextValue>(
     () => ({
       columns: state.columns,
+      archive: state.archive,
       ...mutations,
       setNextCardNumber: saveCounter,
       searchQuery,
@@ -189,6 +199,7 @@ export function BoardProvider({
     }),
     [
       state.columns,
+      state.archive,
       mutations,
       saveCounter,
       searchQuery,

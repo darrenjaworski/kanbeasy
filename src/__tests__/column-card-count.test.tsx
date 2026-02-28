@@ -36,7 +36,7 @@ describe("column card count badge", () => {
     expect(within(column as HTMLElement).getByText("2")).toBeInTheDocument();
   });
 
-  it("decrements count when a card is removed", async () => {
+  it("decrements count when a card is archived", async () => {
     const user = userEvent.setup();
     renderApp();
 
@@ -50,10 +50,10 @@ describe("column card count badge", () => {
     await user.click(addCardBtn);
     expect(within(column as HTMLElement).getByText("2")).toBeInTheDocument();
 
-    const removeBtn = within(column as HTMLElement).getAllByRole("button", {
-      name: /remove card/i,
+    const archiveBtn = within(column as HTMLElement).getAllByRole("button", {
+      name: /archive card/i,
     })[0];
-    await user.click(removeBtn);
+    await user.click(archiveBtn);
 
     expect(within(column as HTMLElement).getByText("1")).toBeInTheDocument();
   });

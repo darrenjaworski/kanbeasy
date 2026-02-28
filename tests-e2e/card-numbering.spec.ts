@@ -122,9 +122,9 @@ test("counter increments past deleted cards (no number reuse)", async ({
   await column.getByTestId("add-card-button-0").click();
   await expect(column.getByTestId("card-0")).toContainText("#1");
 
-  // Delete it
+  // Archive it
   await column.getByTestId("card-0").hover();
-  await column.getByTestId("card-remove-0").click();
+  await column.getByTestId("card-archive-0").click();
   await expect(column.locator('[data-testid^="card-content-"]')).toHaveCount(0);
 
   // Counter should still be at 2, not reset to 1

@@ -1,12 +1,12 @@
 import type { HTMLAttributes } from "react";
-import { CardDragIcon, CloseIcon, CopyIcon, MoreIcon } from "../icons";
+import { ArchiveIcon, CardDragIcon, CopyIcon, MoreIcon } from "../icons";
 import { tc } from "../../theme/classNames";
 
 interface CardControlsProps {
   readonly canDrag: boolean;
   readonly cardTitle: string;
   readonly onCopy: () => void;
-  readonly onRemove: () => void;
+  readonly onArchive: () => void;
   readonly onOpenDetail: () => void;
   readonly setActivatorNodeRef: (node: HTMLElement | null) => void;
   readonly attributes: HTMLAttributes<HTMLButtonElement>;
@@ -18,7 +18,7 @@ export function CardControls({
   canDrag,
   cardTitle,
   onCopy,
-  onRemove,
+  onArchive,
   onOpenDetail,
   setActivatorNodeRef,
   attributes,
@@ -68,13 +68,13 @@ export function CardControls({
       <span aria-hidden className={`${tc.separator} h-6 w-px`} />
       <button
         type="button"
-        onClick={onRemove}
-        aria-label={`Remove card ${cardTitle || "Untitled"}`}
-        title="Remove card"
+        onClick={onArchive}
+        aria-label={`Archive card ${cardTitle || "Untitled"}`}
+        title="Archive card"
         className={`${tc.iconButton} h-6 w-6`}
-        data-testid={`card-remove-${index}`}
+        data-testid={`card-archive-${index}`}
       >
-        <CloseIcon className="size-4" />
+        <ArchiveIcon className="size-4" />
       </button>
     </div>
   );

@@ -1,4 +1,5 @@
 export { AnalyticsIcon } from "./AnalyticsIcon";
+export { ArchiveIcon } from "./ArchiveIcon";
 export { BoardViewIcon } from "./BoardViewIcon";
 export { CardDragIcon } from "./CardDragIcon";
 export { CloseIcon } from "./CloseIcon";

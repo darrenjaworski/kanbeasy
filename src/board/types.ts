@@ -14,6 +14,12 @@ export type Card = Readonly<{
   columnHistory: ColumnHistoryEntry[];
 }>;
 
+export type ArchivedCard = Card &
+  Readonly<{
+    archivedAt: number;
+    archivedFromColumnId: string;
+  }>;
+
 export type CardClipboard = Pick<Card, "title" | "description">;
 
 export type CardUpdates = Partial<CardClipboard & Pick<Card, "ticketTypeId">>;
@@ -28,6 +34,7 @@ export type Column = Readonly<{
 
 export type BoardState = Readonly<{
   columns: Column[];
+  archive: ArchivedCard[];
 }>;
 
 export type BoardContextValue = Readonly<{
@@ -38,7 +45,7 @@ export type BoardContextValue = Readonly<{
   addCard: (columnId: string, title?: string) => string;
   removeCard: (columnId: string, cardId: string) => void;
   updateCard: (columnId: string, cardId: string, updates: CardUpdates) => void;
-  setColumns: (cols: Column[]) => void;
+  setColumns: (cols: Column[], archive?: ArchivedCard[]) => void;
   sortCards: (columnId: string) => void;
   reorderCard: (
     columnId: string,
@@ -49,6 +56,13 @@ export type BoardContextValue = Readonly<{
   duplicateCard: (columnId: string, source: CardClipboard) => string;
   renameTicketType: (oldId: string, newId: string) => void;
   clearTicketType: (typeId: string) => void;
+  archive: ArchivedCard[];
+  archiveCard: (columnId: string, cardId: string) => void;
+  restoreCard: (archivedCardId: string, targetColumnId: string) => void;
+  restoreCards: (cardIds: string[]) => void;
+  permanentlyDeleteCard: (archivedCardId: string) => void;
+  permanentlyDeleteCards: (cardIds: string[]) => void;
+  clearArchive: () => void;
   resetBoard: () => void;
   setNextCardNumber: (n: number) => void;
   searchQuery: string;

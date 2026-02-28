@@ -1,4 +1,4 @@
-import type { Card, Column } from "./types";
+import type { ArchivedCard, Card, Column } from "./types";
 
 export function isCard(x: unknown): x is Card {
   return (
@@ -6,6 +6,15 @@ export function isCard(x: unknown): x is Card {
     typeof x === "object" &&
     typeof (x as { id?: unknown }).id === "string" &&
     typeof (x as { title?: unknown }).title === "string"
+  );
+}
+
+export function isArchivedCard(x: unknown): x is ArchivedCard {
+  return (
+    isCard(x) &&
+    typeof (x as { archivedAt?: unknown }).archivedAt === "number" &&
+    typeof (x as { archivedFromColumnId?: unknown }).archivedFromColumnId ===
+      "string"
   );
 }
 

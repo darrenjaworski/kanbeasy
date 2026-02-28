@@ -79,9 +79,9 @@ test("can undo deleting a card", async ({ page }) => {
   await column.getByTestId("add-card-button-0").click();
   await expect(column.getByTestId("card-0")).toBeVisible();
 
-  // Delete the card
+  // Archive the card
   await column.getByTestId("card-0").hover();
-  await column.getByTestId("card-remove-0").click();
+  await column.getByTestId("card-archive-0").click();
   await expect(column.getByTestId("card-0")).not.toBeVisible();
 
   // Undo — card should reappear

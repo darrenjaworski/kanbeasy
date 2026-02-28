@@ -1,4 +1,4 @@
-import type { Card, Column, ColumnHistoryEntry } from "./types";
+import type { ArchivedCard, Card, Column, ColumnHistoryEntry } from "./types";
 
 /**
  * Backfills timestamps and columnHistory on a legacy card.
@@ -31,6 +31,25 @@ export function migrateCard(
     createdAt,
     updatedAt,
     columnHistory,
+  };
+}
+
+/**
+ * Migrates an archived card, backfilling card fields and archive-specific fields.
+ * Idempotent — preserves existing values if already present.
+ */
+function migrateArchivedCard(raw: Record<string, unknown>): ArchivedCard {
+  const columnId =
+    typeof raw.archivedFromColumnId === "string"
+      ? raw.archivedFromColumnId
+      : "unknown";
+  const card = migrateCard(raw, columnId);
+  const now = Date.now();
+
+  return {
+    ...card,
+    archivedAt: typeof raw.archivedAt === "number" ? raw.archivedAt : now,
+    archivedFromColumnId: columnId,
   };
 }
 
@@ -68,12 +87,15 @@ export function migrateColumns(columns: Record<string, unknown>[]): Column[] {
 /**
  * Migrates columns and assigns sequential card numbers by createdAt order.
  * Cards that already have a number > 0 keep their existing number.
+ * Archived cards are included in the used-numbers set to avoid conflicts.
  * Returns the migrated columns and the next available card number.
  */
 export function migrateColumnsWithNumbering(
   rawColumns: Record<string, unknown>[],
-): { columns: Column[]; nextCardNumber: number } {
+  rawArchive: Record<string, unknown>[] = [],
+): { columns: Column[]; archive: ArchivedCard[]; nextCardNumber: number } {
   const columns = migrateColumns(rawColumns);
+  const archive = rawArchive.map(migrateArchivedCard);
 
   // Collect all cards with their position info for stable sorting
   const entries: { colIdx: number; cardIdx: number; card: Card }[] = [];
@@ -92,10 +114,16 @@ export function migrateColumnsWithNumbering(
   });
 
   // Collect existing numbers into a Set for O(1) conflict checks
+  // Include archive card numbers to avoid collisions
   const usedNumbers = new Set<number>();
   for (const entry of entries) {
     if (entry.card.number > 0) {
       usedNumbers.add(entry.card.number);
+    }
+  }
+  for (const archivedCard of archive) {
+    if (archivedCard.number > 0) {
+      usedNumbers.add(archivedCard.number);
     }
   }
 
@@ -125,14 +153,18 @@ export function migrateColumnsWithNumbering(
     })),
   }));
 
-  // Next card number is max of all assigned numbers + 1
+  // Next card number is max of all assigned/used numbers + 1
   let maxNumber = 0;
+  for (const n of usedNumbers) {
+    if (n > maxNumber) maxNumber = n;
+  }
   for (const n of numberMap.values()) {
     if (n > maxNumber) maxNumber = n;
   }
 
   return {
     columns: numberedColumns,
+    archive,
     nextCardNumber: Math.max(maxNumber + 1, 1),
   };
 }

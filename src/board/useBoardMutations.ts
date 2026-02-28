@@ -1,9 +1,15 @@
 import { useCallback, type RefObject } from "react";
-import type { BoardContextValue, BoardState, Card } from "./types";
+import type {
+  ArchivedCard,
+  BoardContextValue,
+  BoardState,
+  Card,
+} from "./types";
 import { dropCardOnColumn } from "./dragUtils";
 
 const defaultState: BoardState = {
   columns: [],
+  archive: [],
 };
 
 export function useBoardMutations(
@@ -16,6 +22,7 @@ export function useBoardMutations(
       const now = Date.now();
       const id = crypto.randomUUID();
       setState((s) => ({
+        ...s,
         columns: [
           ...s.columns,
           { id, title, cards: [], createdAt: now, updatedAt: now },
@@ -29,6 +36,7 @@ export function useBoardMutations(
     (id, title) => {
       const now = Date.now();
       setState((s) => ({
+        ...s,
         columns: s.columns.map((c) =>
           c.id === id ? { ...c, title, updatedAt: now } : c,
         ),
@@ -39,14 +47,21 @@ export function useBoardMutations(
 
   const removeColumn = useCallback<BoardContextValue["removeColumn"]>(
     (id) => {
-      setState((s) => ({ columns: s.columns.filter((c) => c.id !== id) }));
+      setState((s) => ({
+        ...s,
+        columns: s.columns.filter((c) => c.id !== id),
+      }));
     },
     [setState],
   );
 
   const setColumns = useCallback<BoardContextValue["setColumns"]>(
-    (cols) => {
-      setState({ columns: cols });
+    (cols, archive) => {
+      setState((s) => ({
+        ...s,
+        columns: cols,
+        ...(archive !== undefined ? { archive } : {}),
+      }));
     },
     [setState],
   );
@@ -67,6 +82,7 @@ export function useBoardMutations(
         columnHistory: [{ columnId, enteredAt: now }],
       };
       setState((s) => ({
+        ...s,
         columns: s.columns.map((c) =>
           c.id === columnId
             ? { ...c, cards: [card, ...c.cards], updatedAt: now }
@@ -89,7 +105,7 @@ export function useBoardMutations(
         const now = Date.now();
         const newColumns = prev.columns.slice();
         newColumns[idx] = { ...col, cards: newCards, updatedAt: now };
-        return { columns: newColumns };
+        return { ...prev, columns: newColumns };
       });
     },
     [setState],
@@ -112,7 +128,7 @@ export function useBoardMutations(
         };
         const newColumns = prev.columns.slice();
         newColumns[idx] = { ...col, cards: newCards, updatedAt: now };
-        return { columns: newColumns };
+        return { ...prev, columns: newColumns };
       });
     },
     [setState],
@@ -132,7 +148,7 @@ export function useBoardMutations(
           );
         const nextColumns = prev.columns.slice();
         nextColumns[idx] = { ...col, cards: nextCards, updatedAt: now };
-        return { columns: nextColumns };
+        return { ...prev, columns: nextColumns };
       });
     },
     [setState],
@@ -153,7 +169,7 @@ export function useBoardMutations(
         newCards.splice(toIdx, 0, { ...moved, updatedAt: now });
         const newColumns = prev.columns.slice();
         newColumns[colIdx] = { ...col, cards: newCards, updatedAt: now };
-        return { columns: newColumns };
+        return { ...prev, columns: newColumns };
       });
     },
     [setState],
@@ -175,6 +191,7 @@ export function useBoardMutations(
         columnHistory: [{ columnId, enteredAt: now }],
       };
       setState((s) => ({
+        ...s,
         columns: s.columns.map((c) =>
           c.id === columnId
             ? { ...c, cards: [card, ...c.cards], updatedAt: now }
@@ -190,6 +207,7 @@ export function useBoardMutations(
     (fromColumnId, toColumnId, cardId) => {
       if (fromColumnId === toColumnId) return;
       setState((prev) => ({
+        ...prev,
         columns: dropCardOnColumn(
           prev.columns,
           fromColumnId,
@@ -214,7 +232,7 @@ export function useBoardMutations(
               : card,
           ),
         }));
-        return { columns };
+        return { ...prev, columns };
       });
     },
     [setState],
@@ -233,11 +251,149 @@ export function useBoardMutations(
               : card,
           ),
         }));
-        return { columns };
+        return { ...prev, columns };
       });
     },
     [setState],
   );
+
+  const archiveCard = useCallback<BoardContextValue["archiveCard"]>(
+    (columnId, cardId) => {
+      setState((prev) => {
+        const colIdx = prev.columns.findIndex((c) => c.id === columnId);
+        if (colIdx === -1) return prev;
+        const col = prev.columns[colIdx];
+        const card = col.cards.find((c) => c.id === cardId);
+        if (!card) return prev;
+        const now = Date.now();
+        const archived: ArchivedCard = {
+          ...card,
+          archivedAt: now,
+          archivedFromColumnId: columnId,
+        };
+        const newCards = col.cards.filter((c) => c.id !== cardId);
+        const newColumns = prev.columns.slice();
+        newColumns[colIdx] = { ...col, cards: newCards, updatedAt: now };
+        return {
+          columns: newColumns,
+          archive: [...prev.archive, archived],
+        };
+      });
+    },
+    [setState],
+  );
+
+  const restoreCard = useCallback<BoardContextValue["restoreCard"]>(
+    (archivedCardId, targetColumnId) => {
+      setState((prev) => {
+        const archivedCard = prev.archive.find((c) => c.id === archivedCardId);
+        if (!archivedCard) return prev;
+        const colIdx = prev.columns.findIndex((c) => c.id === targetColumnId);
+        if (colIdx === -1) return prev;
+        const now = Date.now();
+        // Strip archive metadata and add column history entry
+        const {
+          archivedAt: _,
+          archivedFromColumnId: __,
+          ...cardFields
+        } = archivedCard;
+        const restoredCard: Card = {
+          ...cardFields,
+          updatedAt: now,
+          columnHistory: [
+            ...cardFields.columnHistory,
+            { columnId: targetColumnId, enteredAt: now },
+          ],
+        };
+        const col = prev.columns[colIdx];
+        const newColumns = prev.columns.slice();
+        newColumns[colIdx] = {
+          ...col,
+          cards: [restoredCard, ...col.cards],
+          updatedAt: now,
+        };
+        return {
+          columns: newColumns,
+          archive: prev.archive.filter((c) => c.id !== archivedCardId),
+        };
+      });
+    },
+    [setState],
+  );
+
+  const restoreCards = useCallback<BoardContextValue["restoreCards"]>(
+    (cardIds) => {
+      setState((prev) => {
+        const idsToRestore = new Set(cardIds);
+        const cardsToRestore = prev.archive.filter((c) =>
+          idsToRestore.has(c.id),
+        );
+        if (cardsToRestore.length === 0) return prev;
+        const now = Date.now();
+        const newColumns = prev.columns.slice();
+        for (const archived of cardsToRestore) {
+          const colIdx = newColumns.findIndex(
+            (c) => c.id === archived.archivedFromColumnId,
+          );
+          const targetIdx = colIdx !== -1 ? colIdx : 0;
+          if (targetIdx >= newColumns.length) continue;
+          const {
+            archivedAt: _,
+            archivedFromColumnId: __,
+            ...cardFields
+          } = archived;
+          const restoredCard: Card = {
+            ...cardFields,
+            updatedAt: now,
+            columnHistory: [
+              ...cardFields.columnHistory,
+              { columnId: newColumns[targetIdx].id, enteredAt: now },
+            ],
+          };
+          const col = newColumns[targetIdx];
+          newColumns[targetIdx] = {
+            ...col,
+            cards: [restoredCard, ...col.cards],
+            updatedAt: now,
+          };
+        }
+        return {
+          columns: newColumns,
+          archive: prev.archive.filter((c) => !idsToRestore.has(c.id)),
+        };
+      });
+    },
+    [setState],
+  );
+
+  const permanentlyDeleteCard = useCallback<
+    BoardContextValue["permanentlyDeleteCard"]
+  >(
+    (archivedCardId) => {
+      setState((prev) => ({
+        ...prev,
+        archive: prev.archive.filter((c) => c.id !== archivedCardId),
+      }));
+    },
+    [setState],
+  );
+
+  const permanentlyDeleteCards = useCallback<
+    BoardContextValue["permanentlyDeleteCards"]
+  >(
+    (cardIds) => {
+      const idsToDelete = new Set(cardIds);
+      setState((prev) => ({
+        ...prev,
+        archive: prev.archive.filter((c) => !idsToDelete.has(c.id)),
+      }));
+    },
+    [setState],
+  );
+
+  const clearArchive = useCallback<BoardContextValue["clearArchive"]>(() => {
+    setState((prev) => ({ ...prev, archive: [] }));
+  }, [setState]);
 
   const resetBoard = useCallback<BoardContextValue["resetBoard"]>(() => {
     setState(defaultState);
@@ -257,6 +413,12 @@ export function useBoardMutations(
     reorderCard,
     renameTicketType,
     clearTicketType,
+    archiveCard,
+    restoreCard,
+    restoreCards,
+    permanentlyDeleteCard,
+    permanentlyDeleteCards,
+    clearArchive,
     resetBoard,
   };
 }

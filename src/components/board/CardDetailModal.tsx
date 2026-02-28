@@ -5,7 +5,7 @@ import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { Modal } from "../shared/Modal";
 import { ModalHeader } from "../shared/ModalHeader";
 import { DescriptionField } from "./DescriptionField";
-import { MoreIcon } from "../icons";
+import { ArchiveIcon, MoreIcon } from "../icons";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
 import { formatDateTime } from "../../utils/formatDate";
@@ -20,6 +20,7 @@ type Props = Readonly<{
   density: CardDensity;
   onUpdate: (updates: CardUpdates) => void;
   onMoveCard: (toColumnId: string) => void;
+  onArchive: () => void;
   ticketTypes: TicketType[];
 }>;
 
@@ -32,6 +33,7 @@ export function CardDetailModal({
   density,
   onUpdate,
   onMoveCard,
+  onArchive,
   ticketTypes,
 }: Props) {
   // Title editing — uses useInlineEdit (reverts on empty)
@@ -189,6 +191,17 @@ export function CardDetailModal({
             onSave={handleDescriptionSave}
           />
         </div>
+
+        {/* Archive button */}
+        <button
+          type="button"
+          onClick={onArchive}
+          className={`${tc.dangerButton} w-full rounded-md px-3 py-1.5 inline-flex items-center justify-center gap-2`}
+          data-testid="card-detail-archive"
+        >
+          <ArchiveIcon className="size-4" />
+          Archive card
+        </button>
 
         {/* Metadata footer */}
         <div

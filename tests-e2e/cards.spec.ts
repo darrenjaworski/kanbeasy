@@ -128,10 +128,10 @@ test("can delete a card from a column", async ({ page }) => {
   await column.getByTestId("add-card-button-0").click();
   await column.getByTestId("add-card-button-0").click();
 
-  // Reveal controls for the first card and click remove
+  // Reveal controls for the first card and click archive
   const firstCard = column.getByTestId("card-0");
   await firstCard.hover();
-  const removeBtn = column.getByTestId("card-remove-0");
+  const removeBtn = column.getByTestId("card-archive-0");
   await removeBtn.click();
 
   // Verify only one card remains in the column (count textareas by testid)

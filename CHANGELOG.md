@@ -10,11 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Add type column to list view table showing ticket type label with color
+- Add card archive (soft-delete): cards go to an archive instead of being permanently deleted, with browse, restore, and permanent delete from archive modal
+- Add archive button in header between Analytics and Settings
+- Add "Archive card" button in card detail modal
+
+### Changed
+
+- Replace card "Remove" button with "Archive" button on card controls
+- Bump export version to 6 to include archive data; v1–5 imports default to empty archive
+- Refactor archive modal from flat list to table with checkbox selection and bulk restore/delete actions
 
 ### Tests
 
 - Add unit tests for ListView type column
 - Add e2e test suite for list view (headers, type column, descriptions, empty state)
+- Add unit tests for `isArchivedCard` validation
+- Add integration tests for archive/restore/permanentlyDelete/clearArchive mutations and undo/redo
+- Add import/export tests for v6 archive data
+- Add e2e test suite for card archive workflow (archive, restore, permanent delete, undo)
 
 ## [1.22.0]
 

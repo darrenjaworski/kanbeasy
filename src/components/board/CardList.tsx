@@ -12,7 +12,7 @@ import type { CardDensity } from "../../theme/types";
 export function CardList({
   cards,
   onCopy,
-  onRemove,
+  onArchive,
   onUpdate,
   onOpenDetail,
   density,
@@ -22,7 +22,7 @@ export function CardList({
 }: Readonly<{
   cards: Card[];
   onCopy: (cardId: string) => void;
-  onRemove: (cardId: string) => void;
+  onArchive: (cardId: string) => void;
   onUpdate: (cardId: string, updates: CardUpdates) => void;
   onOpenDetail: (cardId: string) => void;
   density: CardDensity;
@@ -68,7 +68,7 @@ export function CardList({
               key={card.id}
               card={card}
               onCopy={() => onCopy(card.id)}
-              onRemove={() => onRemove(card.id)}
+              onArchive={() => onArchive(card.id)}
               onUpdate={(updates) => onUpdate(card.id, updates)}
               onOpenDetail={() => onOpenDetail(card.id)}
               canDrag={cards.length > 1 || columns.length > 1}

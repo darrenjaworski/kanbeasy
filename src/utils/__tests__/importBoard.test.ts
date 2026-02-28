@@ -341,6 +341,76 @@ describe("validateExportData", () => {
     expect(result.data.nextCardNumber).toBe(43);
   });
 
+  it("accepts v6 export data", () => {
+    const result = validateExportData(makeExportData({ version: 6 }));
+    expect(result.ok).toBe(true);
+  });
+
+  it("v6 import includes archive data", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 6,
+        board: {
+          columns: [{ id: "col-1", title: "To Do", cards: [] }],
+          archive: [
+            {
+              id: "card-a",
+              title: "Archived Task",
+              number: 1,
+              description: "",
+              ticketTypeId: null,
+              createdAt: 5000,
+              updatedAt: 5000,
+              columnHistory: [{ columnId: "col-1", enteredAt: 5000 }],
+              archivedAt: 6000,
+              archivedFromColumnId: "col-1",
+            },
+          ],
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.archive).toHaveLength(1);
+    expect(result.data.archive[0].title).toBe("Archived Task");
+    expect(result.data.archive[0].archivedAt).toBe(6000);
+    expect(result.data.archive[0].archivedFromColumnId).toBe("col-1");
+  });
+
+  it("v1-5 imports default to empty archive", () => {
+    for (const version of [1, 2, 3, 4, 5]) {
+      const result = validateExportData(makeExportData({ version }));
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(result.data.archive).toEqual([]);
+    }
+  });
+
+  it("v6 import filters out invalid archive entries", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 6,
+        board: {
+          columns: [{ id: "col-1", title: "To Do", cards: [] }],
+          archive: [
+            {
+              id: "card-a",
+              title: "Valid",
+              archivedAt: 6000,
+              archivedFromColumnId: "col-1",
+            },
+            { id: 123, title: "Bad id" },
+            "not an object",
+          ],
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.archive).toHaveLength(1);
+    expect(result.data.archive[0].title).toBe("Valid");
+  });
+
   it("v1-4 imports default ticketTypePresetId to development", () => {
     const result = validateExportData(makeExportData({ version: 4 }));
     expect(result.ok).toBe(true);

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isCard, isColumn } from "../validation";
+import { isArchivedCard, isCard, isColumn } from "../validation";
 
 describe("isCard", () => {
   it("returns true for a valid card", () => {
@@ -92,5 +92,50 @@ describe("isColumn", () => {
     expect(isColumn({ id: "col1", title: "To Do", cards: [{ id: 123 }] })).toBe(
       false,
     );
+  });
+});
+
+describe("isArchivedCard", () => {
+  const validArchivedCard = {
+    id: "c1",
+    title: "Task",
+    archivedAt: 1000,
+    archivedFromColumnId: "col-1",
+  };
+
+  it("returns true for a valid archived card", () => {
+    expect(isArchivedCard(validArchivedCard)).toBe(true);
+  });
+
+  it("returns false when archivedAt is missing", () => {
+    const { archivedAt: _, ...rest } = validArchivedCard;
+    expect(isArchivedCard(rest)).toBe(false);
+  });
+
+  it("returns false when archivedFromColumnId is missing", () => {
+    const { archivedFromColumnId: _, ...rest } = validArchivedCard;
+    expect(isArchivedCard(rest)).toBe(false);
+  });
+
+  it("returns false when archivedAt is not a number", () => {
+    expect(
+      isArchivedCard({ ...validArchivedCard, archivedAt: "not-a-number" }),
+    ).toBe(false);
+  });
+
+  it("returns false when archivedFromColumnId is not a string", () => {
+    expect(
+      isArchivedCard({ ...validArchivedCard, archivedFromColumnId: 123 }),
+    ).toBe(false);
+  });
+
+  it("returns false for a non-card object", () => {
+    expect(
+      isArchivedCard({ archivedAt: 1000, archivedFromColumnId: "col-1" }),
+    ).toBe(false);
+  });
+
+  it("returns false for null", () => {
+    expect(isArchivedCard(null)).toBe(false);
   });
 });

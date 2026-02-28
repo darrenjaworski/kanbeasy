@@ -62,9 +62,9 @@ export function DataSection() {
       return;
     }
 
-    const { columns, nextCardNumber, settings } = result.data;
+    const { columns, archive, nextCardNumber, settings } = result.data;
 
-    setColumns(columns);
+    setColumns(columns, archive);
     setNextCardNumber(nextCardNumber);
     setThemePreference(settings.themePreference);
     if (settings.theme) {

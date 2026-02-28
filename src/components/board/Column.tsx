@@ -46,7 +46,7 @@ export function Column({
   const resizing = useRef(false);
   const startX = useRef(0);
   const startWidth = useRef(DEFAULT_COLUMN_WIDTH);
-  const { addCard, removeColumn, removeCard, updateColumn, updateCard } =
+  const { addCard, removeColumn, archiveCard, updateColumn, updateCard } =
     useBoard();
   const { copiedCard, copyCard, pasteCard } = useClipboard();
   const { cardDensity, columnResizingEnabled, deleteColumnWarningEnabled } =
@@ -219,7 +219,7 @@ export function Column({
           if (card)
             copyCard({ title: card.title, description: card.description });
         }}
-        onRemove={(cardId) => removeCard(id, cardId)}
+        onArchive={(cardId) => archiveCard(id, cardId)}
         onUpdate={(cardId, updates) => updateCard(id, cardId, updates)}
         onOpenDetail={onOpenDetail ?? (() => {})}
         density={cardDensity}

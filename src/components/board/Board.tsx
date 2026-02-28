@@ -23,7 +23,8 @@ import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import { SortableColumnItem } from "./SortableColumnItem";
 
 export function Board() {
-  const { columns, addColumn, setColumns, updateCard, moveCard } = useBoard();
+  const { columns, addColumn, setColumns, updateCard, moveCard, archiveCard } =
+    useBoard();
   const { cardDensity, ticketTypes } = useTheme();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -178,6 +179,10 @@ export function Board() {
           onMoveCard={(toColumnId) =>
             moveCard(detailCard.columnId, toColumnId, detailCard.card.id)
           }
+          onArchive={() => {
+            archiveCard(detailCard.columnId, detailCard.card.id);
+            setDetailCardId(null);
+          }}
           ticketTypes={ticketTypes}
         />
       )}
