@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add e2e tests to quality standards checklist and release process in CLAUDE.md
+
 ## [1.21.0]
 
 ### Features

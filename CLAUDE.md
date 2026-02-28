@@ -194,6 +194,7 @@ Before making any changes, ensure:
 - TypeScript typecheck passes (`npm run type:check`)
 - ESLint passes (`npm run lint`)
 - Unit tests pass (`npm run test:run`)
+- E2E tests pass (`npm run e2e`)
 - No `any` types without justification
 - New features include tests and cover edge cases
 
@@ -242,6 +243,7 @@ Follow these steps to prepare a new release:
 
    ```bash
    npm run static-checks
+   npm run e2e
    ```
 
 3. **Update ROADMAP.md**:
