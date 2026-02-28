@@ -1,14 +1,28 @@
 type Props = Readonly<{
   id: string;
   label: string;
+  description?: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
 }>;
 
-export function ToggleSwitch({ id, label, checked, onChange }: Props) {
+export function ToggleSwitch({
+  id,
+  label,
+  description,
+  checked,
+  onChange,
+}: Props) {
   return (
     <label className="flex items-center justify-between gap-3 cursor-pointer select-none">
-      <span>{label}</span>
+      <span>
+        {label}
+        {description && (
+          <span className="block text-xs font-normal opacity-60">
+            {description}
+          </span>
+        )}
+      </span>
       <span className="relative inline-flex items-center">
         <input
           id={id}

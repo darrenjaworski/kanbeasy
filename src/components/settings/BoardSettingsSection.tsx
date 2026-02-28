@@ -36,6 +36,7 @@ export function BoardSettingsSection() {
       <ToggleSwitch
         id="owl-mode"
         label="Owl assistant"
+        description="A friendly owl that shares productivity tips and jokes"
         checked={owlModeEnabled}
         onChange={setOwlModeEnabled}
       />
