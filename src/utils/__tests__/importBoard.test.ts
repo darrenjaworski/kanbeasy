@@ -117,7 +117,7 @@ describe("validateExportData", () => {
     });
   });
 
-  it("defaults invalid cardDensity to medium", () => {
+  it("defaults invalid cardDensity to small (compact)", () => {
     const result = validateExportData(
       makeExportData({
         settings: {
@@ -131,7 +131,7 @@ describe("validateExportData", () => {
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.cardDensity).toBe("medium");
+    expect(result.data.settings.cardDensity).toBe("small");
   });
 
   it("defaults invalid themePreference to system", () => {

@@ -95,29 +95,31 @@ describe("settings modal", () => {
     expect(comfortableBtn).toBeInTheDocument();
     expect(spaciousBtn).toBeInTheDocument();
 
-    // Default is medium (comfortable)
-    expect(comfortableBtn).toHaveAttribute("aria-pressed", "true");
+    // Default is small (compact)
+    expect(compactBtn).toHaveAttribute("aria-pressed", "true");
 
-    // Close settings to snapshot spacing comfortably
+    // Close settings to snapshot spacing at compact default
     await user.click(
       within(dlg).getByRole("button", { name: /close settings/i }),
     );
 
-    // default rows should be 2
+    // default rows should be 1 (compact)
     const textareas = screen.getAllByRole("textbox", { name: /card content/i });
-    expect(textareas[0]).toHaveAttribute("rows", "2");
+    expect(textareas[0]).toHaveAttribute("rows", "1");
 
-    // Re-open and set compact
+    // Re-open and set comfortable
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg2 = await screen.findByRole("dialog", { name: /settings/i });
-    await user.click(within(dlg2).getByRole("button", { name: /compact/i }));
+    await user.click(
+      within(dlg2).getByRole("button", { name: /comfortable/i }),
+    );
     await user.click(
       within(dlg2).getByRole("button", { name: /close settings/i }),
     );
-    const textareasAfterCompact = screen.getAllByRole("textbox", {
+    const textareasAfterComfortable = screen.getAllByRole("textbox", {
       name: /card content/i,
     });
-    expect(textareasAfterCompact[0]).toHaveAttribute("rows", "1");
+    expect(textareasAfterComfortable[0]).toHaveAttribute("rows", "2");
 
     // Re-open and set spacious
     await user.click(screen.getByRole("button", { name: /open settings/i }));

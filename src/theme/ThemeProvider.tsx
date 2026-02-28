@@ -69,11 +69,11 @@ function getInitialThemeId(preference: ThemePreference): ThemeId {
 }
 
 function getInitialDensity(): CardDensity {
-  const stored = getStringFromStorage(STORAGE_KEYS.CARD_DENSITY, "medium");
+  const stored = getStringFromStorage(STORAGE_KEYS.CARD_DENSITY, "small");
   if (stored === "small" || stored === "medium" || stored === "large") {
     return stored;
   }
-  return "medium";
+  return "small";
 }
 
 function getInitialViewMode(): ViewMode {
@@ -246,7 +246,7 @@ export function ThemeProvider({
     // Reset state to defaults
     setThemePreferenceState("system");
     setThemeId(getDefaultThemeForMode(getSystemTheme()).id as ThemeId);
-    setCardDensity("medium");
+    setCardDensity("small");
     setColumnResizingEnabled(false);
     setDeleteColumnWarningEnabled(true);
     setOwlModeEnabled(false);

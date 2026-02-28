@@ -28,14 +28,14 @@ describe("resetSettings", () => {
     expect(result.current.themeId).toBe("light-slate");
   });
 
-  it("resets card density to medium", () => {
+  it("resets card density to small (compact)", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
     act(() => result.current.setCardDensity("large"));
     expect(result.current.cardDensity).toBe("large");
 
     act(() => result.current.resetSettings());
-    expect(result.current.cardDensity).toBe("medium");
+    expect(result.current.cardDensity).toBe("small");
   });
 
   it("resets column resizing to disabled", () => {

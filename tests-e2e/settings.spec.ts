@@ -38,28 +38,28 @@ test("has a setting to adjust the size of the cards", async ({ page }) => {
   await column.getByTestId("add-card-button-0").click();
   await column.getByTestId("add-card-button-0").click();
 
-  // Open settings and verify default selection (Comfortable/medium)
+  // Open settings and verify default selection (Compact/small)
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
-  const comfortableBtn = dlg.getByRole("button", { name: /comfortable/i });
-  await expect(comfortableBtn).toHaveAttribute("aria-pressed", "true");
+  const compactBtn = dlg.getByRole("button", { name: /compact/i });
+  await expect(compactBtn).toHaveAttribute("aria-pressed", "true");
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
-  // rows should be 2 for medium
-  await expect(column.getByTestId("card-content-0")).toHaveAttribute(
-    "rows",
-    "2",
-  );
-
-  // Set Compact (rows = 1)
-  await page.getByRole("button", { name: /open settings/i }).click();
-  const dlg2 = page.getByRole("dialog", { name: /settings/i });
-  await dlg2.getByRole("button", { name: /compact/i }).click();
-  await dlg2.getByRole("button", { name: /close settings/i }).click();
+  // rows should be 1 for small (compact)
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(
     "rows",
     "1",
+  );
+
+  // Set Comfortable (rows = 2)
+  await page.getByRole("button", { name: /open settings/i }).click();
+  const dlg2 = page.getByRole("dialog", { name: /settings/i });
+  await dlg2.getByRole("button", { name: /comfortable/i }).click();
+  await dlg2.getByRole("button", { name: /close settings/i }).click();
+  await expect(column.getByTestId("card-content-0")).toHaveAttribute(
+    "rows",
+    "2",
   );
 
   // Set Spacious (rows = 3)

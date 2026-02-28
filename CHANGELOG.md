@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Add visible text labels ("Board" / "List") to view mode toggle buttons for improved discoverability
+- Switch default card density from "Comfortable" (medium) to "Compact" (small) to reduce dead space; existing users who previously set a density preference are unaffected
 
 ### Documentation
 

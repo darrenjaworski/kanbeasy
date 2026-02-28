@@ -113,7 +113,7 @@ export function validateExportData(parsed: unknown): ImportResult {
   const cardDensity: CardDensity =
     typeof s.cardDensity === "string" && VALID_DENSITIES.has(s.cardDensity)
       ? (s.cardDensity as CardDensity)
-      : "medium";
+      : "small";
 
   const columnResizingEnabled =
     typeof s.columnResizingEnabled === "string"

@@ -53,8 +53,8 @@ describe("SettingsModal", () => {
     fireEvent.click(screen.getByRole("button", { name: "Clear settings" }));
     // Board data should still exist
     expect(window.localStorage.getItem("kanbeasy:board")).not.toBeNull();
-    // Card density should be reset to default "medium"
-    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("medium");
+    // Card density should be reset to default "small" (compact)
+    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("small");
   });
 
   it("clears all data when 'Clear all data' is clicked", () => {
@@ -67,8 +67,8 @@ describe("SettingsModal", () => {
       </BoardProvider>,
     );
     fireEvent.click(screen.getByRole("button", { name: "Clear all data" }));
-    // Card density should be reset to default "medium"
-    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("medium");
+    // Card density should be reset to default "small" (compact)
+    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("small");
   });
   it("renders the modal when open", () => {
     render(
