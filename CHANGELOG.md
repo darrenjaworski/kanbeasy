@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Generate HTML report in CI so Playwright report artifact is uploaded correctly
+- Fix high severity vulnerabilities in minimatch and rollup dependencies
 
 ## [1.21.1]
 
