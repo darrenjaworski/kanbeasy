@@ -80,3 +80,24 @@ export const owlTips: readonly string[] = [
   "Hoooo! Small consistent progress beats heroic bursts. Show up every day.",
   "Hoot! If everything is a priority, nothing is. Pick your top three for today.",
 ];
+
+export const nightOwlTips: readonly string[] = [
+  "*yaaawn* Hoot... You know what's a great feature? Sleep.",
+  "Hoo... *rubs eyes* Bugs written after midnight take twice as long to fix in the morning.",
+  "*yaaawn* Hoooot... Your code will still be here tomorrow. Your energy won't.",
+  "Hoo hoo... *blinks slowly* Save your work and close the laptop. Trust me.",
+  "*yaaawn* Hoot hoot... Even owls need rest. And I'm literally an owl.",
+  "Hoo... *stretches wings* The best debugging tool at this hour is a pillow.",
+  "*yaaawn* Hoooo... Late-night commits are just future reverts waiting to happen.",
+  "Hoot... *nods off* ...huh? Oh. You're still here? Go to bed!",
+  "Hoo hoo... *droopy eyes* Fun fact: sleep deprivation has the same effect as being legally drunk. Ship responsibly.",
+  "*yaaawn* Hoot... The kanban board will be right where you left it. Promise.",
+  "Hoo... *yawns widely* Every hour of sleep you skip now costs two hours of productivity tomorrow.",
+  "*yaaawn* Hoooot... You wouldn't deploy on a Friday. Don't code at 2 AM either.",
+  "Hoo hoo... *rubs eyes* Your future self is begging you to step away from the keyboard.",
+  "*yaaawn* Hoot hoot... There's a reason they call it 'dream code' — because you should be dreaming right now.",
+  "Hoo... *barely awake* I'd give you a productivity tip, but at this hour, the only tip is: sleep.",
+  "*yaaawn* Hoooo... Did you know? Owls are nocturnal. You are not. Go to bed.",
+  "Hoot... *heavy eyelids* One more commit? No. One more pillow.",
+  "Hoo hoo... *yawns* The longest-lived bugs are the ones born between midnight and 4 AM.",
+];

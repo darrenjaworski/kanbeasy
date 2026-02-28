@@ -29,9 +29,7 @@ test("can enable owl assistant from settings", async ({ page }) => {
   await expect(page.getByRole("button", { name: /owl buddy/i })).toBeVisible();
 });
 
-test("owl shows a tip on click and dismisses with Thanks!", async ({
-  page,
-}) => {
+test("owl shows a tip on click and dismisses with button", async ({ page }) => {
   // Enable owl mode
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
@@ -43,12 +41,14 @@ test("owl shows a tip on click and dismisses with Thanks!", async ({
 
   // Speech bubble should appear with buttons
   await expect(page.getByRole("button", { name: /one more/i })).toBeVisible();
-  await expect(page.getByRole("button", { name: /thanks!/i })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /thanks!|good night!/i }),
+  ).toBeVisible();
 
   // Dismiss
-  await page.getByRole("button", { name: /thanks!/i }).click();
+  await page.getByRole("button", { name: /thanks!|good night!/i }).click();
   await expect(
-    page.getByRole("button", { name: /thanks!/i }),
+    page.getByRole("button", { name: /thanks!|good night!/i }),
   ).not.toBeVisible();
 });
 
@@ -72,5 +72,7 @@ test("'One more' shows the next tip without closing", async ({ page }) => {
   expect(firstTip).not.toBe(secondTip);
 
   // Dialog should still be open
-  await expect(page.getByRole("button", { name: /thanks!/i })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /thanks!|good night!/i }),
+  ).toBeVisible();
 });

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
-import { OwlIcon } from "./icons";
-import { owlTips } from "../constants/owlTips";
+import { OwlIcon, SleepyOwlIcon } from "./icons";
+import { owlTips, nightOwlTips } from "../constants/owlTips";
+import { isNightOwlHour } from "../utils/isNightOwlHour";
 
 const END_OF_DECK_TIP =
   "Hoot hoot hoot! You've seen every single tip I've got! I'm impressed — you're one dedicated owl-watcher. Reshuffling the deck for round two!";
@@ -17,6 +18,10 @@ function shuffle<T>(arr: readonly T[]): T[] {
   return copy;
 }
 
+function getActiveTips(isNight: boolean): readonly string[] {
+  return isNight ? nightOwlTips : owlTips;
+}
+
 export function OwlBuddy() {
   const { owlModeEnabled } = useTheme();
   const [open, setOpen] = useState(false);
@@ -24,6 +29,9 @@ export function OwlBuddy() {
   const deckRef = useRef<string[]>([]);
   const posRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastPoolRef = useRef<"day" | "night" | null>(null);
+
+  const isNight = isNightOwlHour();
 
   useEffect(() => {
     if (!open) return;
@@ -40,6 +48,16 @@ export function OwlBuddy() {
   }, [open]);
 
   const advanceTip = useCallback(() => {
+    const currentPool = isNightOwlHour() ? "night" : "day";
+    const tips = getActiveTips(currentPool === "night");
+
+    // Reset deck when the tip pool changes (day ↔ night)
+    if (lastPoolRef.current !== null && lastPoolRef.current !== currentPool) {
+      deckRef.current = [];
+      posRef.current = 0;
+    }
+    lastPoolRef.current = currentPool;
+
     if (
       deckRef.current.length > 0 &&
       posRef.current >= deckRef.current.length
@@ -48,14 +66,14 @@ export function OwlBuddy() {
       const lastTip = deckRef.current[deckRef.current.length - 1];
       let newDeck: string[];
       do {
-        newDeck = shuffle(owlTips);
-      } while (newDeck[0] === lastTip && owlTips.length > 1);
+        newDeck = shuffle(tips);
+      } while (newDeck[0] === lastTip && tips.length > 1);
       deckRef.current = newDeck;
       posRef.current = 0;
       return;
     }
     if (deckRef.current.length === 0) {
-      deckRef.current = shuffle(owlTips);
+      deckRef.current = shuffle(tips);
       posRef.current = 0;
     }
     setTip(deckRef.current[posRef.current]);
@@ -72,6 +90,9 @@ export function OwlBuddy() {
   }, []);
 
   if (!owlModeEnabled) return null;
+
+  const Icon = isNight ? SleepyOwlIcon : OwlIcon;
+  const dismissLabel = isNight ? "Good night!" : "Thanks!";
 
   return (
     <div ref={containerRef} className="fixed bottom-12 left-4 z-10">
@@ -95,7 +116,7 @@ export function OwlBuddy() {
               onClick={handleDismiss}
               className={`${tc.button} rounded-md px-2 py-1 text-xs`}
             >
-              Thanks!
+              {dismissLabel}
             </button>
           </div>
           {/* Triangle pointer — overflow-hidden clips the rotated square to a clean triangle */}
@@ -112,7 +133,7 @@ export function OwlBuddy() {
         aria-label="Owl buddy"
         className={`h-10 w-10 rounded-full border backdrop-blur ${tc.iconButton} ${tc.border} ${tc.glass}`}
       >
-        <OwlIcon className="h-6 w-6" />
+        <Icon className="h-6 w-6" />
       </button>
     </div>
   );

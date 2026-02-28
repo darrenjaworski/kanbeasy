@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { OwlBuddy } from "../OwlBuddy";
-import { owlTips } from "../../constants/owlTips";
+import { owlTips, nightOwlTips } from "../../constants/owlTips";
 
 const mockTheme = {
   owlModeEnabled: false,
@@ -12,9 +12,15 @@ vi.mock("../../theme/useTheme", () => ({
   useTheme: () => mockTheme,
 }));
 
+let mockIsNight = false;
+vi.mock("../../utils/isNightOwlHour", () => ({
+  isNightOwlHour: () => mockIsNight,
+}));
+
 describe("OwlBuddy", () => {
   beforeEach(() => {
     mockTheme.owlModeEnabled = false;
+    mockIsNight = false;
   });
 
   it("does not render when owl mode is disabled", () => {
@@ -133,5 +139,85 @@ describe("OwlBuddy", () => {
     expect(
       screen.getByText(/You've seen every single tip/),
     ).toBeInTheDocument();
+  });
+
+  describe("night owl mode", () => {
+    it("renders sleepy owl icon during night hours", () => {
+      mockTheme.owlModeEnabled = true;
+      mockIsNight = true;
+      render(<OwlBuddy />);
+
+      const button = screen.getByRole("button", { name: "Owl buddy" });
+      const svg = button.querySelector("svg");
+      // SleepyOwlIcon has <ellipse> elements for half-closed eyes
+      expect(svg?.querySelector("ellipse")).toBeTruthy();
+    });
+
+    it("renders normal owl icon during day hours", () => {
+      mockTheme.owlModeEnabled = true;
+      mockIsNight = false;
+      render(<OwlBuddy />);
+
+      const button = screen.getByRole("button", { name: "Owl buddy" });
+      const svg = button.querySelector("svg");
+      // Normal OwlIcon has no <ellipse> elements
+      expect(svg?.querySelector("ellipse")).toBeNull();
+    });
+
+    it("shows night tips during night hours", async () => {
+      mockTheme.owlModeEnabled = true;
+      mockIsNight = true;
+      const user = userEvent.setup();
+      render(<OwlBuddy />);
+
+      await user.click(screen.getByRole("button", { name: "Owl buddy" }));
+
+      const tipEl = screen.getByTestId("owl-tip");
+      expect(nightOwlTips.includes(tipEl.textContent ?? "")).toBe(true);
+    });
+
+    it("shows day tips during day hours", async () => {
+      mockTheme.owlModeEnabled = true;
+      mockIsNight = false;
+      const user = userEvent.setup();
+      render(<OwlBuddy />);
+
+      await user.click(screen.getByRole("button", { name: "Owl buddy" }));
+
+      const tipEl = screen.getByTestId("owl-tip");
+      expect(owlTips.includes(tipEl.textContent ?? "")).toBe(true);
+    });
+
+    it("shows 'Good night!' dismiss button during night hours", async () => {
+      mockTheme.owlModeEnabled = true;
+      mockIsNight = true;
+      const user = userEvent.setup();
+      render(<OwlBuddy />);
+
+      await user.click(screen.getByRole("button", { name: "Owl buddy" }));
+
+      expect(
+        screen.getByRole("button", { name: "Good night!" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Thanks!" }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("shows 'Thanks!' dismiss button during day hours", async () => {
+      mockTheme.owlModeEnabled = true;
+      mockIsNight = false;
+      const user = userEvent.setup();
+      render(<OwlBuddy />);
+
+      await user.click(screen.getByRole("button", { name: "Owl buddy" }));
+
+      expect(
+        screen.getByRole("button", { name: "Thanks!" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Good night!" }),
+      ).not.toBeInTheDocument();
+    });
   });
 });

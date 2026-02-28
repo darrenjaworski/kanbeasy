@@ -9,7 +9,7 @@ export { DensitySmallIcon } from "./DensitySmallIcon";
 export { DragIndicatorIcon } from "./DragIndicatorIcon";
 export { ListViewIcon } from "./ListViewIcon";
 export { MoreIcon } from "./MoreIcon";
-export { OwlIcon } from "./OwlIcon";
+export { OwlIcon, SleepyOwlIcon } from "./OwlIcon";
 export { RedoIcon } from "./RedoIcon";
 export { SettingsGearIcon } from "./SettingsGearIcon";
 export { UndoIcon } from "./UndoIcon";

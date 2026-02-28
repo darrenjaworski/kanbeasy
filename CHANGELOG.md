@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add night owl mode: between 10 PM and 4 AM, the owl assistant shows sleepy eyes, "go to bed!" style tips, and a "Good night!" dismiss button
+
 ### Changed
 
 - Add `eslint-plugin-jsx-a11y` for accessibility linting (recommended preset)
