@@ -4,6 +4,7 @@ import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 import { MarkdownPreview } from "./shared/MarkdownPreview";
 import { TicketTypeBadge } from "./shared/TicketTypeBadge";
+import { findTicketType } from "../utils/formatCardId";
 import { formatDate } from "../utils/formatDate";
 
 interface CardRow {
@@ -60,6 +61,12 @@ export function ListView() {
                     className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
                     scope="col"
                   >
+                    Type
+                  </th>
+                  <th
+                    className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
+                    scope="col"
+                  >
                     Title
                   </th>
                   <th
@@ -96,6 +103,21 @@ export function ListView() {
                           ticketTypeId={row.ticketTypeId}
                           ticketTypes={ticketTypes}
                         />
+                      </td>
+                      <td className={`px-3 py-2 ${tc.textMuted}`}>
+                        {(() => {
+                          const type = findTicketType(
+                            ticketTypes,
+                            row.ticketTypeId,
+                          );
+                          return type ? (
+                            <span style={{ color: type.color }}>
+                              {type.label}
+                            </span>
+                          ) : (
+                            "\u2014"
+                          );
+                        })()}
                       </td>
                       <td className={`px-3 py-2 ${tc.text}`}>{row.title}</td>
                       <td className={`px-3 py-2 ${tc.textMuted} max-w-xs`}>
