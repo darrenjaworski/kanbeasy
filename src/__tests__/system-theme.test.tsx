@@ -52,6 +52,7 @@ describe("system theme preference", () => {
     // Open settings and select System
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
     await user.click(within(dlg).getByRole("button", { name: /system/i }));
 
     expect(document.documentElement.classList.contains("dark")).toBe(true);
@@ -66,6 +67,7 @@ describe("system theme preference", () => {
     // Open settings and select System
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
     await user.click(within(dlg).getByRole("button", { name: /system/i }));
 
     expect(document.documentElement.classList.contains("dark")).toBe(false);
@@ -80,6 +82,7 @@ describe("system theme preference", () => {
     // Open settings and select System
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
     await user.click(within(dlg).getByRole("button", { name: /system/i }));
 
     expect(document.documentElement.classList.contains("dark")).toBe(false);
@@ -102,6 +105,7 @@ describe("system theme preference", () => {
     // Open settings and select Dark explicitly
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
     await user.click(within(dlg).getByRole("button", { name: /^dark$/i }));
 
     expect(document.documentElement.classList.contains("dark")).toBe(true);

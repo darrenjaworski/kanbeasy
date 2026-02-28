@@ -6,6 +6,7 @@ import { ThemeSection } from "./ThemeSection";
 import { TicketTypeSection } from "./TicketTypeSection";
 import { BoardSettingsSection } from "./BoardSettingsSection";
 import { DataSection } from "./DataSection";
+import { SettingsSection } from "./SettingsSection";
 
 type Props = Readonly<{
   open: boolean;
@@ -26,11 +27,19 @@ export function SettingsModal({ open, onClose }: Props) {
         />
       </div>
 
-      <div className="p-4 pt-3 overflow-y-auto">
-        <ThemeSection />
-        <TicketTypeSection />
-        <BoardSettingsSection />
-        <DataSection />
+      <div className="px-4 pb-4 overflow-y-auto">
+        <SettingsSection title="Appearance">
+          <ThemeSection />
+        </SettingsSection>
+        <SettingsSection title="Ticket Types">
+          <TicketTypeSection />
+        </SettingsSection>
+        <SettingsSection title="Preferences">
+          <BoardSettingsSection />
+        </SettingsSection>
+        <SettingsSection title="Data">
+          <DataSection />
+        </SettingsSection>
 
         {/* Version */}
         <div className={`mt-4 text-center text-xs ${tc.textFaint}`}>

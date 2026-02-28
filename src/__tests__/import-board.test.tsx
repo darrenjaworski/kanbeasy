@@ -43,6 +43,7 @@ describe("import board integration", () => {
     renderApp();
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dialog).getByRole("button", { name: /data/i }));
     expect(
       within(dialog).getByRole("button", { name: /import board data/i }),
     ).toBeInTheDocument();
@@ -53,6 +54,7 @@ describe("import board integration", () => {
     renderApp();
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dialog).getByRole("button", { name: /data/i }));
 
     const fileInput = within(dialog).getByTestId(
       "import-file-input",
@@ -86,6 +88,7 @@ describe("import board integration", () => {
     renderApp();
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dialog).getByRole("button", { name: /data/i }));
 
     const fileInput = within(dialog).getByTestId(
       "import-file-input",
@@ -121,6 +124,7 @@ describe("import board integration", () => {
     renderApp();
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dialog).getByRole("button", { name: /data/i }));
 
     const fileInput = within(dialog).getByTestId(
       "import-file-input",
@@ -144,6 +148,7 @@ describe("import board integration", () => {
     renderApp();
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dialog = await screen.findByRole("dialog", { name: /settings/i });
+    await user.click(within(dialog).getByRole("button", { name: /data/i }));
 
     const fileInput = within(dialog).getByTestId(
       "import-file-input",

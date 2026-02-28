@@ -5,6 +5,10 @@ import { ThemeProvider } from "../../../theme/ThemeProvider";
 import { BoardProvider } from "../../../board/BoardProvider";
 import { vi, describe, it, expect } from "vitest";
 
+function expandDataSection() {
+  fireEvent.click(screen.getByRole("button", { name: "Data" }));
+}
+
 describe("SettingsModal", () => {
   it("renders three separate clear buttons", () => {
     render(
@@ -14,6 +18,7 @@ describe("SettingsModal", () => {
         </ThemeProvider>
       </BoardProvider>,
     );
+    expandDataSection();
     expect(
       screen.getByRole("button", { name: "Clear board data" }),
     ).toBeInTheDocument();
@@ -35,6 +40,7 @@ describe("SettingsModal", () => {
         </ThemeProvider>
       </BoardProvider>,
     );
+    expandDataSection();
     fireEvent.click(screen.getByRole("button", { name: "Clear board data" }));
     // Settings should be preserved
     expect(window.localStorage.getItem("kanbeasy:theme")).toBe("dark-slate");
@@ -50,6 +56,7 @@ describe("SettingsModal", () => {
         </ThemeProvider>
       </BoardProvider>,
     );
+    expandDataSection();
     fireEvent.click(screen.getByRole("button", { name: "Clear settings" }));
     // Board data should still exist
     expect(window.localStorage.getItem("kanbeasy:board")).not.toBeNull();
@@ -66,10 +73,12 @@ describe("SettingsModal", () => {
         </ThemeProvider>
       </BoardProvider>,
     );
+    expandDataSection();
     fireEvent.click(screen.getByRole("button", { name: "Clear all data" }));
     // Card density should be reset to default "small" (compact)
     expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("small");
   });
+
   it("renders the modal when open", () => {
     render(
       <BoardProvider>

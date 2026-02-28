@@ -241,6 +241,7 @@ export function ThemeProvider({
     localStorage.removeItem(STORAGE_KEYS.VIEW_MODE);
     localStorage.removeItem(STORAGE_KEYS.TICKET_TYPE_PRESET);
     localStorage.removeItem(STORAGE_KEYS.TICKET_TYPES);
+    localStorage.removeItem(STORAGE_KEYS.SETTINGS_SECTIONS);
     localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
     // Reset state to defaults

@@ -54,7 +54,8 @@ describe("settings modal", () => {
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
     const html = document.documentElement;
 
-    // Switch to dark mode, then pick a dark theme
+    // Expand Appearance section, then switch to dark mode
+    await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
     await user.click(within(dlg).getByRole("button", { name: /dark/i }));
     const darkSwatch = within(dlg).getByRole("button", {
       name: /midnight theme/i,
@@ -85,6 +86,9 @@ describe("settings modal", () => {
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
 
+    // Expand Preferences section to access density controls
+    await user.click(within(dlg).getByRole("button", { name: /preferences/i }));
+
     // Find the fieldset via legend text and icon buttons by title
     const compactBtn = within(dlg).getByRole("button", { name: /compact/i });
     const comfortableBtn = within(dlg).getByRole("button", {
@@ -107,7 +111,7 @@ describe("settings modal", () => {
     const textareas = screen.getAllByRole("textbox", { name: /card content/i });
     expect(textareas[0]).toHaveAttribute("rows", "1");
 
-    // Re-open and set comfortable
+    // Re-open and set comfortable (Preferences section stays open via localStorage)
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg2 = await screen.findByRole("dialog", { name: /settings/i });
     await user.click(
@@ -121,7 +125,7 @@ describe("settings modal", () => {
     });
     expect(textareasAfterComfortable[0]).toHaveAttribute("rows", "2");
 
-    // Re-open and set spacious
+    // Re-open and set spacious (Preferences section stays open via localStorage)
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg3 = await screen.findByRole("dialog", { name: /settings/i });
     await user.click(within(dlg3).getByRole("button", { name: /spacious/i }));

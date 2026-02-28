@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { STORAGE_KEYS } from "../constants/storage";
 import { renderApp } from "../test/renderApp";
@@ -39,8 +39,10 @@ describe("app shell", () => {
     renderApp();
     const btn = screen.getByRole("button", { name: /open settings/i });
     await user.click(btn);
-    // Switch to dark mode, then pick a dark theme
-    await user.click(await screen.findByRole("button", { name: /dark/i }));
+    const dlg = await screen.findByRole("dialog", { name: /settings/i });
+    // Expand Appearance section, then switch to dark mode
+    await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
+    await user.click(within(dlg).getByRole("button", { name: /dark/i }));
     const darkSwatch = await screen.findByRole("button", {
       name: /midnight theme/i,
     });

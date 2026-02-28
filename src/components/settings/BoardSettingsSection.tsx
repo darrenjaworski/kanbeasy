@@ -20,7 +20,7 @@ export function BoardSettingsSection() {
   } = useTheme();
 
   return (
-    <div className="space-y-3 text-sm font-medium mb-4">
+    <div className="space-y-3 text-sm font-medium">
       <ToggleSwitch
         id="column-resizing"
         label="Column resizing"

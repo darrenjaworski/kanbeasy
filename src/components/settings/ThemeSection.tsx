@@ -33,9 +33,8 @@ export function ThemeSection() {
   const visibleThemes = themesForMode(themeMode);
 
   return (
-    <fieldset className="border-0 p-0 m-0 mb-4 space-y-3 text-sm font-medium">
+    <fieldset className="border-0 p-0 m-0 space-y-3 text-sm font-medium">
       <legend className="sr-only">Theme</legend>
-      <span aria-hidden>Theme</span>
       <div className={`${tc.buttonGroup} rounded-full w-full mt-1`}>
         {MODE_OPTIONS.map((opt, i) => (
           <span key={opt.value} className="contents">

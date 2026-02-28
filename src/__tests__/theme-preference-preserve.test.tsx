@@ -22,7 +22,9 @@ function mockMatchMedia(prefersDark: boolean) {
 
 async function openSettings(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: /open settings/i }));
-  return screen.findByRole("dialog", { name: /settings/i });
+  const dlg = await screen.findByRole("dialog", { name: /settings/i });
+  await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
+  return dlg;
 }
 
 describe("theme preference preserves theme choice when mode unchanged", () => {

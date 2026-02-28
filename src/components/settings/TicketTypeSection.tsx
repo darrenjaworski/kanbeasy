@@ -59,11 +59,8 @@ export function TicketTypeSection() {
   };
 
   return (
-    <fieldset className="border-0 p-0 m-0 mb-4 space-y-3 text-sm font-medium">
+    <fieldset className="border-0 p-0 m-0 space-y-3 text-sm font-medium">
       <legend className="sr-only">Ticket Types</legend>
-      <span aria-hidden className="block mb-1">
-        Ticket Types
-      </span>
 
       {/* Preset selector */}
       <div className="relative">
