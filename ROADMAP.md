@@ -68,6 +68,7 @@ an ultra simple task organizer
   - ✅ dynamic favicon — browser tab icon updates to reflect the active theme colors
   - ✅ move floating buttons (owl assistant, undo/redo) to bottom of page after footer removal
   - ✅ disable navigation controls (analytics, search, list view toggle, archive) when board or archive is empty
+- ✅ column delete warning updated to reflect archiving behavior ("cards will be archived and can be restored later")
 
 Settings
 
@@ -84,7 +85,6 @@ Settings
 
 ### upcoming
 
-- revisit "warn before deleting columns with cards" — columns now archive cards instead of permanently deleting them, so the warning may be unnecessary or should be reworded
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - tooltips on all buttons for improved discoverability and accessibility
