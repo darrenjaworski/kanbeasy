@@ -86,8 +86,8 @@ describe("settings modal", () => {
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg = await screen.findByRole("dialog", { name: /settings/i });
 
-    // Expand Preferences section to access density controls
-    await user.click(within(dlg).getByRole("button", { name: /preferences/i }));
+    // Expand Appearance section to access density controls
+    await user.click(within(dlg).getByRole("button", { name: /appearance/i }));
 
     // Find the fieldset via legend text and icon buttons by title
     const compactBtn = within(dlg).getByRole("button", { name: /compact/i });

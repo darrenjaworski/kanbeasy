@@ -2,6 +2,11 @@ import { useTheme } from "../../theme/useTheme";
 import { themes } from "../../theme/themes";
 import type { ThemePreference } from "../../theme/types";
 import { tc } from "../../theme/classNames";
+import {
+  DensitySmallIcon,
+  DensityMediumIcon,
+  DensityLargeIcon,
+} from "../icons";
 
 const lightThemes = themes.filter((t) => t.mode === "light");
 const darkThemes = themes.filter((t) => t.mode === "dark");
@@ -23,6 +28,8 @@ export function ThemeSection() {
     themeMode,
     themePreference,
     setThemePreference,
+    cardDensity,
+    setCardDensity,
   } = useTheme();
 
   const handleModeSwitch = (pref: ThemePreference) => {
@@ -81,6 +88,47 @@ export function ThemeSection() {
           </button>
         ))}
       </div>
+      <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
+        <legend className="sr-only">Card density</legend>
+        <span aria-hidden>Card density</span>
+        <div className={`${tc.buttonGroup} rounded-full`}>
+          <button
+            type="button"
+            onClick={() => setCardDensity("small")}
+            title="Compact"
+            aria-pressed={cardDensity === "small"}
+            className={`h-9 w-9 ${tc.iconButton} ${
+              cardDensity === "small" ? tc.pressed : ""
+            }`}
+          >
+            <DensitySmallIcon />
+          </button>
+          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+          <button
+            type="button"
+            onClick={() => setCardDensity("medium")}
+            title="Comfortable"
+            aria-pressed={cardDensity === "medium"}
+            className={`h-9 w-9 ${tc.iconButton} ${
+              cardDensity === "medium" ? tc.pressed : ""
+            }`}
+          >
+            <DensityMediumIcon />
+          </button>
+          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+          <button
+            type="button"
+            onClick={() => setCardDensity("large")}
+            title="Spacious"
+            aria-pressed={cardDensity === "large"}
+            className={`h-9 w-9 ${tc.iconButton} ${
+              cardDensity === "large" ? tc.pressed : ""
+            }`}
+          >
+            <DensityLargeIcon />
+          </button>
+        </div>
+      </fieldset>
     </fieldset>
   );
 }

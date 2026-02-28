@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Collapse ticket type editor behind "Edit types" disclosure — preset dropdown always visible, type list and add button hidden until expanded
 - Add descriptive subtitle to "Owl assistant" toggle explaining what it does
 - Move footer credit into settings modal next to version link; remove fixed footer to reclaim vertical space
+- Move card density control from Preferences to Appearance section in settings
 
 ### Documentation
 
