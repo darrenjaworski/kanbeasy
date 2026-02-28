@@ -331,7 +331,7 @@ describe("AnalyticsModal", () => {
     const dlg = await openAnalytics(user);
 
     expect(
-      within(dlg).getByText(/archived cards are included/i),
+      within(dlg).getByText(/include archived cards/i),
     ).toBeInTheDocument();
   });
 

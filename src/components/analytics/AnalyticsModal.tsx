@@ -54,9 +54,11 @@ export function AnalyticsModal({ open, onClose }: Props) {
 
       <div className="p-4 pt-3 overflow-y-auto">
         <p className={`text-xs ${tc.textFaint} mb-3`}>
-          Reordering columns resets all data. Archived cards are included in
-          cycle time, throughput, and reverse time metrics. Permanently deleted
-          cards are excluded.
+          Total cards and cards in flight reflect the current board only.
+          Cycle time, throughput, and reverse time include archived cards
+          (marked as &ldquo;archived&rdquo; in the tables below). Permanently
+          deleted cards are excluded from all metrics. Reordering columns
+          resets all data.
         </p>
 
         {/* Metric cards grid */}
