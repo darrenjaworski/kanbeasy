@@ -79,6 +79,8 @@ Settings
   - collapse ticket type editor behind a disclosure — show only the preset dropdown by default, expand to full editor on click
   - add descriptive subtitle to "Owl assistant" toggle explaining what it does
   - move footer credit into settings modal (near version number) to reclaim vertical space on every page
+- revisit "warn before deleting columns with cards" — columns now archive cards instead of permanently deleting them, so the warning may be unnecessary or should be reworded
+- dynamic favicon — update the browser tab icon to reflect the active theme accent color
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
 - tooltips on all buttons for improved discoverability and accessibility
