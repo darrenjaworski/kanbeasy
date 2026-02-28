@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Generate HTML report in CI so Playwright report artifact is uploaded correctly
+
 ## [1.21.1]
 
 ### Fixed

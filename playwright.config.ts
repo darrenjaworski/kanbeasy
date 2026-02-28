@@ -8,7 +8,7 @@ export default defineConfig({
   testDir: "./tests-e2e",
   timeout: 30_000,
   retries: isCI ? 2 : 0,
-  reporter: isCI ? "github" : [["list"], ["html"]],
+  reporter: isCI ? [["github"], ["html"]] : [["list"], ["html"]],
   use: {
     baseURL: deployedBaseURL || "http://localhost:5173",
     trace: "on-first-retry",
