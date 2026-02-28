@@ -10,9 +10,19 @@ test.beforeEach(async ({ page }) => {
   await page.getByTestId("get-started-button").click();
 });
 
-test("search input is visible and can receive text", async ({ page }) => {
+test("search input is disabled when there are no cards", async ({ page }) => {
   const searchInput = page.getByTestId("search-input");
   await expect(searchInput).toBeVisible();
+  await expect(searchInput).toBeDisabled();
+});
+
+test("search input is enabled when cards exist", async ({ page }) => {
+  await page.getByTestId("add-column-button").click();
+  const column = page.getByTestId("column-0");
+  await column.getByTestId("add-card-button-0").click();
+
+  const searchInput = page.getByTestId("search-input");
+  await expect(searchInput).toBeEnabled();
 
   await searchInput.fill("test query");
   await expect(searchInput).toHaveValue("test query");

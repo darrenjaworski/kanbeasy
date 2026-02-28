@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move footer credit into settings modal next to version link; remove fixed footer to reclaim vertical space
 - Move card density control from Preferences to Appearance section in settings
 
+### Tests
+
+- Fix e2e tests for collapsible settings sections (Appearance, Preferences, Data must be expanded before interacting)
+- Fix e2e tests for disabled navigation controls on empty boards (analytics, search, list view)
+- Add dedicated e2e test suite for disabled UI states (analytics, archive, search, list view toggle)
+
 ### Documentation
 
 - Add UI polish roadmap items: view toggle labels, compact default density, settings modal reorganization, ticket type disclosure, owl assistant description, footer relocation, column delete warning revisit, dynamic favicon

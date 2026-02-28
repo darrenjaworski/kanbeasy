@@ -21,7 +21,8 @@ test("can enable owl assistant from settings", async ({ page }) => {
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
 
-  // Toggle on owl assistant
+  // Expand Preferences section, then toggle on owl assistant
+  await dlg.getByRole("button", { name: /preferences/i }).click();
   await dlg.getByText(/owl assistant/i).click();
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
@@ -33,6 +34,7 @@ test("owl shows a tip on click and dismisses with button", async ({ page }) => {
   // Enable owl mode
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
+  await dlg.getByRole("button", { name: /preferences/i }).click();
   await dlg.getByText(/owl assistant/i).click();
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
@@ -56,6 +58,7 @@ test("'One more' shows the next tip without closing", async ({ page }) => {
   // Enable owl mode
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
+  await dlg.getByRole("button", { name: /preferences/i }).click();
   await dlg.getByText(/owl assistant/i).click();
   await dlg.getByRole("button", { name: /close settings/i }).click();
 

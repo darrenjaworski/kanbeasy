@@ -127,7 +127,7 @@ test.describe("List view", () => {
   });
 });
 
-test("list view shows empty state when board has no cards", async ({
+test("list view toggle is disabled when board has no cards", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -149,8 +149,6 @@ test("list view shows empty state when board has no cards", async ({
   const target = process.env.CI === "true" ? "/kanbeasy" : "/";
   await page.goto(target);
   await page.getByTestId("get-started-button").click();
-  await page.getByRole("radio", { name: /list view/i }).click();
 
-  await expect(page.locator("table")).not.toBeVisible();
-  await expect(page.getByText(/no cards yet/i)).toBeVisible();
+  await expect(page.getByRole("radio", { name: /list view/i })).toBeDisabled();
 });

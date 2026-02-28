@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -10,7 +10,15 @@ test.beforeEach(async ({ page }) => {
   await page.getByTestId("get-started-button").click();
 });
 
+/** Add a column with a card so analytics button is enabled. */
+async function addColumnWithCard(page: Page) {
+  await page.getByTestId("add-column-button").click();
+  const column = page.getByTestId("column-0");
+  await column.getByTestId("add-card-button-0").click();
+}
+
 test("can open and close the analytics modal", async ({ page }) => {
+  await addColumnWithCard(page);
   await page.getByRole("button", { name: /open analytics/i }).click();
   const dlg = page.getByRole("dialog", { name: /analytics/i });
   await expect(dlg).toBeVisible();
@@ -23,18 +31,18 @@ test("can open and close the analytics modal", async ({ page }) => {
   await expect(dlg).not.toBeVisible();
 });
 
-test("shows metric cards with empty board", async ({ page }) => {
+test("shows metric cards with a single card", async ({ page }) => {
+  await addColumnWithCard(page);
   await page.getByRole("button", { name: /open analytics/i }).click();
   const dlg = page.getByRole("dialog", { name: /analytics/i });
   await expect(dlg).toBeVisible();
 
-  // With an empty board, Total Cards and Cards in Flight should be 0
   await expect(dlg.getByText("Total Cards", { exact: true })).toBeVisible();
   await expect(dlg.getByText("Cards in Flight", { exact: true })).toBeVisible();
   await expect(dlg.getByText("Avg Cycle Time")).toBeVisible();
   await expect(dlg.getByText("Throughput", { exact: true })).toBeVisible();
 
-  // Cycle time should show "Not enough data" with no cards
+  // Cycle time should show "Not enough data" with only one card
   await expect(dlg.getByText("Not enough data").first()).toBeVisible();
 });
 
@@ -57,6 +65,7 @@ test("shows correct total card count", async ({ page }) => {
 });
 
 test("can close analytics with Escape key", async ({ page }) => {
+  await addColumnWithCard(page);
   await page.getByRole("button", { name: /open analytics/i }).click();
   const dlg = page.getByRole("dialog", { name: /analytics/i });
   await expect(dlg).toBeVisible();
@@ -66,6 +75,7 @@ test("can close analytics with Escape key", async ({ page }) => {
 });
 
 test("can close analytics by clicking backdrop", async ({ page }) => {
+  await addColumnWithCard(page);
   await page.getByRole("button", { name: /open analytics/i }).click();
   const dlg = page.getByRole("dialog", { name: /analytics/i });
   await expect(dlg).toBeVisible();
@@ -76,6 +86,7 @@ test("can close analytics by clicking backdrop", async ({ page }) => {
 });
 
 test("shows disclaimer text", async ({ page }) => {
+  await addColumnWithCard(page);
   await page.getByRole("button", { name: /open analytics/i }).click();
   const dlg = page.getByRole("dialog", { name: /analytics/i });
   await expect(dlg).toBeVisible();

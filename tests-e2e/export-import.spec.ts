@@ -30,6 +30,7 @@ test("can export board data as JSON", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
+  await dlg.getByRole("button", { name: /data/i }).click();
 
   // Listen for download
   const downloadPromise = page.waitForEvent("download");
@@ -93,6 +94,7 @@ test("can import board data from JSON file", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
+  await dlg.getByRole("button", { name: /data/i }).click();
 
   // Trigger file import via the hidden input
   const fileInput = page.getByTestId("import-file-input");
@@ -129,6 +131,7 @@ test("shows error for invalid import file", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
+  await dlg.getByRole("button", { name: /data/i }).click();
 
   // Trigger file import with bad data
   const fileInput = page.getByTestId("import-file-input");

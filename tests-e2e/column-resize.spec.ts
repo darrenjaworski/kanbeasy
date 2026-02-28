@@ -24,6 +24,7 @@ test("settings toggle enables column resize and persists", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
+  await dlg.getByRole("button", { name: /preferences/i }).click();
   const switchEl = dlg.getByRole("switch", { name: /column resizing/i });
   await switchEl.focus();
   await page.keyboard.press("Space");
@@ -46,6 +47,7 @@ test("can resize a column with the mouse and clamps to min/max", async ({
   await page.getByTestId("add-column-button").click();
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
+  await dlg.getByRole("button", { name: /preferences/i }).click();
   const switch2 = dlg.getByRole("switch", { name: /column resizing/i });
   await switch2.focus();
   await page.keyboard.press("Space");
