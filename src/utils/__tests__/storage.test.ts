@@ -43,12 +43,15 @@ describe("storage utilities", () => {
     });
 
     it("returns fallback when parsing fails", () => {
+      const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
       localStorage.setItem("invalid", "not valid JSON");
       const result = getFromStorage("invalid", { default: true });
       expect(result).toEqual({ default: true });
+      spy.mockRestore();
     });
 
     it("returns fallback when localStorage throws", () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       const spy = vi.spyOn(Storage.prototype, "getItem");
       spy.mockImplementation(() => {
         throw new Error("localStorage disabled");
@@ -58,6 +61,7 @@ describe("storage utilities", () => {
       expect(result).toEqual({ default: true });
 
       spy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 
@@ -74,6 +78,7 @@ describe("storage utilities", () => {
     });
 
     it("returns fallback when localStorage throws", () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       const spy = vi.spyOn(Storage.prototype, "getItem");
       spy.mockImplementation(() => {
         throw new Error("localStorage disabled");
@@ -83,6 +88,7 @@ describe("storage utilities", () => {
       expect(result).toBe("default");
 
       spy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 
@@ -117,6 +123,7 @@ describe("storage utilities", () => {
     });
 
     it("handles errors silently", () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       const spy = vi.spyOn(Storage.prototype, "setItem");
       spy.mockImplementation(() => {
         throw new Error("Quota exceeded");
@@ -126,6 +133,7 @@ describe("storage utilities", () => {
       expect(() => saveToStorage("test", { value: 42 })).not.toThrow();
 
       spy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 
@@ -144,6 +152,7 @@ describe("storage utilities", () => {
     });
 
     it("handles errors silently", () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       const spy = vi.spyOn(Storage.prototype, "setItem");
       spy.mockImplementation(() => {
         throw new Error("Quota exceeded");
@@ -153,6 +162,7 @@ describe("storage utilities", () => {
       expect(() => saveStringToStorage("test", "value")).not.toThrow();
 
       spy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 
@@ -171,6 +181,7 @@ describe("storage utilities", () => {
     });
 
     it("handles errors silently", () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       const spy = vi.spyOn(Storage.prototype, "removeItem");
       spy.mockImplementation(() => {
         throw new Error("localStorage disabled");
@@ -180,6 +191,7 @@ describe("storage utilities", () => {
       expect(() => removeFromStorage("test")).not.toThrow();
 
       spy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 
