@@ -47,10 +47,20 @@ export function useBoardMutations(
 
   const removeColumn = useCallback<BoardContextValue["removeColumn"]>(
     (id) => {
-      setState((s) => ({
-        ...s,
-        columns: s.columns.filter((c) => c.id !== id),
-      }));
+      setState((s) => {
+        const col = s.columns.find((c) => c.id === id);
+        const now = Date.now();
+        const newArchived: ArchivedCard[] = (col?.cards ?? []).map((card) => ({
+          ...card,
+          archivedAt: now,
+          archivedFromColumnId: id,
+        }));
+        return {
+          ...s,
+          columns: s.columns.filter((c) => c.id !== id),
+          archive: [...s.archive, ...newArchived],
+        };
+      });
     },
     [setState],
   );

@@ -25,7 +25,7 @@ describe("column delete", () => {
     expect(
       screen.queryByRole("region", { name: /new column/i }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
+    expect(screen.queryByText("Remove column?")).not.toBeInTheDocument();
   });
 
   it("shows confirmation dialog when deleting a column with cards", async () => {
@@ -45,8 +45,11 @@ describe("column delete", () => {
       }),
     );
 
-    expect(screen.getByText("Delete column?")).toBeInTheDocument();
+    expect(screen.getByText("Remove column?")).toBeInTheDocument();
     expect(screen.getByText(/this column has 1 card/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/cards will be archived and can be restored/i),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("region", { name: /new column/i }),
     ).toBeInTheDocument();
@@ -70,13 +73,13 @@ describe("column delete", () => {
 
     await user.click(screen.getByRole("button", { name: /cancel/i }));
 
-    expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
+    expect(screen.queryByText("Remove column?")).not.toBeInTheDocument();
     expect(
       screen.getByRole("region", { name: /new column/i }),
     ).toBeInTheDocument();
   });
 
-  it("deletes column when confirming deletion", async () => {
+  it("archives cards when confirming column deletion", async () => {
     const user = userEvent.setup();
     renderApp();
 
@@ -97,6 +100,13 @@ describe("column delete", () => {
     expect(
       screen.queryByRole("region", { name: /new column/i }),
     ).not.toBeInTheDocument();
+
+    // Verify cards were archived, not destroyed
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}");
+    expect(stored.archive).toHaveLength(1);
+    expect(stored.archive[0].title).toBe("New card");
+    expect(stored.archive[0].archivedAt).toBeGreaterThan(0);
+    expect(stored.archive[0].archivedFromColumnId).toBeDefined();
   });
 
   it("pluralizes card count in confirmation message", async () => {
@@ -139,9 +149,13 @@ describe("column delete", () => {
       }),
     );
 
-    expect(screen.queryByText("Delete column?")).not.toBeInTheDocument();
+    expect(screen.queryByText("Remove column?")).not.toBeInTheDocument();
     expect(
       screen.queryByRole("region", { name: /new column/i }),
     ).not.toBeInTheDocument();
+
+    // Cards should still be archived even without the warning dialog
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}");
+    expect(stored.archive).toHaveLength(1);
   });
 });

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Auto-archive cards when deleting a column instead of permanently destroying them; cards can be restored from the archive
+
 ### Changed
 
 - Add visible text labels ("Board" / "List") to view mode toggle buttons for improved discoverability

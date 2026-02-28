@@ -234,8 +234,9 @@ export function Column({
           setShowDeleteConfirm(false);
           removeColumn(id);
         }}
-        title="Delete column?"
-        message={`This column has ${cards.length} card${cards.length === 1 ? "" : "s"}. Deleting it will remove them permanently.`}
+        title="Remove column?"
+        confirmLabel="Remove"
+        message={`This column has ${cards.length} card${cards.length === 1 ? "" : "s"}. Its cards will be archived and can be restored later.`}
       />
       {/* Resize handle (feature-flagged) */}
       {/* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- separator with tabIndex is an interactive resize widget */}

@@ -21,7 +21,7 @@ export function BoardSettingsSection() {
       />
       <ToggleSwitch
         id="delete-column-warning"
-        label="Warn before deleting columns with cards"
+        label="Warn before removing columns with cards"
         checked={deleteColumnWarningEnabled}
         onChange={setDeleteColumnWarningEnabled}
       />
