@@ -17,6 +17,7 @@ export function DataSection() {
     setViewMode,
     setTicketTypePresetId,
     setTicketTypes,
+    resetSettings,
   } = useTheme();
   const { setColumns, resetBoard, setNextCardNumber } = useBoard();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,9 +26,19 @@ export function DataSection() {
     "idle" | "importing" | "complete"
   >("idle");
 
-  const handleClearLocalStorage = () => {
-    window.localStorage.clear();
+  const handleClearBoard = () => {
     resetBoard();
+    setNextCardNumber(1);
+  };
+
+  const handleClearSettings = () => {
+    resetSettings();
+  };
+
+  const handleClearAll = () => {
+    resetBoard();
+    setNextCardNumber(1);
+    resetSettings();
   };
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,10 +140,24 @@ export function DataSection() {
       )}
       <button
         type="button"
-        onClick={handleClearLocalStorage}
+        onClick={handleClearBoard}
         className={`${tc.dangerButton} w-full rounded-md px-3 py-1.5`}
       >
         Clear board data
+      </button>
+      <button
+        type="button"
+        onClick={handleClearSettings}
+        className={`${tc.dangerButton} w-full rounded-md px-3 py-1.5`}
+      >
+        Clear settings
+      </button>
+      <button
+        type="button"
+        onClick={handleClearAll}
+        className={`${tc.dangerButton} w-full rounded-md px-3 py-1.5`}
+      >
+        Clear all data
       </button>
     </div>
   );

@@ -2,19 +2,20 @@ import { createPortal } from "react-dom";
 import { CloseIcon } from "./icons";
 import { useEffect, useState } from "react";
 import { tc } from "../theme/classNames";
+import { STORAGE_KEYS } from "../constants/storage";
 
 export function WelcomeModal() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem("hasSeenWelcome");
+    const hasSeenWelcome = localStorage.getItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
     if (!hasSeenWelcome) {
       setIsVisible(true);
     }
   }, []);
 
   const handleClose = () => {
-    localStorage.setItem("hasSeenWelcome", "true");
+    localStorage.setItem(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
     setIsVisible(false);
   };
 

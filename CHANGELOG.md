@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace single "Clear board data" button with three separate actions: clear board, clear settings, and clear all
+- Centralize `hasSeenWelcome` localStorage key into `STORAGE_KEYS` constant
+- Add `resetSettings` to ThemeProvider for resetting all settings to defaults
+
 ### Features
 
 - Add ticket type field to cards with configurable types (e.g. `feat-42`, `fix-13`) and colored badge display

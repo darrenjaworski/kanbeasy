@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { WelcomeModal } from "../WelcomeModal";
+import { STORAGE_KEYS } from "../../constants/storage";
 import { describe, beforeEach, it, expect } from "vitest";
 
 describe("WelcomeModal", () => {
@@ -13,7 +14,7 @@ describe("WelcomeModal", () => {
   });
 
   it("should not display the modal if the user has already seen it", () => {
-    localStorage.setItem("hasSeenWelcome", "true");
+    localStorage.setItem(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
     render(<WelcomeModal />);
     expect(screen.queryByText(/Welcome to Kanbeasy/i)).not.toBeInTheDocument();
   });
@@ -22,6 +23,6 @@ describe("WelcomeModal", () => {
     render(<WelcomeModal />);
     fireEvent.click(screen.getByText(/Get started!/i));
     expect(screen.queryByText(/Welcome to Kanbeasy/i)).not.toBeInTheDocument();
-    expect(localStorage.getItem("hasSeenWelcome")).toBe("true");
+    expect(localStorage.getItem(STORAGE_KEYS.HAS_SEEN_WELCOME)).toBe("true");
   });
 });

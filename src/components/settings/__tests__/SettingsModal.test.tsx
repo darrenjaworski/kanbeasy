@@ -6,7 +6,26 @@ import { BoardProvider } from "../../../board/BoardProvider";
 import { vi, describe, it, expect } from "vitest";
 
 describe("SettingsModal", () => {
-  it("clears localStorage when the clear button is clicked", () => {
+  it("renders three separate clear buttons", () => {
+    render(
+      <BoardProvider>
+        <ThemeProvider>
+          <SettingsModal open={true} onClose={vi.fn()} />
+        </ThemeProvider>
+      </BoardProvider>,
+    );
+    expect(
+      screen.getByRole("button", { name: "Clear board data" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Clear settings" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Clear all data" }),
+    ).toBeInTheDocument();
+  });
+
+  it("clears board data but preserves settings when 'Clear board data' is clicked", () => {
     window.localStorage.setItem("kanbeasy:theme", "dark-slate");
     window.localStorage.setItem("kanbeasy:cardDensity", "large");
     render(
@@ -16,11 +35,40 @@ describe("SettingsModal", () => {
         </ThemeProvider>
       </BoardProvider>,
     );
-    const clearBtn = screen.getByRole("button", { name: /clear/i });
-    expect(clearBtn).toBeInTheDocument();
-    fireEvent.click(clearBtn);
-    expect(window.localStorage.getItem("kanbeasy:theme")).toBeNull();
-    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Clear board data" }));
+    // Settings should be preserved
+    expect(window.localStorage.getItem("kanbeasy:theme")).toBe("dark-slate");
+    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("large");
+  });
+
+  it("clears settings but preserves board when 'Clear settings' is clicked", () => {
+    window.localStorage.setItem("kanbeasy:cardDensity", "large");
+    render(
+      <BoardProvider>
+        <ThemeProvider>
+          <SettingsModal open={true} onClose={vi.fn()} />
+        </ThemeProvider>
+      </BoardProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Clear settings" }));
+    // Board data should still exist
+    expect(window.localStorage.getItem("kanbeasy:board")).not.toBeNull();
+    // Card density should be reset to default "medium"
+    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("medium");
+  });
+
+  it("clears all data when 'Clear all data' is clicked", () => {
+    window.localStorage.setItem("kanbeasy:cardDensity", "large");
+    render(
+      <BoardProvider>
+        <ThemeProvider>
+          <SettingsModal open={true} onClose={vi.fn()} />
+        </ThemeProvider>
+      </BoardProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Clear all data" }));
+    // Card density should be reset to default "medium"
+    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("medium");
   });
   it("renders the modal when open", () => {
     render(

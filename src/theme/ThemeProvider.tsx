@@ -226,6 +226,20 @@ export function ThemeProvider({
     saveToStorage(STORAGE_KEYS.TICKET_TYPES, ticketTypes);
   }, [ticketTypes]);
 
+  const resetSettings = useCallback(() => {
+    setThemePreferenceState("system");
+    setThemeId(getDefaultThemeForMode(getSystemTheme()).id as ThemeId);
+    setCardDensity("medium");
+    setColumnResizingEnabled(false);
+    setDeleteColumnWarningEnabled(true);
+    setOwlModeEnabled(false);
+    setViewMode("board");
+    setTicketTypePresetId(DEFAULT_PRESET_ID);
+    const preset = TICKET_TYPE_PRESETS.find((p) => p.id === DEFAULT_PRESET_ID);
+    if (preset) setTicketTypes([...preset.types]);
+    localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
+  }, []);
+
   const theme = getThemeById(themeId);
 
   const value = useMemo<ThemeContextValue>(
@@ -250,6 +264,7 @@ export function ThemeProvider({
       setTicketTypes,
       ticketTypePresetId,
       setTicketTypePresetId,
+      resetSettings,
     }),
     [
       themeId,
@@ -263,6 +278,7 @@ export function ThemeProvider({
       viewMode,
       ticketTypes,
       ticketTypePresetId,
+      resetSettings,
     ],
   );
 
