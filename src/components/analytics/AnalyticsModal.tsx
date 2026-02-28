@@ -119,6 +119,7 @@ export function AnalyticsModal({ open, onClose }: Props) {
             rows={cardCycleTimes.map((ct) => ({
               cardTitle: ct.cardTitle,
               durationMs: ct.cycleTimeMs,
+              isArchived: ct.isArchived,
             }))}
             visibleCount={cycleTimeVisible}
             onShowMore={() => setCycleTimeVisible((v) => v + PAGE_SIZE)}
@@ -133,6 +134,7 @@ export function AnalyticsModal({ open, onClose }: Props) {
             rows={cardReverseTimes.map((rt) => ({
               cardTitle: rt.cardTitle,
               durationMs: rt.reverseTimeMs,
+              isArchived: rt.isArchived,
             }))}
             visibleCount={reverseTimeVisible}
             onShowMore={() => setReverseTimeVisible((v) => v + PAGE_SIZE)}

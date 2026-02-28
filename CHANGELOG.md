@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Include archived cards in historical analytics (cycle time, throughput, reverse time); snapshot metrics (total cards, cards in flight) remain board-only
+- Show "(archived)" indicator next to archived card titles in analytics cycle time and reverse time tables
 
 ### Fixed
 
@@ -19,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add unit tests for `additionalCards` parameter in `cycleTime` and `boardMetrics` functions
 - Add integration tests verifying archived cards appear in AnalyticsModal historical metrics
+- Add `isArchived` flag tests for `getCardCycleTimes` and `getCardReverseTimes`
+- Add edge case tests: empty columnHistory, all-additionalCards, duplicate IDs, boundary throughput, nonexistent column refs
+- Add integration test for "(archived)" label rendering in AnalyticsModal
 
 ## [1.23.0]
 

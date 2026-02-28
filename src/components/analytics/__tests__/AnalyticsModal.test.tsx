@@ -26,6 +26,7 @@ function makeCard(
     number: cardNum++,
     title,
     description: "",
+    ticketTypeId: null as string | null,
     createdAt: now,
     updatedAt: now,
     columnHistory,
@@ -230,6 +231,57 @@ describe("AnalyticsModal", () => {
     expect(
       within(dlg).getByText((text) => text.includes("Archived task")),
     ).toBeInTheDocument();
+  });
+
+  it("shows '(archived)' label next to archived card titles in cycle time table", async () => {
+    const now = Date.now();
+    const twoHoursAgo = now - 2 * 60 * 60 * 1000;
+
+    const columns = [
+      makeColumn("c1", "Todo"),
+      makeColumn("c2", "Done", [
+        makeCard("board1", "Board task", [
+          { columnId: "c1", enteredAt: twoHoursAgo },
+          { columnId: "c2", enteredAt: now },
+        ]),
+      ]),
+    ];
+    const archive: ArchivedCard[] = [
+      {
+        ...makeCard("archived1", "Archived task", [
+          { columnId: "c1", enteredAt: twoHoursAgo },
+          { columnId: "c2", enteredAt: now },
+        ]),
+        ticketTypeId: null,
+        archivedAt: now,
+        archivedFromColumnId: "c2",
+      },
+    ];
+
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({ columns, archive }),
+    );
+
+    const user = userEvent.setup();
+    renderApp();
+
+    const dlg = await openAnalytics(user);
+
+    // The archived card row should have the "(archived)" indicator
+    const archivedLabel = within(dlg).getByText("(archived)");
+    expect(archivedLabel).toBeInTheDocument();
+
+    // The "(archived)" label should be near the archived card title
+    const archivedCell = archivedLabel.closest("td")!;
+    expect(archivedCell.textContent).toContain("Archived task");
+
+    // The board card should NOT have "(archived)"
+    const boardRow = within(dlg).getByText((text) =>
+      text.includes("Board task"),
+    );
+    const boardCell = boardRow.closest("td")!;
+    expect(boardCell.textContent).not.toContain("(archived)");
   });
 
   it("does not include archived cards in total card count", async () => {

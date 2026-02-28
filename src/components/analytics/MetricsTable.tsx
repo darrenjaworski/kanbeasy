@@ -4,7 +4,7 @@ import { formatDuration } from "../../utils/cycleTime";
 type Props = Readonly<{
   title: string;
   columnLabel: string;
-  rows: { cardTitle: string; durationMs: number }[];
+  rows: { cardTitle: string; durationMs: number; isArchived?: boolean }[];
   visibleCount: number;
   onShowMore: () => void;
 }>;
@@ -54,6 +54,11 @@ export function MetricsTable({
                   {row.cardTitle.length > 40
                     ? `${row.cardTitle.slice(0, 40)}...`
                     : row.cardTitle}
+                  {row.isArchived && (
+                    <span className={`ml-1.5 text-xs ${tc.textFaint}`}>
+                      (archived)
+                    </span>
+                  )}
                 </td>
                 <td
                   className={`text-right px-3 py-2 tabular-nums ${tc.textMuted} whitespace-nowrap`}

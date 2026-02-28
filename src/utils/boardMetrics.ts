@@ -3,6 +3,7 @@ import type { Card, Column } from "../board/types";
 type CardReverseTime = {
   cardTitle: string;
   reverseTimeMs: number;
+  isArchived?: boolean;
 };
 
 /**
@@ -80,6 +81,8 @@ export function getCardReverseTimes(
 
   const results: CardReverseTime[] = [];
 
+  const additionalCardIds = new Set(additionalCards.map((c) => c.id));
+
   const allCards: Card[] = [];
   for (const col of columns) {
     for (const card of col.cards) {
@@ -116,6 +119,7 @@ export function getCardReverseTimes(
       results.push({
         cardTitle: `#${card.number} ${card.title}`,
         reverseTimeMs,
+        ...(additionalCardIds.has(card.id) && { isArchived: true }),
       });
     }
   }

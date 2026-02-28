@@ -212,6 +212,81 @@ describe("getCardCycleTimes with additionalCards", () => {
     expect(getCardCycleTimes([col], [archivedCard])).toEqual([]);
   });
 
+  it("marks additional cards as isArchived", () => {
+    const col = makeColumn([
+      makeCard("c1", "Board Card", {
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 3000 },
+        ],
+      }),
+    ]);
+    const archivedCard = makeCard("c2", "Archived Card", {
+      columnHistory: [
+        { columnId: "a", enteredAt: 1000 },
+        { columnId: "b", enteredAt: 6000 },
+      ],
+    });
+
+    const result = getCardCycleTimes([col], [archivedCard]);
+    const archived = result.find((r) => r.cardTitle.includes("Archived Card"));
+    const board = result.find((r) => r.cardTitle.includes("Board Card"));
+    expect(archived?.isArchived).toBe(true);
+    expect(board?.isArchived).toBeUndefined();
+  });
+
+  it("excludes additional cards with empty columnHistory", () => {
+    const col = makeColumn([]);
+    const archivedCard = makeCard("c1", "Empty history", {
+      columnHistory: [],
+    });
+
+    expect(getCardCycleTimes([col], [archivedCard])).toEqual([]);
+  });
+
+  it("returns results when all cards come from additionalCards", () => {
+    const col = makeColumn([]);
+    const archivedCards = [
+      makeCard("c1", "Archived A", {
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 4000 },
+        ],
+      }),
+      makeCard("c2", "Archived B", {
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 7000 },
+        ],
+      }),
+    ];
+
+    const result = getCardCycleTimes([col], archivedCards);
+    expect(result).toHaveLength(2);
+    expect(result.every((r) => r.isArchived === true)).toBe(true);
+  });
+
+  it("includes both board and additional cards independently even with duplicate IDs", () => {
+    const sharedId = "same-id";
+    const col = makeColumn([
+      makeCard(sharedId, "Board version", {
+        columnHistory: [
+          { columnId: "a", enteredAt: 1000 },
+          { columnId: "b", enteredAt: 3000 },
+        ],
+      }),
+    ]);
+    const archivedCard = makeCard(sharedId, "Archived version", {
+      columnHistory: [
+        { columnId: "a", enteredAt: 1000 },
+        { columnId: "b", enteredAt: 5000 },
+      ],
+    });
+
+    const result = getCardCycleTimes([col], [archivedCard]);
+    expect(result).toHaveLength(2);
+  });
+
   it("computes average including additional cards", () => {
     const col = makeColumn([
       makeCard("c1", "Board Card", {

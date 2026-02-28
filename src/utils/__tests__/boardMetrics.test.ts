@@ -393,6 +393,131 @@ describe("additionalCards", () => {
     });
   });
 
+  it("getCardReverseTimes marks additional cards as isArchived", () => {
+    const now = 10000;
+    const colA = makeColumn([], "colA");
+    const colB = makeColumn(
+      [
+        makeCard("c1", "Board card", [
+          { columnId: "colB", enteredAt: 1000 },
+          { columnId: "colA", enteredAt: 2000 },
+          { columnId: "colB", enteredAt: 4000 },
+        ]),
+      ],
+      "colB",
+    );
+
+    const archivedCard = makeCard("c2", "Archived card", [
+      { columnId: "colB", enteredAt: 1000 },
+      { columnId: "colA", enteredAt: 2000 },
+      { columnId: "colB", enteredAt: 5000 },
+    ]);
+
+    const result = getCardReverseTimes([colA, colB], now, [archivedCard]);
+    const archived = result.find((r) => r.cardTitle.includes("Archived card"));
+    const board = result.find((r) => r.cardTitle.includes("Board card"));
+    expect(archived?.isArchived).toBe(true);
+    expect(board?.isArchived).toBeUndefined();
+  });
+
+  it("getThroughput excludes archived card outside 30-day window", () => {
+    const now = 100_000_000;
+    const ms1Day = 24 * 60 * 60 * 1000;
+    const doneId = "done";
+
+    const col = makeColumn([], doneId);
+    const archivedCard = makeCard("c1", "Old archived", [
+      { columnId: doneId, enteredAt: now - ms1Day * 60 },
+    ]);
+
+    expect(getThroughput([col], now, [archivedCard])).toEqual({
+      last7Days: 0,
+      last30Days: 0,
+    });
+  });
+
+  it("getThroughput includes archived card at exactly 30-day boundary", () => {
+    const now = 100_000_000;
+    const ms30Days = 30 * 24 * 60 * 60 * 1000;
+    const doneId = "done";
+
+    const col = makeColumn([], doneId);
+    const archivedCard = makeCard("c1", "Boundary archived", [
+      { columnId: doneId, enteredAt: now - ms30Days },
+    ]);
+
+    expect(getThroughput([col], now, [archivedCard])).toEqual({
+      last7Days: 0,
+      last30Days: 1,
+    });
+  });
+
+  it("getCardReverseTimes gracefully skips archived card referencing nonexistent columns", () => {
+    const now = 10000;
+    const colA = makeColumn([], "colA");
+    const colB = makeColumn([], "colB");
+
+    const archivedCard = makeCard("c1", "Orphan refs", [
+      { columnId: "deleted1", enteredAt: 1000 },
+      { columnId: "deleted2", enteredAt: 2000 },
+      { columnId: "deleted1", enteredAt: 3000 },
+    ]);
+
+    const result = getCardReverseTimes([colA, colB], now, [archivedCard]);
+    expect(result).toEqual([]);
+  });
+
+  it("getCardReverseTimes excludes archived card with only forward moves", () => {
+    const now = 10000;
+    const colA = makeColumn([], "colA");
+    const colB = makeColumn([], "colB");
+    const colC = makeColumn([], "colC");
+
+    const archivedCard = makeCard("c1", "Forward only", [
+      { columnId: "colA", enteredAt: 1000 },
+      { columnId: "colB", enteredAt: 2000 },
+      { columnId: "colC", enteredAt: 3000 },
+    ]);
+
+    const result = getCardReverseTimes([colA, colB, colC], now, [archivedCard]);
+    expect(result).toEqual([]);
+  });
+
+  it("empty additionalCards array produces same results as omitting parameter", () => {
+    const now = 100_000_000;
+    const ms1Day = 24 * 60 * 60 * 1000;
+    const doneId = "done";
+
+    const col = makeColumn(
+      [
+        makeCard("c1", "Board card", [
+          { columnId: doneId, enteredAt: now - ms1Day * 3 },
+        ]),
+      ],
+      doneId,
+    );
+
+    const withEmpty = getThroughput([col], now, []);
+    const withoutParam = getThroughput([col], now);
+    expect(withEmpty).toEqual(withoutParam);
+
+    const colA = makeColumn([], "colA");
+    const colB = makeColumn(
+      [
+        makeCard("c2", "Board bounced", [
+          { columnId: "colB", enteredAt: 1000 },
+          { columnId: "colA", enteredAt: 2000 },
+          { columnId: "colB", enteredAt: 4000 },
+        ]),
+      ],
+      "colB",
+    );
+
+    const reverseWithEmpty = getCardReverseTimes([colA, colB], now, []);
+    const reverseWithout = getCardReverseTimes([colA, colB], now);
+    expect(reverseWithEmpty).toEqual(reverseWithout);
+  });
+
   it("getCardReverseTimes includes additional cards with backward moves", () => {
     const now = 10000;
     const colA = makeColumn([], "colA");

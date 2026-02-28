@@ -3,6 +3,7 @@ import type { Card, Column } from "../board/types";
 type CardCycleTime = {
   cardTitle: string;
   cycleTimeMs: number;
+  isArchived?: boolean;
 };
 
 /**
@@ -35,6 +36,7 @@ export function getCardCycleTimes(
     results.push({
       cardTitle: `#${card.number} ${card.title}`,
       cycleTimeMs: last.enteredAt - first.enteredAt,
+      isArchived: true,
     });
   }
 
