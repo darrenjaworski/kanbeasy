@@ -101,9 +101,7 @@ describe("SettingsModal", () => {
       </BoardProvider>,
     );
 
-    fireEvent.click(
-      screen.getByLabelText("Close settings", { selector: ".ml-auto" }),
-    );
+    fireEvent.click(screen.getByLabelText("Close settings"));
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 

@@ -18,8 +18,10 @@ const tooltip = (page: Page, text: string) =>
 test("undo button shows tooltip with keyboard shortcut on hover", async ({
   page,
 }) => {
-  const undoBtn = page.getByRole("button", { name: "Undo" });
+  // Add a column so undo becomes available
+  await page.getByTestId("add-column-button").click();
 
+  const undoBtn = page.getByRole("button", { name: "Undo" });
   await undoBtn.hover({ force: true });
   await expect(tooltip(page, "Undo")).toBeVisible();
   await expect(tooltip(page, "Undo")).toContainText("⌘Z");
@@ -28,8 +30,11 @@ test("undo button shows tooltip with keyboard shortcut on hover", async ({
 test("redo button shows tooltip with keyboard shortcut on hover", async ({
   page,
 }) => {
-  const redoBtn = page.getByRole("button", { name: "Redo" });
+  // Add a column then undo so redo becomes available
+  await page.getByTestId("add-column-button").click();
+  await page.getByRole("button", { name: "Undo" }).click();
 
+  const redoBtn = page.getByRole("button", { name: "Redo" });
   await redoBtn.hover({ force: true });
   await expect(tooltip(page, "Redo")).toBeVisible();
   await expect(tooltip(page, "Redo")).toContainText("⌘⇧Z");
