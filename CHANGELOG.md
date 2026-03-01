@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add styled tooltip component for icon-only buttons — themed glass-blur tooltips replace native `title` attributes across all icon buttons (card controls, column controls, undo/redo, density selector, modal close, owl buddy)
+- Add visible text labels to undo/redo buttons for improved discoverability
+- Add `aria-label` to card density buttons for screen reader accessibility
+
+### Tests
+
+- Add unit tests for Tooltip component (rendering, positioning, click passthrough, accessibility attributes)
+- Add e2e tests for tooltip visibility on hover (undo/redo, card controls, column controls)
+
 ## [1.26.0]
 
 ### Features

@@ -36,6 +36,7 @@ const dangerButton = `border border-red-400 ${glass} text-sm hover:bg-red-100 da
 const iconButton = `inline-flex items-center justify-center ${bgHover} ${focusRing} ${text} ${textHover}`;
 const buttonGroup = `inline-flex items-center overflow-hidden border ${border} ${glass}`;
 const input = `bg-transparent border-0 outline-hidden ${focusRing}`;
+const tooltip = `${glassOpaque} backdrop-blur-md border ${border} ${text} text-xs font-medium`;
 
 // ── Exported object ──────────────────────────────────────
 
@@ -66,4 +67,5 @@ export const tc = {
   iconButton,
   buttonGroup,
   input,
+  tooltip,
 } as const;

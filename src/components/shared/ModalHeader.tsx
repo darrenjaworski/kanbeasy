@@ -1,4 +1,5 @@
 import { CloseIcon } from "../icons";
+import { Tooltip } from "./Tooltip";
 import { tc } from "../../theme/classNames";
 
 type Props = Readonly<{
@@ -22,14 +23,16 @@ export function ModalHeader({
       <h2 id={titleId} className="text-base font-semibold tracking-tight">
         {title}
       </h2>
-      <button
-        type="button"
-        className={`ml-auto ${tc.iconButton} h-6 w-6 rounded-full`}
-        onClick={onClose}
-        aria-label={closeLabel}
-      >
-        <CloseIcon className="size-4" />
-      </button>
+      <Tooltip content="Close">
+        <button
+          type="button"
+          className={`ml-auto ${tc.iconButton} h-6 w-6 rounded-full`}
+          onClick={onClose}
+          aria-label={closeLabel}
+        >
+          <CloseIcon className="size-4" />
+        </button>
+      </Tooltip>
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { useClipboard } from "../../board/useClipboard";
 import { DragIndicatorIcon, CloseIcon } from "../icons";
 import { CardList } from "./CardList";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
+import { Tooltip } from "../shared/Tooltip";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
 import { getBadgeHeat } from "./badgeHeat";
@@ -121,36 +122,38 @@ export function Column({
     >
       {/* Combined drag + delete control */}
       <div
-        className={`absolute right-2 top-2 z-2 inline-flex items-center overflow-hidden border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
+        className={`absolute right-2 top-2 z-2 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
       >
         {canDrag && (
-          <button
-            type="button"
-            ref={dragHandleRef}
-            aria-label={`Drag column ${title || "column"}`}
-            title="Drag to reorder"
-            {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-            className={`${tc.iconButton} h-8 w-8 hover:cursor-grab active:cursor-grabbing`}
-            data-testid={`drag-column-button-${index}`}
-          >
-            <DragIndicatorIcon className="size-5" />
-          </button>
+          <Tooltip content="Drag to reorder" side="bottom">
+            <button
+              type="button"
+              ref={dragHandleRef}
+              aria-label={`Drag column ${title || "column"}`}
+              {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+              className={`${tc.iconButton} h-8 w-8 hover:cursor-grab active:cursor-grabbing`}
+              data-testid={`drag-column-button-${index}`}
+            >
+              <DragIndicatorIcon className="size-5" />
+            </button>
+          </Tooltip>
         )}
         {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
-        <button
-          type="button"
-          onClick={() =>
-            deleteColumnWarningEnabled && cards.length > 0
-              ? setShowDeleteConfirm(true)
-              : removeColumn(id)
-          }
-          aria-label={`Remove column ${title || "column"}`}
-          title="Remove column"
-          className={`${tc.iconButton} h-8 w-8`}
-          data-testid={`delete-column-button-${index}`}
-        >
-          <CloseIcon className="size-5" />
-        </button>
+        <Tooltip content="Remove column" side="bottom">
+          <button
+            type="button"
+            onClick={() =>
+              deleteColumnWarningEnabled && cards.length > 0
+                ? setShowDeleteConfirm(true)
+                : removeColumn(id)
+            }
+            aria-label={`Remove column ${title || "column"}`}
+            className={`${tc.iconButton} h-8 w-8`}
+            data-testid={`delete-column-button-${index}`}
+          >
+            <CloseIcon className="size-5" />
+          </button>
+        </Tooltip>
       </div>
       {/* Card count badge — slides left on hover to clear controls */}
       {(() => {

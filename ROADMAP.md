@@ -70,6 +70,7 @@ an ultra simple task organizer
   - ✅ disable navigation controls (analytics, search, list view toggle, archive) when board or archive is empty
 - ✅ column delete warning updated to reflect archiving behavior ("cards will be archived and can be restored later")
 - ✅ default ticket type — allow setting a ticket type as the default for new cards in settings
+- ✅ tooltips on all icon-only buttons for improved discoverability and accessibility
 
 Settings
 
@@ -88,7 +89,6 @@ Settings
 
 - ability to specify column background color
 - customizable icons on the lefthand side of each todo
-- tooltips on all buttons for improved discoverability and accessibility
 - keyboard shortcuts
   - cmd + n to create a new card
 - card enhancements

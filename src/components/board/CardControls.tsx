@@ -1,5 +1,6 @@
 import type { HTMLAttributes } from "react";
 import { ArchiveIcon, CardDragIcon, CopyIcon, MoreIcon } from "../icons";
+import { Tooltip } from "../shared/Tooltip";
 import { tc } from "../../theme/classNames";
 
 interface CardControlsProps {
@@ -27,55 +28,59 @@ export function CardControls({
 }: CardControlsProps) {
   return (
     <div
-      className={`absolute right-1 top-1 z-1 inline-flex items-center overflow-hidden border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
+      className={`absolute right-1 top-1 z-1 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
     >
       {canDrag && (
-        <button
-          type="button"
-          ref={setActivatorNodeRef}
-          {...(attributes as unknown as HTMLAttributes<HTMLButtonElement>)}
-          {...(listeners as unknown as HTMLAttributes<HTMLButtonElement>)}
-          aria-label={`Drag card ${cardTitle || "Untitled"}`}
-          title="Drag to reorder"
-          className={`${tc.iconButton} h-6 w-6 hover:cursor-grab active:cursor-grabbing`}
-          data-testid={`card-drag-${index}`}
-        >
-          <CardDragIcon className="size-4" />
-        </button>
+        <Tooltip content="Drag to reorder">
+          <button
+            type="button"
+            ref={setActivatorNodeRef}
+            {...(attributes as unknown as HTMLAttributes<HTMLButtonElement>)}
+            {...(listeners as unknown as HTMLAttributes<HTMLButtonElement>)}
+            aria-label={`Drag card ${cardTitle || "Untitled"}`}
+            className={`${tc.iconButton} h-6 w-6 hover:cursor-grab active:cursor-grabbing`}
+            data-testid={`card-drag-${index}`}
+          >
+            <CardDragIcon className="size-4" />
+          </button>
+        </Tooltip>
       )}
       {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
-      <button
-        type="button"
-        onClick={onCopy}
-        aria-label={`Copy card ${cardTitle || "Untitled"}`}
-        title="Copy card"
-        className={`${tc.iconButton} h-6 w-6`}
-        data-testid={`card-copy-${index}`}
-      >
-        <CopyIcon className="size-4" />
-      </button>
+      <Tooltip content="Copy card">
+        <button
+          type="button"
+          onClick={onCopy}
+          aria-label={`Copy card ${cardTitle || "Untitled"}`}
+          className={`${tc.iconButton} h-6 w-6`}
+          data-testid={`card-copy-${index}`}
+        >
+          <CopyIcon className="size-4" />
+        </button>
+      </Tooltip>
       <span aria-hidden className={`${tc.separator} h-6 w-px`} />
-      <button
-        type="button"
-        onClick={onOpenDetail}
-        aria-label={`More details for ${cardTitle || "Untitled"}`}
-        title="More details"
-        className={`${tc.iconButton} h-6 w-6`}
-        data-testid={`card-detail-${index}`}
-      >
-        <MoreIcon className="size-4" />
-      </button>
+      <Tooltip content="Card details">
+        <button
+          type="button"
+          onClick={onOpenDetail}
+          aria-label={`More details for ${cardTitle || "Untitled"}`}
+          className={`${tc.iconButton} h-6 w-6`}
+          data-testid={`card-detail-${index}`}
+        >
+          <MoreIcon className="size-4" />
+        </button>
+      </Tooltip>
       <span aria-hidden className={`${tc.separator} h-6 w-px`} />
-      <button
-        type="button"
-        onClick={onArchive}
-        aria-label={`Archive card ${cardTitle || "Untitled"}`}
-        title="Archive card"
-        className={`${tc.iconButton} h-6 w-6`}
-        data-testid={`card-archive-${index}`}
-      >
-        <ArchiveIcon className="size-4" />
-      </button>
+      <Tooltip content="Archive card">
+        <button
+          type="button"
+          onClick={onArchive}
+          aria-label={`Archive card ${cardTitle || "Untitled"}`}
+          className={`${tc.iconButton} h-6 w-6`}
+          data-testid={`card-archive-${index}`}
+        >
+          <ArchiveIcon className="size-4" />
+        </button>
+      </Tooltip>
     </div>
   );
 }
