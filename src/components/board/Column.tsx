@@ -125,7 +125,7 @@ export function Column({
         className={`absolute right-2 top-2 z-2 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
       >
         {canDrag && (
-          <Tooltip content="Drag to reorder" side="bottom">
+          <Tooltip content="Drag to reorder">
             <button
               type="button"
               ref={dragHandleRef}
@@ -139,7 +139,7 @@ export function Column({
           </Tooltip>
         )}
         {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
-        <Tooltip content="Remove column" side="bottom">
+        <Tooltip content="Remove column">
           <button
             type="button"
             onClick={() =>

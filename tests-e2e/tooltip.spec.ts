@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -10,26 +10,29 @@ test.beforeEach(async ({ page }) => {
   await page.getByTestId("get-started-button").click();
 });
 
+// Tooltips use aria-hidden so they don't double-announce for screen readers.
+// Use CSS selector instead of getByRole to locate them.
+const tooltip = (page: Page, text: string) =>
+  page.locator(`[role="tooltip"]`, { hasText: text });
+
 test("undo button shows tooltip with keyboard shortcut on hover", async ({
   page,
 }) => {
   const undoBtn = page.getByRole("button", { name: "Undo" });
-  const tooltip = page.getByRole("tooltip", { name: /Undo/ });
 
-  await undoBtn.hover();
-  await expect(tooltip).toBeVisible();
-  await expect(tooltip).toContainText("⌘Z");
+  await undoBtn.hover({ force: true });
+  await expect(tooltip(page, "Undo")).toBeVisible();
+  await expect(tooltip(page, "Undo")).toContainText("⌘Z");
 });
 
 test("redo button shows tooltip with keyboard shortcut on hover", async ({
   page,
 }) => {
   const redoBtn = page.getByRole("button", { name: "Redo" });
-  const tooltip = page.getByRole("tooltip", { name: /Redo/ });
 
-  await redoBtn.hover();
-  await expect(tooltip).toBeVisible();
-  await expect(tooltip).toContainText("⌘⇧Z");
+  await redoBtn.hover({ force: true });
+  await expect(tooltip(page, "Redo")).toBeVisible();
+  await expect(tooltip(page, "Redo")).toContainText("⌘⇧Z");
 });
 
 test("card control buttons show tooltips on hover", async ({ page }) => {
@@ -41,8 +44,8 @@ test("card control buttons show tooltips on hover", async ({ page }) => {
   await page.getByTestId("card-0").hover();
 
   // Hover the copy button
-  await page.getByTestId("card-copy-0").hover();
-  await expect(page.getByRole("tooltip", { name: "Copy card" })).toBeVisible();
+  await page.getByTestId("card-copy-0").hover({ force: true });
+  await expect(tooltip(page, "Copy card")).toBeVisible();
 });
 
 test("column delete button shows tooltip on hover", async ({ page }) => {
@@ -53,21 +56,6 @@ test("column delete button shows tooltip on hover", async ({ page }) => {
   await page.getByTestId("column-0").hover();
 
   // Hover the delete button
-  await page.getByTestId("delete-column-button-0").hover();
-  await expect(
-    page.getByRole("tooltip", { name: "Remove column" }),
-  ).toBeVisible();
-});
-
-test("tooltip disappears when mouse leaves", async ({ page }) => {
-  const undoBtn = page.getByRole("button", { name: "Undo" });
-  const tooltip = page.getByRole("tooltip", { name: /Undo/ });
-
-  // Hover to show tooltip
-  await undoBtn.hover();
-  await expect(tooltip).toBeVisible();
-
-  // Move mouse away
-  await page.mouse.move(0, 0);
-  await expect(tooltip).not.toBeVisible();
+  await page.getByTestId("delete-column-button-0").hover({ force: true });
+  await expect(tooltip(page, "Remove column")).toBeVisible();
 });

@@ -37,25 +37,25 @@ describe("Tooltip", () => {
     );
   });
 
-  it("positions tooltip above by default (side='top')", () => {
+  it("positions tooltip below by default (side='bottom')", () => {
     render(
       <Tooltip content="Help text">
         <button type="button">Click me</button>
       </Tooltip>,
     );
     expect(screen.getByRole("tooltip", { hidden: true })).toHaveClass(
-      "bottom-full",
+      "top-full",
     );
   });
 
-  it("positions tooltip below when side='bottom'", () => {
+  it("positions tooltip above when side='top'", () => {
     render(
-      <Tooltip content="Help text" side="bottom">
+      <Tooltip content="Help text" side="top">
         <button type="button">Click me</button>
       </Tooltip>,
     );
     expect(screen.getByRole("tooltip", { hidden: true })).toHaveClass(
-      "top-full",
+      "bottom-full",
     );
   });
 

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 import { OwlIcon, SleepyOwlIcon } from "./icons";
-import { Tooltip } from "./shared/Tooltip";
 import { owlTips, nightOwlTips } from "../constants/owlTips";
 import { isNightOwlHour } from "../utils/isNightOwlHour";
 
@@ -128,16 +127,14 @@ export function OwlBuddy() {
           </div>
         </div>
       )}
-      <Tooltip content="Owl buddy" side="top">
-        <button
-          type="button"
-          onClick={handleOpen}
-          aria-label="Owl buddy"
-          className={`h-10 w-10 rounded-full border backdrop-blur ${tc.iconButton} ${tc.border} ${tc.glass}`}
-        >
-          <Icon className="h-6 w-6" />
-        </button>
-      </Tooltip>
+      <button
+        type="button"
+        onClick={handleOpen}
+        aria-label="Owl buddy"
+        className={`h-10 w-10 rounded-full border backdrop-blur ${tc.iconButton} ${tc.border} ${tc.glass}`}
+      >
+        <Icon className="h-6 w-6" />
+      </button>
     </div>
   );
 }

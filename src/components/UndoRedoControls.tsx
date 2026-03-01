@@ -11,7 +11,7 @@ export function UndoRedoControls() {
 
   return (
     <div className="fixed bottom-4 right-4 z-10 flex gap-1">
-      <Tooltip content="Undo (⌘Z)">
+      <Tooltip content="Undo (⌘Z)" side="top" disabled={!canUndo}>
         <button
           type="button"
           onClick={undo}
@@ -23,7 +23,7 @@ export function UndoRedoControls() {
           <span>Undo</span>
         </button>
       </Tooltip>
-      <Tooltip content="Redo (⌘⇧Z)">
+      <Tooltip content="Redo (⌘⇧Z)" side="top" disabled={!canRedo}>
         <button
           type="button"
           onClick={redo}
