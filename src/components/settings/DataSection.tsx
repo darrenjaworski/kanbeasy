@@ -16,6 +16,7 @@ export function DataSection() {
     setViewMode,
     setTicketTypePresetId,
     setTicketTypes,
+    setDefaultTicketTypeId,
     resetSettings,
   } = useTheme();
   const { setColumns, resetBoard, setNextCardNumber } = useBoard();
@@ -76,6 +77,7 @@ export function DataSection() {
     setViewMode(settings.viewMode);
     setTicketTypePresetId(settings.ticketTypePresetId);
     setTicketTypes(settings.ticketTypes);
+    setDefaultTicketTypeId(settings.defaultTicketTypeId);
 
     setImportStatus("complete");
     setTimeout(() => setImportStatus("idle"), 600);

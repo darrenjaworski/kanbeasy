@@ -34,5 +34,7 @@ export type ThemeContextValue = Readonly<{
   setTicketTypes: (types: TicketType[]) => void;
   ticketTypePresetId: string;
   setTicketTypePresetId: (id: string) => void;
+  defaultTicketTypeId: string | null;
+  setDefaultTicketTypeId: (id: string | null) => void;
   resetSettings: () => void;
 }>;

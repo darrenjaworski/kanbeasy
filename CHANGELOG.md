@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add default ticket type setting — new cards are automatically pre-tagged with the selected type; dropdown in Ticket Types settings section with "None" and all configured types
+- Include default ticket type in export/import (export format bumped to v7); v1–6 imports default to null
+
 ### Changed
 
 - Replace inline `dark:` Tailwind patterns with centralized `tc` theme tokens (`glassSubtle`, `glassOpaque`, `placeholder`, `borderHover`, `error`, `codeBg`, `searchHighlight`) across 9 component files

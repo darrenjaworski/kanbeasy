@@ -39,6 +39,13 @@ function ThemeWrapper({ children }: { children: React.ReactNode }) {
       setOwlModeEnabled: () => {},
       viewMode: "board" as const,
       setViewMode: () => {},
+      ticketTypes: [],
+      setTicketTypes: () => {},
+      ticketTypePresetId: "development",
+      setTicketTypePresetId: () => {},
+      defaultTicketTypeId: null,
+      setDefaultTicketTypeId: () => {},
+      resetSettings: () => {},
     }),
     [],
   );

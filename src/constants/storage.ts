@@ -37,6 +37,9 @@ export const STORAGE_KEYS = {
   /** Custom ticket types JSON */
   TICKET_TYPES: "kanbeasy:ticketTypes",
 
+  /** Default ticket type for new cards */
+  DEFAULT_TICKET_TYPE: "kanbeasy:defaultTicketType",
+
   /** Settings modal section collapse state (JSON object) */
   SETTINGS_SECTIONS: "kanbeasy:settingsSections",
 

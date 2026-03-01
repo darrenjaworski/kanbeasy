@@ -23,6 +23,7 @@ interface ValidatedImport {
     viewMode: ViewMode;
     ticketTypePresetId: string;
     ticketTypes: TicketType[];
+    defaultTicketTypeId: string | null;
   };
 }
 
@@ -58,12 +59,13 @@ export function validateExportData(parsed: unknown): ImportResult {
     version !== 3 &&
     version !== 4 &&
     version !== 5 &&
-    version !== 6
+    version !== 6 &&
+    version !== 7
   ) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–6 are supported.`
+        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–7 are supported.`
         : "Missing export version.",
     };
   }
@@ -184,6 +186,16 @@ export function validateExportData(parsed: unknown): ImportResult {
     }
   }
 
+  // Default ticket type (v7+). Fall back to null for older versions.
+  let defaultTicketTypeId: string | null = null;
+  if (version >= 7) {
+    const rawDefault =
+      typeof s.defaultTicketType === "string" ? s.defaultTicketType : "";
+    if (rawDefault && ticketTypes.some((t) => t.id === rawDefault)) {
+      defaultTicketTypeId = rawDefault;
+    }
+  }
+
   return {
     ok: true,
     data: {
@@ -200,6 +212,7 @@ export function validateExportData(parsed: unknown): ImportResult {
         viewMode,
         ticketTypePresetId,
         ticketTypes,
+        defaultTicketTypeId,
       },
     },
   };

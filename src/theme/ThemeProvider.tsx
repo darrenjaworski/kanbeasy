@@ -144,6 +144,9 @@ export function ThemeProvider({
   const [ticketTypes, setTicketTypes] = useState<TicketType[]>(() =>
     getInitialTicketTypes(ticketTypePresetId),
   );
+  const [defaultTicketTypeId, setDefaultTicketTypeId] = useState<string | null>(
+    () => getStringFromStorage(STORAGE_KEYS.DEFAULT_TICKET_TYPE, "") || null,
+  );
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -234,6 +237,27 @@ export function ThemeProvider({
     saveToStorage(STORAGE_KEYS.TICKET_TYPES, ticketTypes);
   }, [ticketTypes]);
 
+  useEffect(() => {
+    if (defaultTicketTypeId) {
+      saveStringToStorage(
+        STORAGE_KEYS.DEFAULT_TICKET_TYPE,
+        defaultTicketTypeId,
+      );
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE);
+    }
+  }, [defaultTicketTypeId]);
+
+  // Clear default ticket type if it no longer exists in the current types
+  useEffect(() => {
+    if (
+      defaultTicketTypeId &&
+      !ticketTypes.some((t) => t.id === defaultTicketTypeId)
+    ) {
+      setDefaultTicketTypeId(null);
+    }
+  }, [ticketTypes, defaultTicketTypeId]);
+
   const resetSettings = useCallback(() => {
     // Clear all localStorage keys
     localStorage.removeItem(STORAGE_KEYS.THEME);
@@ -245,6 +269,7 @@ export function ThemeProvider({
     localStorage.removeItem(STORAGE_KEYS.VIEW_MODE);
     localStorage.removeItem(STORAGE_KEYS.TICKET_TYPE_PRESET);
     localStorage.removeItem(STORAGE_KEYS.TICKET_TYPES);
+    localStorage.removeItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE);
     localStorage.removeItem(STORAGE_KEYS.SETTINGS_SECTIONS);
     localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
@@ -259,6 +284,7 @@ export function ThemeProvider({
     setTicketTypePresetId(DEFAULT_PRESET_ID);
     const preset = TICKET_TYPE_PRESETS.find((p) => p.id === DEFAULT_PRESET_ID);
     if (preset) setTicketTypes([...preset.types]);
+    setDefaultTicketTypeId(null);
   }, []);
 
   const theme = getThemeById(themeId);
@@ -285,6 +311,8 @@ export function ThemeProvider({
       setTicketTypes,
       ticketTypePresetId,
       setTicketTypePresetId,
+      defaultTicketTypeId,
+      setDefaultTicketTypeId,
       resetSettings,
     }),
     [
@@ -299,6 +327,7 @@ export function ThemeProvider({
       viewMode,
       ticketTypes,
       ticketTypePresetId,
+      defaultTicketTypeId,
       resetSettings,
     ],
   );

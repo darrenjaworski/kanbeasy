@@ -463,6 +463,62 @@ describe("validateExportData", () => {
     expect(result.data.settings.ticketTypes.length).toBeGreaterThan(0);
   });
 
+  it("accepts v7 export data", () => {
+    const result = validateExportData(makeExportData({ version: 7 }));
+    expect(result.ok).toBe(true);
+  });
+
+  it("v7 import preserves defaultTicketTypeId", () => {
+    const types = [{ id: "feat", label: "Feature", color: "#6366f1" }];
+    const result = validateExportData(
+      makeExportData({
+        version: 7,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "medium",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+          ticketTypePreset: "custom",
+          ticketTypes: JSON.stringify(types),
+          defaultTicketType: "feat",
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.defaultTicketTypeId).toBe("feat");
+  });
+
+  it("v7 import clears defaultTicketTypeId when type not in list", () => {
+    const types = [{ id: "feat", label: "Feature", color: "#6366f1" }];
+    const result = validateExportData(
+      makeExportData({
+        version: 7,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "medium",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+          ticketTypePreset: "custom",
+          ticketTypes: JSON.stringify(types),
+          defaultTicketType: "nonexistent",
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.defaultTicketTypeId).toBeNull();
+  });
+
+  it("v6 import defaults defaultTicketTypeId to null", () => {
+    const result = validateExportData(makeExportData({ version: 6 }));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.defaultTicketTypeId).toBeNull();
+  });
+
   it("v4 import backfills ticketTypeId to null on cards", () => {
     const result = validateExportData(
       makeExportData({

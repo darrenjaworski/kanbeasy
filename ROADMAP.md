@@ -69,6 +69,7 @@ an ultra simple task organizer
   - ✅ move floating buttons (owl assistant, undo/redo) to bottom of page after footer removal
   - ✅ disable navigation controls (analytics, search, list view toggle, archive) when board or archive is empty
 - ✅ column delete warning updated to reflect archiving behavior ("cards will be archived and can be restored later")
+- ✅ default ticket type — allow setting a ticket type as the default for new cards in settings
 
 Settings
 
@@ -89,6 +90,7 @@ Settings
 - customizable icons on the lefthand side of each todo
 - tooltips on all buttons for improved discoverability and accessibility
 - keyboard shortcuts
+  - cmd + n to create a new card
 - card enhancements
   - checklists with inline progress (e.g., "3/5")
   - labels/tags with custom colors, filterable from search
@@ -98,7 +100,6 @@ Settings
   - pinned cards — stick important cards to the top of a column
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
-- default ticket type — allow setting a ticket type as the default for new cards in settings
 - card sorting UI (alphabetical, by date created, by last updated)
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded

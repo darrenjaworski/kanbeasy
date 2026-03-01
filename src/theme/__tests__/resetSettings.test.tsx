@@ -88,6 +88,16 @@ describe("resetSettings", () => {
     expect(result.current.ticketTypePresetId).toBe("development");
   });
 
+  it("resets default ticket type to null", () => {
+    const { result } = renderHook(() => useTheme(), { wrapper });
+
+    act(() => result.current.setDefaultTicketTypeId("feat"));
+    expect(result.current.defaultTicketTypeId).toBe("feat");
+
+    act(() => result.current.resetSettings());
+    expect(result.current.defaultTicketTypeId).toBeNull();
+  });
+
   it("removes hasSeenWelcome from localStorage", () => {
     localStorage.setItem(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
     const { result } = renderHook(() => useTheme(), { wrapper });

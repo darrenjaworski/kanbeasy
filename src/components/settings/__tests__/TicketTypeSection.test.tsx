@@ -175,6 +175,56 @@ describe("TicketTypeSection", () => {
     });
   });
 
+  describe("default ticket type", () => {
+    it("renders default type dropdown", () => {
+      renderSection();
+      expect(screen.getByTestId("default-ticket-type")).toBeInTheDocument();
+    });
+
+    it("shows None and all ticket types as options", () => {
+      renderSection();
+      const select = screen.getByTestId(
+        "default-ticket-type",
+      ) as HTMLSelectElement;
+      const options = Array.from(select.options);
+
+      // "None" + all dev preset types
+      expect(options).toHaveLength(devPreset.types.length + 1);
+      expect(options[0].textContent).toBe("None");
+      expect(options[0].value).toBe("");
+    });
+
+    it("defaults to None", () => {
+      renderSection();
+      expect(screen.getByTestId("default-ticket-type")).toHaveValue("");
+    });
+
+    it("sets default type when selected", () => {
+      renderSection();
+      fireEvent.change(screen.getByTestId("default-ticket-type"), {
+        target: { value: devPreset.types[0].id },
+      });
+
+      expect(screen.getByTestId("default-ticket-type")).toHaveValue(
+        devPreset.types[0].id,
+      );
+    });
+
+    it("clears default type when None is selected", () => {
+      renderSection();
+      // First set a type
+      fireEvent.change(screen.getByTestId("default-ticket-type"), {
+        target: { value: devPreset.types[0].id },
+      });
+      // Then clear it
+      fireEvent.change(screen.getByTestId("default-ticket-type"), {
+        target: { value: "" },
+      });
+
+      expect(screen.getByTestId("default-ticket-type")).toHaveValue("");
+    });
+  });
+
   describe("color picker", () => {
     it("opens color picker when swatch is clicked", () => {
       renderSection();

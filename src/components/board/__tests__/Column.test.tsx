@@ -107,6 +107,8 @@ function makeThemeContext(
     setTicketTypes: vi.fn(),
     ticketTypePresetId: "development",
     setTicketTypePresetId: vi.fn(),
+    defaultTicketTypeId: null,
+    setDefaultTicketTypeId: vi.fn(),
     resetSettings: vi.fn(),
     ...overrides,
   };
@@ -285,7 +287,7 @@ describe("Column", () => {
   it("calls addCard with column id on button click", async () => {
     const { boardCtx } = renderColumn();
     await userEvent.click(screen.getByRole("button", { name: /Add card to/ }));
-    expect(boardCtx.addCard).toHaveBeenCalledWith("col-1", "New card");
+    expect(boardCtx.addCard).toHaveBeenCalledWith("col-1", "New card", null);
   });
 
   // --- Paste card ---

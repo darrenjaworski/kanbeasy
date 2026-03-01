@@ -300,6 +300,42 @@ describe("useBoardMutations", () => {
       const next = applyLatest({ columns: [col], archive: [] });
       expect(next.columns[0].cards[0].title).toBe("");
     });
+
+    it("applies ticketTypeId when provided", () => {
+      const { result, applyLatest } = setup();
+      const col = makeColumn({ id: "col-1", cards: [] });
+
+      act(() => {
+        result.current.addCard("col-1", "Typed card", "feat");
+      });
+
+      const next = applyLatest({ columns: [col], archive: [] });
+      expect(next.columns[0].cards[0].ticketTypeId).toBe("feat");
+    });
+
+    it("defaults ticketTypeId to null when not provided", () => {
+      const { result, applyLatest } = setup();
+      const col = makeColumn({ id: "col-1", cards: [] });
+
+      act(() => {
+        result.current.addCard("col-1", "Untyped card");
+      });
+
+      const next = applyLatest({ columns: [col], archive: [] });
+      expect(next.columns[0].cards[0].ticketTypeId).toBeNull();
+    });
+
+    it("treats explicit null ticketTypeId as null", () => {
+      const { result, applyLatest } = setup();
+      const col = makeColumn({ id: "col-1", cards: [] });
+
+      act(() => {
+        result.current.addCard("col-1", "No type", null);
+      });
+
+      const next = applyLatest({ columns: [col], archive: [] });
+      expect(next.columns[0].cards[0].ticketTypeId).toBeNull();
+    });
   });
 
   /* -------------------- removeCard -------------------- */

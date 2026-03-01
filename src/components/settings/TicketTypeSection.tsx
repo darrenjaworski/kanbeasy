@@ -14,6 +14,8 @@ export function TicketTypeSection() {
     setTicketTypes,
     ticketTypePresetId,
     setTicketTypePresetId,
+    defaultTicketTypeId,
+    setDefaultTicketTypeId,
   } = useTheme();
   const { renameTicketType, clearTicketType } = useBoard();
   const [editingColorIdx, setEditingColorIdx] = useState<number | null>(null);
@@ -65,7 +67,14 @@ export function TicketTypeSection() {
 
       {/* Preset selector */}
       <div className="relative">
+        <label
+          htmlFor="ticket-type-preset"
+          className={`block text-xs ${tc.textMuted} mb-1`}
+        >
+          Preset
+        </label>
         <select
+          id="ticket-type-preset"
           value={ticketTypePresetId}
           onChange={(e) => handlePresetChange(e.target.value)}
           className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
@@ -79,7 +88,7 @@ export function TicketTypeSection() {
           <option value="custom">Custom</option>
         </select>
         <svg
-          className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-4 ${tc.textFaint}`}
+          className={`pointer-events-none absolute right-2.5 bottom-2.5 size-4 ${tc.textFaint}`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -92,6 +101,45 @@ export function TicketTypeSection() {
           />
         </svg>
       </div>
+
+      {/* Default type for new cards */}
+      {ticketTypes.length > 0 && (
+        <div className="relative">
+          <label
+            htmlFor="default-ticket-type"
+            className={`block text-xs ${tc.textMuted} mb-1`}
+          >
+            Default type for new cards
+          </label>
+          <select
+            id="default-ticket-type"
+            value={defaultTicketTypeId ?? ""}
+            onChange={(e) => setDefaultTicketTypeId(e.target.value || null)}
+            className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
+            data-testid="default-ticket-type"
+          >
+            <option value="">None</option>
+            {ticketTypes.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.label}
+              </option>
+            ))}
+          </select>
+          <svg
+            className={`pointer-events-none absolute right-2.5 bottom-2.5 size-4 ${tc.textFaint}`}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+      )}
 
       {/* Disclosure toggle for type editor */}
       <button
