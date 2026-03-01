@@ -38,7 +38,7 @@ export function CardControls({
             {...(attributes as unknown as HTMLAttributes<HTMLButtonElement>)}
             {...(listeners as unknown as HTMLAttributes<HTMLButtonElement>)}
             aria-label={`Drag card ${cardTitle || "Untitled"}`}
-            className={`${tc.iconButton} h-6 w-6 hover:cursor-grab active:cursor-grabbing`}
+            className={`${tc.iconButton} h-6 w-6 rounded-l-full hover:cursor-grab active:cursor-grabbing`}
             data-testid={`card-drag-${index}`}
           >
             <CardDragIcon className="size-4" />
@@ -51,7 +51,7 @@ export function CardControls({
           type="button"
           onClick={onCopy}
           aria-label={`Copy card ${cardTitle || "Untitled"}`}
-          className={`${tc.iconButton} h-6 w-6`}
+          className={`${tc.iconButton} h-6 w-6${canDrag ? "" : " rounded-l-full"}`}
           data-testid={`card-copy-${index}`}
         >
           <CopyIcon className="size-4" />
@@ -75,7 +75,7 @@ export function CardControls({
           type="button"
           onClick={onArchive}
           aria-label={`Archive card ${cardTitle || "Untitled"}`}
-          className={`${tc.iconButton} h-6 w-6`}
+          className={`${tc.iconButton} h-6 w-6 rounded-r-full`}
           data-testid={`card-archive-${index}`}
         >
           <ArchiveIcon className="size-4" />

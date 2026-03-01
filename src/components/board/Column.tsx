@@ -131,7 +131,7 @@ export function Column({
               ref={dragHandleRef}
               aria-label={`Drag column ${title || "column"}`}
               {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
-              className={`${tc.iconButton} h-8 w-8 hover:cursor-grab active:cursor-grabbing`}
+              className={`${tc.iconButton} h-8 w-8 rounded-l-full hover:cursor-grab active:cursor-grabbing`}
               data-testid={`drag-column-button-${index}`}
             >
               <DragIndicatorIcon className="size-5" />
@@ -148,7 +148,7 @@ export function Column({
                 : removeColumn(id)
             }
             aria-label={`Remove column ${title || "column"}`}
-            className={`${tc.iconButton} h-8 w-8`}
+            className={`${tc.iconButton} h-8 w-8 ${canDrag ? "rounded-r-full" : "rounded-full"}`}
             data-testid={`delete-column-button-${index}`}
           >
             <CloseIcon className="size-5" />
