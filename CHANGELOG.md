@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add unit tests for `useBoardMutations` hook — 52 tests covering all 18 mutation functions (column CRUD, card CRUD, archive, ticket types, reset)
 - Suppress `console.warn` stderr noise in storage utility error-path tests
+- Add isolated unit tests for `CardList` (13 tests), `Column` (25 tests), and `Board` (9 tests) components
 
 ## [1.25.0]
 
