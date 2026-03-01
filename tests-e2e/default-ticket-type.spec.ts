@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 /** Open settings, expand Ticket Types section, return the dialog locator. */
-async function openTicketTypeSettings(page: import("@playwright/test").Page) {
+async function openTicketTypeSettings(page: Page) {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
