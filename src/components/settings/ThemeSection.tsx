@@ -7,7 +7,6 @@ import {
   DensityMediumIcon,
   DensityLargeIcon,
 } from "../icons";
-import { Tooltip } from "../shared/Tooltip";
 
 const lightThemes = themes.filter((t) => t.mode === "light");
 const darkThemes = themes.filter((t) => t.mode === "dark");
@@ -93,47 +92,41 @@ export function ThemeSection() {
         <legend className="sr-only">Card density</legend>
         <span aria-hidden>Card density</span>
         <div className={`${tc.buttonGroup} rounded-full`}>
-          <Tooltip content="Compact">
-            <button
-              type="button"
-              onClick={() => setCardDensity("small")}
-              aria-label="Compact"
-              aria-pressed={cardDensity === "small"}
-              className={`h-9 w-9 ${tc.iconButton} ${
-                cardDensity === "small" ? tc.pressed : ""
-              }`}
-            >
-              <DensitySmallIcon />
-            </button>
-          </Tooltip>
+          <button
+            type="button"
+            onClick={() => setCardDensity("small")}
+            aria-label="Compact"
+            aria-pressed={cardDensity === "small"}
+            className={`h-9 w-9 ${tc.iconButton} ${
+              cardDensity === "small" ? tc.pressed : ""
+            }`}
+          >
+            <DensitySmallIcon />
+          </button>
           <span aria-hidden className={`${tc.separator} h-7 w-px`} />
-          <Tooltip content="Comfortable">
-            <button
-              type="button"
-              onClick={() => setCardDensity("medium")}
-              aria-label="Comfortable"
-              aria-pressed={cardDensity === "medium"}
-              className={`h-9 w-9 ${tc.iconButton} ${
-                cardDensity === "medium" ? tc.pressed : ""
-              }`}
-            >
-              <DensityMediumIcon />
-            </button>
-          </Tooltip>
+          <button
+            type="button"
+            onClick={() => setCardDensity("medium")}
+            aria-label="Comfortable"
+            aria-pressed={cardDensity === "medium"}
+            className={`h-9 w-9 ${tc.iconButton} ${
+              cardDensity === "medium" ? tc.pressed : ""
+            }`}
+          >
+            <DensityMediumIcon />
+          </button>
           <span aria-hidden className={`${tc.separator} h-7 w-px`} />
-          <Tooltip content="Spacious">
-            <button
-              type="button"
-              onClick={() => setCardDensity("large")}
-              aria-label="Spacious"
-              aria-pressed={cardDensity === "large"}
-              className={`h-9 w-9 ${tc.iconButton} ${
-                cardDensity === "large" ? tc.pressed : ""
-              }`}
-            >
-              <DensityLargeIcon />
-            </button>
-          </Tooltip>
+          <button
+            type="button"
+            onClick={() => setCardDensity("large")}
+            aria-label="Spacious"
+            aria-pressed={cardDensity === "large"}
+            className={`h-9 w-9 ${tc.iconButton} ${
+              cardDensity === "large" ? tc.pressed : ""
+            }`}
+          >
+            <DensityLargeIcon />
+          </button>
         </div>
       </fieldset>
     </fieldset>

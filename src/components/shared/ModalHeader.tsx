@@ -23,16 +23,18 @@ export function ModalHeader({
       <h2 id={titleId} className="text-base font-semibold tracking-tight">
         {title}
       </h2>
-      <Tooltip content="Close">
-        <button
-          type="button"
-          className={`ml-auto ${tc.iconButton} h-6 w-6 rounded-full`}
-          onClick={onClose}
-          aria-label={closeLabel}
-        >
-          <CloseIcon className="size-4" />
-        </button>
-      </Tooltip>
+      <span className="ml-auto">
+        <Tooltip content="Close">
+          <button
+            type="button"
+            className={`${tc.iconButton} h-6 w-6 rounded-full`}
+            onClick={onClose}
+            aria-label={closeLabel}
+          >
+            <CloseIcon className="size-4" />
+          </button>
+        </Tooltip>
+      </span>
     </div>
   );
 }
