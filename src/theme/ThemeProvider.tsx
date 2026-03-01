@@ -56,9 +56,9 @@ function getInitialThemeId(preference: ThemePreference): ThemeId {
   if (getThemeById(stored)) {
     // If preference is "system", resolve to the OS-appropriate default
     if (preference === "system") {
-      return getDefaultThemeForMode(getSystemTheme()).id as ThemeId;
+      return getDefaultThemeForMode(getSystemTheme()).id;
     }
-    return stored as ThemeId;
+    return stored;
   }
 
   // Legacy migration: "light" / "dark"
@@ -66,7 +66,7 @@ function getInitialThemeId(preference: ThemePreference): ThemeId {
   if (stored === "dark") return "dark-slate";
 
   // System preference detection
-  return getDefaultThemeForMode(getSystemTheme()).id as ThemeId;
+  return getDefaultThemeForMode(getSystemTheme()).id;
 }
 
 function getInitialDensity(): CardDensity {
@@ -151,7 +151,7 @@ export function ThemeProvider({
       const newMode = pref === "system" ? getSystemTheme() : pref;
       const currentTheme = getThemeById(themeId);
       if (currentTheme?.mode !== newMode) {
-        setThemeId(getDefaultThemeForMode(newMode).id as ThemeId);
+        setThemeId(getDefaultThemeForMode(newMode).id);
       }
     },
     [themeId],
@@ -164,7 +164,7 @@ export function ThemeProvider({
     const mql = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (e: MediaQueryListEvent) => {
       const mode: ThemeMode = e.matches ? "dark" : "light";
-      setThemeId(getDefaultThemeForMode(mode).id as ThemeId);
+      setThemeId(getDefaultThemeForMode(mode).id);
     };
     mql.addEventListener("change", handler);
     return () => mql.removeEventListener("change", handler);
@@ -250,7 +250,7 @@ export function ThemeProvider({
 
     // Reset state to defaults
     setThemePreferenceState("system");
-    setThemeId(getDefaultThemeForMode(getSystemTheme()).id as ThemeId);
+    setThemeId(getDefaultThemeForMode(getSystemTheme()).id);
     setCardDensity("small");
     setColumnResizingEnabled(false);
     setDeleteColumnWarningEnabled(true);

@@ -14,7 +14,7 @@ export default tseslint.config([
     files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
-      tseslint.configs.recommended,
+      tseslint.configs.recommendedTypeChecked,
       reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
       jsxA11y.flatConfigs.recommended,
@@ -24,6 +24,10 @@ export default tseslint.config([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     settings: {
       "import-x/resolver": {
@@ -71,6 +75,19 @@ export default tseslint.config([
         ...globals.node,
       },
     },
+  },
+  // Disable type-aware rules for files not covered by a tsconfig
+  {
+    files: [
+      "**/*.test.{ts,tsx}",
+      "src/test/**",
+      "tests-e2e/**",
+      "knip.config.ts",
+      "playwright.config.{ts,js}",
+      "vite.config.{ts,js}",
+      "vitest.config.{ts,js}",
+    ],
+    extends: [tseslint.configs.disableTypeChecked],
   },
   // Disable formatting rules that conflict with Prettier
   eslintConfigPrettier,

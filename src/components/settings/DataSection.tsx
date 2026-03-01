@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { useTheme } from "../../theme/useTheme";
 import { useBoard } from "../../board/useBoard";
-import type { ThemeId } from "../../theme/themes";
 import { tc } from "../../theme/classNames";
 import { exportBoard } from "../../utils/exportBoard";
 import { readImportFile } from "../../utils/importBoard";
@@ -68,7 +67,7 @@ export function DataSection() {
     setNextCardNumber(nextCardNumber);
     setThemePreference(settings.themePreference);
     if (settings.theme) {
-      setThemeId(settings.theme as ThemeId);
+      setThemeId(settings.theme);
     }
     setCardDensity(settings.cardDensity);
     setColumnResizingEnabled(settings.columnResizingEnabled);
@@ -96,7 +95,7 @@ export function DataSection() {
         type="file"
         accept=".json"
         className="hidden"
-        onChange={handleImport}
+        onChange={(e) => void handleImport(e)}
         data-testid="import-file-input"
       />
       <button

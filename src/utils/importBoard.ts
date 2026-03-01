@@ -63,7 +63,7 @@ export function validateExportData(parsed: unknown): ImportResult {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${String(version)}. Only versions 1–6 are supported.`
+        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–6 are supported.`
         : "Missing export version.",
     };
   }
@@ -101,7 +101,7 @@ export function validateExportData(parsed: unknown): ImportResult {
 
   const theme =
     typeof s.theme === "string" && themes.some((t) => t.id === s.theme)
-      ? (s.theme as string)
+      ? s.theme
       : "";
 
   const themePreference: ThemePreference =
@@ -209,7 +209,8 @@ function readFileAsText(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(reader.error);
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Failed to read file"));
     reader.readAsText(file);
   });
 }
