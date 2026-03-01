@@ -47,10 +47,10 @@ const renderer: RendererObject = {
     const content = escaped
       ? text
       : text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    return `<pre class="bg-black/10 dark:bg-white/10 p-2 rounded overflow-x-auto mb-2 text-xs"><code class="text-xs font-mono${langClass}">${content}</code></pre>`;
+    return `<pre class="${tc.codeBg} p-2 rounded overflow-x-auto mb-2 text-xs"><code class="text-xs font-mono${langClass}">${content}</code></pre>`;
   },
   codespan({ text }) {
-    return `<code class="bg-black/10 dark:bg-white/10 px-1 rounded text-xs font-mono">${text}</code>`;
+    return `<code class="${tc.codeBg} px-1 rounded text-xs font-mono">${text}</code>`;
   },
   blockquote({ tokens }) {
     const body = this.parser.parse(tokens);

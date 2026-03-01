@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replace inline `dark:` Tailwind patterns with centralized `tc` theme tokens (`glassSubtle`, `glassOpaque`, `placeholder`, `borderHover`, `error`, `codeBg`, `searchHighlight`) across 9 component files
 - Enable type-aware ESLint rules (`recommendedTypeChecked`) to catch unsafe promises, floating promises, unnecessary type assertions, and type-unsafe patterns
 - Add local Lighthouse audit (`npm run lighthouse`) and include it in `kitchen-sink` pipeline between static-checks and e2e
 - Ignore `open` system binary in knip config to fix false positive unlisted binary warning

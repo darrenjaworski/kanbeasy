@@ -16,7 +16,7 @@ export function BoardDragOverlay({
   return (
     <DragOverlay>
       <div
-        className={`group/card relative rounded-md border ${tc.border} pr-14 p-2 text-sm bg-white/80 dark:bg-black/30 shadow-lg backdrop-blur-md`}
+        className={`group/card relative rounded-md border ${tc.border} pr-14 p-2 text-sm ${tc.glassOpaque} shadow-lg backdrop-blur-md`}
       >
         <div className={`whitespace-pre-wrap ${tc.text}`}>
           {activeCard.title || "New card"}

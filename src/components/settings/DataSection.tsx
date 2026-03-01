@@ -133,7 +133,7 @@ export function DataSection() {
         {importStatus === "idle" && "Import board data"}
       </button>
       {importError && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+        <p role="alert" className={`text-xs ${tc.error}`}>
           {importError}
         </p>
       )}

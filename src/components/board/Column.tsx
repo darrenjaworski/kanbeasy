@@ -117,7 +117,7 @@ export function Column({
     >
       {/* Combined drag + delete control */}
       <div
-        className={`absolute right-2 top-2 z-2 inline-flex items-center overflow-hidden border ${tc.border} bg-white/40 dark:bg-black/10 backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
+        className={`absolute right-2 top-2 z-2 inline-flex items-center overflow-hidden border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
       >
         {canDrag && (
           <button
@@ -153,7 +153,7 @@ export function Column({
         const heat = getBadgeHeat(cards.length, index, columnCount);
         return (
           <span
-            className={`absolute right-2 top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : "bg-white/40 dark:bg-black/10"} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}
+            className={`absolute right-2 top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : tc.glassSubtle} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}
             style={
               heat
                 ? {

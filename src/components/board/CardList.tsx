@@ -1,5 +1,6 @@
 import { useBoard } from "../../board/useBoard";
 import { useTheme } from "../../theme/useTheme";
+import { tc } from "../../theme/classNames";
 import { useDroppable, useDndContext } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -53,7 +54,7 @@ export function CardList({
       <div
         ref={setNodeRef}
         className={`flex flex-col gap-2 rounded-md transition-colors min-h-16 ${
-          highlight ? "ring-2 ring-accent/60 bg-accent/5 dark:bg-accent/10" : ""
+          highlight ? tc.searchHighlight : ""
         }`}
         data-testid="card-list"
         data-card-density={density}

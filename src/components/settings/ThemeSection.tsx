@@ -74,7 +74,7 @@ export function ThemeSection() {
             className={`flex-1 rounded-lg border-2 py-3 text-xs font-medium transition-all ${tc.focusRing} focus-visible:ring-offset-2 ${
               themeId === t.id
                 ? "border-accent ring-2 ring-accent/30"
-                : `${tc.border} hover:border-black/20 dark:hover:border-white/20`
+                : `${tc.border} ${tc.borderHover}`
             }`}
             style={{ backgroundColor: t.colors.bg, color: t.colors.text }}
           >

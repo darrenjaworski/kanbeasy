@@ -27,7 +27,7 @@ export function CardControls({
 }: CardControlsProps) {
   return (
     <div
-      className={`absolute right-1 top-1 z-1 inline-flex items-center overflow-hidden border ${tc.border} bg-white/40 dark:bg-black/10 backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
+      className={`absolute right-1 top-1 z-1 inline-flex items-center overflow-hidden border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
     >
       {canDrag && (
         <button

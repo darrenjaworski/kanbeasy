@@ -107,7 +107,7 @@ export function SortableCardItem({
       style={style}
       className={`group/card relative rounded-md border p-2 text-sm ${
         isSearchMatch
-          ? "border-accent bg-accent/5 dark:bg-accent/10 ring-2 ring-accent/50"
+          ? `border-accent ${tc.searchHighlight}`
           : `${tc.border} ${tc.glass}`
       } ${
         isDragging

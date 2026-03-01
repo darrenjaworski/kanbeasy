@@ -21,6 +21,13 @@ const focusRing =
   "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent";
 const separator = "bg-black/10 dark:bg-white/10";
 const pressed = "bg-black/10 dark:bg-white/10";
+const glassSubtle = "bg-white/40 dark:bg-black/10";
+const glassOpaque = "bg-white/80 dark:bg-black/30";
+const placeholder = "placeholder:text-black/40 dark:placeholder:text-white/40";
+const borderHover = "hover:border-black/20 dark:hover:border-white/20";
+const error = "text-red-600 dark:text-red-400";
+const codeBg = "bg-black/10 dark:bg-white/10";
+const searchHighlight = "ring-2 ring-accent/60 bg-accent/5 dark:bg-accent/10";
 
 // ── Composites ───────────────────────────────────────────
 
@@ -45,6 +52,13 @@ export const tc = {
   focusRing,
   separator,
   pressed,
+  glassSubtle,
+  glassOpaque,
+  placeholder,
+  borderHover,
+  error,
+  codeBg,
+  searchHighlight,
 
   // Composites
   button,
