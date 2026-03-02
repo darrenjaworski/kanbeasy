@@ -7,11 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.27.0]
+
 ### Features
 
-- Add styled tooltip component for icon-only buttons — themed glass-blur tooltips replace native `title` attributes across all icon buttons (card controls, column controls, undo/redo, density selector, modal close, owl buddy)
+- Add styled tooltip component for icon-only buttons — themed glass-blur tooltips replace native `title` attributes across card controls, column controls, undo/redo, and modal close buttons
 - Add visible text labels to undo/redo buttons for improved discoverability
+- Add `disabled` prop to Tooltip component to suppress tooltips on disabled buttons
 - Add `aria-label` to card density buttons for screen reader accessibility
+
+### Fixed
+
+- Round hover backgrounds on edge buttons in control pills to match container shape
+- Fix tooltip delay applying on both show and hide — delay now only applies on hover-in for instant dismissal
+- Fix modal close button pushed flush-left by tooltip wrapper breaking flex layout
+- Suppress undo/redo tooltips when buttons are disabled
 
 ### Tests
 
