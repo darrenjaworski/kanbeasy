@@ -94,6 +94,9 @@ Settings
 - card enhancements
   - checklists with inline progress (e.g., "3/5")
   - labels/tags with custom colors, filterable from search
+- search enhancements
+  - search by ticket type (filter cards by their assigned type)
+  - search card descriptions in addition to titles
   - due dates with visual overdue indicator
   - priority levels (none/low/medium/high) with colored border indicator
   - image attachments (base64 or IndexedDB for larger storage)
