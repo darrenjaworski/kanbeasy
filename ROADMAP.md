@@ -113,6 +113,7 @@ Settings
 - saved filters/views (presets beyond search, e.g., "older than 7 days")
 - swimlanes (horizontal grouping across columns by project or person)
 - activity log (timeline of card movements, edits, deletions)
+- localStorage usage warning — alert the user when approaching the browser's localStorage limit (~5 MB)
 - offline PWA (service worker + manifest for standalone install)
 - print/PDF view (clean print stylesheet for standups and sharing)
 - responsive design for tablets and mobile devices
