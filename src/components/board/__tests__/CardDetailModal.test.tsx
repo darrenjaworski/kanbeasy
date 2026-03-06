@@ -50,6 +50,7 @@ function renderModal(
     density: "medium" as const,
     onUpdate: vi.fn(),
     onMoveCard: vi.fn(),
+    onArchive: vi.fn(),
     ticketTypes: [] as Parameters<typeof CardDetailModal>[0]["ticketTypes"],
   };
   const props = { ...defaults, ...overrides };
@@ -231,6 +232,163 @@ describe("CardDetailModal", () => {
     await user.click(backdrop);
 
     expect(onClose).toHaveBeenCalled();
+  });
+
+  describe("checklist features", () => {
+    const checklistCard: Card = {
+      ...baseCard,
+      id: "card-checklist",
+      description: "- [ ] First item\n- [x] Second item\n- [ ] Third item",
+    };
+
+    it("shows add checklist item button on empty description", () => {
+      renderModal({ card: emptyDescCard });
+      expect(
+        screen.getByTestId("checklist-add-item-button"),
+      ).toBeInTheDocument();
+      expect(screen.getByTestId("checklist-add-item-button")).toHaveTextContent(
+        "+ Add checklist item",
+      );
+    });
+
+    it("shows add checklist item button below preview", () => {
+      renderModal({ card: checklistCard });
+      expect(
+        screen.getByTestId("checklist-add-item-button"),
+      ).toBeInTheDocument();
+    });
+
+    it("clicking add button reveals input", async () => {
+      const user = userEvent.setup();
+      renderModal({ card: emptyDescCard });
+
+      await user.click(screen.getByTestId("checklist-add-item-button"));
+      expect(
+        screen.getByTestId("checklist-add-item-input"),
+      ).toBeInTheDocument();
+      expect(screen.getByTestId("checklist-add-item-input")).toHaveFocus();
+    });
+
+    it("adding item via Enter appends to description and saves", async () => {
+      const user = userEvent.setup();
+      const { onUpdate } = renderModal({ card: emptyDescCard });
+
+      await user.click(screen.getByTestId("checklist-add-item-button"));
+      const input = screen.getByTestId("checklist-add-item-input");
+      await user.type(input, "New task");
+      await user.keyboard("{Enter}");
+
+      expect(onUpdate).toHaveBeenCalledWith({
+        description: "- [ ] New task",
+      });
+    });
+
+    it("adding item to existing description appends on new line", async () => {
+      const user = userEvent.setup();
+      const { onUpdate } = renderModal({ card: checklistCard });
+
+      await user.click(screen.getByTestId("checklist-add-item-button"));
+      const input = screen.getByTestId("checklist-add-item-input");
+      await user.type(input, "Fourth item");
+      await user.keyboard("{Enter}");
+
+      expect(onUpdate).toHaveBeenCalledWith({
+        description:
+          "- [ ] First item\n- [x] Second item\n- [ ] Third item\n- [ ] Fourth item",
+      });
+    });
+
+    it("input clears after adding item and stays visible", async () => {
+      const user = userEvent.setup();
+      renderModal({ card: emptyDescCard });
+
+      await user.click(screen.getByTestId("checklist-add-item-button"));
+      const input = screen.getByTestId("checklist-add-item-input");
+      await user.type(input, "Task one");
+      await user.keyboard("{Enter}");
+
+      expect(input).toHaveValue("");
+      expect(input).toBeInTheDocument();
+    });
+
+    it("Escape dismisses add item input", async () => {
+      const user = userEvent.setup();
+      renderModal({ card: emptyDescCard });
+
+      await user.click(screen.getByTestId("checklist-add-item-button"));
+      expect(
+        screen.getByTestId("checklist-add-item-input"),
+      ).toBeInTheDocument();
+
+      await user.keyboard("{Escape}");
+      expect(
+        screen.queryByTestId("checklist-add-item-input"),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByTestId("checklist-add-item-button"),
+      ).toBeInTheDocument();
+    });
+
+    it("empty input does not add item on Enter", async () => {
+      const user = userEvent.setup();
+      const { onUpdate } = renderModal({ card: emptyDescCard });
+
+      await user.click(screen.getByTestId("checklist-add-item-button"));
+      await user.keyboard("{Enter}");
+
+      expect(onUpdate).not.toHaveBeenCalled();
+    });
+
+    it("whitespace-only input does not add item on Enter", async () => {
+      const user = userEvent.setup();
+      const { onUpdate } = renderModal({ card: emptyDescCard });
+
+      await user.click(screen.getByTestId("checklist-add-item-button"));
+      const input = screen.getByTestId("checklist-add-item-input");
+      await user.type(input, "   ");
+      await user.keyboard("{Enter}");
+
+      expect(onUpdate).not.toHaveBeenCalled();
+    });
+
+    it("renders interactive checkboxes in preview", () => {
+      renderModal({ card: checklistCard });
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      expect(checkboxes).toHaveLength(3);
+      expect(checkboxes[0]).not.toBeChecked();
+      expect(checkboxes[0]).not.toBeDisabled();
+      expect(checkboxes[1]).toBeChecked();
+      expect(checkboxes[1]).not.toBeDisabled();
+      expect(checkboxes[2]).not.toBeChecked();
+    });
+
+    it("clicking checkbox toggles it and saves", async () => {
+      const user = userEvent.setup();
+      const { onUpdate } = renderModal({ card: checklistCard });
+
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      await user.click(checkboxes[0]);
+
+      expect(onUpdate).toHaveBeenCalledWith({
+        description: "- [x] First item\n- [x] Second item\n- [ ] Third item",
+      });
+    });
+
+    it("clicking checkbox does not enter edit mode", async () => {
+      const user = userEvent.setup();
+      renderModal({ card: checklistCard });
+
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      await user.click(checkboxes[0]);
+
+      // Should still be in preview mode, not edit mode
+      expect(
+        screen.queryByTestId("card-detail-description"),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByTestId("card-detail-description-preview"),
+      ).toBeInTheDocument();
+    });
   });
 
   it("does not render when open is false", () => {

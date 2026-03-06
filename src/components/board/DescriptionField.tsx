@@ -81,6 +81,7 @@ export function DescriptionField({ description, onSave }: Props) {
         e.preventDefault();
         handleAddItem();
       } else if (e.key === "Escape") {
+        e.stopPropagation();
         setAddingItem(false);
         setNewItemText("");
       }
