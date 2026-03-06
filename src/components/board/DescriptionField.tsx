@@ -136,7 +136,7 @@ export function DescriptionField({ description, onSave }: Props) {
   ) : (
     <button
       type="button"
-      className={`mt-1.5 text-xs ${tc.textFaint} hover:text-accent transition-colors cursor-pointer`}
+      className={`mt-1.5 text-xs ${tc.textFaint} hover:text-accent transition-colors cursor-pointer self-start`}
       onClick={(e) => {
         e.stopPropagation();
         setAddingItem(true);
