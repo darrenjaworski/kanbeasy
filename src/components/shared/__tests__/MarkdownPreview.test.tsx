@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
 import { MarkdownPreview } from "../MarkdownPreview";
 
 describe("MarkdownPreview", () => {
@@ -82,14 +83,54 @@ describe("MarkdownPreview", () => {
     expect(del.closest("del")).toBeInTheDocument();
   });
 
-  it("renders GFM task lists", () => {
+  it("renders GFM task lists as disabled by default", () => {
     const { container } = render(
       <MarkdownPreview content={`- [x] Done\n- [ ] Not done`} />,
     );
     const checkboxes = container.querySelectorAll('input[type="checkbox"]');
     expect(checkboxes).toHaveLength(2);
     expect(checkboxes[0]).toBeChecked();
+    expect(checkboxes[0]).toBeDisabled();
     expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[1]).toBeDisabled();
+  });
+
+  it("renders interactive checkboxes when onCheckboxToggle is provided", () => {
+    const onToggle = vi.fn();
+    const { container } = render(
+      <MarkdownPreview
+        content={`- [x] Done\n- [ ] Not done`}
+        onCheckboxToggle={onToggle}
+      />,
+    );
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+    expect(checkboxes).toHaveLength(2);
+    expect(checkboxes[0]).not.toBeDisabled();
+    expect(checkboxes[1]).not.toBeDisabled();
+  });
+
+  it("calls onCheckboxToggle with correct index on click", async () => {
+    const user = userEvent.setup();
+    const onToggle = vi.fn();
+    const { container } = render(
+      <MarkdownPreview
+        content={`- [x] Done\n- [ ] Not done`}
+        onCheckboxToggle={onToggle}
+      />,
+    );
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+    await user.click(checkboxes[1]);
+    expect(onToggle).toHaveBeenCalledWith(1);
+  });
+
+  it("assigns sequential data-checkbox-index attributes", () => {
+    const { container } = render(
+      <MarkdownPreview content={`- [ ] A\n- [ ] B\n- [ ] C`} />,
+    );
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+    expect(checkboxes[0]).toHaveAttribute("data-checkbox-index", "0");
+    expect(checkboxes[1]).toHaveAttribute("data-checkbox-index", "1");
+    expect(checkboxes[2]).toHaveAttribute("data-checkbox-index", "2");
   });
 
   it("renders GFM tables", () => {

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add interactive checklists in card descriptions — click checkboxes to toggle in preview mode without entering edit mode
+- Add "+ Add checklist item" button below description for easy item creation without typing markdown syntax
+- Inline input stays focused for rapid multi-item entry (Enter to add, Escape to dismiss)
+
+### Tests
+
+- Add unit tests for `toggleMarkdownCheckbox` utility (8 tests: toggle on/off, mixed state, uppercase X, out-of-range, indented, alternate list markers)
+- Add unit tests for interactive checkbox rendering in `MarkdownPreview` (enabled/disabled state, click callback, index attributes)
+
 ## [1.27.0]
 
 ### Features
