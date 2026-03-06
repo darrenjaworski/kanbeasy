@@ -129,7 +129,7 @@ export function DescriptionField({ description, onSave }: Props) {
             setNewItemText("");
           }
         }}
-        placeholder="Item text, then Enter"
+        placeholder="Checklist item"
         data-testid="checklist-add-item-input"
       />
     </div>
