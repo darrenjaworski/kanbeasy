@@ -91,14 +91,27 @@ Settings
 - customizable icons on the lefthand side of each todo
 - keyboard shortcuts
   - cmd + n to create a new card
+  - cmd + k for command palette / quick actions
+  - arrow key navigation between cards and columns
+  - Enter to open card detail, Escape to close modals
 - card enhancements
-  - checklists with inline progress (e.g., "3/5")
+  - checklists/subtasks with inline progress (e.g., "3/5")
+    - add/remove/reorder checklist items within a card
+    - toggle completion with checkbox
+    - progress bar or fraction displayed on board card
   - labels/tags with custom colors, filterable from search
 - search enhancements
   - search by ticket type (filter cards by their assigned type)
   - search card descriptions in addition to titles
-  - due dates with visual overdue indicator
-  - priority levels (none/low/medium/high) with colored border indicator
+  - due dates with reminders
+    - date picker in card detail modal
+    - visual overdue indicator (red badge/border) on board cards
+    - upcoming due date badge (e.g., "due tomorrow") on board cards
+    - optional browser notification reminders
+  - priority levels (none/low/medium/high)
+    - colored border or badge indicator on board cards
+    - priority selector in card detail modal
+    - sortable/filterable by priority
   - image attachments (base64 or IndexedDB for larger storage)
   - pinned cards — stick important cards to the top of a column
   - compact vs expanded toggle — per-card override of global density setting
@@ -112,6 +125,7 @@ Settings
 - multiple boards
 - saved filters/views (presets beyond search, e.g., "older than 7 days")
 - swimlanes (horizontal grouping across columns by project or person)
+- calendar view — visualize cards with due dates on a monthly/weekly calendar
 - activity log (timeline of card movements, edits, deletions)
 - localStorage usage warning — alert the user when approaching the browser's localStorage limit (~5 MB)
 - offline PWA (service worker + manifest for standalone install)
