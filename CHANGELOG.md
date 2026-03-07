@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.32.6]
+
 ### Fixed
 
 - Backfill ticket type label and color snapshot fields on legacy cards during migration (prevents loss of colored badges for existing users)
