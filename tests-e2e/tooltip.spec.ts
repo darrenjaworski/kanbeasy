@@ -1,14 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
+import type { Page } from "@playwright/test";
 
 // Tooltips use aria-hidden so they don't double-announce for screen readers.
 // Use CSS selector instead of getByRole to locate them.

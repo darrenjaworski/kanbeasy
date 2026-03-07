@@ -1,25 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { makeE2eCard } from "./fixtures";
 
 const now = Date.now();
-
-function makeCard(
-  id: string,
-  number: number,
-  columnId: string,
-  overrides: Record<string, unknown> = {},
-) {
-  return {
-    id,
-    number,
-    title: `Card ${number}`,
-    description: "",
-    ticketTypeId: null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [{ columnId, enteredAt: now }],
-    ...overrides,
-  };
-}
 
 function seedBoard() {
   return JSON.stringify({
@@ -30,11 +12,17 @@ function seedBoard() {
         createdAt: now,
         updatedAt: now,
         cards: [
-          makeCard("c1", 1, "col-0", {
+          makeE2eCard("c1", "col-0", {
+            number: 1,
+            title: "Card 1",
             ticketTypeId: "feat",
             dueDate: "2025-06-15",
           }),
-          makeCard("c2", 2, "col-0", { ticketTypeId: "fix" }),
+          makeE2eCard("c2", "col-0", {
+            number: 2,
+            title: "Card 2",
+            ticketTypeId: "fix",
+          }),
         ],
       },
       {
@@ -42,7 +30,7 @@ function seedBoard() {
         title: "Done",
         createdAt: now,
         updatedAt: now,
-        cards: [makeCard("c3", 3, "col-1")],
+        cards: [makeE2eCard("c3", "col-1", { number: 3, title: "Card 3" })],
       },
     ],
   });
@@ -83,11 +71,11 @@ test.describe("List view", () => {
     const rows = page.locator("tbody tr");
 
     // First card has ticketTypeId "feat" → label "Feature"
-    const firstRowType = rows.nth(0).locator("td").nth(1);
+    const firstRowType = rows.nth(0).getByTestId("list-cell-type");
     await expect(firstRowType).toHaveText("Feature");
 
     // Second card has ticketTypeId "fix" → label "Fix"
-    const secondRowType = rows.nth(1).locator("td").nth(1);
+    const secondRowType = rows.nth(1).getByTestId("list-cell-type");
     await expect(secondRowType).toHaveText("Fix");
   });
 
@@ -95,7 +83,7 @@ test.describe("List view", () => {
     const rows = page.locator("tbody tr");
 
     // Third card has no ticket type
-    const thirdRowType = rows.nth(2).locator("td").nth(1);
+    const thirdRowType = rows.nth(2).getByTestId("list-cell-type");
     await expect(thirdRowType).toHaveText("\u2014");
   });
 
@@ -103,14 +91,14 @@ test.describe("List view", () => {
     const rows = page.locator("tbody tr");
 
     // First row: title and column
-    const firstRowTitle = rows.nth(0).locator("td").nth(2);
+    const firstRowTitle = rows.nth(0).getByTestId("list-cell-title");
     await expect(firstRowTitle).toHaveText("Card 1");
 
-    const firstRowColumn = rows.nth(0).locator("td").nth(4);
+    const firstRowColumn = rows.nth(0).getByTestId("list-cell-column");
     await expect(firstRowColumn).toHaveText("To Do");
 
     // Third row is in "Done" column
-    const thirdRowColumn = rows.nth(2).locator("td").nth(4);
+    const thirdRowColumn = rows.nth(2).getByTestId("list-cell-column");
     await expect(thirdRowColumn).toHaveText("Done");
   });
 
@@ -126,11 +114,11 @@ test.describe("List view", () => {
     const rows = page.locator("tbody tr");
 
     // First card has due date
-    const firstRowDue = rows.nth(0).locator("td").nth(3);
+    const firstRowDue = rows.nth(0).getByTestId("list-cell-due-date");
     await expect(firstRowDue).toContainText("Jun");
 
     // Second card has no due date — shows em dash
-    const secondRowDue = rows.nth(1).locator("td").nth(3);
+    const secondRowDue = rows.nth(1).getByTestId("list-cell-due-date");
     await expect(secondRowDue).toHaveText("\u2014");
   });
 });

@@ -1,14 +1,4 @@
-import { test, expect } from "@playwright/test";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
 
 test("analytics button is disabled when there are no cards", async ({
   page,

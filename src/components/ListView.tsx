@@ -117,14 +117,17 @@ export function ListView() {
                       onClick={() => setDetailCardId(row.id)}
                       className={`cursor-pointer ${tc.bgHover} ${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
                     >
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2" data-testid="list-cell-number">
                         <TicketTypeBadge
                           number={row.number}
                           ticketTypeId={row.ticketTypeId}
                           ticketTypes={ticketTypes}
                         />
                       </td>
-                      <td className={`px-3 py-2 ${tc.textMuted}`}>
+                      <td
+                        className={`px-3 py-2 ${tc.textMuted}`}
+                        data-testid="list-cell-type"
+                      >
                         {(() => {
                           const type = findTicketType(
                             ticketTypes,
@@ -139,9 +142,15 @@ export function ListView() {
                           );
                         })()}
                       </td>
-                      <td className={`px-3 py-2 ${tc.text}`}>{row.title}</td>
+                      <td
+                        className={`px-3 py-2 ${tc.text}`}
+                        data-testid="list-cell-title"
+                      >
+                        {row.title}
+                      </td>
                       <td
                         className={`px-3 py-2 ${tc.textMuted} whitespace-nowrap`}
+                        data-testid="list-cell-due-date"
                       >
                         {row.dueDate
                           ? formatDate(
@@ -149,11 +158,15 @@ export function ListView() {
                             )
                           : "\u2014"}
                       </td>
-                      <td className={`px-3 py-2 ${tc.textMuted}`}>
+                      <td
+                        className={`px-3 py-2 ${tc.textMuted}`}
+                        data-testid="list-cell-column"
+                      >
                         {row.columnTitle}
                       </td>
                       <td
                         className={`px-3 py-2 ${tc.textFaint} whitespace-nowrap`}
+                        data-testid="list-cell-created"
                       >
                         {formatDate(row.createdAt)}
                       </td>

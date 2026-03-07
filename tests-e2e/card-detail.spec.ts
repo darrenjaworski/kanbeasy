@@ -1,14 +1,4 @@
-import { test, expect } from "@playwright/test";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
 
 test("open card detail modal via detail button", async ({ page }) => {
   // Set up a column with a card
@@ -201,8 +191,10 @@ test("close modal by clicking backdrop", async ({ page }) => {
 
   await expect(page.getByTestId("card-detail-title")).toBeVisible();
 
-  // Click the backdrop area outside the dialog (top-left corner of the viewport)
-  await page.mouse.click(5, 5);
+  // Click the backdrop button in the corner (outside the centered dialog)
+  await page
+    .getByTestId("modal-backdrop")
+    .click({ position: { x: 10, y: 10 } });
 
   // Modal should be closed
   await expect(page.getByTestId("card-detail-title")).not.toBeVisible();

@@ -1,14 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
+import type { Page } from "@playwright/test";
 
 /** Open settings, expand Ticket Types section, return the dialog locator. */
 async function openTicketTypeSettings(page: Page) {

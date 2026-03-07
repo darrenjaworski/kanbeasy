@@ -1,23 +1,11 @@
-import { test, expect } from "@playwright/test";
-
-// Basic smoke test to verify the app loads and the settings modal toggles
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
 
 test("add a new column to the board", async ({ page }) => {
   // Click the button to add a new column
   await page.getByTestId("add-column-button").click();
 
   // Verify the new column is added
-  const newColumn = await page.getByTestId("column-0");
+  const newColumn = page.getByTestId("column-0");
   await expect(newColumn).toBeVisible();
 
   // Check the column title is editable
@@ -34,7 +22,7 @@ test("add a new column to the board", async ({ page }) => {
 test("delete a column from the board", async ({ page }) => {
   // Add a new column first
   await page.getByTestId("add-column-button").click();
-  const newColumn = await page.getByTestId("column-0");
+  const newColumn = page.getByTestId("column-0");
   await expect(newColumn).toBeVisible();
 
   // Click the delete button on the new column
@@ -49,7 +37,7 @@ test("reorder columns by dragging", async ({ page }) => {
   await page.getByTestId("add-column-button").click();
 
   // Verify the new column is added
-  const firstColumn = await page.getByTestId("column-0");
+  const firstColumn = page.getByTestId("column-0");
   await expect(firstColumn).toBeVisible();
 
   // Check the column title is editable
@@ -60,7 +48,7 @@ test("reorder columns by dragging", async ({ page }) => {
   await page.getByTestId("add-column-button").click();
 
   // Drag the first column and drop it onto the second column
-  const secondColumn = await page.getByTestId("column-1");
+  const secondColumn = page.getByTestId("column-1");
 
   // Reveal the drag handle (controls are hidden until column is hovered)
   await firstColumn.hover();

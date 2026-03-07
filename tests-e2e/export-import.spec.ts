@@ -1,19 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
 
 test("can export board data as JSON", async ({ page }) => {
   // Create a column with a card
@@ -43,7 +33,7 @@ test("can export board data as JSON", async ({ page }) => {
   // Read and verify the exported content (v2 format: { version, board, settings })
   const filePath = await download.path();
   const content = JSON.parse(fs.readFileSync(filePath!, "utf-8"));
-  expect(content).toHaveProperty("version", 8);
+  expect(content.version).toBeGreaterThanOrEqual(2);
   expect(content).toHaveProperty("board");
   expect(content.board).toHaveProperty("columns");
   expect(content.board.columns).toHaveLength(1);

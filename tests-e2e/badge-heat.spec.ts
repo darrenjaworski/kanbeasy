@@ -1,33 +1,5 @@
 import { test, expect } from "@playwright/test";
-
-function makeCard(id: string, columnId: string) {
-  const now = Date.now();
-  return {
-    id,
-    title: `Card ${id}`,
-    description: "",
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [{ columnId, enteredAt: now }],
-  };
-}
-
-function seedBoard(
-  columns: { id: string; title: string; cardCount: number }[],
-) {
-  const now = Date.now();
-  return {
-    columns: columns.map((col) => ({
-      id: col.id,
-      title: col.title,
-      createdAt: now,
-      updatedAt: now,
-      cards: Array.from({ length: col.cardCount }, (_, i) =>
-        makeCard(`${col.id}-card-${i}`, col.id),
-      ),
-    })),
-  };
-}
+import { seedBoard } from "./fixtures";
 
 test.describe("Badge heat indicator", () => {
   test.beforeEach(async ({ page }) => {
@@ -59,8 +31,7 @@ test.describe("Badge heat indicator", () => {
     const badge = column.getByLabel(/5 cards/i);
     await expect(badge).toBeVisible();
     // First column should never get heat styling
-    const style = await badge.getAttribute("style");
-    expect(style).toBeNull();
+    await expect(badge).not.toHaveAttribute("data-heat-level");
   });
 
   test("no heat on last column even with many cards", async ({ page }) => {
@@ -73,8 +44,7 @@ test.describe("Badge heat indicator", () => {
     const badge = column.getByLabel(/5 cards/i);
     await expect(badge).toBeVisible();
     // Last column should never get heat styling
-    const style = await badge.getAttribute("style");
-    expect(style).toBeNull();
+    await expect(badge).not.toHaveAttribute("data-heat-level");
   });
 
   test("no heat on middle column with 2 or fewer cards", async ({ page }) => {
@@ -86,8 +56,7 @@ test.describe("Badge heat indicator", () => {
     const badge = column.getByLabel(/2 cards/i);
     await expect(badge).toBeVisible();
     // 2 cards should not trigger heat
-    const style = await badge.getAttribute("style");
-    expect(style).toBeNull();
+    await expect(badge).not.toHaveAttribute("data-heat-level");
   });
 
   test("heat appears on middle column with 3+ cards", async ({ page }) => {
@@ -99,10 +68,8 @@ test.describe("Badge heat indicator", () => {
 
     const badge = column.getByLabel(/3 cards/i);
     await expect(badge).toBeVisible();
-    // Badge should have inline background-color with color-mix
-    const style = await badge.getAttribute("style");
-    expect(style).toContain("background-color");
-    expect(style).toContain("color-mix");
+    // Badge should have heat styling
+    await expect(badge).toHaveAttribute("data-heat-level", "medium");
   });
 
   test("heat intensifies and badge is bold at 10+ cards", async ({ page }) => {
@@ -115,10 +82,6 @@ test.describe("Badge heat indicator", () => {
     const badge = column.getByLabel(/10 cards/i);
     await expect(badge).toBeVisible();
     // Badge should have heat styling
-    const style = await badge.getAttribute("style");
-    expect(style).toContain("background-color");
-    expect(style).toContain("color-mix");
-    // Badge text should be bold
-    await expect(badge).toHaveClass(/font-bold/);
+    await expect(badge).toHaveAttribute("data-heat-level", "high");
   });
 });

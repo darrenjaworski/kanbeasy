@@ -1,14 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
+import type { Page } from "@playwright/test";
 
 /** Add a column with a card so analytics button is enabled. */
 async function addColumnWithCard(page: Page) {
@@ -80,8 +71,10 @@ test("can close analytics by clicking backdrop", async ({ page }) => {
   const dlg = page.getByRole("dialog", { name: /analytics/i });
   await expect(dlg).toBeVisible();
 
-  // Click in the top-left corner which is outside the centered dialog
-  await page.mouse.click(5, 5);
+  // Click the backdrop button in the corner (outside the centered dialog)
+  await page
+    .getByTestId("modal-backdrop")
+    .click({ position: { x: 10, y: 10 } });
   await expect(dlg).not.toBeVisible();
 });
 

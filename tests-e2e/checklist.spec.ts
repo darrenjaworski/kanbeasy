@@ -1,13 +1,6 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-  await page.getByTestId("get-started-button").click();
-
   // Create a column and a card
   await page.getByTestId("add-column-button").click();
   const column = page.getByTestId("column-0");
@@ -79,7 +72,7 @@ test("toggle checkbox on and off", async ({ page }) => {
   // Should start unchecked
   await expect(preview.locator('input[type="checkbox"]')).not.toBeChecked();
 
-  // Check it via evaluate (React re-renders the checkbox from dangerouslySetInnerHTML)
+  // Check it via dispatchEvent (React re-renders the checkbox from dangerouslySetInnerHTML)
   await preview
     .locator('input[type="checkbox"]')
     .dispatchEvent("click", { bubbles: true });

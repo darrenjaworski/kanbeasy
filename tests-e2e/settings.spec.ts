@@ -1,16 +1,4 @@
-import { test, expect } from "@playwright/test";
-
-// Basic smoke test to verify the app loads and the settings modal toggles
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
 
 test("can select a dark theme", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();

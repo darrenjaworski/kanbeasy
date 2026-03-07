@@ -1,14 +1,4 @@
-import { test, expect } from "@playwright/test";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
 
 test("search input is disabled when there are no cards", async ({ page }) => {
   const searchInput = page.getByTestId("search-input");
@@ -75,11 +65,11 @@ test("highlights matching cards with blue border", async ({ page }) => {
 
   // The matching card should have the blue ring highlight
   const matchingCard = column.getByTestId("card-0");
-  await expect(matchingCard).toHaveClass(/ring-2/);
+  await expect(matchingCard).toHaveAttribute("data-search-highlight", "true");
 
   // The non-matching card should not have the blue ring
   const otherCard = column.getByTestId("card-1");
-  await expect(otherCard).not.toHaveClass(/ring-2/);
+  await expect(otherCard).not.toHaveAttribute("data-search-highlight");
 });
 
 test("does not show match count for short queries", async ({ page }) => {
@@ -120,5 +110,5 @@ test("clears results when search is emptied", async ({ page }) => {
 
   // Card should no longer be highlighted
   const cardEl = column.getByTestId("card-0");
-  await expect(cardEl).not.toHaveClass(/ring-2/);
+  await expect(cardEl).not.toHaveAttribute("data-search-highlight");
 });

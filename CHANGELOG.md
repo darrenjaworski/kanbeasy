@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extract shared Playwright fixture (`tests-e2e/fixtures.ts`) to eliminate duplicated `beforeEach` setup across 19 e2e spec files
+- Extract shared `makeE2eCard` and `seedBoard` helpers for e2e test data seeding, replacing 3 duplicate `makeCard` definitions
+- Replace CSS class and style attribute assertions with `data-*` attributes in e2e search and badge-heat tests
+- Replace hard-coded `page.mouse.click(5, 5)` backdrop clicks with `modal-backdrop` element clicks in analytics and card-detail e2e tests
+- Replace hard-coded table cell `.nth()` indices with `data-testid` selectors in list-view e2e tests
+- Replace hard-coded export version assertion with `toBeGreaterThanOrEqual(2)` in export-import e2e test
+- Standardize keyboard shortcut modifier detection in card-archive e2e test
+- Remove redundant `smoke.spec.ts` e2e test (covered by all other specs)
+- Remove stale copy-pasted comments from cards, columns, and settings e2e specs
+- Fix unnecessary `await` on Playwright locator assignments in columns e2e spec
+- Add `data-testid` attributes to ListView table cells for semantic test selectors
 - Replace Tailwind class assertions with `data-*` attributes in search, tooltip, and badge heat tests for resilience against styling refactors
 - Extract shared `renderWithProviders` test helper to eliminate duplicated provider/context boilerplate across Column tests
 - Replace SVG DOM queries in OwlBuddy tests with `data-testid` attributes on owl icon components

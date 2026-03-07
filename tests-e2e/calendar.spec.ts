@@ -1,26 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { makeE2eCard } from "./fixtures";
 
 const now = Date.now();
-
-function makeCard(
-  id: string,
-  number: number,
-  columnId: string,
-  overrides: Record<string, unknown> = {},
-) {
-  return {
-    id,
-    number,
-    title: `Card ${number}`,
-    description: "",
-    ticketTypeId: null,
-    dueDate: null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [{ columnId, enteredAt: now }],
-    ...overrides,
-  };
-}
 
 // Use a fixed date in the current month so tests don't break across months
 function todayStr() {
@@ -40,11 +21,13 @@ function seedBoard() {
         createdAt: now,
         updatedAt: now,
         cards: [
-          makeCard("c1", 1, "col-0", {
+          makeE2eCard("c1", "col-0", {
+            number: 1,
             title: "Due Today",
             dueDate: todayStr(),
           }),
-          makeCard("c2", 2, "col-0", {
+          makeE2eCard("c2", "col-0", {
+            number: 2,
             title: "No Due Date",
             dueDate: null,
           }),
@@ -56,7 +39,8 @@ function seedBoard() {
         createdAt: now,
         updatedAt: now,
         cards: [
-          makeCard("c3", 3, "col-1", {
+          makeE2eCard("c3", "col-1", {
+            number: 3,
             title: "Also Due Today",
             dueDate: todayStr(),
           }),

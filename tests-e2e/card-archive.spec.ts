@@ -1,14 +1,4 @@
-import { test, expect } from "@playwright/test";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-
-  await page.getByTestId("get-started-button").click();
-});
+import { test, expect } from "./fixtures";
 
 test("archive card via controls, verify removed from board", async ({
   page,
@@ -142,7 +132,8 @@ test("undo archive restores card to board", async ({ page }) => {
   await expect(column.locator('[data-testid^="card-content-"]')).toHaveCount(0);
 
   // Undo with keyboard shortcut
-  await page.keyboard.press("Meta+z");
+  const modifier = process.platform === "darwin" ? "Meta" : "Control";
+  await page.keyboard.press(`${modifier}+z`);
 
   // Card should reappear
   await expect(column.getByTestId("card-0")).toBeVisible();
