@@ -7,10 +7,14 @@ import { Column } from "../Column";
 import { BoardContext } from "../../../board/BoardContext";
 import { ThemeContext } from "../../../theme/ThemeContext";
 import { ClipboardContext } from "../../../board/ClipboardContext";
-import type { BoardContextValue, Card } from "../../../board/types";
-import type { ThemeContextValue } from "../../../theme/types";
+import type { Card } from "../../../board/types";
 import type { ClipboardContextValue } from "../../../board/ClipboardContext";
 import { makeCard } from "../../../test/builders";
+import {
+  makeBoardContext,
+  makeThemeContext,
+  makeClipboardContext,
+} from "../../../test/renderWithProviders";
 
 // ---------------------------------------------------------------------------
 // Mock CardList to avoid @dnd-kit dependency
@@ -31,12 +35,15 @@ vi.mock("../CardList", () => ({
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeBoardContext(
-  overrides: Partial<BoardContextValue> = {},
-): BoardContextValue {
-  return {
-    columns: [],
-    archive: [],
+type RenderColumnOptions = {
+  props?: Partial<React.ComponentProps<typeof Column>>;
+  board?: Parameters<typeof makeBoardContext>[0];
+  theme?: Parameters<typeof makeThemeContext>[0];
+  clipboard?: Partial<ClipboardContextValue>;
+};
+
+function renderColumn(opts: RenderColumnOptions = {}) {
+  const boardCtx = makeBoardContext({
     addColumn: vi.fn(),
     updateColumn: vi.fn(),
     removeColumn: vi.fn(),
@@ -58,70 +65,17 @@ function makeBoardContext(
     clearArchive: vi.fn(),
     resetBoard: vi.fn(),
     setNextCardNumber: vi.fn(),
-    searchQuery: "",
     setSearchQuery: vi.fn(),
-    matchingCardIds: new Set<string>(),
-    canUndo: false,
-    canRedo: false,
     undo: vi.fn(),
     redo: vi.fn(),
-    ...overrides,
-  };
-}
-
-function makeThemeContext(
-  overrides: Partial<ThemeContextValue> = {},
-): ThemeContextValue {
-  return {
-    themeId: "clean-light" as const,
-    setThemeId: vi.fn(),
-    isDark: false,
-    themeMode: "light" as const,
-    themePreference: "light" as const,
-    setThemePreference: vi.fn(),
-    cardDensity: "medium" as const,
-    setCardDensity: vi.fn(),
-    columnResizingEnabled: false,
-    setColumnResizingEnabled: vi.fn(),
-    deleteColumnWarningEnabled: true,
-    setDeleteColumnWarningEnabled: vi.fn(),
-    owlModeEnabled: false,
-    setOwlModeEnabled: vi.fn(),
-    viewMode: "board" as const,
-    setViewMode: vi.fn(),
-    ticketTypes: [],
-    setTicketTypes: vi.fn(),
-    ticketTypePresetId: "development",
-    setTicketTypePresetId: vi.fn(),
-    defaultTicketTypeId: null,
-    setDefaultTicketTypeId: vi.fn(),
-    resetSettings: vi.fn(),
-    ...overrides,
-  };
-}
-
-function makeClipboardContext(
-  overrides: Partial<ClipboardContextValue> = {},
-): ClipboardContextValue {
-  return {
-    copiedCard: null,
+    ...opts.board,
+  });
+  const themeCtx = makeThemeContext(opts.theme);
+  const clipCtx = makeClipboardContext({
     copyCard: vi.fn(),
     pasteCard: vi.fn(() => null),
-    ...overrides,
-  };
-}
-
-type RenderColumnOptions = {
-  props?: Partial<React.ComponentProps<typeof Column>>;
-  board?: Partial<BoardContextValue>;
-  theme?: Partial<ThemeContextValue>;
-  clipboard?: Partial<ClipboardContextValue>;
-};
-
-function renderColumn(opts: RenderColumnOptions = {}) {
-  const boardCtx = makeBoardContext(opts.board);
-  const themeCtx = makeThemeContext(opts.theme);
-  const clipCtx = makeClipboardContext(opts.clipboard);
+    ...opts.clipboard,
+  });
 
   const defaultProps = {
     id: "col-1",

@@ -36,11 +36,9 @@ Resolved: Added `data-search-highlight`, `data-side`, and `data-heat-level` attr
 
 ---
 
-## 3. Duplicated Provider/Context Boilerplate (MEDIUM -- Maintainability)
+## 3. ~~Duplicated Provider/Context Boilerplate~~ ✅ DONE
 
-Files like `badgeHeatColumn.test.tsx`, `ColumnResize.test.tsx`, and `Column.test.tsx` each define their own 40-50 line `ThemeWrapper` / context provider setup. Similarly, `renderApp()` in `src/test/renderApp.tsx` is used for integration tests, but there's no lightweight `renderWithProviders()` for component-level tests.
-
-**Recommendation**: Create `src/test/renderWithProviders.tsx` that accepts context overrides without bootstrapping the entire app.
+Resolved: Created `src/test/renderWithProviders.tsx` with shared `makeThemeContext`, `makeBoardContext`, `makeClipboardContext` factories and a `renderWithProviders` wrapper. Updated `badgeHeatColumn.test.tsx`, `ColumnResize.test.tsx`, and `Column.test.tsx` to use it. Also fixed missing `compactHeader` field in theme mocks.
 
 ---
 

@@ -1,60 +1,22 @@
-import * as React from "react";
-import { render, fireEvent } from "@testing-library/react";
-import { BoardProvider } from "../../../board/BoardProvider";
-import { ClipboardProvider } from "../../../board/ClipboardProvider";
+import { fireEvent } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 import { Column } from "../Column";
-import { ThemeContext } from "../../../theme/ThemeContext";
-import type { ThemeContextValue } from "../../../theme/types";
+import { renderWithProviders } from "../../../test/renderWithProviders";
 
-function ThemeProviderWithColumnResize({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const value: ThemeContextValue = React.useMemo(
-    () => ({
-      themeId: "clean-light" as const,
-      setThemeId: () => {},
-      isDark: false,
-      themeMode: "light" as const,
-      themePreference: "light" as const,
-      setThemePreference: () => {},
-      cardDensity: "medium" as const,
-      setCardDensity: () => {},
-      columnResizingEnabled: true,
-      setColumnResizingEnabled: () => {},
-      deleteColumnWarningEnabled: true,
-      setDeleteColumnWarningEnabled: () => {},
-      owlModeEnabled: false,
-      setOwlModeEnabled: () => {},
-      viewMode: "board" as const,
-      setViewMode: () => {},
-      ticketTypes: [],
-      setTicketTypes: () => {},
-      ticketTypePresetId: "development",
-      setTicketTypePresetId: () => {},
-      defaultTicketTypeId: null,
-      setDefaultTicketTypeId: () => {},
-      resetSettings: () => {},
-    }),
-    [],
-  );
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+function renderResizableColumn(props: { id: string; title: string; index: number }) {
+  return renderWithProviders(
+    <Column {...props} cards={[]} />,
+    { theme: { columnResizingEnabled: true } },
   );
 }
 
 describe("Column resizing", () => {
   it("should allow resizing the column with the mouse", () => {
-    const { getByTestId } = render(
-      <ThemeProviderWithColumnResize>
-        <BoardProvider>
-          <ClipboardProvider>
-            <Column id="col1" title="Test Column" cards={[]} index={0} />
-          </ClipboardProvider>
-        </BoardProvider>
-      </ThemeProviderWithColumnResize>,
-    );
+    const { getByTestId } = renderResizableColumn({
+      id: "col1",
+      title: "Test Column",
+      index: 0,
+    });
     const section = getByTestId("column-0");
     const handle = getByTestId("resize-handle-0");
     fireEvent.mouseDown(handle, { clientX: 320 });
@@ -66,15 +28,11 @@ describe("Column resizing", () => {
   });
 
   it("should not allow resizing beyond max width", () => {
-    const { getByTestId } = render(
-      <ThemeProviderWithColumnResize>
-        <BoardProvider>
-          <ClipboardProvider>
-            <Column id="col2" title="Test Column 2" cards={[]} index={1} />
-          </ClipboardProvider>
-        </BoardProvider>
-      </ThemeProviderWithColumnResize>,
-    );
+    const { getByTestId } = renderResizableColumn({
+      id: "col2",
+      title: "Test Column 2",
+      index: 1,
+    });
     const section = getByTestId("column-1");
     const handle = getByTestId("resize-handle-1");
     fireEvent.mouseDown(handle, { clientX: 320 });
@@ -84,15 +42,11 @@ describe("Column resizing", () => {
   });
 
   it("should not allow resizing below min width", () => {
-    const { getByTestId } = render(
-      <ThemeProviderWithColumnResize>
-        <BoardProvider>
-          <ClipboardProvider>
-            <Column id="col3" title="Test Column 3" cards={[]} index={2} />
-          </ClipboardProvider>
-        </BoardProvider>
-      </ThemeProviderWithColumnResize>,
-    );
+    const { getByTestId } = renderResizableColumn({
+      id: "col3",
+      title: "Test Column 3",
+      index: 2,
+    });
     const section = getByTestId("column-2");
     const handle = getByTestId("resize-handle-2");
     fireEvent.mouseDown(handle, { clientX: 320 });

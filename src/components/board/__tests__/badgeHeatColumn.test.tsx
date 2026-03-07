@@ -1,51 +1,12 @@
-import * as React from "react";
-import { render } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { BoardProvider } from "../../../board/BoardProvider";
-import { ClipboardProvider } from "../../../board/ClipboardProvider";
 import { Column } from "../Column";
-import { ThemeContext } from "../../../theme/ThemeContext";
-import type { ThemeContextValue } from "../../../theme/types";
 import type { Card } from "../../../board/types";
 import { makeCard } from "../../../test/builders";
+import { renderWithProviders } from "../../../test/renderWithProviders";
 
 function makeCards(count: number): Card[] {
   return Array.from({ length: count }, (_, i) =>
     makeCard({ id: `card-${i}`, title: `Card ${i}` }),
-  );
-}
-
-function ThemeWrapper({ children }: { children: React.ReactNode }) {
-  const value: ThemeContextValue = React.useMemo(
-    () => ({
-      themeId: "clean-light" as const,
-      setThemeId: () => {},
-      isDark: false,
-      themeMode: "light" as const,
-      themePreference: "light" as const,
-      setThemePreference: () => {},
-      cardDensity: "medium" as const,
-      setCardDensity: () => {},
-      columnResizingEnabled: false,
-      setColumnResizingEnabled: () => {},
-      deleteColumnWarningEnabled: true,
-      setDeleteColumnWarningEnabled: () => {},
-      owlModeEnabled: false,
-      setOwlModeEnabled: () => {},
-      viewMode: "board" as const,
-      setViewMode: () => {},
-      ticketTypes: [],
-      setTicketTypes: () => {},
-      ticketTypePresetId: "development",
-      setTicketTypePresetId: () => {},
-      defaultTicketTypeId: null,
-      setDefaultTicketTypeId: () => {},
-      resetSettings: () => {},
-    }),
-    [],
-  );
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 
@@ -56,15 +17,7 @@ function renderColumn(props: {
   index: number;
   columnCount: number;
 }) {
-  return render(
-    <ThemeWrapper>
-      <BoardProvider>
-        <ClipboardProvider>
-          <Column {...props} />
-        </ClipboardProvider>
-      </BoardProvider>
-    </ThemeWrapper>,
-  );
+  return renderWithProviders(<Column {...props} />);
 }
 
 describe("Badge heat rendering in Column", () => {
