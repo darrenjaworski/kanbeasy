@@ -22,6 +22,7 @@ Preview
 ```
 
 **2. Field list (below)** — Each row has:
+
 - Drag handle (left) — reorder via @dnd-kit sortable
 - Checkbox (middle) — toggle visibility
 - Field name label
@@ -42,17 +43,17 @@ Fields
 
 ### Displayable fields
 
-| Field ID       | Default | Options              | Notes                                          |
-|---------------|---------|----------------------|------------------------------------------------|
-| `badge`       | visible | —                    | Card number + type badge (feat-42 / #42)       |
-| `title`       | visible | lines: 1, 2, 3      | Editable textarea, line count replaces density  |
-| `description` | hidden  | lines: 1, 2, 3      | New: plain-text preview of description          |
-| `checklist`   | visible | —                    | Progress bar, only renders if checklist exists   |
-| `dueDate`     | visible | —                    | Date badge with urgency color                   |
-| `createdAt`   | hidden  | —                    | Timestamp, e.g., "Mar 7, 2026"                 |
-| `updatedAt`   | hidden  | —                    | Timestamp                                       |
+| Field ID      | Default | Options        | Notes                                          |
+| ------------- | ------- | -------------- | ---------------------------------------------- |
+| `badge`       | visible | —              | Card number + type badge (feat-42 / #42)       |
+| `title`       | visible | lines: 1, 2, 3 | Editable textarea, line count replaces density |
+| `description` | hidden  | lines: 1, 2, 3 | New: plain-text preview of description         |
+| `checklist`   | visible | —              | Progress bar, only renders if checklist exists |
+| `dueDate`     | visible | —              | Date badge with urgency color                  |
+| `createdAt`   | hidden  | —              | Timestamp, e.g., "Mar 7, 2026"                 |
+| `updatedAt`   | hidden  | —              | Timestamp                                      |
 
-Fields with conditional data (checklist, dueDate) still only render when data exists — the layout controls whether they *can* show, not whether there's data.
+Fields with conditional data (checklist, dueDate) still only render when data exists — the layout controls whether they _can_ show, not whether there's data.
 
 ### Card density integration
 
@@ -109,6 +110,7 @@ const DEFAULT_CARD_LAYOUT: CardLayout = [
 ## Implementation Plan
 
 ### 1. Constants & types (`src/constants/cardLayout.ts`, `src/theme/types.ts`)
+
 - Define `CardFieldId`, `CardFieldConfig`, `CardLayout` types
 - Define `DEFAULT_CARD_LAYOUT`, `CARD_FIELD_LABELS`
 - Define `FIELDS_WITH_LINE_OPTIONS: Set<CardFieldId>` for fields that support `lines`
@@ -116,15 +118,18 @@ const DEFAULT_CARD_LAYOUT: CardLayout = [
 - Add `cardLayout` / `setCardLayout` to `ThemeContextValue`
 
 ### 2. Storage key (`src/constants/storage.ts`)
+
 - Add `CARD_LAYOUT: "kanbeasy:cardLayout"` key
 
 ### 3. ThemeProvider (`src/theme/ThemeProvider.tsx`)
+
 - Add `cardLayout` state initialized from localStorage (JSON parsed, validated, falls back to default)
 - Persist with `useEffect` -> `saveToStorage`
 - Derive `cardDensity` from layout's title field `lines` option (backward compat)
 - Add to `resetSettings`, context value, and dependency arrays
 
 ### 4. Card layout settings UI (`src/components/settings/CardLayoutSection.tsx`)
+
 - **Preview**: Render a mock card using the actual shared components with sample data
   - Sample: `{ number: 42, title: "My example task", cardTypeId: "feat", description: "A description with\n- [ ] Todo item\n- [x] Done item", dueDate: tomorrow, createdAt: weekAgo, updatedAt: now }`
   - Iterate over `cardLayout` in order, render each visible field using the real components
@@ -138,6 +143,7 @@ const DEFAULT_CARD_LAYOUT: CardLayout = [
 - Uses existing `tc` class helpers for consistent styling
 
 ### 5. Update SortableCardItem (`src/components/board/SortableCardItem.tsx`)
+
 - Accept `cardLayout` prop (from `useTheme()` in parent)
 - Replace hardcoded field rendering with a loop over `cardLayout`:
   ```tsx
@@ -158,40 +164,43 @@ const DEFAULT_CARD_LAYOUT: CardLayout = [
 - Title remains the only editable-inline field
 
 ### 6. SettingsModal integration (`src/components/settings/SettingsModal.tsx`)
+
 - Add new `<SettingsSection title="Card Layout">` with `<CardLayoutSection />`
 - Remove card density from Appearance section (it's now part of layout editor)
 - Reorder sections: Appearance -> Card Layout -> Card Types -> Preferences -> Data
 
 ### 7. Export/import (`src/utils/exportBoard.ts`, `src/utils/importBoard.ts`)
+
 - Bump export version to 10
 - Add `cardLayout` to export settings (JSON stringified)
 - Import: parse and validate `cardLayout` from v10+ exports, fall back to default for older versions
 - Validate each field config has a known `id`, boolean `visible`, and valid `options`
 
 ### 8. Backward compat
+
 - Existing `cardDensity` setting derived from layout's title lines
 - `setCardDensity` still works (updates layout's title lines)
 - Old exports without `cardLayout` get the default layout with title lines mapped from their `cardDensity`
 
 ## Files to modify
 
-| File | Change |
-|------|--------|
-| `src/constants/cardLayout.ts` | **New** — types, defaults, labels |
-| `src/constants/storage.ts` | Add `CARD_LAYOUT` key |
-| `src/theme/types.ts` | Add `cardLayout` / `setCardLayout` to context type |
-| `src/theme/ThemeProvider.tsx` | Add state, persistence, derive density |
-| `src/components/settings/CardLayoutSection.tsx` | **New** — preview + field editor |
-| `src/components/settings/SettingsModal.tsx` | Add Card Layout section, adjust density |
-| `src/components/board/SortableCardItem.tsx` | Render fields from layout config |
-| `src/components/board/CardList.tsx` | Pass `cardLayout` through to SortableCardItem |
-| `src/components/board/Column.tsx` | Pass `cardLayout` through to CardList |
-| `src/components/board/Board.tsx` | Read `cardLayout` from theme context |
-| `src/utils/exportBoard.ts` | Bump version, add cardLayout |
-| `src/utils/importBoard.ts` | Parse/validate cardLayout |
-| `src/components/settings/DataSection.tsx` | Restore cardLayout on import |
-| `src/components/settings/ThemeSection.tsx` | Remove card density controls |
-| Tests for all of the above |
+| File                                            | Change                                             |
+| ----------------------------------------------- | -------------------------------------------------- |
+| `src/constants/cardLayout.ts`                   | **New** — types, defaults, labels                  |
+| `src/constants/storage.ts`                      | Add `CARD_LAYOUT` key                              |
+| `src/theme/types.ts`                            | Add `cardLayout` / `setCardLayout` to context type |
+| `src/theme/ThemeProvider.tsx`                   | Add state, persistence, derive density             |
+| `src/components/settings/CardLayoutSection.tsx` | **New** — preview + field editor                   |
+| `src/components/settings/SettingsModal.tsx`     | Add Card Layout section, adjust density            |
+| `src/components/board/SortableCardItem.tsx`     | Render fields from layout config                   |
+| `src/components/board/CardList.tsx`             | Pass `cardLayout` through to SortableCardItem      |
+| `src/components/board/Column.tsx`               | Pass `cardLayout` through to CardList              |
+| `src/components/board/Board.tsx`                | Read `cardLayout` from theme context               |
+| `src/utils/exportBoard.ts`                      | Bump version, add cardLayout                       |
+| `src/utils/importBoard.ts`                      | Parse/validate cardLayout                          |
+| `src/components/settings/DataSection.tsx`       | Restore cardLayout on import                       |
+| `src/components/settings/ThemeSection.tsx`      | Remove card density controls                       |
+| Tests for all of the above                      |
 
 ## Verification
 
