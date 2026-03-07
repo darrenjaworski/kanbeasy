@@ -146,7 +146,7 @@ test.describe("Visual regression", () => {
   test("board view — default light theme", async ({ page }) => {
     await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-light.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -159,7 +159,7 @@ test.describe("Visual regression", () => {
     });
     await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-stone.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -170,7 +170,7 @@ test.describe("Visual regression", () => {
     });
     await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-rose.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -182,7 +182,7 @@ test.describe("Visual regression", () => {
     });
     await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-midnight.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -193,7 +193,7 @@ test.describe("Visual regression", () => {
     });
     await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-forest.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -204,7 +204,7 @@ test.describe("Visual regression", () => {
     });
     await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-twilight.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -216,7 +216,7 @@ test.describe("Visual regression", () => {
     await page.goto(target);
     await expect(page.getByTestId("get-started-button")).toBeVisible();
     await expect(page).toHaveScreenshot("welcome-modal.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -231,7 +231,7 @@ test.describe("Visual regression", () => {
     await expect(page.getByTestId("card-detail-title")).toBeVisible();
 
     await expect(page).toHaveScreenshot("card-detail-modal.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
       mask: TIMESTAMP_MASKS.map((s) => page.locator(s)),
     });
   });
@@ -243,7 +243,7 @@ test.describe("Visual regression", () => {
     await expect(dlg).toBeVisible();
 
     await expect(page).toHaveScreenshot("settings-modal.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -254,7 +254,7 @@ test.describe("Visual regression", () => {
     await expect(dlg).toBeVisible();
 
     await expect(page).toHaveScreenshot("analytics-modal.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -265,7 +265,7 @@ test.describe("Visual regression", () => {
     await expect(dlg).toBeVisible();
 
     await expect(page).toHaveScreenshot("archive-modal.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -275,7 +275,7 @@ test.describe("Visual regression", () => {
     await expect(page.locator("tbody tr")).toHaveCount(5);
 
     await expect(page).toHaveScreenshot("list-view.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -305,7 +305,7 @@ test.describe("Visual regression", () => {
     await expect(monthHeader).toHaveText(targetLabel);
 
     await expect(page).toHaveScreenshot("calendar-view.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 
@@ -322,7 +322,7 @@ test.describe("Visual regression", () => {
     await expect(page.getByTestId("add-column-button")).toBeVisible();
 
     await expect(page).toHaveScreenshot("empty-board.png", {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.0005,
     });
   });
 });

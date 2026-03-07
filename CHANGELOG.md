@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `e2e:visual` and `e2e:snapshot` npm scripts for running visual regression tests in isolation
 - Exclude visual regression tests from deployed CI e2e runs via `--grep-invert`
+- Tighten visual regression pixel threshold from 0.01 to 0.0005 to catch single-character text changes
 
 ## [1.32.4]
 
