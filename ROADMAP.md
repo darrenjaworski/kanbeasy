@@ -109,7 +109,7 @@ Settings
   - search by ticket type (filter cards by their assigned type)
   - search card descriptions in addition to titles
   - due dates with reminders
-    - date picker in card detail modal
+    - ✅ date picker in card detail modal
     - visual overdue indicator (red badge/border) on board cards
     - upcoming due date badge (e.g., "due tomorrow") on board cards
     - optional browser notification reminders

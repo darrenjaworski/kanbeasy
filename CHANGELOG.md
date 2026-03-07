@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.29.0]
+
+### Features
+
+- Add due date field to card data model and card detail modal with native browser date picker
+
+### Fixed
+
+- Improve checklist progress bar track contrast on light themes (use `bg-black/10` instead of `bg-white/40`)
+
+### Tests
+
+- Add migration tests for `dueDate` backfill (null when missing, preserves existing, rejects non-string)
+- Add CardDetailModal tests for due date input (renders empty/populated, updates on change, clears to null)
+
 ## [1.28.0]
 
 ### Features
