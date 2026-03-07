@@ -7,17 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.28.0]
+
 ### Features
 
 - Add interactive checklists in card descriptions — click checkboxes to toggle in preview mode without entering edit mode
 - Add "+ Add checklist item" button below description for easy item creation without typing markdown syntax
 - Inline input stays focused for rapid multi-item entry (Enter to add, Escape to dismiss)
-- Add checklist progress bar on board cards and card detail modal showing checked/total with color-coded fill
+- Add checklist progress bar on board cards and card detail modal showing checked/total with accent-colored fill
 
 ### Tests
 
 - Add unit tests for `toggleMarkdownCheckbox` utility (8 tests: toggle on/off, mixed state, uppercase X, out-of-range, indented, alternate list markers)
+- Add unit tests for `checklistStats` utility (8 tests: null for no checkboxes, count checked/unchecked, mixed, uppercase X, indented, alternate markers)
 - Add unit tests for interactive checkbox rendering in `MarkdownPreview` (enabled/disabled state, click callback, index attributes)
+- Add e2e tests for checklist feature (9 tests: toggle checkboxes, add items, progress bar, keyboard interactions)
 
 ## [1.27.0]
 

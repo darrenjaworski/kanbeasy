@@ -71,6 +71,10 @@ an ultra simple task organizer
 - ✅ column delete warning updated to reflect archiving behavior ("cards will be archived and can be restored later")
 - ✅ default ticket type — allow setting a ticket type as the default for new cards in settings
 - ✅ tooltips on all icon-only buttons for improved discoverability and accessibility
+- ✅ interactive checklists in card descriptions
+  - ✅ click-to-toggle checkboxes from preview mode
+  - ✅ "+ Add checklist item" button for easy creation without markdown syntax
+  - ✅ checklist progress bar on board cards and card detail modal
 
 Settings
 
@@ -95,10 +99,11 @@ Settings
   - arrow key navigation between cards and columns
   - Enter to open card detail, Escape to close modals
 - card enhancements
-  - checklists/subtasks with inline progress (e.g., "3/5")
-    - add/remove/reorder checklist items within a card
-    - toggle completion with checkbox
-    - progress bar or fraction displayed on board card
+  - ✅ checklists/subtasks with inline progress (e.g., "3/5")
+    - ✅ add checklist items within a card
+    - ✅ toggle completion with checkbox
+    - ✅ progress bar displayed on board card
+    - reorder checklist items within a card
   - labels/tags with custom colors, filterable from search
 - search enhancements
   - search by ticket type (filter cards by their assigned type)
