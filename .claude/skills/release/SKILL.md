@@ -63,6 +63,16 @@ npm run build
 
 Ensure it compiles cleanly at the new version.
 
-## 8. STOP
+## 8. Push
 
-Report the release summary (version, key changes, tag name). Do NOT push unless the user explicitly asks to push.
+Report the release summary (version, key changes, tag name) and ask the user for permission to push. Wait for confirmation before proceeding.
+
+Once approved, push the commits and the new version tag:
+
+```bash
+git push origin main && git push origin vX.Y.Z
+```
+
+## 9. Confirm
+
+Confirm the push was successful.

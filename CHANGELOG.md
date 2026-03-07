@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add push step with user confirmation to `/release` skill
+
 ## [1.32.5]
 
 ### Fixed
