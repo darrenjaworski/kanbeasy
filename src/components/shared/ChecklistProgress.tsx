@@ -25,7 +25,7 @@ export function ChecklistProgress({
       data-testid="checklist-progress"
     >
       <div
-        className={`flex-1 h-1.5 rounded-full ${tc.glassSubtle} overflow-hidden`}
+        className="flex-1 h-1.5 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden"
       >
         <div
           className="h-full rounded-full transition-all duration-300 bg-accent"
