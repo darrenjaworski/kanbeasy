@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.31.0]
+
+### Features
+
+- Add 17 feature-discovery owl tips to introduce users to calendar view, list view, compact header, checklists, analytics, archive, search, undo/redo, and export/import
+- Add 14 night owl puns encouraging users to log off late at night
+
 ## [1.30.0]
 
 ### Features
