@@ -73,39 +73,51 @@ export function Column({
     onSave: saveTitle,
     onRevert: revertTitle,
   });
-  // Mouse event handlers for resizing
+  // Mouse event handlers for resizing — stored in refs to avoid stale closure issues
+  const onResizeMouseMove = useRef<((e: MouseEvent) => void) | null>(null);
+  const onResizeMouseUp = useRef<(() => void) | null>(null);
+
   const onResizeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     resizing.current = true;
     startX.current = e.clientX;
     startWidth.current = width;
     document.body.style.cursor = "col-resize";
-    window.addEventListener("mousemove", onResizeMouseMove);
-    window.addEventListener("mouseup", onResizeMouseUp);
-  };
 
-  const onResizeMouseMove = (e: MouseEvent) => {
-    if (!resizing.current) return;
-    const delta = e.clientX - startX.current;
-    let newWidth = startWidth.current + delta;
-    newWidth = Math.max(MIN_COLUMN_WIDTH, Math.min(MAX_COLUMN_WIDTH, newWidth));
-    setWidth(newWidth);
-  };
+    const handleMouseMove = (ev: MouseEvent) => {
+      if (!resizing.current) return;
+      const delta = ev.clientX - startX.current;
+      let newWidth = startWidth.current + delta;
+      newWidth = Math.max(
+        MIN_COLUMN_WIDTH,
+        Math.min(MAX_COLUMN_WIDTH, newWidth),
+      );
+      setWidth(newWidth);
+    };
 
-  const onResizeMouseUp = () => {
-    resizing.current = false;
-    document.body.style.cursor = "";
-    window.removeEventListener("mousemove", onResizeMouseMove);
-    window.removeEventListener("mouseup", onResizeMouseUp);
+    const handleMouseUp = () => {
+      resizing.current = false;
+      document.body.style.cursor = "";
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      onResizeMouseMove.current = null;
+      onResizeMouseUp.current = null;
+    };
+
+    onResizeMouseMove.current = handleMouseMove;
+    onResizeMouseUp.current = handleMouseUp;
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
   };
 
   useEffect(() => {
     return () => {
       // Clean up listeners if unmounted while resizing
-      window.removeEventListener("mousemove", onResizeMouseMove);
-      window.removeEventListener("mouseup", onResizeMouseUp);
+      if (onResizeMouseMove.current)
+        window.removeEventListener("mousemove", onResizeMouseMove.current);
+      if (onResizeMouseUp.current)
+        window.removeEventListener("mouseup", onResizeMouseUp.current);
       document.body.style.cursor = "";
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

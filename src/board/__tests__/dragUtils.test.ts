@@ -120,10 +120,13 @@ describe("dragUtils", () => {
       expect(result[2].id).toBe("col-3");
     });
 
-    it("bumps updatedAt on all columns when reordered", () => {
+    it("preserves column and card data when reordered", () => {
       const result = reorderColumns(mockColumns, "col-1", "col-2");
+      // Columns keep their original updatedAt — reordering doesn't modify them
       for (const col of result) {
-        expect(col.updatedAt).toBe(NOW);
+        const original = mockColumns.find((c) => c.id === col.id)!;
+        expect(col.updatedAt).toBe(original.updatedAt);
+        expect(col.cards).toEqual(original.cards);
       }
     });
 
@@ -137,7 +140,7 @@ describe("dragUtils", () => {
       expect(result).toBe(mockColumns);
     });
 
-    it("resets card columnHistory to a single entry for the current column", () => {
+    it("preserves card columnHistory on reorder", () => {
       // Give card-1 a multi-step history (col-1 → col-2 → back to col-1)
       const columnsWithHistory: Column[] = [
         makeColumn({
@@ -171,31 +174,38 @@ describe("dragUtils", () => {
 
       const result = reorderColumns(columnsWithHistory, "col-1", "col-3");
 
-      // card-1 is in col-1 — history should be reset to a single entry
+      // card-1 history should be preserved — reordering columns doesn't change card data
       const card1 = result
         .find((c) => c.id === "col-1")!
         .cards.find((c) => c.id === "card-1")!;
-      expect(card1.columnHistory).toHaveLength(1);
-      expect(card1.columnHistory[0].columnId).toBe("col-1");
-      expect(card1.columnHistory[0].enteredAt).toBe(NOW);
+      expect(card1.columnHistory).toHaveLength(3);
+      expect(card1.columnHistory).toEqual([
+        { columnId: "col-1", enteredAt: 500 },
+        { columnId: "col-2", enteredAt: 700 },
+        { columnId: "col-1", enteredAt: 900 },
+      ]);
 
-      // card-4 in col-2 should also be reset
+      // card-4 history should also be preserved
       const card4 = result
         .find((c) => c.id === "col-2")!
         .cards.find((c) => c.id === "card-4")!;
       expect(card4.columnHistory).toHaveLength(1);
-      expect(card4.columnHistory[0].columnId).toBe("col-2");
-      expect(card4.columnHistory[0].enteredAt).toBe(NOW);
+      expect(card4.columnHistory[0]).toEqual({
+        columnId: "col-2",
+        enteredAt: 1000,
+      });
     });
 
-    it("resets card createdAt and updatedAt timestamps on reorder", () => {
+    it("preserves card createdAt and updatedAt timestamps on reorder", () => {
       const result = reorderColumns(mockColumns, "col-1", "col-2");
 
-      // All cards should have their timestamps reset
+      // All card timestamps should be preserved — reordering columns doesn't modify cards
       for (const col of result) {
+        const originalCol = mockColumns.find((c) => c.id === col.id)!;
         for (const card of col.cards) {
-          expect(card.createdAt).toBe(NOW);
-          expect(card.updatedAt).toBe(NOW);
+          const originalCard = originalCol.cards.find((c) => c.id === card.id)!;
+          expect(card.createdAt).toBe(originalCard.createdAt);
+          expect(card.updatedAt).toBe(originalCard.updatedAt);
         }
       }
     });

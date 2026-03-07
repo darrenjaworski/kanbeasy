@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix column reorder destroying all card timestamps and column history (analytics data loss)
+- Fix `removeCard` no-op detection (filter always returns new array, polluting undo history)
+- Fix `renameTicketType`/`clearTicketType` updating all columns even when unaffected
+- Fix column resize event listener leak when component unmounts during active resize
+
 ## [1.32.1]
 
 ### Fixed

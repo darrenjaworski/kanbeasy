@@ -111,8 +111,8 @@ export function useBoardMutations(
         const idx = prev.columns.findIndex((c) => c.id === columnId);
         if (idx === -1) return prev;
         const col = prev.columns[idx];
+        if (!col.cards.some((c) => c.id === cardId)) return prev;
         const newCards = col.cards.filter((c) => c.id !== cardId);
-        if (newCards === col.cards) return prev;
         const now = Date.now();
         const newColumns = prev.columns.slice();
         newColumns[idx] = { ...col, cards: newCards, updatedAt: now };
@@ -234,16 +234,24 @@ export function useBoardMutations(
   const renameTicketType = useCallback<BoardContextValue["renameTicketType"]>(
     (oldId, newId) => {
       setState((prev) => {
+        const hasAffectedCard = prev.columns.some((col) =>
+          col.cards.some((card) => card.ticketTypeId === oldId),
+        );
+        if (!hasAffectedCard) return prev;
         const now = Date.now();
-        const columns = prev.columns.map((col) => ({
-          ...col,
-          updatedAt: now,
-          cards: col.cards.map((card) =>
-            card.ticketTypeId === oldId
-              ? { ...card, ticketTypeId: newId, updatedAt: now }
-              : card,
-          ),
-        }));
+        const columns = prev.columns.map((col) => {
+          if (!col.cards.some((card) => card.ticketTypeId === oldId))
+            return col;
+          return {
+            ...col,
+            updatedAt: now,
+            cards: col.cards.map((card) =>
+              card.ticketTypeId === oldId
+                ? { ...card, ticketTypeId: newId, updatedAt: now }
+                : card,
+            ),
+          };
+        });
         return { ...prev, columns };
       });
     },
@@ -253,16 +261,24 @@ export function useBoardMutations(
   const clearTicketType = useCallback<BoardContextValue["clearTicketType"]>(
     (typeId) => {
       setState((prev) => {
+        const hasAffectedCard = prev.columns.some((col) =>
+          col.cards.some((card) => card.ticketTypeId === typeId),
+        );
+        if (!hasAffectedCard) return prev;
         const now = Date.now();
-        const columns = prev.columns.map((col) => ({
-          ...col,
-          updatedAt: now,
-          cards: col.cards.map((card) =>
-            card.ticketTypeId === typeId
-              ? { ...card, ticketTypeId: null, updatedAt: now }
-              : card,
-          ),
-        }));
+        const columns = prev.columns.map((col) => {
+          if (!col.cards.some((card) => card.ticketTypeId === typeId))
+            return col;
+          return {
+            ...col,
+            updatedAt: now,
+            cards: col.cards.map((card) =>
+              card.ticketTypeId === typeId
+                ? { ...card, ticketTypeId: null, updatedAt: now }
+                : card,
+            ),
+          };
+        });
         return { ...prev, columns };
       });
     },
