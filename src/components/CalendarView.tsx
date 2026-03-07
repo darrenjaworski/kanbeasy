@@ -147,7 +147,7 @@ export function CalendarView() {
               <button
                 type="button"
                 onClick={goToday}
-                className={`text-xs px-2 py-0.5 rounded ${tc.bgHover} ${tc.border} border ${tc.focusRing}`}
+                className={`text-sm px-3 py-1.5 rounded ${tc.bgHover} ${tc.border} border ${tc.focusRing}`}
               >
                 Today
               </button>
