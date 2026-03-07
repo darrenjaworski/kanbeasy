@@ -148,7 +148,7 @@ export function SortableCardItem({
         onBlur={cardBlur}
         data-testid={`card-content-${index}`}
       />
-      <div className="flex items-center gap-2 mt-1 empty:hidden">
+      <div className="flex items-center gap-2 empty:hidden">
         <ChecklistProgress
           description={card.description}
           className="flex-1"
