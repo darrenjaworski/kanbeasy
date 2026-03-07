@@ -169,6 +169,7 @@ export function Column({
                 : undefined
             }
             aria-label={`${cards.length} card${cards.length === 1 ? "" : "s"}`}
+            data-heat-level={heat ? (heat.bold ? "high" : "medium") : undefined}
           >
             {cards.length}
           </span>

@@ -68,7 +68,7 @@ function renderColumn(props: {
 }
 
 describe("Badge heat rendering in Column", () => {
-  it("has no background-color on first column regardless of card count", () => {
+  it("has no heat on first column regardless of card count", () => {
     const { getByLabelText } = renderColumn({
       id: "col-0",
       title: "First",
@@ -79,9 +79,10 @@ describe("Badge heat rendering in Column", () => {
 
     const badge = getByLabelText("8 cards");
     expect(badge.style.backgroundColor).toBe("");
+    expect(badge).not.toHaveAttribute("data-heat-level");
   });
 
-  it("has no background-color on last column regardless of card count", () => {
+  it("has no heat on last column regardless of card count", () => {
     const { getByLabelText } = renderColumn({
       id: "col-2",
       title: "Last",
@@ -92,6 +93,7 @@ describe("Badge heat rendering in Column", () => {
 
     const badge = getByLabelText("8 cards");
     expect(badge.style.backgroundColor).toBe("");
+    expect(badge).not.toHaveAttribute("data-heat-level");
   });
 
   it("has inline background-color with color-mix for middle column with 5 cards", () => {
@@ -107,7 +109,7 @@ describe("Badge heat rendering in Column", () => {
     expect(badge.style.backgroundColor).toContain("color-mix");
   });
 
-  it("does not have background-color for middle column with 2 cards", () => {
+  it("has no heat for middle column with 2 cards", () => {
     const { getByLabelText } = renderColumn({
       id: "col-1",
       title: "Middle",
@@ -118,9 +120,10 @@ describe("Badge heat rendering in Column", () => {
 
     const badge = getByLabelText("2 cards");
     expect(badge.style.backgroundColor).toBe("");
+    expect(badge).not.toHaveAttribute("data-heat-level");
   });
 
-  it("applies font-bold class for middle column with 10+ cards", () => {
+  it("marks high heat level for middle column with 10+ cards", () => {
     const { getByLabelText } = renderColumn({
       id: "col-1",
       title: "Middle",
@@ -130,10 +133,10 @@ describe("Badge heat rendering in Column", () => {
     });
 
     const badge = getByLabelText("10 cards");
-    expect(badge.className).toContain("font-bold");
+    expect(badge).toHaveAttribute("data-heat-level", "high");
   });
 
-  it("applies font-medium (not font-bold) for middle column with 5 cards", () => {
+  it("marks medium heat level for middle column with 5 cards", () => {
     const { getByLabelText } = renderColumn({
       id: "col-1",
       title: "Middle",
@@ -143,7 +146,6 @@ describe("Badge heat rendering in Column", () => {
     });
 
     const badge = getByLabelText("5 cards");
-    expect(badge.className).toContain("font-medium");
-    expect(badge.className).not.toContain("font-bold");
+    expect(badge).toHaveAttribute("data-heat-level", "medium");
   });
 });

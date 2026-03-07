@@ -4,9 +4,11 @@
 
 ---
 
-## 1. Duplicated Seed Data Builders (HIGH -- Maintainability)
+## 1. ~~Duplicated Seed Data Builders~~ ✅ DONE
 
-The most widespread problem. `makeCard()`, `makeColumn()`, and `makeArchivedCard()` are independently redefined in **5+ files** with slightly different signatures:
+Resolved: Shared builders extracted to `src/test/builders.ts` and all 13 test files migrated.
+
+~~The most widespread problem. `makeCard()`, `makeColumn()`, and `makeArchivedCard()` are independently redefined in **5+ files** with slightly different signatures:~~
 
 | Location | Signature difference |
 |---|---|
@@ -26,15 +28,11 @@ export function makeColumn(id: string, cards?: Card[], overrides?: Partial<Colum
 
 ---
 
-## 2. Tailwind Class Assertions (HIGH -- Brittleness)
+## 2. ~~Tailwind Class Assertions~~ ✅ DONE
 
-Multiple test files assert on specific CSS classes that will break on any styling refactor:
+Resolved: Added `data-search-highlight`, `data-side`, and `data-heat-level` attributes to components. Tests now assert on data attributes instead of Tailwind classes. Removed brittle `opacity-0` and `pointer-events-none` assertions.
 
-- **`search-cards.test.tsx`**: Checks for `"border-accent"`, `"ring-2"` on highlighted cards
-- **`Tooltip.test.tsx`**: Asserts `"opacity-0"`, `"top-full"`, `"bottom-full"`, `"pointer-events-none"`
-- **`badgeHeatColumn.test.tsx`**: Checks for specific color classes
-
-**Recommendation**: Use `data-*` attributes for testable state (e.g., `data-highlighted="true"`) instead of coupling tests to Tailwind classes. This also aligns with the planned theme class refactor noted in MEMORY.md.
+~~Multiple test files assert on specific CSS classes that will break on any styling refactor.~~
 
 ---
 

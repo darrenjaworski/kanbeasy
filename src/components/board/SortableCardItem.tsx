@@ -116,6 +116,7 @@ export function SortableCardItem({
           : ""
       }`}
       data-testid={`card-${index}`}
+      data-search-highlight={isSearchMatch || undefined}
     >
       <TicketTypeBadge
         number={card.number}

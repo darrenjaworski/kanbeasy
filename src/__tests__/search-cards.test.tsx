@@ -61,16 +61,14 @@ describe("search cards", () => {
     // Check that matching cards are highlighted
     const cards = within(column).getAllByTestId(/^card-\d+$/);
 
-    // First card should have search highlight classes
-    expect(cards[0]).toHaveClass("border-accent");
-    expect(cards[0]).toHaveClass("ring-2");
+    // First card should have search highlight
+    expect(cards[0]).toHaveAttribute("data-search-highlight", "true");
 
     // Second card should NOT have highlight
-    expect(cards[1]).not.toHaveClass("border-accent");
+    expect(cards[1]).not.toHaveAttribute("data-search-highlight");
 
-    // Third card should have search highlight classes
-    expect(cards[2]).toHaveClass("border-accent");
-    expect(cards[2]).toHaveClass("ring-2");
+    // Third card should have search highlight
+    expect(cards[2]).toHaveAttribute("data-search-highlight", "true");
 
     // Check match count is displayed
     expect(screen.getByText("2 matches")).toBeInTheDocument();
@@ -80,7 +78,7 @@ describe("search cards", () => {
 
     // No cards should be highlighted
     cards.forEach((card) => {
-      expect(card).not.toHaveClass("border-accent");
+      expect(card).not.toHaveAttribute("data-search-highlight");
     });
   });
 
@@ -113,7 +111,7 @@ describe("search cards", () => {
     await user.type(searchInput, "meetng"); // Missing 'i'
 
     const card = within(column).getByTestId("card-0");
-    expect(card).toHaveClass("border-accent");
+    expect(card).toHaveAttribute("data-search-highlight", "true");
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
 
@@ -150,7 +148,7 @@ describe("search cards", () => {
 
     // Card should not be highlighted
     const card = within(column).getByTestId("card-0");
-    expect(card).not.toHaveClass("border-accent");
+    expect(card).not.toHaveAttribute("data-search-highlight");
   });
 
   it("does not search with less than 2 characters", async () => {
@@ -183,7 +181,7 @@ describe("search cards", () => {
 
     // Card should NOT be highlighted with single character
     const card = within(column).getByTestId("card-0");
-    expect(card).not.toHaveClass("border-accent");
+    expect(card).not.toHaveAttribute("data-search-highlight");
 
     // No match count should be shown
     expect(screen.queryByText(/match/i)).not.toBeInTheDocument();
@@ -192,7 +190,7 @@ describe("search cards", () => {
     await user.type(searchInput, "u");
 
     // Now card should be highlighted
-    expect(card).toHaveClass("border-accent");
+    expect(card).toHaveAttribute("data-search-highlight", "true");
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
 
@@ -225,7 +223,7 @@ describe("search cards", () => {
     await user.type(searchInput, "GROC");
 
     const card = within(column).getByTestId("card-0");
-    expect(card).toHaveClass("border-accent");
+    expect(card).toHaveAttribute("data-search-highlight", "true");
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
 

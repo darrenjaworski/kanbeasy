@@ -26,25 +26,15 @@ describe("Tooltip", () => {
     );
   });
 
-  it("tooltip is hidden by default (opacity-0)", () => {
-    render(
-      <Tooltip content="Help text">
-        <button type="button">Click me</button>
-      </Tooltip>,
-    );
-    expect(screen.getByRole("tooltip", { hidden: true })).toHaveClass(
-      "opacity-0",
-    );
-  });
-
   it("positions tooltip below by default (side='bottom')", () => {
     render(
       <Tooltip content="Help text">
         <button type="button">Click me</button>
       </Tooltip>,
     );
-    expect(screen.getByRole("tooltip", { hidden: true })).toHaveClass(
-      "top-full",
+    expect(screen.getByRole("tooltip", { hidden: true })).toHaveAttribute(
+      "data-side",
+      "bottom",
     );
   });
 
@@ -54,8 +44,9 @@ describe("Tooltip", () => {
         <button type="button">Click me</button>
       </Tooltip>,
     );
-    expect(screen.getByRole("tooltip", { hidden: true })).toHaveClass(
-      "bottom-full",
+    expect(screen.getByRole("tooltip", { hidden: true })).toHaveAttribute(
+      "data-side",
+      "top",
     );
   });
 
@@ -71,17 +62,6 @@ describe("Tooltip", () => {
     );
     await user.click(screen.getByRole("button", { name: "Click me" }));
     expect(onClick).toHaveBeenCalledOnce();
-  });
-
-  it("tooltip has pointer-events-none", () => {
-    render(
-      <Tooltip content="Help text">
-        <button type="button">Click me</button>
-      </Tooltip>,
-    );
-    expect(screen.getByRole("tooltip", { hidden: true })).toHaveClass(
-      "pointer-events-none",
-    );
   });
 
   it("tooltip has aria-hidden", () => {

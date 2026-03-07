@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace Tailwind class assertions with `data-*` attributes in search, tooltip, and badge heat tests for resilience against styling refactors
+
 ## [1.31.0]
 
 ### Features

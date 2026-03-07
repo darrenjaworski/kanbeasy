@@ -26,6 +26,7 @@ export function Tooltip({
         <span
           role="tooltip"
           aria-hidden
+          data-side={side}
           className={`pointer-events-none absolute z-50 ${positionClasses[side]} whitespace-nowrap rounded-md px-2 py-1 ${tc.tooltip} opacity-0 transition-opacity group-hover/tooltip:delay-300 group-hover/tooltip:opacity-100 group-focus-within/tooltip:delay-300 group-focus-within/tooltip:opacity-100`}
         >
           {content}
