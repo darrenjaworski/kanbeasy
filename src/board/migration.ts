@@ -1,8 +1,66 @@
 import type { ArchivedCard, Card, Column, ColumnHistoryEntry } from "./types";
+import type { TicketType } from "../constants/ticketTypes";
+import { TICKET_TYPE_PRESETS } from "../constants/ticketTypes";
+
+/**
+ * Builds a lookup map of ticket type ID → TicketType from the user's saved
+ * types (localStorage) and all built-in presets as fallback.
+ */
+function buildTicketTypeLookup(): Map<string, TicketType> {
+  const map = new Map<string, TicketType>();
+
+  // Add all preset types first (lower priority)
+  for (const preset of TICKET_TYPE_PRESETS) {
+    for (const t of preset.types) {
+      map.set(t.id, t);
+    }
+  }
+
+  // Override with user's saved types (higher priority)
+  try {
+    const raw = window.localStorage.getItem("kanbeasy:ticketTypes");
+    if (raw) {
+      const parsed = JSON.parse(raw) as unknown;
+      if (Array.isArray(parsed)) {
+        for (const t of parsed) {
+          if (
+            t &&
+            typeof t === "object" &&
+            typeof (t as TicketType).id === "string" &&
+            typeof (t as TicketType).label === "string" &&
+            typeof (t as TicketType).color === "string"
+          ) {
+            map.set((t as TicketType).id, t as TicketType);
+          }
+        }
+      }
+    }
+  } catch {
+    // Ignore parse errors — fall back to presets only
+  }
+
+  return map;
+}
+
+// Lazily built on first use during a migration pass
+let ticketTypeLookup: Map<string, TicketType> | null = null;
+
+function getTicketTypeLookup(): Map<string, TicketType> {
+  if (!ticketTypeLookup) {
+    ticketTypeLookup = buildTicketTypeLookup();
+  }
+  return ticketTypeLookup;
+}
+
+/** Reset the cached lookup (used by tests after localStorage changes). */
+export function resetTicketTypeLookup(): void {
+  ticketTypeLookup = null;
+}
 
 /**
  * Backfills timestamps and columnHistory on a legacy card.
  * Idempotent — preserves existing values if already present.
+ * Backfills ticketTypeLabel/ticketTypeColor from known types when missing.
  */
 export function migrateCard(
   raw: Record<string, unknown>,
@@ -23,18 +81,28 @@ export function migrateCard(
     typeof raw.ticketTypeId === "string" ? raw.ticketTypeId : null;
   const dueDate = typeof raw.dueDate === "string" ? raw.dueDate : null;
 
+  // Backfill snapshot fields from known ticket types when missing
+  let ticketTypeLabel =
+    typeof raw.ticketTypeLabel === "string" ? raw.ticketTypeLabel : undefined;
+  let ticketTypeColor =
+    typeof raw.ticketTypeColor === "string" ? raw.ticketTypeColor : undefined;
+
+  if (ticketTypeId && (!ticketTypeLabel || !ticketTypeColor)) {
+    const knownType = getTicketTypeLookup().get(ticketTypeId);
+    if (knownType) {
+      ticketTypeLabel ??= knownType.label;
+      ticketTypeColor ??= knownType.color;
+    }
+  }
+
   return {
     id: raw.id as string,
     number,
     title: raw.title as string,
     description,
     ticketTypeId,
-    ...(typeof raw.ticketTypeLabel === "string" && {
-      ticketTypeLabel: raw.ticketTypeLabel,
-    }),
-    ...(typeof raw.ticketTypeColor === "string" && {
-      ticketTypeColor: raw.ticketTypeColor,
-    }),
+    ...(ticketTypeLabel && { ticketTypeLabel }),
+    ...(ticketTypeColor && { ticketTypeColor }),
     dueDate,
     createdAt,
     updatedAt,
