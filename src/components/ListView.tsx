@@ -71,7 +71,7 @@ export function ListView() {
               <thead>
                 <tr className={`${tc.glass} border-b ${tc.border}`}>
                   <th
-                    className={`text-left px-3 py-2 font-medium ${tc.textMuted} w-12`}
+                    className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
                     scope="col"
                   >
                     #
