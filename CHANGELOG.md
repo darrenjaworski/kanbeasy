@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.32.4]
+
 ### Fixed
 
 - Fix tooltips showing on column drag preview during reorder
