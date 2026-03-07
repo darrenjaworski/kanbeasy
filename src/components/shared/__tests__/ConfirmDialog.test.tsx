@@ -63,6 +63,38 @@ describe("ConfirmDialog", () => {
     expect(onConfirm).toHaveBeenCalledOnce();
   });
 
+  it("calls onClose when Escape key is pressed", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(
+      <ConfirmDialog
+        open
+        onClose={onClose}
+        onConfirm={vi.fn()}
+        title="Delete column?"
+        message="This will remove 3 cards."
+      />,
+    );
+    await user.keyboard("{Escape}");
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it("calls onClose when backdrop is clicked", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(
+      <ConfirmDialog
+        open
+        onClose={onClose}
+        onConfirm={vi.fn()}
+        title="Delete column?"
+        message="This will remove 3 cards."
+      />,
+    );
+    await user.click(screen.getByTestId("modal-backdrop"));
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+
   it("supports custom button labels", () => {
     render(
       <ConfirmDialog

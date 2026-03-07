@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { isNightOwlHour } from "../isNightOwlHour";
 
 function dateAtHour(hour: number, minute = 0): Date {
@@ -7,6 +7,9 @@ function dateAtHour(hour: number, minute = 0): Date {
 }
 
 describe("isNightOwlHour", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
   it("returns false at 21:59 (just before night)", () => {
     expect(isNightOwlHour(dateAtHour(21, 59))).toBe(false);
   });
@@ -40,7 +43,8 @@ describe("isNightOwlHour", () => {
   });
 
   it("defaults to current time when no argument is provided", () => {
-    // Just verify it returns a boolean without throwing
-    expect(typeof isNightOwlHour()).toBe("boolean");
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 0, 15, 23, 0));
+    expect(isNightOwlHour()).toBe(true);
   });
 });

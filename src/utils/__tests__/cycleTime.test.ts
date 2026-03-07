@@ -380,6 +380,50 @@ describe("getCardCycleTimes with additionalCards", () => {
   });
 });
 
+describe("cycleTime edge cases", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
+  it("produces negative cycle time for out-of-order timestamps", () => {
+    const col = makeColumn({
+      id: "col-1",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Time traveler",
+          columnHistory: [
+            { columnId: "a", enteredAt: 5000 },
+            { columnId: "b", enteredAt: 1000 },
+          ],
+        }),
+      ],
+    });
+    const result = getCardCycleTimes([col]);
+    expect(result).toHaveLength(1);
+    expect(result[0].cycleTimeMs).toBe(-4000);
+  });
+
+  it("returns 0ms cycle time when timestamps are identical", () => {
+    const col = makeColumn({
+      id: "col-1",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Instant move",
+          columnHistory: [
+            { columnId: "a", enteredAt: 5000 },
+            { columnId: "b", enteredAt: 5000 },
+          ],
+        }),
+      ],
+    });
+    const result = getCardCycleTimes([col]);
+    expect(result).toHaveLength(1);
+    expect(result[0].cycleTimeMs).toBe(0);
+  });
+});
+
 describe("formatDuration", () => {
   it("formats sub-minute durations as seconds", () => {
     expect(formatDuration(0)).toBe("0s");

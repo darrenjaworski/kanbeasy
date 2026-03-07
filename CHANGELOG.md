@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replace SVG DOM queries in OwlBuddy tests with `data-testid` attributes on owl icon components
 - Consolidate repetitive tests using `it.each` in importBoard, badgeHeat, and validation test files
 - Scope AnalyticsModal metric assertions to specific MetricCard containers and tighten formatDate assertions
+- Add missing test coverage for ConfirmDialog (Escape key, backdrop click) and cycleTime edge cases
+- Fix trivial `typeof` assertion in isNightOwlHour test with real `vi.setSystemTime` verification
 
 ## [1.31.0]
 
