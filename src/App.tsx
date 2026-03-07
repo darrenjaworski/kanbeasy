@@ -4,6 +4,7 @@ import { WelcomeModal } from "./components/WelcomeModal";
 import { UndoRedoControls } from "./components/UndoRedoControls";
 import { OwlBuddy } from "./components/OwlBuddy";
 import { ListView } from "./components/ListView";
+import { CalendarView } from "./components/CalendarView";
 import { useTheme } from "./theme/useTheme";
 
 function App() {
@@ -13,7 +14,9 @@ function App() {
     <div className="min-h-screen bg-bg text-text transition-colors">
       <WelcomeModal />
       <Header />
-      {viewMode === "board" ? <Board /> : <ListView />}
+      {viewMode === "board" && <Board />}
+      {viewMode === "list" && <ListView />}
+      {viewMode === "calendar" && <CalendarView />}
       {viewMode === "board" && <UndoRedoControls />}
       <OwlBuddy />
     </div>

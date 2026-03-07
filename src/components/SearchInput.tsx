@@ -8,7 +8,7 @@ export function SearchInput() {
   const showMatchCount = searchQuery && matchingCardIds.size > 0;
 
   return (
-    <div className="relative flex-1 max-w-md">
+    <div className="relative flex-1 max-w-xs">
       <input
         id="search-cards"
         type="search"

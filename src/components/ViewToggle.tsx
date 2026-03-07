@@ -1,6 +1,6 @@
 import { useTheme } from "../theme/useTheme";
 import { useBoard } from "../board/useBoard";
-import { BoardViewIcon, ListViewIcon } from "./icons";
+import { BoardViewIcon, CalendarIcon, ListViewIcon } from "./icons";
 import { tc } from "../theme/classNames";
 import type { ViewMode } from "../theme/types";
 
@@ -17,6 +17,12 @@ const modes: readonly {
     Icon: BoardViewIcon,
   },
   { mode: "list", label: "List view", shortLabel: "List", Icon: ListViewIcon },
+  {
+    mode: "calendar",
+    label: "Calendar view",
+    shortLabel: "Calendar",
+    Icon: CalendarIcon,
+  },
 ];
 
 export function ViewToggle() {
@@ -32,7 +38,7 @@ export function ViewToggle() {
     >
       {modes.map(({ mode, label, shortLabel, Icon }) => {
         const active = viewMode === mode;
-        const disabled = mode === "list" && !hasCards;
+        const disabled = mode !== "board" && !hasCards;
         return (
           <button
             key={mode}

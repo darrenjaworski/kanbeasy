@@ -11,7 +11,7 @@ export const ROWS_FOR_DENSITY: Record<CardDensity, number> = {
 
 export type ThemePreference = "light" | "dark" | "system";
 
-export type ViewMode = "board" | "list";
+export type ViewMode = "board" | "list" | "calendar";
 
 export type ThemeContextValue = Readonly<{
   themeId: ThemeId;

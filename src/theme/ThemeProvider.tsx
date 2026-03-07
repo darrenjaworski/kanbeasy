@@ -79,7 +79,7 @@ function getInitialDensity(): CardDensity {
 
 function getInitialViewMode(): ViewMode {
   const stored = getStringFromStorage(STORAGE_KEYS.VIEW_MODE, "board");
-  if (stored === "board" || stored === "list") {
+  if (stored === "board" || stored === "list" || stored === "calendar") {
     return stored;
   }
   return "board";

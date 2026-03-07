@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add calendar view as third viewing mode (Board | List | Calendar) with month navigation
+- Reduce search bar width for better header layout
+
+### Tests
+
+- Add CalendarView unit tests (12 tests: empty state, grid rendering, navigation, year boundary wrap)
+- Add CalendarView e2e tests (8 tests: grid display, card visibility, month navigation, persistence)
+- Add calendar view toggle tests to ViewToggle test suite
+
+### Fixed
+
+- Fix ThemeProvider to accept "calendar" as a valid persisted view mode
+
 ## [1.29.0]
 
 ### Features

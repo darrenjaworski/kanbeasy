@@ -41,7 +41,11 @@ const VALID_PREFERENCES: ReadonlySet<string> = new Set([
   "dark",
   "system",
 ]);
-const VALID_VIEW_MODES: ReadonlySet<string> = new Set(["board", "list"]);
+const VALID_VIEW_MODES: ReadonlySet<string> = new Set([
+  "board",
+  "list",
+  "calendar",
+]);
 
 function isObject(x: unknown): x is Record<string, unknown> {
   return !!x && typeof x === "object" && !Array.isArray(x);
