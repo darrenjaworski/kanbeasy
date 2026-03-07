@@ -110,9 +110,7 @@ describe("ViewToggle", () => {
   });
 
   it("disables list and calendar views when there are no cards", () => {
-    seedBoard([
-      makeColumn({ id: "c1", title: "Empty", cards: [] }),
-    ]);
+    seedBoard([makeColumn({ id: "c1", title: "Empty", cards: [] })]);
     renderApp();
     expect(screen.getByRole("radio", { name: /list view/i })).toBeDisabled();
     expect(

@@ -14,7 +14,10 @@ export function MetricCard({
   description,
 }: Props) {
   return (
-    <div className={`rounded-lg border ${tc.border} ${tc.glass} p-4`} data-testid={`metric-${label.toLowerCase().replace(/\s+/g, "-")}`}>
+    <div
+      className={`rounded-lg border ${tc.border} ${tc.glass} p-4`}
+      data-testid={`metric-${label.toLowerCase().replace(/\s+/g, "-")}`}
+    >
       <p
         className={`text-xs font-medium uppercase tracking-wide ${tc.textFaint} mb-1`}
       >

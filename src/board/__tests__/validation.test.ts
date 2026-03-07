@@ -55,8 +55,14 @@ describe("isColumn", () => {
     [{ title: "To Do", cards: [] }, "missing id"],
     [{ id: "col1", cards: [] }, "missing title"],
     [{ id: "col1", title: "To Do" }, "missing cards"],
-    [{ id: "col1", title: "To Do", cards: "not-array" }, "cards is not an array"],
-    [{ id: "col1", title: "To Do", cards: [{ id: 123 }] }, "cards contains invalid card"],
+    [
+      { id: "col1", title: "To Do", cards: "not-array" },
+      "cards is not an array",
+    ],
+    [
+      { id: "col1", title: "To Do", cards: [{ id: 123 }] },
+      "cards contains invalid card",
+    ],
   ])("returns false for %s (%s)", (input) => {
     expect(isColumn(input)).toBe(false);
   });

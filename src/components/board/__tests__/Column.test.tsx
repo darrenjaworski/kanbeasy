@@ -137,7 +137,10 @@ describe("Column", () => {
   });
 
   it("shows correct card count and plural label", () => {
-    const cards = [makeCard({ id: "c1", title: "One" }), makeCard({ id: "c2", title: "Two" })];
+    const cards = [
+      makeCard({ id: "c1", title: "One" }),
+      makeCard({ id: "c2", title: "Two" }),
+    ];
     renderColumn({ props: { cards } });
     expect(screen.getByLabelText("2 cards")).toHaveTextContent("2");
   });
@@ -168,7 +171,10 @@ describe("Column", () => {
   });
 
   it("shows confirmation dialog when cards exist and warning is enabled", async () => {
-    const cards = [makeCard({ id: "c1", title: "One" }), makeCard({ id: "c2", title: "Two" })];
+    const cards = [
+      makeCard({ id: "c1", title: "One" }),
+      makeCard({ id: "c2", title: "Two" }),
+    ];
     renderColumn({
       props: { cards },
       theme: { deleteColumnWarningEnabled: true },

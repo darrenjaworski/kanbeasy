@@ -172,7 +172,10 @@ describe("Board", () => {
   });
 
   it("sets canDrag=true when multiple columns exist", () => {
-    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "A" }), makeColumn({ id: "c2", title: "B" })]);
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "A" }),
+      makeColumn({ id: "c2", title: "B" }),
+    ]);
     render(<Board />);
     expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
       "data-can-drag",
@@ -198,7 +201,9 @@ describe("Board", () => {
 
   it("opens detail modal when onOpenDetail is called from a column", () => {
     const card = makeCard({ id: "card-1", title: "Task A" });
-    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Col", cards: [card] })]);
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "Col", cards: [card] }),
+    ]);
     render(<Board />);
     // Trigger the onOpenDetail callback captured from SortableColumnItem
     act(() => {
@@ -210,7 +215,9 @@ describe("Board", () => {
 
   it("closes detail modal on close", async () => {
     const card = makeCard({ id: "card-1", title: "Task A" });
-    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Col", cards: [card] })]);
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "Col", cards: [card] }),
+    ]);
     render(<Board />);
     act(() => {
       capturedOnOpenDetail?.("card-1");
@@ -222,7 +229,9 @@ describe("Board", () => {
 
   it("calls archiveCard and closes modal on archive", async () => {
     const card = makeCard({ id: "card-1", title: "Task A" });
-    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Col", cards: [card] })]);
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "Col", cards: [card] }),
+    ]);
     render(<Board />);
     act(() => {
       capturedOnOpenDetail?.("card-1");

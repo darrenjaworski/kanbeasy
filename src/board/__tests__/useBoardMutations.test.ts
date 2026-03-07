@@ -2,11 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useBoardMutations } from "../useBoardMutations";
 import type { BoardState } from "../types";
-import {
-  makeCard,
-  makeColumn,
-  makeArchivedCard,
-} from "../../test/builders";
+import { makeCard, makeColumn, makeArchivedCard } from "../../test/builders";
 
 /**
  * Renders the hook with mocked dependencies and returns helpers

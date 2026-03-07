@@ -29,7 +29,9 @@ describe("ArchiveTableRow", () => {
   });
 
   it("renders card number and title", () => {
-    renderRow({ card: makeArchivedCard({ id: "card-1", number: 7, title: "My Task" }) });
+    renderRow({
+      card: makeArchivedCard({ id: "card-1", number: 7, title: "My Task" }),
+    });
     expect(screen.getByText("#7")).toBeInTheDocument();
     expect(screen.getByText("My Task")).toBeInTheDocument();
   });
@@ -41,13 +43,17 @@ describe("ArchiveTableRow", () => {
 
   it("renders checkbox with correct checked state", () => {
     renderRow({ selected: true });
-    const checkbox = screen.getByRole("checkbox", { name: /select card #\d+/i });
+    const checkbox = screen.getByRole("checkbox", {
+      name: /select card #\d+/i,
+    });
     expect(checkbox).toBeChecked();
   });
 
   it("renders unchecked checkbox when not selected", () => {
     renderRow({ selected: false });
-    const checkbox = screen.getByRole("checkbox", { name: /select card #\d+/i });
+    const checkbox = screen.getByRole("checkbox", {
+      name: /select card #\d+/i,
+    });
     expect(checkbox).not.toBeChecked();
   });
 

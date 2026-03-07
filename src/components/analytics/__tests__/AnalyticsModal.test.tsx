@@ -41,9 +41,7 @@ describe("AnalyticsModal", () => {
               makeCard({
                 id: "x",
                 title: "Placeholder",
-                columnHistory: [
-                  { columnId: "c1", enteredAt: Date.now() },
-                ],
+                columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
               }),
             ],
           }),
@@ -69,15 +67,27 @@ describe("AnalyticsModal", () => {
         id: "c1",
         title: "Todo",
         cards: [
-          makeCard({ id: "a", title: "Card A", columnHistory: [{ columnId: "c1", enteredAt: Date.now() }] }),
-          makeCard({ id: "b", title: "Card B", columnHistory: [{ columnId: "c1", enteredAt: Date.now() }] }),
+          makeCard({
+            id: "a",
+            title: "Card A",
+            columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
+          }),
+          makeCard({
+            id: "b",
+            title: "Card B",
+            columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
+          }),
         ],
       }),
       makeColumn({
         id: "c2",
         title: "Done",
         cards: [
-          makeCard({ id: "c", title: "Card C", columnHistory: [{ columnId: "c2", enteredAt: Date.now() }] }),
+          makeCard({
+            id: "c",
+            title: "Card C",
+            columnHistory: [{ columnId: "c2", enteredAt: Date.now() }],
+          }),
         ],
       }),
     ];
@@ -246,9 +256,7 @@ describe("AnalyticsModal", () => {
               makeCard({
                 id: "x",
                 title: "Placeholder",
-                columnHistory: [
-                  { columnId: "c1", enteredAt: Date.now() },
-                ],
+                columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
               }),
             ],
           }),
@@ -404,9 +412,7 @@ describe("AnalyticsModal", () => {
         ...makeCard({
           id: "archived1",
           title: "Archived Card",
-          columnHistory: [
-            { columnId: "c1", enteredAt: now },
-          ],
+          columnHistory: [{ columnId: "c1", enteredAt: now }],
         }),
         ticketTypeId: null,
         archivedAt: now,
@@ -441,9 +447,7 @@ describe("AnalyticsModal", () => {
               makeCard({
                 id: "x",
                 title: "Placeholder",
-                columnHistory: [
-                  { columnId: "c1", enteredAt: Date.now() },
-                ],
+                columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
               }),
             ],
           }),
@@ -522,7 +526,10 @@ describe("AnalyticsModal", () => {
       }),
     );
 
-    const columns = [makeColumn({ id: "c1", title: "Todo" }), makeColumn({ id: "c2", title: "Done", cards })];
+    const columns = [
+      makeColumn({ id: "c1", title: "Todo" }),
+      makeColumn({ id: "c2", title: "Done", cards }),
+    ];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
     const user = userEvent.setup();

@@ -18,12 +18,26 @@ describe("getTotalCards", () => {
   });
 
   it("returns 0 for empty columns", () => {
-    expect(getTotalCards([makeColumn({ id: crypto.randomUUID() }), makeColumn({ id: crypto.randomUUID() })])).toBe(0);
+    expect(
+      getTotalCards([
+        makeColumn({ id: crypto.randomUUID() }),
+        makeColumn({ id: crypto.randomUUID() }),
+      ]),
+    ).toBe(0);
   });
 
   it("sums cards across all columns", () => {
-    const col1 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" }), makeCard({ id: "c2", title: "B" })] });
-    const col2 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c3", title: "C" })] });
+    const col1 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({ id: "c1", title: "A" }),
+        makeCard({ id: "c2", title: "B" }),
+      ],
+    });
+    const col2 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c3", title: "C" })],
+    });
     expect(getTotalCards([col1, col2])).toBe(3);
   });
 });
@@ -38,28 +52,58 @@ describe("getCardsInFlight", () => {
   });
 
   it("returns 0 for 1 column", () => {
-    const col = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c1", title: "A" })],
+    });
     expect(getCardsInFlight([col])).toBe(0);
   });
 
   it("returns 0 for 2 columns", () => {
-    const col1 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
-    const col2 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" })] });
+    const col1 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c1", title: "A" })],
+    });
+    const col2 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c2", title: "B" })],
+    });
     expect(getCardsInFlight([col1, col2])).toBe(0);
   });
 
   it("returns 0 for 3 columns with empty middle", () => {
-    const first = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const first = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c1", title: "A" })],
+    });
     const middle = makeColumn({ id: crypto.randomUUID() });
-    const last = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" })] });
+    const last = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c2", title: "B" })],
+    });
     expect(getCardsInFlight([first, middle, last])).toBe(0);
   });
 
   it("counts cards in middle columns for 3+ columns", () => {
-    const first = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
-    const middle1 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" }), makeCard({ id: "c3", title: "C" })] });
-    const middle2 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c4", title: "D" })] });
-    const last = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c5", title: "E" })] });
+    const first = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c1", title: "A" })],
+    });
+    const middle1 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({ id: "c2", title: "B" }),
+        makeCard({ id: "c3", title: "C" }),
+      ],
+    });
+    const middle2 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c4", title: "D" })],
+    });
+    const last = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c5", title: "E" })],
+    });
     expect(getCardsInFlight([first, middle1, middle2, last])).toBe(3);
   });
 });
@@ -86,9 +130,21 @@ describe("getThroughput", () => {
     const col = makeColumn({
       id: doneId,
       cards: [
-        makeCard({ id: "c1", title: "Recent", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 3 }] }),
-        makeCard({ id: "c2", title: "This month", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 20 }] }),
-        makeCard({ id: "c3", title: "Old", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 60 }] }),
+        makeCard({
+          id: "c1",
+          title: "Recent",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 3 }],
+        }),
+        makeCard({
+          id: "c2",
+          title: "This month",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 20 }],
+        }),
+        makeCard({
+          id: "c3",
+          title: "Old",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 60 }],
+        }),
       ],
     });
 
@@ -102,7 +158,11 @@ describe("getThroughput", () => {
     const col = makeColumn({
       id: doneId,
       cards: [
-        makeCard({ id: "c1", title: "Wrong column ref", columnHistory: [{ columnId: "other", enteredAt: now - 1000 }] }),
+        makeCard({
+          id: "c1",
+          title: "Wrong column ref",
+          columnHistory: [{ columnId: "other", enteredAt: now - 1000 }],
+        }),
       ],
     });
 
@@ -111,7 +171,10 @@ describe("getThroughput", () => {
 
   it("ignores cards with empty history", () => {
     const doneId = "done";
-    const col = makeColumn({ id: doneId, cards: [makeCard({ id: "c1", title: "No history" })] });
+    const col = makeColumn({
+      id: doneId,
+      cards: [makeCard({ id: "c1", title: "No history" })],
+    });
 
     expect(getThroughput([col], Date.now())).toEqual({
       last7Days: 0,
@@ -127,12 +190,22 @@ describe("getThroughput", () => {
     const todo = makeColumn({
       id: "todo",
       cards: [
-        makeCard({ id: "c1", title: "In todo", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day }] }),
+        makeCard({
+          id: "c1",
+          title: "In todo",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day }],
+        }),
       ],
     });
     const done = makeColumn({
       id: doneId,
-      cards: [makeCard({ id: "c2", title: "Done", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day }] })],
+      cards: [
+        makeCard({
+          id: "c2",
+          title: "Done",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day }],
+        }),
+      ],
     });
 
     expect(getThroughput([todo, done], now)).toEqual({
@@ -149,7 +222,11 @@ describe("getThroughput", () => {
     const col = makeColumn({
       id: doneId,
       cards: [
-        makeCard({ id: "c1", title: "Exact boundary", columnHistory: [{ columnId: doneId, enteredAt: now - ms7Days }] }),
+        makeCard({
+          id: "c1",
+          title: "Exact boundary",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms7Days }],
+        }),
       ],
     });
 
@@ -163,7 +240,10 @@ describe("getCardReverseTimes", () => {
   });
 
   it("returns empty array when no cards have history", () => {
-    const col = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c1", title: "A" })],
+    });
     expect(getCardReverseTimes([col])).toEqual([]);
   });
 
@@ -333,7 +413,12 @@ describe("computeAverageReverseTime", () => {
   it("returns null when no cards have reverse time", () => {
     expect(computeAverageReverseTime([])).toBeNull();
     expect(
-      computeAverageReverseTime([makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] })]),
+      computeAverageReverseTime([
+        makeColumn({
+          id: crypto.randomUUID(),
+          cards: [makeCard({ id: "c1", title: "A" })],
+        }),
+      ]),
     ).toBeNull();
   });
 
@@ -382,7 +467,11 @@ describe("additionalCards", () => {
     const col = makeColumn({
       id: doneId,
       cards: [
-        makeCard({ id: "c1", title: "Board card", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 3 }] }),
+        makeCard({
+          id: "c1",
+          title: "Board card",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 3 }],
+        }),
       ],
     });
 
@@ -623,14 +712,23 @@ describe("additionalCards", () => {
   });
 
   it("getTotalCards does not include additional cards", () => {
-    const col = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c1", title: "A" })],
+    });
     // getTotalCards has no additionalCards parameter — snapshot metric only
     expect(getTotalCards([col])).toBe(1);
   });
 
   it("getCardsInFlight does not include additional cards", () => {
-    const first = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
-    const middle = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" })] });
+    const first = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c1", title: "A" })],
+    });
+    const middle = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [makeCard({ id: "c2", title: "B" })],
+    });
     const last = makeColumn({ id: crypto.randomUUID() });
     // getCardsInFlight has no additionalCards parameter — snapshot metric only
     expect(getCardsInFlight([first, middle, last])).toBe(1);

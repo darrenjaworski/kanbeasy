@@ -103,14 +103,22 @@ describe("CardList", () => {
   // --- Card rendering ---
 
   it("renders one item per card", () => {
-    const cards = [makeCard({ id: "a", title: "Alpha" }), makeCard({ id: "b", title: "Beta" })];
+    const cards = [
+      makeCard({ id: "a", title: "Alpha" }),
+      makeCard({ id: "b", title: "Beta" }),
+    ];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-a")).toHaveTextContent("Alpha");
     expect(screen.getByTestId("stub-card-b")).toHaveTextContent("Beta");
   });
 
   it("does not show 'No cards yet' when cards exist", () => {
-    render(<CardList {...defaultProps} cards={[makeCard({ id: "x", title: "X" })]} />);
+    render(
+      <CardList
+        {...defaultProps}
+        cards={[makeCard({ id: "x", title: "X" })]}
+      />,
+    );
     expect(screen.queryByText("No cards yet")).not.toBeInTheDocument();
   });
 
@@ -147,7 +155,10 @@ describe("CardList", () => {
 
   it("sets isSearchMatch=true for cards in matchingCardIds", () => {
     mockMatchingCardIds.mockReturnValue(new Set(["m1"]));
-    const cards = [makeCard({ id: "m1", title: "Match" }), makeCard({ id: "m2", title: "No match" })];
+    const cards = [
+      makeCard({ id: "m1", title: "Match" }),
+      makeCard({ id: "m2", title: "No match" }),
+    ];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-m1")).toHaveAttribute(
       "data-is-search-match",
@@ -163,7 +174,10 @@ describe("CardList", () => {
 
   it("sets canDrag=true when multiple cards exist", () => {
     mockColumns.mockReturnValue([{ id: "col-1", title: "Only" }]);
-    const cards = [makeCard({ id: "d1", title: "D1" }), makeCard({ id: "d2", title: "D2" })];
+    const cards = [
+      makeCard({ id: "d1", title: "D1" }),
+      makeCard({ id: "d2", title: "D2" }),
+    ];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-d1")).toHaveAttribute(
       "data-can-drag",
@@ -197,7 +211,10 @@ describe("CardList", () => {
   // --- autoFocus ---
 
   it("passes autoFocus=true to the matching card", () => {
-    const cards = [makeCard({ id: "g1", title: "G1" }), makeCard({ id: "g2", title: "G2" })];
+    const cards = [
+      makeCard({ id: "g1", title: "G1" }),
+      makeCard({ id: "g2", title: "G2" }),
+    ];
     render(
       <CardList
         {...defaultProps}

@@ -3,11 +3,14 @@ import { describe, it, expect } from "vitest";
 import { Column } from "../Column";
 import { renderWithProviders } from "../../../test/renderWithProviders";
 
-function renderResizableColumn(props: { id: string; title: string; index: number }) {
-  return renderWithProviders(
-    <Column {...props} cards={[]} />,
-    { theme: { columnResizingEnabled: true } },
-  );
+function renderResizableColumn(props: {
+  id: string;
+  title: string;
+  index: number;
+}) {
+  return renderWithProviders(<Column {...props} cards={[]} />, {
+    theme: { columnResizingEnabled: true },
+  });
 }
 
 describe("Column resizing", () => {

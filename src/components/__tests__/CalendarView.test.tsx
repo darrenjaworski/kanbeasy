@@ -24,14 +24,31 @@ describe("CalendarView", () => {
   });
 
   it("shows empty state when no cards have due dates", () => {
-    seedBoard([makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task" })] })]);
+    seedBoard([
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [makeCard({ id: "c1", number: 1, title: "Task" })],
+      }),
+    ]);
     renderApp();
     expect(screen.getByText(/no cards with due dates/i)).toBeInTheDocument();
   });
 
   it("renders calendar grid when cards have due dates", () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task", dueDate: "2025-06-15" })] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     renderApp();
     expect(screen.getByTestId("calendar-grid")).toBeInTheDocument();
@@ -39,9 +56,18 @@ describe("CalendarView", () => {
 
   it("displays card title on its due date cell", () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [
-        makeCard({ id: "c1", number: 1, title: "Important Task", dueDate: "2025-06-15" }),
-      ] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Important Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     renderApp();
     expect(screen.getByText("Important Task")).toBeInTheDocument();
@@ -49,7 +75,18 @@ describe("CalendarView", () => {
 
   it("renders day-of-week headers", () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task", dueDate: "2025-06-15" })] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     renderApp();
     for (const day of ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]) {
@@ -59,7 +96,18 @@ describe("CalendarView", () => {
 
   it("shows current month label", () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task", dueDate: "2025-06-15" })] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     renderApp();
     expect(screen.getByText(/june 2025/i)).toBeInTheDocument();
@@ -67,7 +115,18 @@ describe("CalendarView", () => {
 
   it("navigates to next month", async () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task", dueDate: "2025-06-15" })] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     renderApp();
@@ -78,7 +137,18 @@ describe("CalendarView", () => {
 
   it("navigates to previous month", async () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task", dueDate: "2025-06-15" })] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     renderApp();
@@ -89,7 +159,18 @@ describe("CalendarView", () => {
 
   it("today button returns to current month", async () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task", dueDate: "2025-06-15" })] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     renderApp();
@@ -103,10 +184,24 @@ describe("CalendarView", () => {
 
   it("displays multiple cards on the same date", () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [
-        makeCard({ id: "c1", number: 1, title: "Task A", dueDate: "2025-06-15" }),
-        makeCard({ id: "c2", number: 2, title: "Task B", dueDate: "2025-06-15" }),
-      ] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task A",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c2",
+            number: 2,
+            title: "Task B",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     renderApp();
     expect(screen.getByText("Task A")).toBeInTheDocument();
@@ -115,12 +210,30 @@ describe("CalendarView", () => {
 
   it("shows cards from multiple columns", () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [
-        makeCard({ id: "c1", number: 1, title: "Todo Task", dueDate: "2025-06-10" }),
-      ] }),
-      makeColumn({ id: "col-2", title: "Done", cards: [
-        makeCard({ id: "c2", number: 2, title: "Done Task", dueDate: "2025-06-20" }),
-      ] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Todo Task",
+            dueDate: "2025-06-10",
+          }),
+        ],
+      }),
+      makeColumn({
+        id: "col-2",
+        title: "Done",
+        cards: [
+          makeCard({
+            id: "c2",
+            number: 2,
+            title: "Done Task",
+            dueDate: "2025-06-20",
+          }),
+        ],
+      }),
     ]);
     renderApp();
     expect(screen.getByText("Todo Task")).toBeInTheDocument();
@@ -129,10 +242,19 @@ describe("CalendarView", () => {
 
   it("does not show cards without due dates on the grid", () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [
-        makeCard({ id: "c1", number: 1, title: "Has Date", dueDate: "2025-06-15" }),
-        makeCard({ id: "c2", number: 2, title: "No Date", dueDate: null }),
-      ] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Has Date",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({ id: "c2", number: 2, title: "No Date", dueDate: null }),
+        ],
+      }),
     ]);
     renderApp();
     const grid = screen.getByTestId("calendar-grid");
@@ -144,7 +266,18 @@ describe("CalendarView", () => {
     vi.setSystemTime(new Date(2025, 0, 15)); // January 2025
 
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [makeCard({ id: "c1", number: 1, title: "Task", dueDate: "2024-12-10" })] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Task",
+            dueDate: "2024-12-10",
+          }),
+        ],
+      }),
     ]);
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     renderApp();
@@ -156,9 +289,18 @@ describe("CalendarView", () => {
 
   it("opens card detail modal when clicking a card", async () => {
     seedBoard([
-      makeColumn({ id: "col-1", title: "Todo", cards: [
-        makeCard({ id: "c1", number: 1, title: "Clickable Task", dueDate: "2025-06-15" }),
-      ] }),
+      makeColumn({
+        id: "col-1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Clickable Task",
+            dueDate: "2025-06-15",
+          }),
+        ],
+      }),
     ]);
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     renderApp();

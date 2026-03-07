@@ -97,7 +97,13 @@ type ProviderOverrides = {
   clipboard?: Partial<ClipboardContextValue>;
 };
 
-function AllProviders({ overrides, children }: { overrides: ProviderOverrides; children: React.ReactNode }) {
+function AllProviders({
+  overrides,
+  children,
+}: {
+  overrides: ProviderOverrides;
+  children: React.ReactNode;
+}) {
   const board = makeBoardContext(overrides.board);
   const theme = makeThemeContext(overrides.theme);
   const clipboard = makeClipboardContext(overrides.clipboard);

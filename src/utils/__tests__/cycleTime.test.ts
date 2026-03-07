@@ -13,7 +13,9 @@ describe("computeAverageCycleTime", () => {
 
   it("returns null when there are no cards", () => {
     expect(computeAverageCycleTime([])).toBeNull();
-    expect(computeAverageCycleTime([makeColumn({ id: crypto.randomUUID() })])).toBeNull();
+    expect(
+      computeAverageCycleTime([makeColumn({ id: crypto.randomUUID() })]),
+    ).toBeNull();
   });
 
   it("returns null when all cards have only 1 history entry (never moved)", () => {
@@ -135,7 +137,9 @@ describe("getCardCycleTimes", () => {
 
   it("returns empty array when no cards qualify", () => {
     expect(getCardCycleTimes([])).toEqual([]);
-    expect(getCardCycleTimes([makeColumn({ id: crypto.randomUUID() })])).toEqual([]);
+    expect(
+      getCardCycleTimes([makeColumn({ id: crypto.randomUUID() })]),
+    ).toEqual([]);
     expect(
       getCardCycleTimes([
         makeColumn({

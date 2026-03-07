@@ -9,11 +9,7 @@ import {
   dropCardOnColumn,
 } from "../dragUtils";
 import type { Column } from "../types";
-import {
-  makeCard,
-  makeColumn,
-  resetCardNumber,
-} from "../../test/builders";
+import { makeCard, makeColumn, resetCardNumber } from "../../test/builders";
 
 describe("dragUtils", () => {
   beforeEach(() => {
