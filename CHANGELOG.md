@@ -7,25 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.32.5]
+
 ### Fixed
 
 - Fix React duplicate key warning in ticket type default dropdown during type ID editing
-
-### Changed
-
-- Update `/check` and `/commit` skills to run full kitchen-sink (static checks, lighthouse, e2e)
-- Apply prettier formatting to check skill and visual regression spec
-
-### Tests
-
-- Add Playwright visual regression snapshot tests covering all 6 themes (Slate, Stone, Rose, Midnight, Forest, Twilight), welcome modal, card detail, settings, analytics, archive, list view, calendar view, and empty board
+- Tighten visual regression pixel threshold from 0.01 to 0.0005 to catch single-character text changes
 - Pin calendar view visual regression test date to June 2025 to match seeded card due dates
 
 ### Changed
 
 - Add `e2e:visual` and `e2e:snapshot` npm scripts for running visual regression tests in isolation
 - Exclude visual regression tests from deployed CI e2e runs via `--grep-invert`
-- Tighten visual regression pixel threshold from 0.01 to 0.0005 to catch single-character text changes
+- Update `/check` and `/commit` skills to run full kitchen-sink (static checks, lighthouse, e2e)
+- Replace Haiku agents with `/check`, `/commit`, `/snapshot` skills
+
+### Tests
+
+- Add Playwright visual regression snapshot tests covering all 6 themes (Slate, Stone, Rose, Midnight, Forest, Twilight), welcome modal, card detail, settings, analytics, archive, list view, calendar view, and empty board
 
 ## [1.32.4]
 
