@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Add due date badge to column-view cards with color-coded urgency (red for overdue, amber for due within 2 days, muted for further out)
+- Add search highlighting to calendar view cards, matching board and list view behavior
+- Add match count badge on calendar days with 5+ cards when search matches are present
 
 ### Changed
 

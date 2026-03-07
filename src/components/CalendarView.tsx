@@ -32,7 +32,7 @@ interface CardEntry {
 }
 
 export function CalendarView() {
-  const { columns, updateCard, moveCard, archiveCard } = useBoard();
+  const { columns, updateCard, moveCard, archiveCard, matchingCardIds, searchQuery } = useBoard();
   const { ticketTypes, cardDensity } = useTheme();
 
   const [detailCardId, setDetailCardId] = useState<string | null>(null);
@@ -104,6 +104,8 @@ export function CalendarView() {
     setYear(today.getFullYear());
     setMonth(today.getMonth());
   }
+
+  const hasSearch = searchQuery.length >= 2;
 
   const totalDue = Array.from(cardsByDate.values()).reduce(
     (sum, cards) => sum + cards.length,
@@ -195,32 +197,53 @@ export function CalendarView() {
               const cards = dateStr ? (cardsByDate.get(dateStr) ?? []) : [];
               const isToday = dateStr === todayStr;
 
+              const matchCount = hasSearch
+                ? cards.filter((c) => matchingCardIds.has(c.id)).length
+                : 0;
+
               return (
                 <div
                   key={i}
-                  className={`border-r border-b ${tc.border} h-32 p-1 overflow-y-auto ${
+                  className={`relative border-r border-b ${tc.border} h-32 overflow-y-auto ${
                     day ? "" : "bg-black/5 dark:bg-white/5"
                   }`}
                 >
                   {day && (
                     <>
-                      <span
-                        className={`sticky top-0 z-[1] text-xs inline-flex items-center justify-center size-6 rounded-full ${
-                          isToday
-                            ? "bg-accent text-white font-bold"
-                            : tc.textMuted
-                        }`}
-                      >
-                        {day}
-                      </span>
-                      <div className="mt-1 space-y-1">
-                        {cards.map((card) => (
+                      <div className={`sticky top-0 z-[1] flex items-center justify-between px-1 py-1 bg-surface backdrop-blur-sm`}>
+                        <span
+                          className={`text-xs inline-flex items-center justify-center size-6 rounded-full ${
+                            isToday
+                              ? "bg-accent text-white font-bold"
+                              : tc.textMuted
+                          }`}
+                        >
+                          {day}
+                        </span>
+                        {matchCount > 0 && cards.length > 4 && (
+                          <span
+                            className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-accent/15 text-accent"
+                            data-testid="calendar-match-badge"
+                          >
+                            {matchCount} {matchCount === 1 ? "match" : "matches"}
+                          </span>
+                        )}
+                      </div>
+                      <div className="px-1 pb-1 space-y-1">
+                        {cards.map((card) => {
+                          const isMatch = hasSearch && matchingCardIds.has(card.id);
+                          return (
                           <button
                             type="button"
                             key={card.id}
                             onClick={() => setDetailCardId(card.id)}
-                            className={`w-full text-left text-xs truncate rounded px-1 py-0.5 ${tc.glass} ${tc.border} border ${tc.bgHover} cursor-pointer`}
+                            className={`w-full text-left text-xs truncate rounded px-1 py-0.5 ${
+                              isMatch
+                                ? `border-accent ${tc.searchHighlight}`
+                                : `${tc.glass} ${tc.border} border`
+                            } ${tc.bgHover} cursor-pointer`}
                             title={card.title}
+                            data-search-highlight={isMatch || undefined}
                           >
                             <TicketTypeBadge
                               number={card.number}
@@ -229,7 +252,8 @@ export function CalendarView() {
                             />
                             <span className="ml-1">{card.title}</span>
                           </button>
-                        ))}
+                          );
+                        })}
                       </div>
                     </>
                   )}
