@@ -77,6 +77,7 @@ an ultra simple task organizer
   - ✅ checklist progress bar on board cards and card detail modal
 - ✅ calendar view — visualize cards with due dates on a monthly/weekly calendar
 - ✅ simplified header buttons — compact header setting to hide text labels on header buttons
+- ✅ due date badge on board cards — color-coded urgency indicator (red for overdue, amber for due soon, muted for further out)
 
 Settings
 
@@ -112,8 +113,8 @@ Settings
   - search card descriptions in addition to titles
   - due dates with reminders
     - ✅ date picker in card detail modal
-    - visual overdue indicator (red badge/border) on board cards
-    - upcoming due date badge (e.g., "due tomorrow") on board cards
+    - ✅ visual overdue indicator (red badge/border) on board cards
+    - ✅ upcoming due date badge (e.g., "due tomorrow") on board cards
     - optional browser notification reminders
   - priority levels (none/low/medium/high)
     - colored border or badge indicator on board cards
@@ -124,6 +125,7 @@ Settings
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
 - card sorting UI (alphabetical, by date created, by last updated)
+- lock columns — toggle in settings to prevent drag-and-drop reordering of columns while still allowing card movement
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded
 - drag to trash drop zone for card deletion
