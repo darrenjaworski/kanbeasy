@@ -29,6 +29,9 @@ export function ViewToggle() {
   const { viewMode, setViewMode, compactHeader } = useTheme();
   const { columns } = useBoard();
   const hasCards = columns.some((c) => c.cards.length > 0);
+  const hasDueDates = columns.some((c) =>
+    c.cards.some((card) => card.dueDate),
+  );
 
   return (
     <div
@@ -38,7 +41,10 @@ export function ViewToggle() {
     >
       {modes.map(({ mode, label, shortLabel, Icon }) => {
         const active = viewMode === mode;
-        const disabled = mode !== "board" && !hasCards;
+        const disabled =
+          mode === "calendar"
+            ? !hasDueDates
+            : mode !== "board" && !hasCards;
         return (
           <button
             key={mode}

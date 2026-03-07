@@ -134,4 +134,30 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     await user.click(within(dlg).getByRole("button", { name: /^light$/i }));
     expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("light-slate");
   });
+
+  it("preserves non-default theme on reload when preference is system", async () => {
+    mockMatchMedia(true);
+
+    const user = userEvent.setup();
+    renderApp();
+
+    const dlg = await openSettings(user);
+
+    // Select system preference (OS is dark)
+    await user.click(within(dlg).getByRole("button", { name: /system/i }));
+
+    // Pick Twilight (non-default dark theme)
+    await user.click(
+      within(dlg).getByRole("button", { name: /twilight theme/i }),
+    );
+    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+    expect(localStorage.getItem(STORAGE_KEYS.THEME_PREFERENCE)).toBe("system");
+
+    // Simulate reload: re-render with same localStorage
+    const { unmount } = renderApp();
+    unmount;
+
+    // Theme should still be Twilight, not reset to default dark-slate
+    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+  });
 });

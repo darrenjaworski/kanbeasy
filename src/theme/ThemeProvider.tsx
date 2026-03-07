@@ -54,9 +54,14 @@ function getInitialThemeId(preference: ThemePreference): ThemeId {
 
   // Already a valid theme ID
   if (getThemeById(stored)) {
-    // If preference is "system", resolve to the OS-appropriate default
     if (preference === "system") {
-      return getDefaultThemeForMode(getSystemTheme()).id;
+      // Keep the stored theme if it matches the current system mode,
+      // otherwise fall back to the default for the system mode
+      const systemMode = getSystemTheme();
+      const storedTheme = getThemeById(stored)!;
+      return storedTheme.mode === systemMode
+        ? stored
+        : getDefaultThemeForMode(systemMode).id;
     }
     return stored;
   }
