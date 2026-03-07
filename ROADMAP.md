@@ -126,6 +126,7 @@ Settings
   - pinned cards — stick important cards to the top of a column
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
+- due date analytics — add due date metrics to the analytics modal (e.g., overdue count, on-time completion rate, average days until due)
 - card sorting UI (alphabetical, by date created, by last updated)
 - lock columns — toggle in settings to prevent drag-and-drop reordering of columns while still allowing card movement
 - column collapse/expand to save horizontal space
