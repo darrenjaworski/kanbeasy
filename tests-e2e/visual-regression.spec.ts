@@ -233,6 +233,8 @@ test.describe("Visual regression", () => {
   });
 
   test("calendar view", async ({ page }) => {
+    // Fix the clock to June 2025 so the calendar shows the month matching seeded due dates
+    await page.clock.setFixedTime(new Date("2025-06-15T12:00:00Z"));
     await seedAndNavigate(page);
     await page.getByRole("radio", { name: /calendar view/i }).click();
     await expect(page.getByTestId("calendar-grid")).toBeVisible();
