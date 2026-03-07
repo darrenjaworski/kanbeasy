@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Tests
+
+- Add Playwright visual regression snapshot tests covering board (light/dark), welcome modal, card detail, settings, analytics, archive, list view, calendar view, and empty board
+
 ## [1.32.4]
 
 ### Fixed
