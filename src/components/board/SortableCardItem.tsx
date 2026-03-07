@@ -125,17 +125,19 @@ export function SortableCardItem({
         ticketTypes={ticketTypes}
       />
 
-      <CardControls
-        index={index}
-        canDrag={canDrag}
-        cardTitle={card.title}
-        onCopy={onCopy}
-        onArchive={onArchive}
-        onOpenDetail={onOpenDetail}
-        setActivatorNodeRef={setActivatorNodeRef}
-        attributes={attributes}
-        listeners={listeners}
-      />
+      {!isDragging && (
+        <CardControls
+          index={index}
+          canDrag={canDrag}
+          cardTitle={card.title}
+          onCopy={onCopy}
+          onArchive={onArchive}
+          onOpenDetail={onOpenDetail}
+          setActivatorNodeRef={setActivatorNodeRef}
+          attributes={attributes}
+          listeners={listeners}
+        />
+      )}
 
       <textarea
         ref={textareaRef}
