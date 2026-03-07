@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Add `e2e:visual` and `e2e:snapshot` npm scripts for running visual regression tests in isolation
+- Add GitHub Actions workflow for visual regression tests on macOS runner (Chromium only)
 
 ## [1.32.4]
 
