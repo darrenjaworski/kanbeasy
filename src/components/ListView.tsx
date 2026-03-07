@@ -59,7 +59,7 @@ export function ListView() {
   const hasSearch = searchQuery.length >= 2;
 
   return (
-    <main className="mx-auto max-w-4xl p-6">
+    <main className="mx-auto max-w-5xl p-6">
       {rows.length === 0 ? (
         <p className={`text-center py-12 ${tc.textMuted}`}>
           No cards yet. Switch to the board view to add some.
