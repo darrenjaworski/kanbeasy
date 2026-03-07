@@ -1,6 +1,6 @@
 # /check — Run all static checks and report results
 
-Run `npm run static-checks` which executes: format:check, lint, knip, type:check, build, and test:run.
+Run `npm run kitchen-sink` which executes: format:check, lint, knip, type:check, build, test:run, lighthouse, and e2e tests (including visual regression).
 
 Report a clear summary:
 
