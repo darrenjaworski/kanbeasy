@@ -5,7 +5,7 @@ import { ThemeProvider } from "../../../theme/ThemeProvider";
 import { BoardProvider } from "../../../board/BoardProvider";
 import { TICKET_TYPE_PRESETS } from "../../../constants/ticketTypes";
 import { STORAGE_KEYS } from "../../../constants/storage";
-import { describe, beforeEach, it, expect } from "vitest";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 
 function renderSection() {
   return render(
@@ -175,6 +175,95 @@ describe("TicketTypeSection", () => {
       expect(screen.getByTestId("ticket-type-preset")).toHaveValue("custom");
       expect(idInput).toHaveValue("story");
     });
+
+    it("does not call renameTicketType on every keystroke — only on blur", async () => {
+      // Seed board with a card using "feat" so we can check localStorage
+      const now = Date.now();
+      localStorage.setItem(
+        STORAGE_KEYS.BOARD,
+        JSON.stringify({
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: now,
+              updatedAt: now,
+              cards: [
+                {
+                  id: "card-1",
+                  number: 1,
+                  title: "A feature",
+                  description: "",
+                  ticketTypeId: "feat",
+                  dueDate: null,
+                  createdAt: now,
+                  updatedAt: now,
+                  columnHistory: [{ columnId: "col-1", enteredAt: now }],
+                },
+              ],
+            },
+          ],
+          archive: [],
+        }),
+      );
+
+      const user = userEvent.setup();
+      renderSection();
+      expandEditor();
+
+      const idInput = screen.getByTestId("ticket-type-id-0");
+      await user.clear(idInput);
+      await user.type(idInput, "story");
+
+      // While typing, the card should still have ticketTypeId "feat" in localStorage
+      // because renameTicketType hasn't been called yet
+      const boardDuringTyping = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
+      );
+      expect(boardDuringTyping.columns[0].cards[0].ticketTypeId).toBe("feat");
+
+      // Now blur to trigger the rename
+      await user.tab();
+
+      // After blur, the card should be renamed to "story"
+      // Wait for state to settle
+      await vi.waitFor(() => {
+        const boardAfterBlur = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
+        );
+        expect(boardAfterBlur.columns[0].cards[0].ticketTypeId).toBe("story");
+      });
+    });
+
+    it("reverts type ID on blur when it duplicates another type", async () => {
+      const user = userEvent.setup();
+      renderSection();
+      expandEditor();
+
+      // Type "fix" into the first type's ID input — "fix" already exists as type[1]
+      const idInput = screen.getByTestId("ticket-type-id-0");
+      await user.clear(idInput);
+      await user.type(idInput, "fix");
+      await user.tab(); // blur
+
+      // Should revert to the original ID "feat"
+      await vi.waitFor(() => {
+        expect(screen.getByTestId("ticket-type-id-0")).toHaveValue("feat");
+      });
+    });
+
+    it("shows red border on duplicate type ID while editing", async () => {
+      const user = userEvent.setup();
+      renderSection();
+      expandEditor();
+
+      const idInput = screen.getByTestId("ticket-type-id-0");
+      await user.clear(idInput);
+      await user.type(idInput, "fix");
+
+      // The input should have a red border class
+      expect(idInput.className).toContain("border-red-500");
+    });
   });
 
   describe("removing types", () => {
@@ -193,6 +282,51 @@ describe("TicketTypeSection", () => {
       expect(
         screen.queryByDisplayValue(devPreset.types[0].id),
       ).not.toBeInTheDocument();
+    });
+
+    it("does not clear card ticketTypeId when removing a type definition", () => {
+      // Seed board with a card using the "feat" type
+      const now = Date.now();
+      localStorage.setItem(
+        STORAGE_KEYS.BOARD,
+        JSON.stringify({
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: now,
+              updatedAt: now,
+              cards: [
+                {
+                  id: "card-1",
+                  number: 1,
+                  title: "A feature",
+                  description: "",
+                  ticketTypeId: "feat",
+                  dueDate: null,
+                  createdAt: now,
+                  updatedAt: now,
+                  columnHistory: [{ columnId: "col-1", enteredAt: now }],
+                },
+              ],
+            },
+          ],
+          archive: [],
+        }),
+      );
+
+      renderSection();
+      expandEditor();
+
+      // Remove the "feat" type (index 0)
+      fireEvent.click(screen.getByTestId("ticket-type-remove-0"));
+
+      // Card should still have ticketTypeId "feat" — type definition
+      // removal should not wipe card data
+      const board = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
+      );
+      expect(board.columns[0].cards[0].ticketTypeId).toBe("feat");
     });
   });
 

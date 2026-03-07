@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTheme } from "../../theme/useTheme";
 import { useBoard } from "../../board/useBoard";
 import { tc } from "../../theme/classNames";
@@ -17,9 +17,15 @@ export function TicketTypeSection() {
     defaultTicketTypeId,
     setDefaultTicketTypeId,
   } = useTheme();
-  const { columns, renameTicketType, clearTicketType } = useBoard();
+  const { columns, renameTicketType } = useBoard();
   const [editingColorIdx, setEditingColorIdx] = useState<number | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
+
+  // Track the original ID when the user starts editing, so we can
+  // do a single bulk rename on blur instead of on every keystroke.
+  const pendingIdRename = useRef<{ index: number; originalId: string } | null>(
+    null,
+  );
 
   const handlePresetChange = (presetId: string) => {
     setTicketTypePresetId(presetId);
@@ -50,16 +56,40 @@ export function TicketTypeSection() {
     );
     setTicketTypes(next);
     setTicketTypePresetId("custom");
+    // Note: ID renames are deferred to blur — see handleIdBlur
+  };
 
-    // If the id changed, bulk-rename cards
-    if (updates.id && updates.id !== ticketTypes[index].id) {
-      renameTicketType(ticketTypes[index].id, updates.id);
+  const handleIdFocus = (index: number) => {
+    pendingIdRename.current = { index, originalId: ticketTypes[index].id };
+  };
+
+  const handleIdBlur = (index: number) => {
+    const pending = pendingIdRename.current;
+    if (!pending || pending.index !== index) return;
+    pendingIdRename.current = null;
+
+    const newId = ticketTypes[index].id;
+    if (!newId || newId === pending.originalId) return;
+
+    // Check for duplicate IDs — revert if the new ID conflicts
+    const isDuplicate = ticketTypes.some(
+      (t, i) => i !== index && t.id === newId,
+    );
+    if (isDuplicate) {
+      // Revert to the original ID
+      const reverted = ticketTypes.map((t, i) =>
+        i === index ? { ...t, id: pending.originalId } : t,
+      );
+      setTicketTypes(reverted);
+      return;
     }
+
+    renameTicketType(pending.originalId, newId);
   };
 
   const handleRemoveType = (index: number) => {
-    const removed = ticketTypes[index];
-    clearTicketType(removed.id);
+    // Only remove the type definition — card ticketTypeId values are preserved
+    // so they can be restored by re-adding the type or switching presets
     setTicketTypes(ticketTypes.filter((_, i) => i !== index));
     setTicketTypePresetId("custom");
   };
@@ -74,6 +104,9 @@ export function TicketTypeSection() {
     setTicketTypes([...ticketTypes, newType]);
     setTicketTypePresetId("custom");
   };
+
+  const isDuplicateId = (id: string, index: number) =>
+    ticketTypes.some((t, i) => i !== index && t.id === id);
 
   return (
     <fieldset className="border-0 p-0 m-0 space-y-3 text-sm font-medium">
@@ -199,14 +232,16 @@ export function TicketTypeSection() {
                     aria-label={`Change color for ${type.label}`}
                   />
 
-                  {/* ID input */}
+                  {/* ID input — rename only fires on blur, not on every keystroke */}
                   <input
                     type="text"
                     value={type.id}
                     onChange={(e) =>
                       handleUpdateType(index, { id: e.target.value })
                     }
-                    className={`${tc.glass} rounded-md border ${tc.border} px-2 py-1 text-xs font-mono ${tc.text} ${tc.focusRing} w-20`}
+                    onFocus={() => handleIdFocus(index)}
+                    onBlur={() => handleIdBlur(index)}
+                    className={`${tc.glass} rounded-md border ${isDuplicateId(type.id, index) ? "border-red-500" : tc.border} px-2 py-1 text-xs font-mono ${tc.text} ${tc.focusRing} w-20`}
                     aria-label={`Type ID for ${type.label}`}
                     data-testid={`ticket-type-id-${index}`}
                   />

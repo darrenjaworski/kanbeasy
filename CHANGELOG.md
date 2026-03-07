@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix ticket type ID rename firing on every keystroke instead of on blur (corrupted card data during editing)
+- Fix duplicate ticket type IDs allowed — now reverts on blur and shows red border while duplicate
+- Fix removing a ticket type definition permanently clearing card type assignments (now preserves card data)
+
 ## [1.32.2]
 
 ### Fixed
