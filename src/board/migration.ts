@@ -1,16 +1,16 @@
 import type { ArchivedCard, Card, Column, ColumnHistoryEntry } from "./types";
-import type { TicketType } from "../constants/ticketTypes";
-import { TICKET_TYPE_PRESETS } from "../constants/ticketTypes";
+import type { CardType } from "../constants/cardTypes";
+import { CARD_TYPE_PRESETS } from "../constants/cardTypes";
 
 /**
- * Builds a lookup map of ticket type ID → TicketType from the user's saved
+ * Builds a lookup map of card type ID → CardType from the user's saved
  * types (localStorage) and all built-in presets as fallback.
  */
-function buildTicketTypeLookup(): Map<string, TicketType> {
-  const map = new Map<string, TicketType>();
+function buildCardTypeLookup(): Map<string, CardType> {
+  const map = new Map<string, CardType>();
 
   // Add all preset types first (lower priority)
-  for (const preset of TICKET_TYPE_PRESETS) {
+  for (const preset of CARD_TYPE_PRESETS) {
     for (const t of preset.types) {
       map.set(t.id, t);
     }
@@ -26,11 +26,11 @@ function buildTicketTypeLookup(): Map<string, TicketType> {
           if (
             t &&
             typeof t === "object" &&
-            typeof (t as TicketType).id === "string" &&
-            typeof (t as TicketType).label === "string" &&
-            typeof (t as TicketType).color === "string"
+            typeof (t as CardType).id === "string" &&
+            typeof (t as CardType).label === "string" &&
+            typeof (t as CardType).color === "string"
           ) {
-            map.set((t as TicketType).id, t as TicketType);
+            map.set((t as CardType).id, t as CardType);
           }
         }
       }
@@ -43,24 +43,24 @@ function buildTicketTypeLookup(): Map<string, TicketType> {
 }
 
 // Lazily built on first use during a migration pass
-let ticketTypeLookup: Map<string, TicketType> | null = null;
+let cardTypeLookup: Map<string, CardType> | null = null;
 
-function getTicketTypeLookup(): Map<string, TicketType> {
-  if (!ticketTypeLookup) {
-    ticketTypeLookup = buildTicketTypeLookup();
+function getCardTypeLookup(): Map<string, CardType> {
+  if (!cardTypeLookup) {
+    cardTypeLookup = buildCardTypeLookup();
   }
-  return ticketTypeLookup;
+  return cardTypeLookup;
 }
 
 /** Reset the cached lookup (used by tests after localStorage changes). */
-export function resetTicketTypeLookup(): void {
-  ticketTypeLookup = null;
+export function resetCardTypeLookup(): void {
+  cardTypeLookup = null;
 }
 
 /**
  * Backfills timestamps and columnHistory on a legacy card.
  * Idempotent — preserves existing values if already present.
- * Backfills ticketTypeLabel/ticketTypeColor from known types when missing.
+ * Backfills cardTypeLabel/cardTypeColor from known types when missing.
  */
 export function migrateCard(
   raw: Record<string, unknown>,
@@ -77,21 +77,23 @@ export function migrateCard(
     : [{ columnId, enteredAt: now }];
 
   const number = typeof raw.number === "number" ? raw.number : 0;
-  const ticketTypeId =
-    typeof raw.ticketTypeId === "string" ? raw.ticketTypeId : null;
+  // Support both new (cardTypeId) and legacy (ticketTypeId) field names
+  const rawCardTypeId = raw.cardTypeId ?? raw.ticketTypeId;
+  const cardTypeId = typeof rawCardTypeId === "string" ? rawCardTypeId : null;
   const dueDate = typeof raw.dueDate === "string" ? raw.dueDate : null;
 
-  // Backfill snapshot fields from known ticket types when missing
-  let ticketTypeLabel =
-    typeof raw.ticketTypeLabel === "string" ? raw.ticketTypeLabel : undefined;
-  let ticketTypeColor =
-    typeof raw.ticketTypeColor === "string" ? raw.ticketTypeColor : undefined;
+  // Backfill snapshot fields from known card types when missing
+  // Support both new (cardType*) and legacy (ticketType*) field names
+  const rawLabel = raw.cardTypeLabel ?? raw.ticketTypeLabel;
+  const rawColor = raw.cardTypeColor ?? raw.ticketTypeColor;
+  let cardTypeLabel = typeof rawLabel === "string" ? rawLabel : undefined;
+  let cardTypeColor = typeof rawColor === "string" ? rawColor : undefined;
 
-  if (ticketTypeId && (!ticketTypeLabel || !ticketTypeColor)) {
-    const knownType = getTicketTypeLookup().get(ticketTypeId);
+  if (cardTypeId && (!cardTypeLabel || !cardTypeColor)) {
+    const knownType = getCardTypeLookup().get(cardTypeId);
     if (knownType) {
-      ticketTypeLabel ??= knownType.label;
-      ticketTypeColor ??= knownType.color;
+      cardTypeLabel ??= knownType.label;
+      cardTypeColor ??= knownType.color;
     }
   }
 
@@ -100,9 +102,9 @@ export function migrateCard(
     number,
     title: raw.title as string,
     description,
-    ticketTypeId,
-    ...(ticketTypeLabel && { ticketTypeLabel }),
-    ...(ticketTypeColor && { ticketTypeColor }),
+    cardTypeId,
+    ...(cardTypeLabel && { cardTypeLabel }),
+    ...(cardTypeColor && { cardTypeColor }),
     dueDate,
     createdAt,
     updatedAt,

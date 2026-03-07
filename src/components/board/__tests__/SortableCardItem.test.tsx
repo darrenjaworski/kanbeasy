@@ -36,7 +36,7 @@ const baseProps = {
   density: "medium" as const,
   columnId: "col-1",
   index: 0,
-  ticketTypes: [],
+  cardTypes: [],
 };
 
 describe("SortableCardItem", () => {

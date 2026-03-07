@@ -23,7 +23,7 @@ vi.mock("../../../board/useBoard", () => ({
 }));
 
 vi.mock("../../../theme/useTheme", () => ({
-  useTheme: () => ({ ticketTypes: [] }),
+  useTheme: () => ({ cardTypes: [] }),
 }));
 
 vi.mock("@dnd-kit/core", () => ({

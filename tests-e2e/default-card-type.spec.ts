@@ -2,23 +2,23 @@ import { test, expect } from "./fixtures";
 import type { Page } from "@playwright/test";
 
 /** Open settings, expand Ticket Types section, return the dialog locator. */
-async function openTicketTypeSettings(page: Page) {
+async function openCardTypeSettings(page: Page) {
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg = page.getByRole("dialog", { name: /settings/i });
   await expect(dlg).toBeVisible();
-  await dlg.getByRole("button", { name: /ticket types/i }).click();
+  await dlg.getByRole("button", { name: /card types/i }).click();
   return dlg;
 }
 
-test("new cards get the default ticket type", async ({ page }) => {
+test("new cards get the default card type", async ({ page }) => {
   // Create a column first
   await page.getByTestId("add-column-button").click();
   const column = page.getByTestId("column-0");
   await expect(column).toBeVisible();
 
-  // Set default ticket type to "feat" (Feature)
-  const dlg = await openTicketTypeSettings(page);
-  const defaultSelect = dlg.getByTestId("default-ticket-type");
+  // Set default card type to "feat" (Feature)
+  const dlg = await openCardTypeSettings(page);
+  const defaultSelect = dlg.getByTestId("default-card-type");
   await expect(defaultSelect).toBeVisible();
   await defaultSelect.selectOption("feat");
   await expect(defaultSelect).toHaveValue("feat");
@@ -40,8 +40,8 @@ test("new cards have no type when default is None", async ({ page }) => {
   await expect(column).toBeVisible();
 
   // Verify default type is None by default
-  const dlg = await openTicketTypeSettings(page);
-  const defaultSelect = dlg.getByTestId("default-ticket-type");
+  const dlg = await openCardTypeSettings(page);
+  const defaultSelect = dlg.getByTestId("default-card-type");
   await expect(defaultSelect).toHaveValue("");
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
@@ -53,9 +53,9 @@ test("new cards have no type when default is None", async ({ page }) => {
 });
 
 test("default type persists to localStorage", async ({ page }) => {
-  // Set default ticket type
-  const dlg = await openTicketTypeSettings(page);
-  await dlg.getByTestId("default-ticket-type").selectOption("fix");
+  // Set default card type
+  const dlg = await openCardTypeSettings(page);
+  await dlg.getByTestId("default-card-type").selectOption("fix");
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
   // Verify it was written to localStorage
@@ -69,34 +69,34 @@ test("default type clears when switching to a preset without that type", async (
   page,
 }) => {
   // Set default type to "feat" (development preset)
-  const dlg = await openTicketTypeSettings(page);
-  await dlg.getByTestId("default-ticket-type").selectOption("feat");
-  await expect(dlg.getByTestId("default-ticket-type")).toHaveValue("feat");
+  const dlg = await openCardTypeSettings(page);
+  await dlg.getByTestId("default-card-type").selectOption("feat");
+  await expect(dlg.getByTestId("default-card-type")).toHaveValue("feat");
 
   // Switch to "personal" preset which doesn't have "feat"
-  await dlg.getByTestId("ticket-type-preset").selectOption("personal");
+  await dlg.getByTestId("card-type-preset").selectOption("personal");
 
   // Default type should auto-clear to None
-  await expect(dlg.getByTestId("default-ticket-type")).toHaveValue("");
+  await expect(dlg.getByTestId("default-card-type")).toHaveValue("");
 });
 
 test("default type clears when the selected type is removed", async ({
   page,
 }) => {
   // Set default type to the first development type
-  const dlg = await openTicketTypeSettings(page);
-  await dlg.getByTestId("default-ticket-type").selectOption("feat");
-  await expect(dlg.getByTestId("default-ticket-type")).toHaveValue("feat");
+  const dlg = await openCardTypeSettings(page);
+  await dlg.getByTestId("default-card-type").selectOption("feat");
+  await expect(dlg.getByTestId("default-card-type")).toHaveValue("feat");
 
   // Expand editor and remove the "feat" type
-  await dlg.getByTestId("ticket-type-editor-toggle").click();
-  await dlg.getByTestId("ticket-type-remove-0").click();
+  await dlg.getByTestId("card-type-editor-toggle").click();
+  await dlg.getByTestId("card-type-remove-0").click();
 
   // Default type should auto-clear
-  await expect(dlg.getByTestId("default-ticket-type")).toHaveValue("");
+  await expect(dlg.getByTestId("default-card-type")).toHaveValue("");
 });
 
-test("card detail modal shows the default ticket type on new card", async ({
+test("card detail modal shows the default card type on new card", async ({
   page,
 }) => {
   // Create a column
@@ -105,8 +105,8 @@ test("card detail modal shows the default ticket type on new card", async ({
   await expect(column).toBeVisible();
 
   // Set default type to "fix"
-  const dlg = await openTicketTypeSettings(page);
-  await dlg.getByTestId("default-ticket-type").selectOption("fix");
+  const dlg = await openCardTypeSettings(page);
+  await dlg.getByTestId("default-card-type").selectOption("fix");
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
   // Add a card and open detail modal

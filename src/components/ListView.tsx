@@ -3,7 +3,7 @@ import { useBoard } from "../board/useBoard";
 import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 
-import { TicketTypeBadge } from "./shared/TicketTypeBadge";
+import { CardTypeBadge } from "./shared/CardTypeBadge";
 import { CardDetailModal } from "./board/CardDetailModal";
 import { formatDate } from "../utils/formatDate";
 
@@ -11,9 +11,9 @@ interface CardRow {
   id: string;
   number: number;
   title: string;
-  ticketTypeId: string | null;
-  ticketTypeLabel?: string;
-  ticketTypeColor?: string;
+  cardTypeId: string | null;
+  cardTypeLabel?: string;
+  cardTypeColor?: string;
   dueDate: string | null;
   columnTitle: string;
   createdAt: number;
@@ -28,7 +28,7 @@ export function ListView() {
     moveCard,
     archiveCard,
   } = useBoard();
-  const { ticketTypes, cardDensity } = useTheme();
+  const { cardTypes, cardDensity } = useTheme();
 
   const [detailCardId, setDetailCardId] = useState<string | null>(null);
   const detailCard = detailCardId
@@ -48,9 +48,9 @@ export function ListView() {
           id: card.id,
           number: card.number,
           title: card.title,
-          ticketTypeId: card.ticketTypeId,
-          ticketTypeLabel: card.ticketTypeLabel,
-          ticketTypeColor: card.ticketTypeColor,
+          cardTypeId: card.cardTypeId,
+          cardTypeLabel: card.cardTypeLabel,
+          cardTypeColor: card.cardTypeColor,
           dueDate: card.dueDate,
           columnTitle: col.title,
           createdAt: card.createdAt,
@@ -121,19 +121,19 @@ export function ListView() {
                       className={`cursor-pointer ${tc.bgHover} ${i < rows.length - 1 ? `border-b ${tc.borderSubtle}` : ""} ${highlighted ? "ring-2 ring-accent ring-inset" : ""}`}
                     >
                       <td className="px-3 py-2" data-testid="list-cell-number">
-                        <TicketTypeBadge
+                        <CardTypeBadge
                           number={row.number}
-                          ticketTypeId={row.ticketTypeId}
-                          ticketTypeColor={row.ticketTypeColor}
+                          cardTypeId={row.cardTypeId}
+                          cardTypeColor={row.cardTypeColor}
                         />
                       </td>
                       <td
                         className={`px-3 py-2 ${tc.textMuted}`}
                         data-testid="list-cell-type"
                       >
-                        {row.ticketTypeLabel ? (
-                          <span style={{ color: row.ticketTypeColor }}>
-                            {row.ticketTypeLabel}
+                        {row.cardTypeLabel ? (
+                          <span style={{ color: row.cardTypeColor }}>
+                            {row.cardTypeLabel}
                           </span>
                         ) : (
                           "\u2014"
@@ -193,7 +193,7 @@ export function ListView() {
             archiveCard(detailCard.columnId, detailCard.card.id);
             setDetailCardId(null);
           }}
-          ticketTypes={ticketTypes}
+          cardTypes={cardTypes}
         />
       )}
     </main>

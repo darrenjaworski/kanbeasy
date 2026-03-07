@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add support for multiple boards, allowing users to maintain separate kanban boards for different contexts (e.g., personal tasks, work projects). Each board is fully isolated with its own columns, cards, archive, ticket types, and undo/redo history.
+Add support for multiple boards, allowing users to maintain separate kanban boards for different contexts (e.g., personal tasks, work projects). Each board is fully isolated with its own columns, cards, archive, card types, and undo/redo history.
 
 ## Data Model
 
@@ -27,16 +27,16 @@ interface BoardIndex {
 
 ### BoardState Changes
 
-`BoardState` gains per-board ticket type configuration:
+`BoardState` gains per-board card type configuration:
 
 ```typescript
 interface BoardState {
   columns: Column[];
   archive: ArchivedCard[];
-  // NEW — per-board ticket types
-  ticketTypes: TicketType[];
-  ticketTypePresetId: string;
-  defaultTicketTypeId: string | null;
+  // NEW — per-board card types
+  cardTypes: CardType[];
+  cardTypePresetId: string;
+  defaultCardTypeId: string | null;
 }
 ```
 
@@ -49,7 +49,7 @@ Split storage to avoid hitting localStorage limits and improve performance:
 | Key                   | Contents                                             | Size      |
 | --------------------- | ---------------------------------------------------- | --------- |
 | `kanbeasy:boardIndex` | `BoardIndex` (board list + active ID + card counter) | Small     |
-| `kanbeasy:board:<id>` | `BoardState` (columns + archive + ticket types)      | Per-board |
+| `kanbeasy:board:<id>` | `BoardState` (columns + archive + card types)        | Per-board |
 
 Benefits:
 
@@ -75,18 +75,18 @@ These are user preferences and remain in their existing storage keys:
 
 These move from ThemeProvider into BoardState:
 
-- `ticketTypes` — type definitions
-- `ticketTypePresetId` — which preset is active
-- `defaultTicketTypeId` — default type for new cards
+- `cardTypes` — type definitions
+- `cardTypePresetId` — which preset is active
+- `defaultCardTypeId` — default type for new cards
 
-This allows a personal board to use "Personal" ticket types while a work board uses "Development" types.
+This allows a personal board to use "Personal" card types while a work board uses "Development" types.
 
 ## Provider Architecture
 
 ```
 ThemeProvider           (global: theme, density, column resize, owl, view mode)
   BoardsProvider        (NEW: board index, active board, CRUD operations)
-    BoardProvider       (scoped: columns, archive, ticket types, undo/redo, search)
+    BoardProvider       (scoped: columns, archive, card types, undo/redo, search)
       ClipboardProvider
         App
 ```
@@ -111,12 +111,12 @@ Minimal changes needed:
 
 - Accept `boardId` prop (or read from BoardsContext)
 - Load/save using `kanbeasy:board:<boardId>` instead of `kanbeasy:board`
-- Own ticket type state (moved from ThemeProvider)
+- Own card type state (moved from ThemeProvider)
 - Undo/redo history is already per-instance (resets naturally on board switch)
 
 ### ThemeProvider Changes
 
-Remove ticket type state (`ticketTypes`, `ticketTypePresetId`, `defaultTicketTypeId`) — these move into BoardProvider/BoardState.
+Remove card type state (`cardTypes`, `cardTypePresetId`, `defaultCardTypeId`) — these move into BoardProvider/BoardState.
 
 ## UI Design
 
@@ -154,7 +154,7 @@ The Settings modal gets a new "Boards" section:
 
 - List all boards with rename/delete actions
 - Create new board button
-- No board-level settings here initially (ticket types are edited in the existing ticket type section, which now applies to the active board)
+- No board-level settings here initially (card types are edited in the existing card type section, which now applies to the active board)
 
 ### Empty State
 
@@ -177,8 +177,8 @@ For existing users upgrading from single-board to multi-board:
 2. If missing, detect existing `kanbeasy:board` key
 3. Create a `BoardIndex` with one entry: `{ id: "default", title: "My Board" }`
 4. Rename storage: `kanbeasy:board` -> `kanbeasy:board:default`
-5. Move ticket type settings from ThemeProvider keys into the board state
-6. Clean up old ticket type keys from localStorage
+5. Move card type settings from ThemeProvider keys into the board state
+6. Clean up old card type keys from localStorage
 
 This is transparent to the user — their existing board appears as "My Board" and everything works as before.
 
@@ -188,12 +188,12 @@ Bump export format version from 8 to 9.
 
 ### Export Modes
 
-- **Single board** (default) — exports the active board only, same structure as today but with ticket types included in board data
+- **Single board** (default) — exports the active board only, same structure as today but with card types included in board data
 - **Full workspace** — exports all boards + global settings (for backup/device transfer)
 
 ### Import Handling
 
-- Version <= 8 imports: treated as a single board, ticket types pulled from settings object
+- Version <= 8 imports: treated as a single board, card types pulled from settings object
 - Version 9 single-board import: imported as a new board or replaces active board (user choice)
 - Version 9 workspace import: replaces all boards and settings (with confirmation)
 
@@ -208,11 +208,11 @@ Bump export format version from 8 to 9.
 
 ### Modified Files
 
-- `src/board/BoardProvider.tsx` — parameterize storage key, own ticket types
-- `src/theme/ThemeProvider.tsx` — remove ticket type state
+- `src/board/BoardProvider.tsx` — parameterize storage key, own card types
+- `src/theme/ThemeProvider.tsx` — remove card type state
 - `src/main.tsx` — add BoardsProvider to provider stack
 - `src/components/Header.tsx` — add board tab bar or selector
-- `src/components/settings/TicketTypeSection.tsx` — read ticket types from board context
+- `src/components/settings/CardTypeSection.tsx` — read card types from board context
 - `src/utils/exportBoard.ts` — version bump, multi-board support
 - `src/utils/importBoard.ts` — migration for v8 -> v9, multi-board import
 - `src/constants/storage.ts` — add new storage key patterns

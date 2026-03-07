@@ -78,7 +78,7 @@ describe("exportBoard", () => {
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(8);
+    expect(data.version).toBe(9);
     expect(data.exportedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(data.board).toEqual(boardData);
     expect(data.settings).toEqual({
@@ -89,9 +89,9 @@ describe("exportBoard", () => {
       deleteColumnWarning: "true",
       owlModeEnabled: "",
       viewMode: "",
-      ticketTypePreset: "",
-      ticketTypes: "",
-      defaultTicketType: "",
+      cardTypePreset: "",
+      cardTypes: "",
+      defaultCardType: "",
       compactHeader: "",
     });
   });
@@ -109,19 +109,19 @@ describe("exportBoard", () => {
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(8);
+    expect(data.version).toBe(9);
     expect(data.board).toBeNull();
     expect(data.settings.theme).toBe("");
     expect(data.settings.cardDensity).toBe("");
   });
 
-  it("includes defaultTicketType in exported settings", () => {
-    localStorage.setItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE, "feat");
+  it("includes defaultCardType in exported settings", () => {
+    localStorage.setItem(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
 
     exportBoard();
 
     const data = JSON.parse(capturedJson);
-    expect(data.settings.defaultTicketType).toBe("feat");
+    expect(data.settings.defaultCardType).toBe("feat");
   });
 
   it("cleans up object URL after download", () => {

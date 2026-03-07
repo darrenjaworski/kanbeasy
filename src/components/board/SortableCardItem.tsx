@@ -14,7 +14,7 @@ import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
 import { ChecklistProgress } from "../shared/ChecklistProgress";
 import { DueDateBadge } from "../shared/DueDateBadge";
-import { TicketTypeBadge } from "../shared/TicketTypeBadge";
+import { CardTypeBadge } from "../shared/CardTypeBadge";
 
 type SortableCardItemProps = Readonly<{
   card: Card;
@@ -116,10 +116,10 @@ export function SortableCardItem({
       data-testid={`card-${index}`}
       data-search-highlight={isSearchMatch || undefined}
     >
-      <TicketTypeBadge
+      <CardTypeBadge
         number={card.number}
-        ticketTypeId={card.ticketTypeId}
-        ticketTypeColor={card.ticketTypeColor}
+        cardTypeId={card.cardTypeId}
+        cardTypeColor={card.cardTypeColor}
       />
 
       {!isDragging && (

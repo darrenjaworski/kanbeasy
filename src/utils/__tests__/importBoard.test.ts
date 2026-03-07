@@ -338,7 +338,7 @@ describe("validateExportData", () => {
               title: "Archived Task",
               number: 1,
               description: "",
-              ticketTypeId: null,
+              cardTypeId: null,
               createdAt: 5000,
               updatedAt: 5000,
               columnHistory: [{ columnId: "col-1", enteredAt: 5000 }],
@@ -391,15 +391,15 @@ describe("validateExportData", () => {
     expect(result.data.archive[0].title).toBe("Valid");
   });
 
-  it("v1-4 imports default ticketTypePresetId to development", () => {
+  it("v1-4 imports default cardTypePresetId to development", () => {
     const result = validateExportData(makeExportData({ version: 4 }));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.ticketTypePresetId).toBe("development");
-    expect(result.data.settings.ticketTypes.length).toBeGreaterThan(0);
+    expect(result.data.settings.cardTypePresetId).toBe("development");
+    expect(result.data.settings.cardTypes.length).toBeGreaterThan(0);
   });
 
-  it("v5 import preserves ticket type settings", () => {
+  it("v5 import preserves card type settings", () => {
     const types = [{ id: "task", label: "Task", color: "#6366f1" }];
     const result = validateExportData(
       makeExportData({
@@ -410,18 +410,18 @@ describe("validateExportData", () => {
           cardDensity: "medium",
           columnResizingEnabled: "false",
           deleteColumnWarning: "true",
-          ticketTypePreset: "custom",
-          ticketTypes: JSON.stringify(types),
+          cardTypePreset: "custom",
+          cardTypes: JSON.stringify(types),
         },
       }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.ticketTypePresetId).toBe("custom");
-    expect(result.data.settings.ticketTypes).toEqual(types);
+    expect(result.data.settings.cardTypePresetId).toBe("custom");
+    expect(result.data.settings.cardTypes).toEqual(types);
   });
 
-  it("v5 import with invalid ticketTypes JSON defaults to development preset", () => {
+  it("v5 import with invalid cardTypes JSON defaults to development preset", () => {
     const result = validateExportData(
       makeExportData({
         version: 5,
@@ -431,19 +431,19 @@ describe("validateExportData", () => {
           cardDensity: "medium",
           columnResizingEnabled: "false",
           deleteColumnWarning: "true",
-          ticketTypePreset: "development",
-          ticketTypes: "not-valid-json",
+          cardTypePreset: "development",
+          cardTypes: "not-valid-json",
         },
       }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.ticketTypePresetId).toBe("development");
+    expect(result.data.settings.cardTypePresetId).toBe("development");
     // Falls back to default types
-    expect(result.data.settings.ticketTypes.length).toBeGreaterThan(0);
+    expect(result.data.settings.cardTypes.length).toBeGreaterThan(0);
   });
 
-  it("v7 import preserves defaultTicketTypeId", () => {
+  it("v7 import preserves defaultCardTypeId", () => {
     const types = [{ id: "feat", label: "Feature", color: "#6366f1" }];
     const result = validateExportData(
       makeExportData({
@@ -454,18 +454,18 @@ describe("validateExportData", () => {
           cardDensity: "medium",
           columnResizingEnabled: "false",
           deleteColumnWarning: "true",
-          ticketTypePreset: "custom",
-          ticketTypes: JSON.stringify(types),
-          defaultTicketType: "feat",
+          cardTypePreset: "custom",
+          cardTypes: JSON.stringify(types),
+          defaultCardType: "feat",
         },
       }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.defaultTicketTypeId).toBe("feat");
+    expect(result.data.settings.defaultCardTypeId).toBe("feat");
   });
 
-  it("v7 import clears defaultTicketTypeId when type not in list", () => {
+  it("v7 import clears defaultCardTypeId when type not in list", () => {
     const types = [{ id: "feat", label: "Feature", color: "#6366f1" }];
     const result = validateExportData(
       makeExportData({
@@ -476,25 +476,25 @@ describe("validateExportData", () => {
           cardDensity: "medium",
           columnResizingEnabled: "false",
           deleteColumnWarning: "true",
-          ticketTypePreset: "custom",
-          ticketTypes: JSON.stringify(types),
-          defaultTicketType: "nonexistent",
+          cardTypePreset: "custom",
+          cardTypes: JSON.stringify(types),
+          defaultCardType: "nonexistent",
         },
       }),
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.defaultTicketTypeId).toBeNull();
+    expect(result.data.settings.defaultCardTypeId).toBeNull();
   });
 
-  it("v6 import defaults defaultTicketTypeId to null", () => {
+  it("v6 import defaults defaultCardTypeId to null", () => {
     const result = validateExportData(makeExportData({ version: 6 }));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.defaultTicketTypeId).toBeNull();
+    expect(result.data.settings.defaultCardTypeId).toBeNull();
   });
 
-  it("v4 import backfills ticketTypeId to null on cards", () => {
+  it("v4 import backfills cardTypeId to null on cards", () => {
     const result = validateExportData(
       makeExportData({
         version: 4,
@@ -523,7 +523,7 @@ describe("validateExportData", () => {
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.columns[0].cards[0].ticketTypeId).toBeNull();
+    expect(result.data.columns[0].cards[0].cardTypeId).toBeNull();
   });
 
   it("v2 import preserves existing timestamps", () => {

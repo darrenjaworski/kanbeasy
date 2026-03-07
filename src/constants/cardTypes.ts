@@ -1,17 +1,17 @@
-export type TicketType = Readonly<{
+export type CardType = Readonly<{
   id: string;
   label: string;
   color: string;
 }>;
 
-type TicketTypePreset = Readonly<{
+type CardTypePreset = Readonly<{
   id: string;
   name: string;
-  types: TicketType[];
+  types: CardType[];
 }>;
 
 /** 8 fixed colors that work in both light and dark mode. */
-export const TICKET_TYPE_COLORS = [
+export const CARD_TYPE_COLORS = [
   "#6366f1", // indigo
   "#22c55e", // green
   "#f59e0b", // amber
@@ -22,7 +22,7 @@ export const TICKET_TYPE_COLORS = [
   "#64748b", // slate
 ] as const;
 
-export const TICKET_TYPE_PRESETS: TicketTypePreset[] = [
+export const CARD_TYPE_PRESETS: CardTypePreset[] = [
   {
     id: "development",
     name: "Development",

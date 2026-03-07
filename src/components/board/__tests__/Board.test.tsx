@@ -31,7 +31,7 @@ vi.mock("../../../board/useBoard", () => ({
 vi.mock("../../../theme/useTheme", () => ({
   useTheme: () => ({
     cardDensity: "medium",
-    ticketTypes: [],
+    cardTypes: [],
   }),
 }));
 

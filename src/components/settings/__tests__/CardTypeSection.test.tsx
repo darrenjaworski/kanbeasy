@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { TicketTypeSection } from "../TicketTypeSection";
+import { CardTypeSection } from "../CardTypeSection";
 import { ThemeProvider } from "../../../theme/ThemeProvider";
 import { BoardProvider } from "../../../board/BoardProvider";
-import { TICKET_TYPE_PRESETS } from "../../../constants/ticketTypes";
+import { CARD_TYPE_PRESETS } from "../../../constants/cardTypes";
 import { STORAGE_KEYS } from "../../../constants/storage";
 import { describe, beforeEach, it, expect, vi } from "vitest";
 
@@ -11,20 +11,20 @@ function renderSection() {
   return render(
     <BoardProvider>
       <ThemeProvider>
-        <TicketTypeSection />
+        <CardTypeSection />
       </ThemeProvider>
     </BoardProvider>,
   );
 }
 
 function expandEditor() {
-  fireEvent.click(screen.getByTestId("ticket-type-editor-toggle"));
+  fireEvent.click(screen.getByTestId("card-type-editor-toggle"));
 }
 
-const devPreset = TICKET_TYPE_PRESETS.find((p) => p.id === "development")!;
-const personalPreset = TICKET_TYPE_PRESETS.find((p) => p.id === "personal")!;
+const devPreset = CARD_TYPE_PRESETS.find((p) => p.id === "development")!;
+const personalPreset = CARD_TYPE_PRESETS.find((p) => p.id === "personal")!;
 
-describe("TicketTypeSection", () => {
+describe("CardTypeSection", () => {
   beforeEach(() => {
     localStorage.clear();
   });
@@ -32,11 +32,11 @@ describe("TicketTypeSection", () => {
   describe("rendering", () => {
     it("renders the preset selector with development as default", () => {
       renderSection();
-      const select = screen.getByTestId("ticket-type-preset");
+      const select = screen.getByTestId("card-type-preset");
       expect(select).toHaveValue("development");
     });
 
-    it("renders all default development ticket types", () => {
+    it("renders all default development card types", () => {
       renderSection();
       expandEditor();
       for (const type of devPreset.types) {
@@ -48,7 +48,7 @@ describe("TicketTypeSection", () => {
     it("renders add type button", () => {
       renderSection();
       expandEditor();
-      expect(screen.getByTestId("ticket-type-add")).toBeInTheDocument();
+      expect(screen.getByTestId("card-type-add")).toBeInTheDocument();
     });
 
     it("renders a color swatch for each type", () => {
@@ -76,7 +76,7 @@ describe("TicketTypeSection", () => {
     it("switches to personal preset", () => {
       renderSection();
       expandEditor();
-      fireEvent.change(screen.getByTestId("ticket-type-preset"), {
+      fireEvent.change(screen.getByTestId("card-type-preset"), {
         target: { value: "personal" },
       });
 
@@ -104,7 +104,7 @@ describe("TicketTypeSection", () => {
                   number: 1,
                   title: "A feature",
                   description: "",
-                  ticketTypeId: "feat",
+                  cardTypeId: "feat",
                   dueDate: null,
                   createdAt: now,
                   updatedAt: now,
@@ -121,7 +121,7 @@ describe("TicketTypeSection", () => {
       expandEditor();
 
       // Switch to personal preset
-      fireEvent.change(screen.getByTestId("ticket-type-preset"), {
+      fireEvent.change(screen.getByTestId("card-type-preset"), {
         target: { value: "personal" },
       });
 
@@ -137,11 +137,11 @@ describe("TicketTypeSection", () => {
     it("switches to custom without changing types", () => {
       renderSection();
       expandEditor();
-      fireEvent.change(screen.getByTestId("ticket-type-preset"), {
+      fireEvent.change(screen.getByTestId("card-type-preset"), {
         target: { value: "custom" },
       });
 
-      expect(screen.getByTestId("ticket-type-preset")).toHaveValue("custom");
+      expect(screen.getByTestId("card-type-preset")).toHaveValue("custom");
       // Types should remain as development defaults
       for (const type of devPreset.types) {
         expect(screen.getByDisplayValue(type.id)).toBeInTheDocument();
@@ -155,11 +155,11 @@ describe("TicketTypeSection", () => {
       renderSection();
       expandEditor();
 
-      const labelInput = screen.getByTestId("ticket-type-label-0");
+      const labelInput = screen.getByTestId("card-type-label-0");
       await user.clear(labelInput);
       await user.type(labelInput, "Story");
 
-      expect(screen.getByTestId("ticket-type-preset")).toHaveValue("custom");
+      expect(screen.getByTestId("card-type-preset")).toHaveValue("custom");
       expect(labelInput).toHaveValue("Story");
     });
 
@@ -168,15 +168,15 @@ describe("TicketTypeSection", () => {
       renderSection();
       expandEditor();
 
-      const idInput = screen.getByTestId("ticket-type-id-0");
+      const idInput = screen.getByTestId("card-type-id-0");
       await user.clear(idInput);
       await user.type(idInput, "story");
 
-      expect(screen.getByTestId("ticket-type-preset")).toHaveValue("custom");
+      expect(screen.getByTestId("card-type-preset")).toHaveValue("custom");
       expect(idInput).toHaveValue("story");
     });
 
-    it("does not call renameTicketType on every keystroke — only on blur", async () => {
+    it("does not call renameCardType on every keystroke — only on blur", async () => {
       // Seed board with a card using "feat" so we can check localStorage
       const now = Date.now();
       localStorage.setItem(
@@ -194,7 +194,7 @@ describe("TicketTypeSection", () => {
                   number: 1,
                   title: "A feature",
                   description: "",
-                  ticketTypeId: "feat",
+                  cardTypeId: "feat",
                   dueDate: null,
                   createdAt: now,
                   updatedAt: now,
@@ -211,16 +211,16 @@ describe("TicketTypeSection", () => {
       renderSection();
       expandEditor();
 
-      const idInput = screen.getByTestId("ticket-type-id-0");
+      const idInput = screen.getByTestId("card-type-id-0");
       await user.clear(idInput);
       await user.type(idInput, "story");
 
-      // While typing, the card should still have ticketTypeId "feat" in localStorage
-      // because renameTicketType hasn't been called yet
+      // While typing, the card should still have cardTypeId "feat" in localStorage
+      // because renameCardType hasn't been called yet
       const boardDuringTyping = JSON.parse(
         localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
       );
-      expect(boardDuringTyping.columns[0].cards[0].ticketTypeId).toBe("feat");
+      expect(boardDuringTyping.columns[0].cards[0].cardTypeId).toBe("feat");
 
       // Now blur to trigger the rename
       await user.tab();
@@ -231,7 +231,7 @@ describe("TicketTypeSection", () => {
         const boardAfterBlur = JSON.parse(
           localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
         );
-        expect(boardAfterBlur.columns[0].cards[0].ticketTypeId).toBe("story");
+        expect(boardAfterBlur.columns[0].cards[0].cardTypeId).toBe("story");
       });
     });
 
@@ -241,14 +241,14 @@ describe("TicketTypeSection", () => {
       expandEditor();
 
       // Type "fix" into the first type's ID input — "fix" already exists as type[1]
-      const idInput = screen.getByTestId("ticket-type-id-0");
+      const idInput = screen.getByTestId("card-type-id-0");
       await user.clear(idInput);
       await user.type(idInput, "fix");
       await user.tab(); // blur
 
       // Should revert to the original ID "feat"
       await vi.waitFor(() => {
-        expect(screen.getByTestId("ticket-type-id-0")).toHaveValue("feat");
+        expect(screen.getByTestId("card-type-id-0")).toHaveValue("feat");
       });
     });
 
@@ -257,7 +257,7 @@ describe("TicketTypeSection", () => {
       renderSection();
       expandEditor();
 
-      const idInput = screen.getByTestId("ticket-type-id-0");
+      const idInput = screen.getByTestId("card-type-id-0");
       await user.clear(idInput);
       await user.type(idInput, "fix");
 
@@ -272,11 +272,11 @@ describe("TicketTypeSection", () => {
       expandEditor();
       const initialCount = devPreset.types.length;
 
-      fireEvent.click(screen.getByTestId("ticket-type-remove-0"));
+      fireEvent.click(screen.getByTestId("card-type-remove-0"));
 
-      expect(screen.getByTestId("ticket-type-preset")).toHaveValue("custom");
+      expect(screen.getByTestId("card-type-preset")).toHaveValue("custom");
       // One fewer type should be rendered
-      const remaining = screen.queryAllByTestId(/^ticket-type-id-/);
+      const remaining = screen.queryAllByTestId(/^card-type-id-/);
       expect(remaining).toHaveLength(initialCount - 1);
       // The removed type's ID should no longer appear
       expect(
@@ -284,7 +284,7 @@ describe("TicketTypeSection", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("does not clear card ticketTypeId when removing a type definition", () => {
+    it("does not clear card cardTypeId when removing a type definition", () => {
       // Seed board with a card using the "feat" type
       const now = Date.now();
       localStorage.setItem(
@@ -302,7 +302,7 @@ describe("TicketTypeSection", () => {
                   number: 1,
                   title: "A feature",
                   description: "",
-                  ticketTypeId: "feat",
+                  cardTypeId: "feat",
                   dueDate: null,
                   createdAt: now,
                   updatedAt: now,
@@ -319,14 +319,14 @@ describe("TicketTypeSection", () => {
       expandEditor();
 
       // Remove the "feat" type (index 0)
-      fireEvent.click(screen.getByTestId("ticket-type-remove-0"));
+      fireEvent.click(screen.getByTestId("card-type-remove-0"));
 
-      // Card should still have ticketTypeId "feat" — type definition
+      // Card should still have cardTypeId "feat" — type definition
       // removal should not wipe card data
       const board = JSON.parse(
         localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
       );
-      expect(board.columns[0].cards[0].ticketTypeId).toBe("feat");
+      expect(board.columns[0].cards[0].cardTypeId).toBe("feat");
     });
   });
 
@@ -336,10 +336,10 @@ describe("TicketTypeSection", () => {
       expandEditor();
       const initialCount = devPreset.types.length;
 
-      fireEvent.click(screen.getByTestId("ticket-type-add"));
+      fireEvent.click(screen.getByTestId("card-type-add"));
 
-      expect(screen.getByTestId("ticket-type-preset")).toHaveValue("custom");
-      const allTypeIds = screen.queryAllByTestId(/^ticket-type-id-/);
+      expect(screen.getByTestId("card-type-preset")).toHaveValue("custom");
+      const allTypeIds = screen.queryAllByTestId(/^card-type-id-/);
       expect(allTypeIds).toHaveLength(initialCount + 1);
       // New type has default id "new" and label "New Type"
       expect(screen.getByDisplayValue("new")).toBeInTheDocument();
@@ -350,7 +350,7 @@ describe("TicketTypeSection", () => {
       renderSection();
       expandEditor();
 
-      fireEvent.click(screen.getByTestId("ticket-type-add"));
+      fireEvent.click(screen.getByTestId("card-type-add"));
 
       // The new type should have a color swatch button
       const newColorButton = screen.getByLabelText("Change color for New Type");
@@ -358,16 +358,16 @@ describe("TicketTypeSection", () => {
     });
   });
 
-  describe("default ticket type", () => {
+  describe("default card type", () => {
     it("renders default type dropdown", () => {
       renderSection();
-      expect(screen.getByTestId("default-ticket-type")).toBeInTheDocument();
+      expect(screen.getByTestId("default-card-type")).toBeInTheDocument();
     });
 
-    it("shows None and all ticket types as options", () => {
+    it("shows None and all card types as options", () => {
       renderSection();
       const select = screen.getByTestId(
-        "default-ticket-type",
+        "default-card-type",
       ) as HTMLSelectElement;
       const options = Array.from(select.options);
 
@@ -379,16 +379,16 @@ describe("TicketTypeSection", () => {
 
     it("defaults to None", () => {
       renderSection();
-      expect(screen.getByTestId("default-ticket-type")).toHaveValue("");
+      expect(screen.getByTestId("default-card-type")).toHaveValue("");
     });
 
     it("sets default type when selected", () => {
       renderSection();
-      fireEvent.change(screen.getByTestId("default-ticket-type"), {
+      fireEvent.change(screen.getByTestId("default-card-type"), {
         target: { value: devPreset.types[0].id },
       });
 
-      expect(screen.getByTestId("default-ticket-type")).toHaveValue(
+      expect(screen.getByTestId("default-card-type")).toHaveValue(
         devPreset.types[0].id,
       );
     });
@@ -396,15 +396,15 @@ describe("TicketTypeSection", () => {
     it("clears default type when None is selected", () => {
       renderSection();
       // First set a type
-      fireEvent.change(screen.getByTestId("default-ticket-type"), {
+      fireEvent.change(screen.getByTestId("default-card-type"), {
         target: { value: devPreset.types[0].id },
       });
       // Then clear it
-      fireEvent.change(screen.getByTestId("default-ticket-type"), {
+      fireEvent.change(screen.getByTestId("default-card-type"), {
         target: { value: "" },
       });
 
-      expect(screen.getByTestId("default-ticket-type")).toHaveValue("");
+      expect(screen.getByTestId("default-card-type")).toHaveValue("");
     });
   });
 
@@ -453,7 +453,7 @@ describe("TicketTypeSection", () => {
       // Picker should close
       expect(screen.queryAllByLabelText(/^Color #/)).toHaveLength(0);
       // Preset should switch to custom
-      expect(screen.getByTestId("ticket-type-preset")).toHaveValue("custom");
+      expect(screen.getByTestId("card-type-preset")).toHaveValue("custom");
     });
 
     it("only shows one color picker at a time", () => {

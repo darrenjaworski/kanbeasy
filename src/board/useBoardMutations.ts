@@ -77,7 +77,7 @@ export function useBoardMutations(
   );
 
   const addCard = useCallback<BoardContextValue["addCard"]>(
-    (columnId, title = "", ticketTypeId, ticketTypeLabel, ticketTypeColor) => {
+    (columnId, title = "", cardTypeId, cardTypeLabel, cardTypeColor) => {
       const now = Date.now();
       const number = nextCardNumberRef.current;
       saveCounter(number + 1);
@@ -86,9 +86,9 @@ export function useBoardMutations(
         number,
         title,
         description: "",
-        ticketTypeId: ticketTypeId ?? null,
-        ...(ticketTypeLabel !== undefined && { ticketTypeLabel }),
-        ...(ticketTypeColor !== undefined && { ticketTypeColor }),
+        cardTypeId: cardTypeId ?? null,
+        ...(cardTypeLabel !== undefined && { cardTypeLabel }),
+        ...(cardTypeColor !== undefined && { cardTypeColor }),
         dueDate: null,
         createdAt: now,
         updatedAt: now,
@@ -198,12 +198,12 @@ export function useBoardMutations(
         number,
         title: source.title,
         description: source.description,
-        ticketTypeId: source.ticketTypeId ?? null,
-        ...(source.ticketTypeLabel !== undefined && {
-          ticketTypeLabel: source.ticketTypeLabel,
+        cardTypeId: source.cardTypeId ?? null,
+        ...(source.cardTypeLabel !== undefined && {
+          cardTypeLabel: source.cardTypeLabel,
         }),
-        ...(source.ticketTypeColor !== undefined && {
-          ticketTypeColor: source.ticketTypeColor,
+        ...(source.cardTypeColor !== undefined && {
+          cardTypeColor: source.cardTypeColor,
         }),
         dueDate: null,
         createdAt: now,
@@ -239,23 +239,22 @@ export function useBoardMutations(
     [setState],
   );
 
-  const renameTicketType = useCallback<BoardContextValue["renameTicketType"]>(
+  const renameCardType = useCallback<BoardContextValue["renameCardType"]>(
     (oldId, newId) => {
       setState((prev) => {
         const hasAffectedCard = prev.columns.some((col) =>
-          col.cards.some((card) => card.ticketTypeId === oldId),
+          col.cards.some((card) => card.cardTypeId === oldId),
         );
         if (!hasAffectedCard) return prev;
         const now = Date.now();
         const columns = prev.columns.map((col) => {
-          if (!col.cards.some((card) => card.ticketTypeId === oldId))
-            return col;
+          if (!col.cards.some((card) => card.cardTypeId === oldId)) return col;
           return {
             ...col,
             updatedAt: now,
             cards: col.cards.map((card) =>
-              card.ticketTypeId === oldId
-                ? { ...card, ticketTypeId: newId, updatedAt: now }
+              card.cardTypeId === oldId
+                ? { ...card, cardTypeId: newId, updatedAt: now }
                 : card,
             ),
           };
@@ -266,23 +265,22 @@ export function useBoardMutations(
     [setState],
   );
 
-  const clearTicketType = useCallback<BoardContextValue["clearTicketType"]>(
+  const clearCardType = useCallback<BoardContextValue["clearCardType"]>(
     (typeId) => {
       setState((prev) => {
         const hasAffectedCard = prev.columns.some((col) =>
-          col.cards.some((card) => card.ticketTypeId === typeId),
+          col.cards.some((card) => card.cardTypeId === typeId),
         );
         if (!hasAffectedCard) return prev;
         const now = Date.now();
         const columns = prev.columns.map((col) => {
-          if (!col.cards.some((card) => card.ticketTypeId === typeId))
-            return col;
+          if (!col.cards.some((card) => card.cardTypeId === typeId)) return col;
           return {
             ...col,
             updatedAt: now,
             cards: col.cards.map((card) =>
-              card.ticketTypeId === typeId
-                ? { ...card, ticketTypeId: null, updatedAt: now }
+              card.cardTypeId === typeId
+                ? { ...card, cardTypeId: null, updatedAt: now }
                 : card,
             ),
           };
@@ -447,8 +445,8 @@ export function useBoardMutations(
     moveCard,
     sortCards,
     reorderCard,
-    renameTicketType,
-    clearTicketType,
+    renameCardType,
+    clearCardType,
     archiveCard,
     restoreCard,
     restoreCards,

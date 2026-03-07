@@ -91,7 +91,7 @@ export const owlTips: readonly string[] = [
   "Hoot hoot! Add checklists to your cards — just click '+ Add checklist item' below the description.",
   "Hooo! Check off items right from the board card — no need to open the detail modal!",
   "Hoo! Your checklist progress shows as a little bar on each card. Satisfying to watch it fill up!",
-  "Hoot! Set a default ticket type in Settings > Ticket Types so new cards are automatically categorized.",
+  "Hoot! Set a default card type in Settings > Card Types so new cards are automatically categorized.",
   "Hoo hoo! Use Ctrl+Z to undo and Ctrl+Shift+Z to redo. Owl mistakes are reversible!",
   "Hoot hoot! Check out Analytics to see your cycle time and throughput. Data-driven owls ship faster!",
   "Hooo! Deleted cards aren't gone forever — they go to the Archive where you can restore them anytime.",

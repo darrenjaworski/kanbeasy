@@ -1,7 +1,7 @@
 import { STORAGE_KEYS } from "../constants/storage";
 
 interface ExportData {
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   exportedAt: string;
   board: unknown;
   settings: {
@@ -12,9 +12,9 @@ interface ExportData {
     deleteColumnWarning: string;
     owlModeEnabled: string;
     viewMode: string;
-    ticketTypePreset: string;
-    ticketTypes: string;
-    defaultTicketType: string;
+    cardTypePreset: string;
+    cardTypes: string;
+    defaultCardType: string;
     compactHeader: string;
   };
 }
@@ -35,7 +35,7 @@ function buildExportData(): ExportData {
   }
 
   return {
-    version: 8,
+    version: 9,
     exportedAt: new Date().toISOString(),
     board,
     settings: {
@@ -46,9 +46,9 @@ function buildExportData(): ExportData {
       deleteColumnWarning: readRaw(STORAGE_KEYS.DELETE_COLUMN_WARNING),
       owlModeEnabled: readRaw(STORAGE_KEYS.OWL_MODE_ENABLED),
       viewMode: readRaw(STORAGE_KEYS.VIEW_MODE),
-      ticketTypePreset: readRaw(STORAGE_KEYS.TICKET_TYPE_PRESET),
-      ticketTypes: readRaw(STORAGE_KEYS.TICKET_TYPES),
-      defaultTicketType: readRaw(STORAGE_KEYS.DEFAULT_TICKET_TYPE),
+      cardTypePreset: readRaw(STORAGE_KEYS.CARD_TYPE_PRESET),
+      cardTypes: readRaw(STORAGE_KEYS.CARD_TYPES),
+      defaultCardType: readRaw(STORAGE_KEYS.DEFAULT_CARD_TYPE),
       compactHeader: readRaw(STORAGE_KEYS.COMPACT_HEADER),
     },
   };

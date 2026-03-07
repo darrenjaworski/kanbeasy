@@ -3,7 +3,7 @@ import { SettingsGearIcon } from "../icons";
 import { tc } from "../../theme/classNames";
 import { ModalHeader } from "../shared/ModalHeader";
 import { ThemeSection } from "./ThemeSection";
-import { TicketTypeSection } from "./TicketTypeSection";
+import { CardTypeSection } from "./CardTypeSection";
 import { BoardSettingsSection } from "./BoardSettingsSection";
 import { DataSection } from "./DataSection";
 import { SettingsSection } from "./SettingsSection";
@@ -31,8 +31,8 @@ export function SettingsModal({ open, onClose }: Props) {
         <SettingsSection title="Appearance">
           <ThemeSection />
         </SettingsSection>
-        <SettingsSection title="Ticket Types">
-          <TicketTypeSection />
+        <SettingsSection title="Card Types">
+          <CardTypeSection />
         </SettingsSection>
         <SettingsSection title="Preferences">
           <BoardSettingsSection />

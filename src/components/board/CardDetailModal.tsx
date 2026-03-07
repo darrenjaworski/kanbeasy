@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Card, CardUpdates, Column } from "../../board/types";
-import type { TicketType } from "../../constants/ticketTypes";
+import type { CardType } from "../../constants/cardTypes";
 import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { Modal } from "../shared/Modal";
 import { ModalHeader } from "../shared/ModalHeader";
@@ -20,7 +20,7 @@ type Props = Readonly<{
   onUpdate: (updates: CardUpdates) => void;
   onMoveCard: (toColumnId: string) => void;
   onArchive: () => void;
-  ticketTypes: TicketType[];
+  cardTypes: CardType[];
 }>;
 
 export function CardDetailModal({
@@ -33,7 +33,7 @@ export function CardDetailModal({
   onUpdate,
   onMoveCard,
   onArchive,
-  ticketTypes,
+  cardTypes,
 }: Props) {
   // Title editing — uses useInlineEdit (reverts on empty)
   const [tempTitle, setTempTitle] = useState(card.title);
@@ -70,7 +70,7 @@ export function CardDetailModal({
       <div className="p-4 pb-2 shrink-0">
         <ModalHeader
           icon={MoreIcon}
-          title={`${card.ticketTypeId ? `${card.ticketTypeId}-${card.number}` : `#${card.number}`} Card Details`}
+          title={`${card.cardTypeId ? `${card.cardTypeId}-${card.number}` : `#${card.number}`} Card Details`}
           titleId="card-detail-title"
           onClose={onClose}
         />
@@ -126,23 +126,23 @@ export function CardDetailModal({
           <div className="relative">
             <select
               id="card-detail-type"
-              value={card.ticketTypeId ?? ""}
+              value={card.cardTypeId ?? ""}
               onChange={(e) => {
                 const selectedId = e.target.value || null;
                 const selectedType = selectedId
-                  ? ticketTypes.find((t) => t.id === selectedId)
+                  ? cardTypes.find((t) => t.id === selectedId)
                   : undefined;
                 onUpdate({
-                  ticketTypeId: selectedId,
-                  ticketTypeLabel: selectedType?.label,
-                  ticketTypeColor: selectedType?.color,
+                  cardTypeId: selectedId,
+                  cardTypeLabel: selectedType?.label,
+                  cardTypeColor: selectedType?.color,
                 });
               }}
               className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
               data-testid="card-detail-type"
             >
               <option value="">None</option>
-              {ticketTypes.map((t) => (
+              {cardTypes.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.label} ({t.id})
                 </option>

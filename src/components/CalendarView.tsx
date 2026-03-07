@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useBoard } from "../board/useBoard";
 import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
-import { TicketTypeBadge } from "./shared/TicketTypeBadge";
+import { CardTypeBadge } from "./shared/CardTypeBadge";
 import { CardDetailModal } from "./board/CardDetailModal";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -27,9 +27,9 @@ interface CardEntry {
   id: string;
   number: number;
   title: string;
-  ticketTypeId: string | null;
-  ticketTypeLabel?: string;
-  ticketTypeColor?: string;
+  cardTypeId: string | null;
+  cardTypeLabel?: string;
+  cardTypeColor?: string;
   dueDate: string;
 }
 
@@ -42,7 +42,7 @@ export function CalendarView() {
     matchingCardIds,
     searchQuery,
   } = useBoard();
-  const { ticketTypes, cardDensity } = useTheme();
+  const { cardTypes, cardDensity } = useTheme();
 
   const [detailCardId, setDetailCardId] = useState<string | null>(null);
   const detailCard = detailCardId
@@ -69,9 +69,9 @@ export function CalendarView() {
           id: card.id,
           number: card.number,
           title: card.title,
-          ticketTypeId: card.ticketTypeId,
-          ticketTypeLabel: card.ticketTypeLabel,
-          ticketTypeColor: card.ticketTypeColor,
+          cardTypeId: card.cardTypeId,
+          cardTypeLabel: card.cardTypeLabel,
+          cardTypeColor: card.cardTypeColor,
           dueDate: card.dueDate,
         });
         map.set(card.dueDate, existing);
@@ -260,10 +260,10 @@ export function CalendarView() {
                               title={card.title}
                               data-search-highlight={isMatch || undefined}
                             >
-                              <TicketTypeBadge
+                              <CardTypeBadge
                                 number={card.number}
-                                ticketTypeId={card.ticketTypeId}
-                                ticketTypeColor={card.ticketTypeColor}
+                                cardTypeId={card.cardTypeId}
+                                cardTypeColor={card.cardTypeColor}
                               />
                               <span className="ml-1">{card.title}</span>
                             </button>
@@ -296,7 +296,7 @@ export function CalendarView() {
             archiveCard(detailCard.columnId, detailCard.card.id);
             setDetailCardId(null);
           }}
-          ticketTypes={ticketTypes}
+          cardTypes={cardTypes}
         />
       )}
     </main>

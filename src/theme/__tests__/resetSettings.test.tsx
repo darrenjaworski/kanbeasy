@@ -78,24 +78,24 @@ describe("resetSettings", () => {
     expect(result.current.viewMode).toBe("board");
   });
 
-  it("resets ticket type preset to development", () => {
+  it("resets card type preset to development", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
-    act(() => result.current.setTicketTypePresetId("personal"));
-    expect(result.current.ticketTypePresetId).toBe("personal");
+    act(() => result.current.setCardTypePresetId("personal"));
+    expect(result.current.cardTypePresetId).toBe("personal");
 
     act(() => result.current.resetSettings());
-    expect(result.current.ticketTypePresetId).toBe("development");
+    expect(result.current.cardTypePresetId).toBe("development");
   });
 
-  it("resets default ticket type to null", () => {
+  it("resets default card type to null", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
-    act(() => result.current.setDefaultTicketTypeId("feat"));
-    expect(result.current.defaultTicketTypeId).toBe("feat");
+    act(() => result.current.setDefaultCardTypeId("feat"));
+    expect(result.current.defaultCardTypeId).toBe("feat");
 
     act(() => result.current.resetSettings());
-    expect(result.current.defaultTicketTypeId).toBeNull();
+    expect(result.current.defaultCardTypeId).toBeNull();
   });
 
   it("removes hasSeenWelcome from localStorage", () => {

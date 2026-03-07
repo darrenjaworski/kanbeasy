@@ -22,7 +22,7 @@ function seedBoard(dueDate: string | null = null) {
               number: 1,
               title: "Test Card",
               description: "Some description",
-              ticketTypeId: null,
+              cardTypeId: null,
               dueDate,
               createdAt: now,
               updatedAt: now,

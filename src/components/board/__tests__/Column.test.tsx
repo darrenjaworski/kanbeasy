@@ -55,8 +55,8 @@ function renderColumn(opts: RenderColumnOptions = {}) {
     reorderCard: vi.fn(),
     moveCard: vi.fn(),
     duplicateCard: vi.fn(() => "dup-id"),
-    renameTicketType: vi.fn(),
-    clearTicketType: vi.fn(),
+    renameCardType: vi.fn(),
+    clearCardType: vi.fn(),
     archiveCard: vi.fn(),
     restoreCard: vi.fn(),
     restoreCards: vi.fn(),
@@ -257,7 +257,7 @@ describe("Column", () => {
         copiedCard: {
           title: "Copied",
           description: "",
-          ticketTypeId: null,
+          cardTypeId: null,
         },
       },
     });
@@ -272,7 +272,7 @@ describe("Column", () => {
         copiedCard: {
           title: "Copied",
           description: "",
-          ticketTypeId: null,
+          cardTypeId: null,
         },
         pasteCard: vi.fn(() => "pasted-id"),
       },
@@ -287,7 +287,7 @@ describe("Column", () => {
         copiedCard: {
           title: "Copied",
           description: "",
-          ticketTypeId: null,
+          cardTypeId: null,
         },
       },
     });

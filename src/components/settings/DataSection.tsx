@@ -14,9 +14,9 @@ export function DataSection() {
     setDeleteColumnWarningEnabled,
     setOwlModeEnabled,
     setViewMode,
-    setTicketTypePresetId,
-    setTicketTypes,
-    setDefaultTicketTypeId,
+    setCardTypePresetId,
+    setCardTypes,
+    setDefaultCardTypeId,
     setCompactHeader,
     resetSettings,
   } = useTheme();
@@ -76,9 +76,9 @@ export function DataSection() {
     setDeleteColumnWarningEnabled(settings.deleteColumnWarning);
     setOwlModeEnabled(settings.owlModeEnabled);
     setViewMode(settings.viewMode);
-    setTicketTypePresetId(settings.ticketTypePresetId);
-    setTicketTypes(settings.ticketTypes);
-    setDefaultTicketTypeId(settings.defaultTicketTypeId);
+    setCardTypePresetId(settings.cardTypePresetId);
+    setCardTypes(settings.cardTypes);
+    setDefaultCardTypeId(settings.defaultCardTypeId);
     setCompactHeader(settings.compactHeader);
 
     setImportStatus("complete");

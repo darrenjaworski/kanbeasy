@@ -3,20 +3,20 @@ import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../../constants/storage";
-import { TICKET_TYPE_PRESETS } from "../../constants/ticketTypes";
+import { CARD_TYPE_PRESETS } from "../../constants/cardTypes";
 import { renderApp } from "../../test/renderApp";
 
-const devPreset = TICKET_TYPE_PRESETS.find((p) => p.id === "development")!;
+const devPreset = CARD_TYPE_PRESETS.find((p) => p.id === "development")!;
 
 function seedBoard({
-  ticketTypeId = null as string | null,
-  ticketTypeLabel,
-  ticketTypeColor,
+  cardTypeId = null as string | null,
+  cardTypeLabel,
+  cardTypeColor,
   description = "",
 }: {
-  ticketTypeId?: string | null;
-  ticketTypeLabel?: string;
-  ticketTypeColor?: string;
+  cardTypeId?: string | null;
+  cardTypeLabel?: string;
+  cardTypeColor?: string;
   description?: string;
 } = {}) {
   localStorage.setItem(
@@ -34,9 +34,9 @@ function seedBoard({
               number: 1,
               title: "Typed card",
               description,
-              ticketTypeId,
-              ...(ticketTypeLabel !== undefined && { ticketTypeLabel }),
-              ...(ticketTypeColor !== undefined && { ticketTypeColor }),
+              cardTypeId,
+              ...(cardTypeLabel !== undefined && { cardTypeLabel }),
+              ...(cardTypeColor !== undefined && { cardTypeColor }),
               createdAt: Date.now(),
               updatedAt: Date.now(),
               columnHistory: [{ columnId: "col-1", enteredAt: Date.now() }],
@@ -70,16 +70,16 @@ describe("ListView type column", () => {
     ).toBeInTheDocument();
   });
 
-  it("displays ticket type label with color when card has a type", () => {
+  it("displays card type label with color when card has a type", () => {
     const featType = devPreset.types.find((t) => t.id === "feat")!;
     seedBoard({
-      ticketTypeId: "feat",
-      ticketTypeLabel: featType.label,
-      ticketTypeColor: featType.color,
+      cardTypeId: "feat",
+      cardTypeLabel: featType.label,
+      cardTypeColor: featType.color,
     });
-    localStorage.setItem(STORAGE_KEYS.TICKET_TYPE_PRESET, "development");
+    localStorage.setItem(STORAGE_KEYS.CARD_TYPE_PRESET, "development");
     localStorage.setItem(
-      STORAGE_KEYS.TICKET_TYPES,
+      STORAGE_KEYS.CARD_TYPES,
       JSON.stringify(devPreset.types),
     );
     renderApp();
@@ -90,7 +90,7 @@ describe("ListView type column", () => {
   });
 
   it("displays em dash when card has no type", () => {
-    seedBoard({ ticketTypeId: null });
+    seedBoard({ cardTypeId: null });
     renderApp();
 
     const table = screen.getByRole("table");
@@ -102,10 +102,10 @@ describe("ListView type column", () => {
   });
 
   it("shows type column alongside other columns in correct order", () => {
-    seedBoard({ ticketTypeId: "feat" });
-    localStorage.setItem(STORAGE_KEYS.TICKET_TYPE_PRESET, "development");
+    seedBoard({ cardTypeId: "feat" });
+    localStorage.setItem(STORAGE_KEYS.CARD_TYPE_PRESET, "development");
     localStorage.setItem(
-      STORAGE_KEYS.TICKET_TYPES,
+      STORAGE_KEYS.CARD_TYPES,
       JSON.stringify(devPreset.types),
     );
     renderApp();
@@ -140,10 +140,10 @@ describe("ListView type column", () => {
                 number: 1,
                 title: "Test",
                 description: "",
-                ticketTypeId: "fix",
-                ticketTypeLabel: devPreset.types.find((t) => t.id === "fix")!
+                cardTypeId: "fix",
+                cardTypeLabel: devPreset.types.find((t) => t.id === "fix")!
                   .label,
-                ticketTypeColor: devPreset.types.find((t) => t.id === "fix")!
+                cardTypeColor: devPreset.types.find((t) => t.id === "fix")!
                   .color,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
@@ -154,9 +154,9 @@ describe("ListView type column", () => {
         ],
       }),
     );
-    localStorage.setItem(STORAGE_KEYS.TICKET_TYPE_PRESET, "development");
+    localStorage.setItem(STORAGE_KEYS.CARD_TYPE_PRESET, "development");
     localStorage.setItem(
-      STORAGE_KEYS.TICKET_TYPES,
+      STORAGE_KEYS.CARD_TYPES,
       JSON.stringify(devPreset.types),
     );
     renderApp();

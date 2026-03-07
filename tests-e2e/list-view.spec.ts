@@ -15,17 +15,17 @@ function seedBoard() {
           makeE2eCard("c1", "col-0", {
             number: 1,
             title: "Card 1",
-            ticketTypeId: "feat",
-            ticketTypeLabel: "Feature",
-            ticketTypeColor: "#22c55e",
+            cardTypeId: "feat",
+            cardTypeLabel: "Feature",
+            cardTypeColor: "#22c55e",
             dueDate: "2025-06-15",
           }),
           makeE2eCard("c2", "col-0", {
             number: 2,
             title: "Card 2",
-            ticketTypeId: "fix",
-            ticketTypeLabel: "Fix",
-            ticketTypeColor: "#ef4444",
+            cardTypeId: "fix",
+            cardTypeLabel: "Fix",
+            cardTypeColor: "#ef4444",
           }),
         ],
       },
@@ -71,14 +71,14 @@ test.describe("List view", () => {
     await expect(rows).toHaveCount(3);
   });
 
-  test("displays ticket type label for typed cards", async ({ page }) => {
+  test("displays card type label for typed cards", async ({ page }) => {
     const rows = page.locator("tbody tr");
 
-    // First card has ticketTypeId "feat" → label "Feature"
+    // First card has cardTypeId "feat" → label "Feature"
     const firstRowType = rows.nth(0).getByTestId("list-cell-type");
     await expect(firstRowType).toHaveText("Feature");
 
-    // Second card has ticketTypeId "fix" → label "Fix"
+    // Second card has cardTypeId "fix" → label "Fix"
     const secondRowType = rows.nth(1).getByTestId("list-cell-type");
     await expect(secondRowType).toHaveText("Fix");
   });
@@ -86,7 +86,7 @@ test.describe("List view", () => {
   test("displays em dash for cards without a type", async ({ page }) => {
     const rows = page.locator("tbody tr");
 
-    // Third card has no ticket type
+    // Third card has no card type
     const thirdRowType = rows.nth(2).getByTestId("list-cell-type");
     await expect(thirdRowType).toHaveText("\u2014");
   });

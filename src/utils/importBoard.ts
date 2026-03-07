@@ -1,13 +1,10 @@
 import type { ArchivedCard, Column } from "../board/types";
 import type { CardDensity, ThemePreference, ViewMode } from "../theme/types";
-import type { TicketType } from "../constants/ticketTypes";
+import type { CardType } from "../constants/cardTypes";
 import { isArchivedCard, isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
 import { migrateColumnsWithNumbering } from "../board/migration";
-import {
-  DEFAULT_PRESET_ID,
-  TICKET_TYPE_PRESETS,
-} from "../constants/ticketTypes";
+import { DEFAULT_PRESET_ID, CARD_TYPE_PRESETS } from "../constants/cardTypes";
 
 interface ValidatedImport {
   columns: Column[];
@@ -21,9 +18,9 @@ interface ValidatedImport {
     deleteColumnWarning: boolean;
     owlModeEnabled: boolean;
     viewMode: ViewMode;
-    ticketTypePresetId: string;
-    ticketTypes: TicketType[];
-    defaultTicketTypeId: string | null;
+    cardTypePresetId: string;
+    cardTypes: CardType[];
+    defaultCardTypeId: string | null;
     compactHeader: boolean;
   };
 }
@@ -66,12 +63,13 @@ export function validateExportData(parsed: unknown): ImportResult {
     version !== 5 &&
     version !== 6 &&
     version !== 7 &&
-    version !== 8
+    version !== 8 &&
+    version !== 9
   ) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–8 are supported.`
+        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–9 are supported.`
         : "Missing export version.",
     };
   }
@@ -149,30 +147,32 @@ export function validateExportData(parsed: unknown): ImportResult {
       ? (s.viewMode as ViewMode)
       : "board";
 
-  // Ticket type settings (v5+). Fall back to Development preset for older versions.
-  const defaultPreset = TICKET_TYPE_PRESETS.find(
+  // Card type settings (v5+). Fall back to Development preset for older versions.
+  // Support both new (cardType*) and legacy (ticketType*) export field names.
+  const defaultPreset = CARD_TYPE_PRESETS.find(
     (p) => p.id === DEFAULT_PRESET_ID,
   )!;
 
-  let ticketTypePresetId = DEFAULT_PRESET_ID;
-  let ticketTypes: TicketType[] = [...defaultPreset.types];
+  let cardTypePresetId = DEFAULT_PRESET_ID;
+  let cardTypes: CardType[] = [...defaultPreset.types];
 
   if (version >= 5) {
-    // Parse preset ID
-    const rawPreset =
-      typeof s.ticketTypePreset === "string" ? s.ticketTypePreset : "";
+    // Parse preset ID (accept both old and new field names)
+    const rawPresetField = s.cardTypePreset ?? s.ticketTypePreset;
+    const rawPreset = typeof rawPresetField === "string" ? rawPresetField : "";
     if (
-      TICKET_TYPE_PRESETS.some((p) => p.id === rawPreset) ||
+      CARD_TYPE_PRESETS.some((p) => p.id === rawPreset) ||
       rawPreset === "custom"
     ) {
-      ticketTypePresetId = rawPreset;
+      cardTypePresetId = rawPreset;
     }
 
-    // Parse ticket types JSON
+    // Parse card types JSON (accept both old and new field names)
+    const rawTypesField = s.cardTypes ?? s.ticketTypes;
     let parsedTypes: unknown = null;
-    if (typeof s.ticketTypes === "string" && s.ticketTypes) {
+    if (typeof rawTypesField === "string" && rawTypesField) {
       try {
-        parsedTypes = JSON.parse(s.ticketTypes);
+        parsedTypes = JSON.parse(rawTypesField);
       } catch {
         // invalid JSON, use default
       }
@@ -188,17 +188,19 @@ export function validateExportData(parsed: unknown): ImportResult {
           typeof (t as { color?: unknown }).color === "string",
       )
     ) {
-      ticketTypes = parsedTypes as TicketType[];
+      cardTypes = parsedTypes as CardType[];
     }
   }
 
-  // Default ticket type (v7+). Fall back to null for older versions.
-  let defaultTicketTypeId: string | null = null;
+  // Default card type (v7+). Fall back to null for older versions.
+  // Accept both old (defaultTicketType) and new (defaultCardType) field names.
+  let defaultCardTypeId: string | null = null;
   if (version >= 7) {
+    const rawDefaultField = s.defaultCardType ?? s.defaultTicketType;
     const rawDefault =
-      typeof s.defaultTicketType === "string" ? s.defaultTicketType : "";
-    if (rawDefault && ticketTypes.some((t) => t.id === rawDefault)) {
-      defaultTicketTypeId = rawDefault;
+      typeof rawDefaultField === "string" ? rawDefaultField : "";
+    if (rawDefault && cardTypes.some((t) => t.id === rawDefault)) {
+      defaultCardTypeId = rawDefault;
     }
   }
 
@@ -226,9 +228,9 @@ export function validateExportData(parsed: unknown): ImportResult {
         deleteColumnWarning,
         owlModeEnabled,
         viewMode,
-        ticketTypePresetId,
-        ticketTypes,
-        defaultTicketTypeId,
+        cardTypePresetId,
+        cardTypes,
+        defaultCardTypeId,
         compactHeader,
       },
     },

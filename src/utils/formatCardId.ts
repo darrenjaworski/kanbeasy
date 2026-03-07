@@ -1,28 +1,28 @@
-import type { TicketType } from "../constants/ticketTypes";
+import type { CardType } from "../constants/cardTypes";
 
 /**
- * Look up a ticket type by ID.
+ * Look up a card type by ID.
  * Returns undefined if not found (orphaned/deleted type).
  */
-export function findTicketType(
-  types: TicketType[],
+export function findCardType(
+  types: CardType[],
   id: string | null,
-): TicketType | undefined {
+): CardType | undefined {
   if (!id) return undefined;
   return types.find((t) => t.id === id);
 }
 
 /**
  * Format a card's display ID.
- * With a ticket type: "feat-42"
+ * With a card type: "feat-42"
  * Without: "#42"
  */
 export function formatCardId(
   number: number,
-  ticketTypeId: string | null,
-  types: TicketType[],
+  cardTypeId: string | null,
+  types: CardType[],
 ): string {
-  const type = findTicketType(types, ticketTypeId);
+  const type = findCardType(types, cardTypeId);
   if (type) return `${type.id}-${number}`;
   return `#${number}`;
 }

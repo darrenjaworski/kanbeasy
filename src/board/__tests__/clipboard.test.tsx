@@ -33,7 +33,7 @@ describe("useClipboard", () => {
     const source: CardClipboard = {
       title: "Test",
       description: "Desc",
-      ticketTypeId: null,
+      cardTypeId: null,
     };
     act(() => result.current.copyCard(source));
 
@@ -75,7 +75,7 @@ describe("useClipboard", () => {
     const source: CardClipboard = {
       title: "Copied card",
       description: "Some description",
-      ticketTypeId: null,
+      cardTypeId: null,
     };
     act(() => result.current.copyCard(source));
 
@@ -88,7 +88,7 @@ describe("useClipboard", () => {
     expect(typeof pasteResult).toBe("string");
   });
 
-  it("preserves ticketTypeId when copying and pasting a card", () => {
+  it("preserves cardTypeId when copying and pasting a card", () => {
     const now = Date.now();
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
@@ -113,7 +113,7 @@ describe("useClipboard", () => {
     const source: CardClipboard = {
       title: "Typed card",
       description: "Has a type",
-      ticketTypeId: "feat",
+      cardTypeId: "feat",
     };
     act(() => result.current.clipboard.copyCard(source));
 
@@ -126,7 +126,7 @@ describe("useClipboard", () => {
       (c) => c.id === pastedId,
     );
     expect(pastedCard).toBeDefined();
-    expect(pastedCard!.ticketTypeId).toBe("feat");
+    expect(pastedCard!.cardTypeId).toBe("feat");
   });
 
   it("preserves copied card after pasting (allows multiple pastes)", () => {
@@ -151,7 +151,7 @@ describe("useClipboard", () => {
     const source: CardClipboard = {
       title: "Test",
       description: "",
-      ticketTypeId: null,
+      cardTypeId: null,
     };
     act(() => result.current.copyCard(source));
     act(() => {

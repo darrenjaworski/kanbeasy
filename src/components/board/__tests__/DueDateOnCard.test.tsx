@@ -22,7 +22,7 @@ function seedBoard(
             number: i + 1,
             title: c.title,
             description: "",
-            ticketTypeId: null,
+            cardTypeId: null,
             dueDate: c.dueDate,
             createdAt: now,
             updatedAt: now,

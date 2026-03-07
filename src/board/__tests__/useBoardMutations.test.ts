@@ -257,7 +257,7 @@ describe("useBoardMutations", () => {
       expect(next.columns[0].cards[0].title).toBe("");
     });
 
-    it("applies ticketTypeId when provided", () => {
+    it("applies cardTypeId when provided", () => {
       const { result, applyLatest } = setup();
       const col = makeColumn({ id: "col-1", cards: [] });
 
@@ -266,10 +266,10 @@ describe("useBoardMutations", () => {
       });
 
       const next = applyLatest({ columns: [col], archive: [] });
-      expect(next.columns[0].cards[0].ticketTypeId).toBe("feat");
+      expect(next.columns[0].cards[0].cardTypeId).toBe("feat");
     });
 
-    it("defaults ticketTypeId to null when not provided", () => {
+    it("defaults cardTypeId to null when not provided", () => {
       const { result, applyLatest } = setup();
       const col = makeColumn({ id: "col-1", cards: [] });
 
@@ -278,10 +278,10 @@ describe("useBoardMutations", () => {
       });
 
       const next = applyLatest({ columns: [col], archive: [] });
-      expect(next.columns[0].cards[0].ticketTypeId).toBeNull();
+      expect(next.columns[0].cards[0].cardTypeId).toBeNull();
     });
 
-    it("treats explicit null ticketTypeId as null", () => {
+    it("treats explicit null cardTypeId as null", () => {
       const { result, applyLatest } = setup();
       const col = makeColumn({ id: "col-1", cards: [] });
 
@@ -290,7 +290,7 @@ describe("useBoardMutations", () => {
       });
 
       const next = applyLatest({ columns: [col], archive: [] });
-      expect(next.columns[0].cards[0].ticketTypeId).toBeNull();
+      expect(next.columns[0].cards[0].cardTypeId).toBeNull();
     });
   });
 
@@ -363,19 +363,19 @@ describe("useBoardMutations", () => {
       );
     });
 
-    it("updates ticketTypeId", () => {
+    it("updates cardTypeId", () => {
       const { result, applyLatest } = setup();
-      const card = makeCard({ id: "card-1", ticketTypeId: null });
+      const card = makeCard({ id: "card-1", cardTypeId: null });
       const col = makeColumn({ id: "col-1", cards: [card] });
 
       act(() =>
         result.current.updateCard("col-1", "card-1", {
-          ticketTypeId: "feat",
+          cardTypeId: "feat",
         }),
       );
 
       const next = applyLatest({ columns: [col], archive: [] });
-      expect(next.columns[0].cards[0].ticketTypeId).toBe("feat");
+      expect(next.columns[0].cards[0].cardTypeId).toBe("feat");
     });
 
     it("returns prev state when column not found", () => {
@@ -489,7 +489,7 @@ describe("useBoardMutations", () => {
         result.current.duplicateCard("col-1", {
           title: "Clone me",
           description: "Desc",
-          ticketTypeId: "feat",
+          cardTypeId: "feat",
         });
       });
 
@@ -497,7 +497,7 @@ describe("useBoardMutations", () => {
       const dup = next.columns[0].cards[0];
       expect(dup.title).toBe("Clone me");
       expect(dup.description).toBe("Desc");
-      expect(dup.ticketTypeId).toBe("feat");
+      expect(dup.cardTypeId).toBe("feat");
       expect(dup.number).toBe(10);
       expect(saveCounter).toHaveBeenCalledWith(11);
     });
@@ -510,7 +510,7 @@ describe("useBoardMutations", () => {
         result.current.duplicateCard("col-2", {
           title: "X",
           description: "",
-          ticketTypeId: null,
+          cardTypeId: null,
         });
       });
 
@@ -526,7 +526,7 @@ describe("useBoardMutations", () => {
         id = result.current.duplicateCard("col-1", {
           title: "",
           description: "",
-          ticketTypeId: null,
+          cardTypeId: null,
         });
       });
 
@@ -566,36 +566,36 @@ describe("useBoardMutations", () => {
     });
   });
 
-  /* -------------------- renameTicketType -------------------- */
+  /* -------------------- renameCardType -------------------- */
 
-  describe("renameTicketType", () => {
-    it("renames ticketTypeId on matching cards across all columns", () => {
+  describe("renameCardType", () => {
+    it("renames cardTypeId on matching cards across all columns", () => {
       const { result, applyLatest } = setup();
-      const card1 = makeCard({ id: "c1", ticketTypeId: "bug" });
-      const card2 = makeCard({ id: "c2", ticketTypeId: "feat" });
-      const card3 = makeCard({ id: "c3", ticketTypeId: "bug" });
+      const card1 = makeCard({ id: "c1", cardTypeId: "bug" });
+      const card2 = makeCard({ id: "c2", cardTypeId: "feat" });
+      const card3 = makeCard({ id: "c3", cardTypeId: "bug" });
       const col1 = makeColumn({ id: "col-1", cards: [card1, card2] });
       const col2 = makeColumn({ id: "col-2", cards: [card3] });
 
-      act(() => result.current.renameTicketType("bug", "defect"));
+      act(() => result.current.renameCardType("bug", "defect"));
 
       const next = applyLatest({
         columns: [col1, col2],
         archive: [],
       });
-      expect(next.columns[0].cards[0].ticketTypeId).toBe("defect");
-      expect(next.columns[0].cards[1].ticketTypeId).toBe("feat");
-      expect(next.columns[1].cards[0].ticketTypeId).toBe("defect");
+      expect(next.columns[0].cards[0].cardTypeId).toBe("defect");
+      expect(next.columns[0].cards[1].cardTypeId).toBe("feat");
+      expect(next.columns[1].cards[0].cardTypeId).toBe("defect");
     });
 
     it("skips columns with no matching cards (preserves references)", () => {
       const { result, applyLatest } = setup();
-      const card1 = makeCard({ id: "c1", ticketTypeId: "bug" });
-      const card2 = makeCard({ id: "c2", ticketTypeId: "feat" });
+      const card1 = makeCard({ id: "c1", cardTypeId: "bug" });
+      const card2 = makeCard({ id: "c2", cardTypeId: "feat" });
       const col1 = makeColumn({ id: "col-1", cards: [card1] });
       const col2 = makeColumn({ id: "col-2", cards: [card2] });
 
-      act(() => result.current.renameTicketType("bug", "defect"));
+      act(() => result.current.renameCardType("bug", "defect"));
 
       const next = applyLatest({
         columns: [col1, col2],
@@ -605,46 +605,46 @@ describe("useBoardMutations", () => {
       expect(next.columns[1]).toBe(col2);
       // col-1 should be updated
       expect(next.columns[0]).not.toBe(col1);
-      expect(next.columns[0].cards[0].ticketTypeId).toBe("defect");
+      expect(next.columns[0].cards[0].cardTypeId).toBe("defect");
     });
 
     it("returns prev state when no cards match the old type", () => {
       const { result, applyLatest } = setup();
-      const card = makeCard({ id: "c1", ticketTypeId: "feat" });
+      const card = makeCard({ id: "c1", cardTypeId: "feat" });
       const col = makeColumn({ id: "col-1", cards: [card] });
       const prev: BoardState = { columns: [col], archive: [] };
 
-      act(() => result.current.renameTicketType("nonexistent", "other"));
+      act(() => result.current.renameCardType("nonexistent", "other"));
 
       const next = applyLatest(prev);
       expect(next).toBe(prev);
     });
   });
 
-  /* -------------------- clearTicketType -------------------- */
+  /* -------------------- clearCardType -------------------- */
 
-  describe("clearTicketType", () => {
-    it("clears ticketTypeId to null on matching cards", () => {
+  describe("clearCardType", () => {
+    it("clears cardTypeId to null on matching cards", () => {
       const { result, applyLatest } = setup();
-      const card1 = makeCard({ id: "c1", ticketTypeId: "bug" });
-      const card2 = makeCard({ id: "c2", ticketTypeId: "feat" });
+      const card1 = makeCard({ id: "c1", cardTypeId: "bug" });
+      const card2 = makeCard({ id: "c2", cardTypeId: "feat" });
       const col = makeColumn({ id: "col-1", cards: [card1, card2] });
 
-      act(() => result.current.clearTicketType("bug"));
+      act(() => result.current.clearCardType("bug"));
 
       const next = applyLatest({ columns: [col], archive: [] });
-      expect(next.columns[0].cards[0].ticketTypeId).toBeNull();
-      expect(next.columns[0].cards[1].ticketTypeId).toBe("feat");
+      expect(next.columns[0].cards[0].cardTypeId).toBeNull();
+      expect(next.columns[0].cards[1].cardTypeId).toBe("feat");
     });
 
     it("skips columns with no matching cards (preserves references)", () => {
       const { result, applyLatest } = setup();
-      const card1 = makeCard({ id: "c1", ticketTypeId: "bug" });
-      const card2 = makeCard({ id: "c2", ticketTypeId: "feat" });
+      const card1 = makeCard({ id: "c1", cardTypeId: "bug" });
+      const card2 = makeCard({ id: "c2", cardTypeId: "feat" });
       const col1 = makeColumn({ id: "col-1", cards: [card1] });
       const col2 = makeColumn({ id: "col-2", cards: [card2] });
 
-      act(() => result.current.clearTicketType("bug"));
+      act(() => result.current.clearCardType("bug"));
 
       const next = applyLatest({
         columns: [col1, col2],
@@ -654,16 +654,16 @@ describe("useBoardMutations", () => {
       expect(next.columns[1]).toBe(col2);
       // col-1 should be updated
       expect(next.columns[0]).not.toBe(col1);
-      expect(next.columns[0].cards[0].ticketTypeId).toBeNull();
+      expect(next.columns[0].cards[0].cardTypeId).toBeNull();
     });
 
     it("returns prev state when no cards match the type", () => {
       const { result, applyLatest } = setup();
-      const card = makeCard({ id: "c1", ticketTypeId: "feat" });
+      const card = makeCard({ id: "c1", cardTypeId: "feat" });
       const col = makeColumn({ id: "col-1", cards: [card] });
       const prev: BoardState = { columns: [col], archive: [] };
 
-      act(() => result.current.clearTicketType("nonexistent"));
+      act(() => result.current.clearCardType("nonexistent"));
 
       const next = applyLatest(prev);
       expect(next).toBe(prev);

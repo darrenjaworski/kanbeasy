@@ -2,22 +2,19 @@ import { useRef, useState } from "react";
 import { useTheme } from "../../theme/useTheme";
 import { useBoard } from "../../board/useBoard";
 import { tc } from "../../theme/classNames";
-import type { TicketType } from "../../constants/ticketTypes";
-import {
-  TICKET_TYPE_PRESETS,
-  TICKET_TYPE_COLORS,
-} from "../../constants/ticketTypes";
+import type { CardType } from "../../constants/cardTypes";
+import { CARD_TYPE_PRESETS, CARD_TYPE_COLORS } from "../../constants/cardTypes";
 
-export function TicketTypeSection() {
+export function CardTypeSection() {
   const {
-    ticketTypes,
-    setTicketTypes,
-    ticketTypePresetId,
-    setTicketTypePresetId,
-    defaultTicketTypeId,
-    setDefaultTicketTypeId,
+    cardTypes,
+    setCardTypes,
+    cardTypePresetId,
+    setCardTypePresetId,
+    defaultCardTypeId,
+    setDefaultCardTypeId,
   } = useTheme();
-  const { columns, renameTicketType } = useBoard();
+  const { columns, renameCardType } = useBoard();
   const [editingColorIdx, setEditingColorIdx] = useState<number | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
 
@@ -28,39 +25,39 @@ export function TicketTypeSection() {
   );
 
   const handlePresetChange = (presetId: string) => {
-    setTicketTypePresetId(presetId);
+    setCardTypePresetId(presetId);
     if (presetId === "custom") return;
-    const preset = TICKET_TYPE_PRESETS.find((p) => p.id === presetId);
+    const preset = CARD_TYPE_PRESETS.find((p) => p.id === presetId);
     if (preset) {
-      // Collect ticket type IDs currently used by cards on the board
+      // Collect card type IDs currently used by cards on the board
       const usedTypeIds = new Set<string>();
       for (const col of columns) {
         for (const card of col.cards) {
-          if (card.ticketTypeId) usedTypeIds.add(card.ticketTypeId);
+          if (card.cardTypeId) usedTypeIds.add(card.cardTypeId);
         }
       }
 
       // Keep any in-use type definitions that the new preset doesn't cover
       const newPresetIds = new Set(preset.types.map((t) => t.id));
-      const retainedTypes = ticketTypes.filter(
+      const retainedTypes = cardTypes.filter(
         (t) => usedTypeIds.has(t.id) && !newPresetIds.has(t.id),
       );
 
-      setTicketTypes([...preset.types, ...retainedTypes]);
+      setCardTypes([...preset.types, ...retainedTypes]);
     }
   };
 
-  const handleUpdateType = (index: number, updates: Partial<TicketType>) => {
-    const next = ticketTypes.map((t, i) =>
+  const handleUpdateType = (index: number, updates: Partial<CardType>) => {
+    const next = cardTypes.map((t, i) =>
       i === index ? { ...t, ...updates } : t,
     );
-    setTicketTypes(next);
-    setTicketTypePresetId("custom");
+    setCardTypes(next);
+    setCardTypePresetId("custom");
     // Note: ID renames are deferred to blur — see handleIdBlur
   };
 
   const handleIdFocus = (index: number) => {
-    pendingIdRename.current = { index, originalId: ticketTypes[index].id };
+    pendingIdRename.current = { index, originalId: cardTypes[index].id };
   };
 
   const handleIdBlur = (index: number) => {
@@ -68,66 +65,64 @@ export function TicketTypeSection() {
     if (!pending || pending.index !== index) return;
     pendingIdRename.current = null;
 
-    const newId = ticketTypes[index].id;
+    const newId = cardTypes[index].id;
     if (!newId || newId === pending.originalId) return;
 
     // Check for duplicate IDs — revert if the new ID conflicts
-    const isDuplicate = ticketTypes.some(
-      (t, i) => i !== index && t.id === newId,
-    );
+    const isDuplicate = cardTypes.some((t, i) => i !== index && t.id === newId);
     if (isDuplicate) {
       // Revert to the original ID
-      const reverted = ticketTypes.map((t, i) =>
+      const reverted = cardTypes.map((t, i) =>
         i === index ? { ...t, id: pending.originalId } : t,
       );
-      setTicketTypes(reverted);
+      setCardTypes(reverted);
       return;
     }
 
-    renameTicketType(pending.originalId, newId);
+    renameCardType(pending.originalId, newId);
   };
 
   const handleRemoveType = (index: number) => {
-    // Only remove the type definition — card ticketTypeId values are preserved
+    // Only remove the type definition — card cardTypeId values are preserved
     // so they can be restored by re-adding the type or switching presets
-    setTicketTypes(ticketTypes.filter((_, i) => i !== index));
-    setTicketTypePresetId("custom");
+    setCardTypes(cardTypes.filter((_, i) => i !== index));
+    setCardTypePresetId("custom");
   };
 
   const handleAddType = () => {
     // Pick the first unused color, or cycle
-    const usedColors = new Set(ticketTypes.map((t) => t.color));
+    const usedColors = new Set(cardTypes.map((t) => t.color));
     const color =
-      TICKET_TYPE_COLORS.find((c) => !usedColors.has(c)) ??
-      TICKET_TYPE_COLORS[ticketTypes.length % TICKET_TYPE_COLORS.length];
-    const newType: TicketType = { id: "new", label: "New Type", color };
-    setTicketTypes([...ticketTypes, newType]);
-    setTicketTypePresetId("custom");
+      CARD_TYPE_COLORS.find((c) => !usedColors.has(c)) ??
+      CARD_TYPE_COLORS[cardTypes.length % CARD_TYPE_COLORS.length];
+    const newType: CardType = { id: "new", label: "New Type", color };
+    setCardTypes([...cardTypes, newType]);
+    setCardTypePresetId("custom");
   };
 
   const isDuplicateId = (id: string, index: number) =>
-    ticketTypes.some((t, i) => i !== index && t.id === id);
+    cardTypes.some((t, i) => i !== index && t.id === id);
 
   return (
     <fieldset className="border-0 p-0 m-0 space-y-3 text-sm font-medium">
-      <legend className="sr-only">Ticket Types</legend>
+      <legend className="sr-only">Card Types</legend>
 
       {/* Preset selector */}
       <div className="relative">
         <label
-          htmlFor="ticket-type-preset"
+          htmlFor="card-type-preset"
           className={`block text-xs ${tc.textMuted} mb-1`}
         >
           Preset
         </label>
         <select
-          id="ticket-type-preset"
-          value={ticketTypePresetId}
+          id="card-type-preset"
+          value={cardTypePresetId}
           onChange={(e) => handlePresetChange(e.target.value)}
           className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
-          data-testid="ticket-type-preset"
+          data-testid="card-type-preset"
         >
-          {TICKET_TYPE_PRESETS.map((p) => (
+          {CARD_TYPE_PRESETS.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
             </option>
@@ -150,23 +145,23 @@ export function TicketTypeSection() {
       </div>
 
       {/* Default type for new cards */}
-      {ticketTypes.length > 0 && (
+      {cardTypes.length > 0 && (
         <div className="relative">
           <label
-            htmlFor="default-ticket-type"
+            htmlFor="default-card-type"
             className={`block text-xs ${tc.textMuted} mb-1`}
           >
             Default type for new cards
           </label>
           <select
-            id="default-ticket-type"
-            value={defaultTicketTypeId ?? ""}
-            onChange={(e) => setDefaultTicketTypeId(e.target.value || null)}
+            id="default-card-type"
+            value={defaultCardTypeId ?? ""}
+            onChange={(e) => setDefaultCardTypeId(e.target.value || null)}
             className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
-            data-testid="default-ticket-type"
+            data-testid="default-card-type"
           >
             <option value="">None</option>
-            {ticketTypes.map((t, i) => (
+            {cardTypes.map((t, i) => (
               <option key={i} value={t.id}>
                 {t.label}
               </option>
@@ -194,7 +189,7 @@ export function TicketTypeSection() {
         onClick={() => setEditorOpen((prev) => !prev)}
         className={`flex items-center gap-1 text-xs ${tc.textMuted} ${tc.focusRing} transition-colors`}
         aria-expanded={editorOpen}
-        data-testid="ticket-type-editor-toggle"
+        data-testid="card-type-editor-toggle"
       >
         <svg
           className={`size-3 transition-transform ${editorOpen ? "rotate-90" : ""}`}
@@ -216,7 +211,7 @@ export function TicketTypeSection() {
         <>
           {/* Editable type list */}
           <div className="space-y-2">
-            {ticketTypes.map((type, index) => (
+            {cardTypes.map((type, index) => (
               <div key={index}>
                 <div className="flex items-center gap-2">
                   {/* Color swatch / picker toggle */}
@@ -243,7 +238,7 @@ export function TicketTypeSection() {
                     onBlur={() => handleIdBlur(index)}
                     className={`${tc.glass} rounded-md border ${isDuplicateId(type.id, index) ? "border-red-500" : tc.border} px-2 py-1 text-xs font-mono ${tc.text} ${tc.focusRing} w-20`}
                     aria-label={`Type ID for ${type.label}`}
-                    data-testid={`ticket-type-id-${index}`}
+                    data-testid={`card-type-id-${index}`}
                   />
 
                   {/* Label input */}
@@ -255,7 +250,7 @@ export function TicketTypeSection() {
                     }
                     className={`${tc.glass} rounded-md border ${tc.border} px-2 py-1 text-xs ${tc.text} ${tc.focusRing} flex-1`}
                     aria-label={`Label for ${type.id}`}
-                    data-testid={`ticket-type-label-${index}`}
+                    data-testid={`card-type-label-${index}`}
                   />
 
                   {/* Remove button */}
@@ -264,7 +259,7 @@ export function TicketTypeSection() {
                     onClick={() => handleRemoveType(index)}
                     className={`${tc.iconButton} size-6 rounded-full text-xs shrink-0`}
                     aria-label={`Remove ${type.label} type`}
-                    data-testid={`ticket-type-remove-${index}`}
+                    data-testid={`card-type-remove-${index}`}
                   >
                     &times;
                   </button>
@@ -275,7 +270,7 @@ export function TicketTypeSection() {
                   <div
                     className={`flex gap-1 p-2 mt-1 rounded-md border ${tc.border} ${tc.glass}`}
                   >
-                    {TICKET_TYPE_COLORS.map((c) => (
+                    {CARD_TYPE_COLORS.map((c) => (
                       <button
                         key={c}
                         type="button"
@@ -303,7 +298,7 @@ export function TicketTypeSection() {
             type="button"
             onClick={handleAddType}
             className={`${tc.button} w-full rounded-md px-3 py-1.5`}
-            data-testid="ticket-type-add"
+            data-testid="card-type-add"
           >
             + Add type
           </button>

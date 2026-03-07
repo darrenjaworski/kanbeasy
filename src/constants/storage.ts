@@ -31,14 +31,14 @@ export const STORAGE_KEYS = {
   /** Next auto-increment card number counter */
   NEXT_CARD_NUMBER: "kanbeasy:nextCardNumber",
 
-  /** Active ticket type preset ID */
-  TICKET_TYPE_PRESET: "kanbeasy:ticketTypePreset",
+  /** Active card type preset ID */
+  CARD_TYPE_PRESET: "kanbeasy:ticketTypePreset",
 
-  /** Custom ticket types JSON */
-  TICKET_TYPES: "kanbeasy:ticketTypes",
+  /** Custom card types JSON */
+  CARD_TYPES: "kanbeasy:ticketTypes",
 
-  /** Default ticket type for new cards */
-  DEFAULT_TICKET_TYPE: "kanbeasy:defaultTicketType",
+  /** Default card type for new cards */
+  DEFAULT_CARD_TYPE: "kanbeasy:defaultTicketType",
 
   /** Compact header buttons (icon-only, no text labels) */
   COMPACT_HEADER: "kanbeasy:compactHeader",

@@ -1,28 +1,28 @@
 import { describe, it, expect } from "vitest";
-import { formatCardId, findTicketType } from "../formatCardId";
-import type { TicketType } from "../../constants/ticketTypes";
+import { formatCardId, findCardType } from "../formatCardId";
+import type { CardType } from "../../constants/cardTypes";
 
-const types: TicketType[] = [
+const types: CardType[] = [
   { id: "feat", label: "Feature", color: "#22c55e" },
   { id: "fix", label: "Fix", color: "#ef4444" },
 ];
 
-describe("findTicketType", () => {
+describe("findCardType", () => {
   it("returns the matching type by id", () => {
-    expect(findTicketType(types, "feat")).toEqual(types[0]);
-    expect(findTicketType(types, "fix")).toEqual(types[1]);
+    expect(findCardType(types, "feat")).toEqual(types[0]);
+    expect(findCardType(types, "fix")).toEqual(types[1]);
   });
 
   it("returns undefined for null id", () => {
-    expect(findTicketType(types, null)).toBeUndefined();
+    expect(findCardType(types, null)).toBeUndefined();
   });
 
   it("returns undefined for non-existent id", () => {
-    expect(findTicketType(types, "chore")).toBeUndefined();
+    expect(findCardType(types, "chore")).toBeUndefined();
   });
 
   it("returns undefined for empty types array", () => {
-    expect(findTicketType([], "feat")).toBeUndefined();
+    expect(findCardType([], "feat")).toBeUndefined();
   });
 });
 

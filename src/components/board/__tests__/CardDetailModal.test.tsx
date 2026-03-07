@@ -10,7 +10,7 @@ const baseCard: Card = {
   number: 1,
   title: "Test Card",
   description: "Test description",
-  ticketTypeId: null,
+  cardTypeId: null,
   dueDate: null,
   createdAt: new Date("2025-06-15T12:00:00Z").getTime(),
   updatedAt: new Date("2025-06-16T12:00:00Z").getTime(),
@@ -52,7 +52,7 @@ function renderModal(
     onUpdate: vi.fn(),
     onMoveCard: vi.fn(),
     onArchive: vi.fn(),
-    ticketTypes: [] as Parameters<typeof CardDetailModal>[0]["ticketTypes"],
+    cardTypes: [] as Parameters<typeof CardDetailModal>[0]["cardTypes"],
   };
   const props = { ...defaults, ...overrides };
   const result = render(<CardDetailModal {...props} />);

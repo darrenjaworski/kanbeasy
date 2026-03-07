@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Rename "Ticket Types" to "Card Types" throughout the application (UI labels, code identifiers, file names, documentation)
+- Bump export format to v9 with backward-compatible import for v1–v8 exports
+- Add card view editor to roadmap backlog
+
 ## [1.32.6]
 
 ### Fixed
 
-- Backfill ticket type label and color snapshot fields on legacy cards during migration (prevents loss of colored badges for existing users)
+- Backfill card type label and color snapshot fields on legacy cards during migration (prevents loss of colored badges for existing users)
 
 ### Changed
 
@@ -22,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix React duplicate key warning in ticket type default dropdown during type ID editing
+- Fix React duplicate key warning in card type default dropdown during type ID editing
 - Tighten visual regression pixel threshold from 0.01 to 0.0005 to catch single-character text changes
 - Pin calendar view visual regression test date to June 2025 to match seeded card due dates
 
@@ -47,16 +53,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Card ticket type data is now static — badge color and label are snapshot at assignment time and no longer depend on current type configuration
-- TicketTypeBadge renders from card snapshot data instead of looking up the live type definition
+- Card card type data is now static — badge color and label are snapshot at assignment time and no longer depend on current type configuration
+- CardTypeBadge renders from card snapshot data instead of looking up the live type definition
 - ListView type column uses card snapshot data for label and color
 
 ### Fixed
 
-- Fix ticket type ID rename firing on every keystroke instead of on blur (corrupted card data during editing)
-- Fix duplicate ticket type IDs allowed — now reverts on blur and shows red border while duplicate
-- Fix removing a ticket type definition permanently clearing card type assignments (now preserves card data)
-- Fix card migration stripping `ticketTypeLabel` and `ticketTypeColor` snapshot fields from localStorage data
+- Fix card type ID rename firing on every keystroke instead of on blur (corrupted card data during editing)
+- Fix duplicate card type IDs allowed — now reverts on blur and shows red border while duplicate
+- Fix removing a card type definition permanently clearing card type assignments (now preserves card data)
+- Fix card migration stripping `cardTypeLabel` and `cardTypeColor` snapshot fields from localStorage data
 
 ## [1.32.2]
 
@@ -64,9 +70,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix column reorder destroying all card timestamps and column history (analytics data loss)
 - Fix `removeCard` no-op detection (filter always returns new array, polluting undo history)
-- Fix `renameTicketType`/`clearTicketType` updating all columns even when unaffected
+- Fix `renameCardType`/`clearCardType` updating all columns even when unaffected
 - Fix column resize event listener leak when component unmounts during active resize
-- Fix ticket type preset switch wiping type definitions used by existing cards
+- Fix card type preset switch wiping type definitions used by existing cards
 
 ## [1.32.1]
 
@@ -213,8 +219,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
-- Add default ticket type setting — new cards are automatically pre-tagged with the selected type; dropdown in Ticket Types settings section with "None" and all configured types
-- Include default ticket type in export/import (export format bumped to v7); v1–6 imports default to null
+- Add default card type setting — new cards are automatically pre-tagged with the selected type; dropdown in Card Types settings section with "None" and all configured types
+- Include default card type in export/import (export format bumped to v7); v1–6 imports default to null
 
 ### Changed
 
@@ -225,10 +231,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tests
 
-- Add unit tests for `useBoardMutations` hook — 52 tests covering all 18 mutation functions (column CRUD, card CRUD, archive, ticket types, reset)
+- Add unit tests for `useBoardMutations` hook — 52 tests covering all 18 mutation functions (column CRUD, card CRUD, archive, card types, reset)
 - Suppress `console.warn` stderr noise in storage utility error-path tests
 - Add isolated unit tests for `CardList` (13 tests), `Column` (25 tests), and `Board` (9 tests) components
-- Add e2e tests for default ticket type setting (6 tests across 3 browsers)
+- Add e2e tests for default card type setting (6 tests across 3 browsers)
 
 ## [1.25.0]
 
@@ -244,8 +250,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move owl assistant and undo/redo buttons to bottom of page now that footer is removed
 - Add visible text labels ("Board" / "List") to view mode toggle buttons for improved discoverability
 - Switch default card density from "Comfortable" (medium) to "Compact" (small) to reduce dead space; existing users who previously set a density preference are unaffected
-- Reorganize settings modal into collapsible sections (Appearance, Ticket Types, Preferences, Data) — all collapsed by default with persistent open/close state via localStorage
-- Collapse ticket type editor behind "Edit types" disclosure — preset dropdown always visible, type list and add button hidden until expanded
+- Reorganize settings modal into collapsible sections (Appearance, Card Types, Preferences, Data) — all collapsed by default with persistent open/close state via localStorage
+- Collapse card type editor behind "Edit types" disclosure — preset dropdown always visible, type list and add button hidden until expanded
 - Add descriptive subtitle to "Owl assistant" toggle explaining what it does
 - Move footer credit into settings modal next to version link; remove fixed footer to reclaim vertical space
 - Move card density control from Preferences to Appearance section in settings
@@ -253,7 +259,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Copy/paste card now preserves the ticket type
+- Copy/paste card now preserves the card type
 
 ### Tests
 
@@ -264,7 +270,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- Add UI polish roadmap items: view toggle labels, compact default density, settings modal reorganization, ticket type disclosure, owl assistant description, footer relocation, column delete warning revisit, dynamic favicon
+- Add UI polish roadmap items: view toggle labels, compact default density, settings modal reorganization, card type disclosure, owl assistant description, footer relocation, column delete warning revisit, dynamic favicon
 - Update release process to use `kitchen-sink` script for full validation
 
 ## [1.24.1]
@@ -300,7 +306,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
-- Add type column to list view table showing ticket type label with color
+- Add type column to list view table showing card type label with color
 - Add card archive (soft-delete): cards go to an archive instead of being permanently deleted, with browse, restore, and permanent delete from archive modal
 - Add archive button in header between Analytics and Settings
 - Add "Archive card" button in card detail modal
@@ -359,12 +365,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
-- Add ticket type field to cards with configurable types (e.g. `feat-42`, `fix-13`) and colored badge display
-- Add ticket type settings with preset selector (Development, Personal) and full customization (add/remove/rename/recolor)
+- Add card type field to cards with configurable types (e.g. `feat-42`, `fix-13`) and colored badge display
+- Add card type settings with preset selector (Development, Personal) and full customization (add/remove/rename/recolor)
 - Add type selector dropdown in card detail modal
-- Display ticket type badges on board cards, list view, and card detail modal header
-- Export/import preserves ticket type data (export format bumped to v5)
-- Bulk rename and clear ticket type mutations participate in undo/redo
+- Display card type badges on board cards, list view, and card detail modal header
+- Export/import preserves card type data (export format bumped to v5)
+- Bulk rename and clear card type mutations participate in undo/redo
 - Add auto-incrementing card numbers (`#1`, `#2`, ...) displayed on board cards, card detail modal, list view, and analytics tables
 - Card numbers persist outside the undo stack to prevent number reuse on undo/redo
 - Duplicated cards receive fresh numbers
@@ -384,8 +390,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tests
 
-- Add comprehensive tests for TicketTypeSection (preset selection, editing, adding, removing types, color picker)
-- Add unit tests for `formatCardId`, `findTicketType`, migration `ticketTypeId` backfill, v5 import/export
+- Add comprehensive tests for CardTypeSection (preset selection, editing, adding, removing types, color picker)
+- Add unit tests for `formatCardId`, `findCardType`, migration `cardTypeId` backfill, v5 import/export
 - Add e2e tests for card numbering (ascending numbers on board, modal header, list view, localStorage persistence, duplicate fresh numbers, no number reuse after deletion)
 - Fix card detail modal close button e2e tests to match `#N Card Details` header format
 

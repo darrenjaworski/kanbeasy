@@ -171,7 +171,7 @@ test("shows empty state when no cards have due dates", async ({ page }) => {
                 number: 1,
                 title: "No date",
                 description: "",
-                ticketTypeId: null,
+                cardTypeId: null,
                 dueDate: null,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),

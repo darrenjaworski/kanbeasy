@@ -25,7 +25,7 @@ import { SortableColumnItem } from "./SortableColumnItem";
 export function Board() {
   const { columns, addColumn, setColumns, updateCard, moveCard, archiveCard } =
     useBoard();
-  const { cardDensity, ticketTypes } = useTheme();
+  const { cardDensity, cardTypes } = useTheme();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -183,7 +183,7 @@ export function Board() {
             archiveCard(detailCard.columnId, detailCard.card.id);
             setDetailCardId(null);
           }}
-          ticketTypes={ticketTypes}
+          cardTypes={cardTypes}
         />
       )}
     </main>

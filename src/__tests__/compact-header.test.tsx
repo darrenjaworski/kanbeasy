@@ -22,7 +22,7 @@ function seedBoard() {
               number: 1,
               title: "Task",
               description: "",
-              ticketTypeId: null,
+              cardTypeId: null,
               dueDate: null,
               createdAt: now,
               updatedAt: now,

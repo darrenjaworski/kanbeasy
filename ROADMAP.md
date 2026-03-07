@@ -50,18 +50,18 @@ an ultra simple task organizer
 - ✅ owl assistant — toggle in settings that places an owl in the corner; clicking it gives random productivity advice, programming jokes, and owl puns
 - ✅ WIP badge heat indicator — middle column card count badges progressively shift to accent color as card count rises
 - ✅ auto-incrementing card numbers (`#1`, `#2`, ...) displayed on board cards, card detail modal, list view, and analytics tables
-- ✅ ticket type field — single-select card category with colored badge; type presets (Development, Personal) and full customization in settings; combined display as `feat-42`, `fix-13`
+- ✅ card type field — single-select card category with colored badge; type presets (Development, Personal) and full customization in settings; combined display as `feat-42`, `fix-13`
 - ✅ granular clear data controls — separate actions for clearing board, settings, or all data
 - ✅ night owl mode — between 10 PM and 4 AM, the owl assistant gets sleepy eyes and tips shift to "go to bed!" style messages
 - ✅ card archive (soft-delete with browse/restore)
   - ✅ auto-archive cards when deleting a column instead of permanently destroying them
-- ✅ list view type column — ticket type displayed in list view table
+- ✅ list view type column — card type displayed in list view table
 - ✅ archived card analytics — archived cards included in historical metrics (cycle time, throughput, reverse time) with "(archived)" indicator in per-card tables
 - ✅ UI polish pass
   - ✅ add text labels ("Board" / "List") to view mode toggle icons for clarity
   - ✅ switch default card density from "Comfortable" to "Compact" to reduce dead space
-  - ✅ reorganize settings modal into collapsible sections (Appearance, Ticket Types, Preferences, Data)
-  - ✅ collapse ticket type editor behind a disclosure
+  - ✅ reorganize settings modal into collapsible sections (Appearance, Card Types, Preferences, Data)
+  - ✅ collapse card type editor behind a disclosure
   - ✅ add descriptive subtitle to "Owl assistant" toggle
   - ✅ move footer credit into settings modal; remove fixed footer
   - ✅ move card density control to Appearance section
@@ -69,7 +69,7 @@ an ultra simple task organizer
   - ✅ move floating buttons (owl assistant, undo/redo) to bottom of page after footer removal
   - ✅ disable navigation controls (analytics, search, list view toggle, archive) when board or archive is empty
 - ✅ column delete warning updated to reflect archiving behavior ("cards will be archived and can be restored later")
-- ✅ default ticket type — allow setting a ticket type as the default for new cards in settings
+- ✅ default card type — allow setting a card type as the default for new cards in settings
 - ✅ tooltips on all icon-only buttons for improved discoverability and accessibility
 - ✅ interactive checklists in card descriptions
   - ✅ click-to-toggle checkboxes from preview mode
@@ -91,7 +91,7 @@ Settings
 
 ### known bugs
 
-- ~~copy/paste card does not preserve ticket type~~ (fixed)
+- ~~copy/paste card does not preserve card type~~ (fixed)
 
 ### upcoming
 
@@ -110,7 +110,7 @@ Settings
     - reorder checklist items within a card
   - labels/tags with custom colors, filterable from search
 - search enhancements
-  - search by ticket type (filter cards by their assigned type)
+  - search by card type (filter cards by their assigned type)
   - search card descriptions in addition to titles
   - ✅ search highlighting on calendar view — highlight matching cards similar to board and list views
   - due dates with reminders
@@ -127,6 +127,11 @@ Settings
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
 - due date analytics — add due date metrics to the analytics modal (e.g., overdue count, on-time completion rate, average days until due)
+- card view editor — customize which fields are displayed on board cards, their order, and how they render
+  - field picker (toggle visibility of title, description preview, card type, due date, checklist progress, card number, timestamps, etc.)
+  - drag-to-reorder field layout
+  - display mode per field (e.g., badge vs inline text, icon-only vs label)
+  - per-board or global preset support
 - card sorting UI (alphabetical, by date created, by last updated)
 - lock columns — toggle in settings to prevent drag-and-drop reordering of columns while still allowing card movement
 - column collapse/expand to save horizontal space

@@ -33,7 +33,7 @@ export function makeE2eCard(
     number: 0,
     title: `Card ${id}`,
     description: "",
-    ticketTypeId: null,
+    cardTypeId: null,
     dueDate: null,
     createdAt: now,
     updatedAt: now,

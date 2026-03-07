@@ -9,68 +9,68 @@ function wrapper({ children }: { children: ReactNode }) {
   return <ThemeProvider>{children}</ThemeProvider>;
 }
 
-describe("defaultTicketTypeId", () => {
+describe("defaultCardTypeId", () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
   it("defaults to null when no stored value", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
-    expect(result.current.defaultTicketTypeId).toBeNull();
+    expect(result.current.defaultCardTypeId).toBeNull();
   });
 
   it("persists to localStorage when set", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
-    act(() => result.current.setDefaultTicketTypeId("feat"));
+    act(() => result.current.setDefaultCardTypeId("feat"));
 
-    expect(localStorage.getItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE)).toBe("feat");
+    expect(localStorage.getItem(STORAGE_KEYS.DEFAULT_CARD_TYPE)).toBe("feat");
   });
 
   it("removes from localStorage when set to null", () => {
-    localStorage.setItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE, "feat");
+    localStorage.setItem(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
     const { result } = renderHook(() => useTheme(), { wrapper });
 
-    act(() => result.current.setDefaultTicketTypeId(null));
+    act(() => result.current.setDefaultCardTypeId(null));
 
-    expect(localStorage.getItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE)).toBeNull();
+    expect(localStorage.getItem(STORAGE_KEYS.DEFAULT_CARD_TYPE)).toBeNull();
   });
 
   it("loads initial value from localStorage", () => {
-    localStorage.setItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE, "feat");
+    localStorage.setItem(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
     const { result } = renderHook(() => useTheme(), { wrapper });
 
-    expect(result.current.defaultTicketTypeId).toBe("feat");
+    expect(result.current.defaultCardTypeId).toBe("feat");
   });
 
-  it("clears when ticket types no longer include the selected type", () => {
+  it("clears when card types no longer include the selected type", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
     // Set a default type that exists in the current types
-    const currentTypes = result.current.ticketTypes;
+    const currentTypes = result.current.cardTypes;
     expect(currentTypes.length).toBeGreaterThan(0);
 
-    act(() => result.current.setDefaultTicketTypeId(currentTypes[0].id));
-    expect(result.current.defaultTicketTypeId).toBe(currentTypes[0].id);
+    act(() => result.current.setDefaultCardTypeId(currentTypes[0].id));
+    expect(result.current.defaultCardTypeId).toBe(currentTypes[0].id);
 
     // Remove all types - default should clear
-    act(() => result.current.setTicketTypes([]));
-    expect(result.current.defaultTicketTypeId).toBeNull();
+    act(() => result.current.setCardTypes([]));
+    expect(result.current.defaultCardTypeId).toBeNull();
   });
 
-  it("retains when ticket types still include the selected type", () => {
+  it("retains when card types still include the selected type", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
-    const currentTypes = result.current.ticketTypes;
-    act(() => result.current.setDefaultTicketTypeId(currentTypes[0].id));
+    const currentTypes = result.current.cardTypes;
+    act(() => result.current.setDefaultCardTypeId(currentTypes[0].id));
 
     // Update types but keep the selected one
     act(() =>
-      result.current.setTicketTypes([
+      result.current.setCardTypes([
         currentTypes[0],
         { id: "new", label: "New", color: "#000" },
       ]),
     );
-    expect(result.current.defaultTicketTypeId).toBe(currentTypes[0].id);
+    expect(result.current.defaultCardTypeId).toBe(currentTypes[0].id);
   });
 });

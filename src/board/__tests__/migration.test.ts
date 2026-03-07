@@ -4,7 +4,7 @@ import {
   migrateColumn,
   migrateColumns,
   migrateColumnsWithNumbering,
-  resetTicketTypeLookup,
+  resetCardTypeLookup,
 } from "../migration";
 
 describe("migration", () => {
@@ -12,7 +12,7 @@ describe("migration", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2025-06-15T12:00:00Z"));
     localStorage.clear();
-    resetTicketTypeLookup();
+    resetCardTypeLookup();
   });
 
   afterEach(() => {
@@ -31,7 +31,7 @@ describe("migration", () => {
         number: 0,
         title: "Task 1",
         description: "",
-        ticketTypeId: null,
+        cardTypeId: null,
         dueDate: null,
         createdAt: NOW,
         updatedAt: NOW,
@@ -73,7 +73,7 @@ describe("migration", () => {
         number: 5,
         title: "Task 1",
         description: "Some notes",
-        ticketTypeId: null,
+        cardTypeId: null,
         dueDate: null,
         createdAt: 1000,
         updatedAt: 2000,
@@ -96,22 +96,22 @@ describe("migration", () => {
       expect(result.number).toBe(0);
     });
 
-    it("backfills ticketTypeId to null when missing", () => {
+    it("backfills cardTypeId to null when missing", () => {
       const raw = { id: "card-1", title: "Task 1" };
       const result = migrateCard(raw, "col-1");
-      expect(result.ticketTypeId).toBeNull();
+      expect(result.cardTypeId).toBeNull();
     });
 
-    it("preserves existing ticketTypeId", () => {
+    it("preserves existing cardTypeId", () => {
       const raw = {
         id: "card-1",
         title: "Task 1",
-        ticketTypeId: "feat",
+        cardTypeId: "feat",
         createdAt: 1000,
         updatedAt: 2000,
       };
       const result = migrateCard(raw, "col-1");
-      expect(result.ticketTypeId).toBe("feat");
+      expect(result.cardTypeId).toBe("feat");
     });
 
     it("preserves existing description", () => {
@@ -154,35 +154,35 @@ describe("migration", () => {
       expect(result.dueDate).toBeNull();
     });
 
-    it("preserves ticketTypeLabel and ticketTypeColor snapshot fields", () => {
+    it("preserves cardTypeLabel and cardTypeColor snapshot fields", () => {
       const raw = {
         id: "card-1",
         title: "Task 1",
-        ticketTypeId: "feat",
-        ticketTypeLabel: "Feature",
-        ticketTypeColor: "#22c55e",
+        cardTypeId: "feat",
+        cardTypeLabel: "Feature",
+        cardTypeColor: "#22c55e",
         createdAt: 1000,
         updatedAt: 2000,
       };
       const result = migrateCard(raw, "col-1");
-      expect(result.ticketTypeLabel).toBe("Feature");
-      expect(result.ticketTypeColor).toBe("#22c55e");
+      expect(result.cardTypeLabel).toBe("Feature");
+      expect(result.cardTypeColor).toBe("#22c55e");
     });
 
-    it("backfills snapshot fields from presets for legacy cards with ticketTypeId", () => {
+    it("backfills snapshot fields from presets for legacy cards with cardTypeId", () => {
       const raw = {
         id: "card-1",
         title: "Task 1",
-        ticketTypeId: "feat",
+        cardTypeId: "feat",
         createdAt: 1000,
         updatedAt: 2000,
       };
       const result = migrateCard(raw, "col-1");
-      expect(result.ticketTypeLabel).toBe("Feature");
-      expect(result.ticketTypeColor).toBe("#22c55e");
+      expect(result.cardTypeLabel).toBe("Feature");
+      expect(result.cardTypeColor).toBe("#22c55e");
     });
 
-    it("backfills snapshot fields from user's saved ticket types", () => {
+    it("backfills snapshot fields from user's saved card types", () => {
       localStorage.setItem(
         "kanbeasy:ticketTypes",
         JSON.stringify([
@@ -192,39 +192,39 @@ describe("migration", () => {
       const raw = {
         id: "card-1",
         title: "Task 1",
-        ticketTypeId: "custom",
+        cardTypeId: "custom",
         createdAt: 1000,
         updatedAt: 2000,
       };
       const result = migrateCard(raw, "col-1");
-      expect(result.ticketTypeLabel).toBe("Custom Type");
-      expect(result.ticketTypeColor).toBe("#ff00ff");
+      expect(result.cardTypeLabel).toBe("Custom Type");
+      expect(result.cardTypeColor).toBe("#ff00ff");
     });
 
-    it("omits snapshot fields when ticketTypeId is unknown", () => {
+    it("omits snapshot fields when cardTypeId is unknown", () => {
       const raw = {
         id: "card-1",
         title: "Task 1",
-        ticketTypeId: "nonexistent",
+        cardTypeId: "nonexistent",
         createdAt: 1000,
         updatedAt: 2000,
       };
       const result = migrateCard(raw, "col-1");
-      expect(result).not.toHaveProperty("ticketTypeLabel");
-      expect(result).not.toHaveProperty("ticketTypeColor");
+      expect(result).not.toHaveProperty("cardTypeLabel");
+      expect(result).not.toHaveProperty("cardTypeColor");
     });
 
     it("ignores non-string snapshot fields and backfills from presets", () => {
       const raw = {
         id: "card-1",
         title: "Task 1",
-        ticketTypeId: "fix",
-        ticketTypeLabel: 42,
-        ticketTypeColor: true,
+        cardTypeId: "fix",
+        cardTypeLabel: 42,
+        cardTypeColor: true,
       };
       const result = migrateCard(raw, "col-1");
-      expect(result.ticketTypeLabel).toBe("Fix");
-      expect(result.ticketTypeColor).toBe("#ef4444");
+      expect(result.cardTypeLabel).toBe("Fix");
+      expect(result.cardTypeColor).toBe("#ef4444");
     });
   });
 

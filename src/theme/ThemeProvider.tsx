@@ -16,11 +16,8 @@ import {
 } from "../utils/storage";
 import { STORAGE_KEYS } from "../constants/storage";
 import { updateFavicon } from "./favicon";
-import type { TicketType } from "../constants/ticketTypes";
-import {
-  DEFAULT_PRESET_ID,
-  TICKET_TYPE_PRESETS,
-} from "../constants/ticketTypes";
+import type { CardType } from "../constants/cardTypes";
+import { DEFAULT_PRESET_ID, CARD_TYPE_PRESETS } from "../constants/cardTypes";
 
 function getSystemTheme(): ThemeMode {
   if (
@@ -90,23 +87,23 @@ function getInitialViewMode(): ViewMode {
   return "board";
 }
 
-function getInitialTicketTypePresetId(): string {
-  const stored = getStringFromStorage(STORAGE_KEYS.TICKET_TYPE_PRESET, "");
-  if (TICKET_TYPE_PRESETS.some((p) => p.id === stored) || stored === "custom") {
+function getInitialCardTypePresetId(): string {
+  const stored = getStringFromStorage(STORAGE_KEYS.CARD_TYPE_PRESET, "");
+  if (CARD_TYPE_PRESETS.some((p) => p.id === stored) || stored === "custom") {
     return stored;
   }
   return DEFAULT_PRESET_ID;
 }
 
-function getInitialTicketTypes(presetId: string): TicketType[] {
-  const stored = getFromStorage<TicketType[] | null>(
-    STORAGE_KEYS.TICKET_TYPES,
+function getInitialCardTypes(presetId: string): CardType[] {
+  const stored = getFromStorage<CardType[] | null>(
+    STORAGE_KEYS.CARD_TYPES,
     null,
   );
   if (Array.isArray(stored) && stored.length > 0) {
     return stored;
   }
-  const preset = TICKET_TYPE_PRESETS.find((p) => p.id === presetId);
+  const preset = CARD_TYPE_PRESETS.find((p) => p.id === presetId);
   return preset ? [...preset.types] : [];
 }
 
@@ -143,14 +140,14 @@ export function ThemeProvider({
     return stored === "true";
   });
   const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
-  const [ticketTypePresetId, setTicketTypePresetId] = useState<string>(
-    getInitialTicketTypePresetId,
+  const [cardTypePresetId, setCardTypePresetId] = useState<string>(
+    getInitialCardTypePresetId,
   );
-  const [ticketTypes, setTicketTypes] = useState<TicketType[]>(() =>
-    getInitialTicketTypes(ticketTypePresetId),
+  const [cardTypes, setCardTypes] = useState<CardType[]>(() =>
+    getInitialCardTypes(cardTypePresetId),
   );
-  const [defaultTicketTypeId, setDefaultTicketTypeId] = useState<string | null>(
-    () => getStringFromStorage(STORAGE_KEYS.DEFAULT_TICKET_TYPE, "") || null,
+  const [defaultCardTypeId, setDefaultCardTypeId] = useState<string | null>(
+    () => getStringFromStorage(STORAGE_KEYS.DEFAULT_CARD_TYPE, "") || null,
   );
   const [compactHeader, setCompactHeader] = useState<boolean>(() => {
     const stored = getStringFromStorage(STORAGE_KEYS.COMPACT_HEADER, "false");
@@ -239,37 +236,34 @@ export function ThemeProvider({
   }, [viewMode]);
 
   useEffect(() => {
-    saveStringToStorage(STORAGE_KEYS.TICKET_TYPE_PRESET, ticketTypePresetId);
-  }, [ticketTypePresetId]);
+    saveStringToStorage(STORAGE_KEYS.CARD_TYPE_PRESET, cardTypePresetId);
+  }, [cardTypePresetId]);
 
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.TICKET_TYPES, ticketTypes);
-  }, [ticketTypes]);
+    saveToStorage(STORAGE_KEYS.CARD_TYPES, cardTypes);
+  }, [cardTypes]);
 
   useEffect(() => {
-    if (defaultTicketTypeId) {
-      saveStringToStorage(
-        STORAGE_KEYS.DEFAULT_TICKET_TYPE,
-        defaultTicketTypeId,
-      );
+    if (defaultCardTypeId) {
+      saveStringToStorage(STORAGE_KEYS.DEFAULT_CARD_TYPE, defaultCardTypeId);
     } else {
-      localStorage.removeItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE);
+      localStorage.removeItem(STORAGE_KEYS.DEFAULT_CARD_TYPE);
     }
-  }, [defaultTicketTypeId]);
+  }, [defaultCardTypeId]);
 
   useEffect(() => {
     saveStringToStorage(STORAGE_KEYS.COMPACT_HEADER, String(compactHeader));
   }, [compactHeader]);
 
-  // Clear default ticket type if it no longer exists in the current types
+  // Clear default card type if it no longer exists in the current types
   useEffect(() => {
     if (
-      defaultTicketTypeId &&
-      !ticketTypes.some((t) => t.id === defaultTicketTypeId)
+      defaultCardTypeId &&
+      !cardTypes.some((t) => t.id === defaultCardTypeId)
     ) {
-      setDefaultTicketTypeId(null);
+      setDefaultCardTypeId(null);
     }
-  }, [ticketTypes, defaultTicketTypeId]);
+  }, [cardTypes, defaultCardTypeId]);
 
   const resetSettings = useCallback(() => {
     // Clear all localStorage keys
@@ -280,9 +274,9 @@ export function ThemeProvider({
     localStorage.removeItem(STORAGE_KEYS.DELETE_COLUMN_WARNING);
     localStorage.removeItem(STORAGE_KEYS.OWL_MODE_ENABLED);
     localStorage.removeItem(STORAGE_KEYS.VIEW_MODE);
-    localStorage.removeItem(STORAGE_KEYS.TICKET_TYPE_PRESET);
-    localStorage.removeItem(STORAGE_KEYS.TICKET_TYPES);
-    localStorage.removeItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE);
+    localStorage.removeItem(STORAGE_KEYS.CARD_TYPE_PRESET);
+    localStorage.removeItem(STORAGE_KEYS.CARD_TYPES);
+    localStorage.removeItem(STORAGE_KEYS.DEFAULT_CARD_TYPE);
     localStorage.removeItem(STORAGE_KEYS.COMPACT_HEADER);
     localStorage.removeItem(STORAGE_KEYS.SETTINGS_SECTIONS);
     localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
@@ -295,10 +289,10 @@ export function ThemeProvider({
     setDeleteColumnWarningEnabled(true);
     setOwlModeEnabled(false);
     setViewMode("board");
-    setTicketTypePresetId(DEFAULT_PRESET_ID);
-    const preset = TICKET_TYPE_PRESETS.find((p) => p.id === DEFAULT_PRESET_ID);
-    if (preset) setTicketTypes([...preset.types]);
-    setDefaultTicketTypeId(null);
+    setCardTypePresetId(DEFAULT_PRESET_ID);
+    const preset = CARD_TYPE_PRESETS.find((p) => p.id === DEFAULT_PRESET_ID);
+    if (preset) setCardTypes([...preset.types]);
+    setDefaultCardTypeId(null);
     setCompactHeader(false);
   }, []);
 
@@ -322,12 +316,12 @@ export function ThemeProvider({
       setOwlModeEnabled,
       viewMode,
       setViewMode,
-      ticketTypes,
-      setTicketTypes,
-      ticketTypePresetId,
-      setTicketTypePresetId,
-      defaultTicketTypeId,
-      setDefaultTicketTypeId,
+      cardTypes,
+      setCardTypes,
+      cardTypePresetId,
+      setCardTypePresetId,
+      defaultCardTypeId,
+      setDefaultCardTypeId,
       compactHeader,
       setCompactHeader,
       resetSettings,
@@ -342,9 +336,9 @@ export function ThemeProvider({
       deleteColumnWarningEnabled,
       owlModeEnabled,
       viewMode,
-      ticketTypes,
-      ticketTypePresetId,
-      defaultTicketTypeId,
+      cardTypes,
+      cardTypePresetId,
+      defaultCardTypeId,
       compactHeader,
       resetSettings,
     ],

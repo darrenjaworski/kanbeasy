@@ -1,5 +1,5 @@
 import type { ThemeId, ThemeMode } from "./themes";
-import type { TicketType } from "../constants/ticketTypes";
+import type { CardType } from "../constants/cardTypes";
 
 export type CardDensity = "small" | "medium" | "large";
 
@@ -30,12 +30,12 @@ export type ThemeContextValue = Readonly<{
   setOwlModeEnabled: (enabled: boolean) => void;
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
-  ticketTypes: TicketType[];
-  setTicketTypes: (types: TicketType[]) => void;
-  ticketTypePresetId: string;
-  setTicketTypePresetId: (id: string) => void;
-  defaultTicketTypeId: string | null;
-  setDefaultTicketTypeId: (id: string | null) => void;
+  cardTypes: CardType[];
+  setCardTypes: (types: CardType[]) => void;
+  cardTypePresetId: string;
+  setCardTypePresetId: (id: string) => void;
+  defaultCardTypeId: string | null;
+  setDefaultCardTypeId: (id: string | null) => void;
   compactHeader: boolean;
   setCompactHeader: (enabled: boolean) => void;
   resetSettings: () => void;
