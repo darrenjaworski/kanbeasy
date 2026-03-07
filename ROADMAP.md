@@ -75,6 +75,8 @@ an ultra simple task organizer
   - ✅ click-to-toggle checkboxes from preview mode
   - ✅ "+ Add checklist item" button for easy creation without markdown syntax
   - ✅ checklist progress bar on board cards and card detail modal
+- ✅ calendar view — visualize cards with due dates on a monthly/weekly calendar
+- ✅ simplified header buttons — compact header setting to hide text labels on header buttons
 
 Settings
 
@@ -121,7 +123,6 @@ Settings
   - pinned cards — stick important cards to the top of a column
   - compact vs expanded toggle — per-card override of global density setting
   - aging indicator — visual fade or badge showing how long a card has sat idle
-- simplified header buttons — streamline header action buttons for a cleaner, more minimal look
 - card sorting UI (alphabetical, by date created, by last updated)
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded
@@ -131,7 +132,6 @@ Settings
 - multiple boards
 - saved filters/views (presets beyond search, e.g., "older than 7 days")
 - swimlanes (horizontal grouping across columns by project or person)
-- calendar view — visualize cards with due dates on a monthly/weekly calendar
 - activity log (timeline of card movements, edits, deletions)
 - localStorage usage warning — alert the user when approaching the browser's localStorage limit (~5 MB)
 - offline PWA (service worker + manifest for standalone install)

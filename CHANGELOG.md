@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.30.0]
+
 ### Features
 
 - Add calendar view as third viewing mode (Board | List | Calendar) with month navigation
@@ -15,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add scrollable day cells in calendar view with fixed-height layout
 - Reduce search bar width for better header layout
 - Add compact header setting to hide text labels on header buttons (Appearance > Compact header)
+
+### Fixed
+
+- Fix ThemeProvider to accept "calendar" as a valid persisted view mode
 
 ### Tests
 
@@ -27,10 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add list view card detail modal e2e test
 - Add compact header e2e test (label hiding, icon accessibility, localStorage persistence)
 - Fix export version expectation in e2e tests (v7 → v8)
-
-### Fixed
-
-- Fix ThemeProvider to accept "calendar" as a valid persisted view mode
 
 ## [1.29.0]
 
