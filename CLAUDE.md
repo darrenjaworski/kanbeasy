@@ -21,6 +21,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **E2E tests**: `npm run e2e` (Playwright across Chromium, Firefox, WebKit)
 - **E2E UI**: `npm run e2e:ui` (interactive test runner)
 - **E2E report**: `npm run e2e:report` (view last HTML report)
+- **Visual regression**: `npm run e2e:visual` (run visual snapshot tests only)
+- **Update snapshots**: `npm run e2e:snapshot` (regenerate visual regression baselines)
 
 For deployed environment testing, set `E2E_BASE_URL`:
 
