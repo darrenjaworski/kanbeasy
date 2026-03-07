@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `removeCard` no-op detection (filter always returns new array, polluting undo history)
 - Fix `renameTicketType`/`clearTicketType` updating all columns even when unaffected
 - Fix column resize event listener leak when component unmounts during active resize
+- Fix ticket type preset switch wiping type definitions used by existing cards
 
 ## [1.32.1]
 

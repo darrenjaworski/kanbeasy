@@ -4,6 +4,7 @@ import { TicketTypeSection } from "../TicketTypeSection";
 import { ThemeProvider } from "../../../theme/ThemeProvider";
 import { BoardProvider } from "../../../board/BoardProvider";
 import { TICKET_TYPE_PRESETS } from "../../../constants/ticketTypes";
+import { STORAGE_KEYS } from "../../../constants/storage";
 import { describe, beforeEach, it, expect } from "vitest";
 
 function renderSection() {
@@ -83,6 +84,54 @@ describe("TicketTypeSection", () => {
         expect(screen.getByDisplayValue(type.id)).toBeInTheDocument();
         expect(screen.getByDisplayValue(type.label)).toBeInTheDocument();
       }
+    });
+
+    it("retains in-use types from previous preset when switching", () => {
+      // Seed board with a card using the "feat" type from the development preset
+      const now = Date.now();
+      localStorage.setItem(
+        STORAGE_KEYS.BOARD,
+        JSON.stringify({
+          columns: [
+            {
+              id: "col-1",
+              title: "To Do",
+              createdAt: now,
+              updatedAt: now,
+              cards: [
+                {
+                  id: "card-1",
+                  number: 1,
+                  title: "A feature",
+                  description: "",
+                  ticketTypeId: "feat",
+                  dueDate: null,
+                  createdAt: now,
+                  updatedAt: now,
+                  columnHistory: [{ columnId: "col-1", enteredAt: now }],
+                },
+              ],
+            },
+          ],
+          archive: [],
+        }),
+      );
+
+      renderSection();
+      expandEditor();
+
+      // Switch to personal preset
+      fireEvent.change(screen.getByTestId("ticket-type-preset"), {
+        target: { value: "personal" },
+      });
+
+      // Personal preset types should be present
+      for (const type of personalPreset.types) {
+        expect(screen.getByDisplayValue(type.id)).toBeInTheDocument();
+      }
+
+      // "feat" type should be retained because a card uses it
+      expect(screen.getByDisplayValue("feat")).toBeInTheDocument();
     });
 
     it("switches to custom without changing types", () => {

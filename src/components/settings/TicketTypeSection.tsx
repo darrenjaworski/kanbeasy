@@ -17,7 +17,7 @@ export function TicketTypeSection() {
     defaultTicketTypeId,
     setDefaultTicketTypeId,
   } = useTheme();
-  const { renameTicketType, clearTicketType } = useBoard();
+  const { columns, renameTicketType, clearTicketType } = useBoard();
   const [editingColorIdx, setEditingColorIdx] = useState<number | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
 
@@ -26,7 +26,21 @@ export function TicketTypeSection() {
     if (presetId === "custom") return;
     const preset = TICKET_TYPE_PRESETS.find((p) => p.id === presetId);
     if (preset) {
-      setTicketTypes([...preset.types]);
+      // Collect ticket type IDs currently used by cards on the board
+      const usedTypeIds = new Set<string>();
+      for (const col of columns) {
+        for (const card of col.cards) {
+          if (card.ticketTypeId) usedTypeIds.add(card.ticketTypeId);
+        }
+      }
+
+      // Keep any in-use type definitions that the new preset doesn't cover
+      const newPresetIds = new Set(preset.types.map((t) => t.id));
+      const retainedTypes = ticketTypes.filter(
+        (t) => usedTypeIds.has(t.id) && !newPresetIds.has(t.id),
+      );
+
+      setTicketTypes([...preset.types, ...retainedTypes]);
     }
   };
 
