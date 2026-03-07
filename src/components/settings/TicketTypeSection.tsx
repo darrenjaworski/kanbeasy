@@ -166,8 +166,8 @@ export function TicketTypeSection() {
             data-testid="default-ticket-type"
           >
             <option value="">None</option>
-            {ticketTypes.map((t) => (
-              <option key={t.id} value={t.id}>
+            {ticketTypes.map((t, i) => (
+              <option key={i} value={t.id}>
                 {t.label}
               </option>
             ))}

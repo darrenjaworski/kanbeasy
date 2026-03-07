@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix React duplicate key warning in ticket type default dropdown during type ID editing
+
 ### Changed
 
 - Update `/check` and `/commit` skills to run full kitchen-sink (static checks, lighthouse, e2e)
