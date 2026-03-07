@@ -280,11 +280,29 @@ test.describe("Visual regression", () => {
   });
 
   test("calendar view", async ({ page }) => {
-    // Fix the clock to June 2025 so the calendar shows the month matching seeded due dates
-    await page.clock.setFixedTime(new Date("2025-06-15T12:00:00Z"));
     await seedAndNavigate(page);
     await page.getByRole("radio", { name: /calendar view/i }).click();
     await expect(page.getByTestId("calendar-grid")).toBeVisible();
+
+    // Navigate the calendar to June 2025 to show seeded due dates (c3: June 16, c4: June 20).
+    // Click prev/next month until we reach the target month.
+    const targetLabel = "June 2025";
+    const monthHeader = page.getByRole("heading", { level: 2 });
+    const prevBtn = page.getByRole("button", { name: "Previous month" });
+    const nextBtn = page.getByRole("button", { name: "Next month" });
+    for (let i = 0; i < 24; i++) {
+      const label = await monthHeader.textContent();
+      if (label?.trim() === targetLabel) break;
+      // Determine direction: if current date is after June 2025, go back
+      if (label && label.includes("2026")) await prevBtn.click();
+      else if (label && label.includes("2025")) {
+        const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const currentMonth = monthNames.findIndex((m) => label.includes(m));
+        if (currentMonth > 5) await prevBtn.click();
+        else await nextBtn.click();
+      } else await prevBtn.click();
+    }
+    await expect(monthHeader).toHaveText(targetLabel);
 
     await expect(page).toHaveScreenshot("calendar-view.png", {
       maxDiffPixelRatio: 0.01,
