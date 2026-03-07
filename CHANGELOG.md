@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.32.3]
+
 ### Changed
 
 - Card ticket type data is now static — badge color and label are snapshot at assignment time and no longer depend on current type configuration
