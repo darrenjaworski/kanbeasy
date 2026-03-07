@@ -233,7 +233,13 @@ describe("Column", () => {
   it("calls addCard with column id on button click", async () => {
     const { boardCtx } = renderColumn();
     await userEvent.click(screen.getByRole("button", { name: /Add card to/ }));
-    expect(boardCtx.addCard).toHaveBeenCalledWith("col-1", "New card", null);
+    expect(boardCtx.addCard).toHaveBeenCalledWith(
+      "col-1",
+      "New card",
+      null,
+      undefined,
+      undefined,
+    );
   });
 
   // --- Paste card ---

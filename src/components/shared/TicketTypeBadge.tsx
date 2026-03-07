@@ -1,27 +1,32 @@
-import type { TicketType } from "../../constants/ticketTypes";
-import { findTicketType, formatCardId } from "../../utils/formatCardId";
 import { tc } from "../../theme/classNames";
 
 type Props = Readonly<{
   number: number;
   ticketTypeId: string | null;
-  ticketTypes: TicketType[];
+  /** Snapshot of the ticket type color stored on the card at assignment time */
+  ticketTypeColor?: string;
 }>;
 
-export function TicketTypeBadge({ number, ticketTypeId, ticketTypes }: Props) {
-  const type = findTicketType(ticketTypes, ticketTypeId);
-  const label = formatCardId(number, ticketTypeId, ticketTypes);
+export function TicketTypeBadge({
+  number,
+  ticketTypeId,
+  ticketTypeColor,
+}: Props) {
+  // Card data is static — always use the snapshot stored on the card, not current config
+  const displayLabel = ticketTypeId
+    ? `${ticketTypeId}-${number}`
+    : `#${number}`;
 
-  if (type) {
+  if (ticketTypeColor) {
     return (
       <span
         className="inline-block text-xs font-mono font-medium tabular-nums rounded-sm px-1 select-none"
         style={{
-          backgroundColor: `${type.color}20`,
-          color: type.color,
+          backgroundColor: `${ticketTypeColor}20`,
+          color: ticketTypeColor,
         }}
       >
-        {label}
+        {displayLabel}
       </span>
     );
   }
@@ -30,7 +35,7 @@ export function TicketTypeBadge({ number, ticketTypeId, ticketTypes }: Props) {
     <span
       className={`text-xs tabular-nums font-mono ${tc.textFaint} select-none`}
     >
-      {label}
+      {displayLabel}
     </span>
   );
 }

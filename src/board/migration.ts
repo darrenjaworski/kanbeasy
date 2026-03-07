@@ -29,6 +29,12 @@ export function migrateCard(
     title: raw.title as string,
     description,
     ticketTypeId,
+    ...(typeof raw.ticketTypeLabel === "string" && {
+      ticketTypeLabel: raw.ticketTypeLabel,
+    }),
+    ...(typeof raw.ticketTypeColor === "string" && {
+      ticketTypeColor: raw.ticketTypeColor,
+    }),
     dueDate,
     createdAt,
     updatedAt,

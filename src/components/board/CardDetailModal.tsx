@@ -10,8 +10,6 @@ import { ChecklistProgress } from "../shared/ChecklistProgress";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
 import { formatDateTime } from "../../utils/formatDate";
-import { formatCardId } from "../../utils/formatCardId";
-
 type Props = Readonly<{
   open: boolean;
   onClose: () => void;
@@ -72,7 +70,7 @@ export function CardDetailModal({
       <div className="p-4 pb-2 shrink-0">
         <ModalHeader
           icon={MoreIcon}
-          title={`${formatCardId(card.number, card.ticketTypeId, ticketTypes)} Card Details`}
+          title={`${card.ticketTypeId ? `${card.ticketTypeId}-${card.number}` : `#${card.number}`} Card Details`}
           titleId="card-detail-title"
           onClose={onClose}
         />
@@ -129,11 +127,17 @@ export function CardDetailModal({
             <select
               id="card-detail-type"
               value={card.ticketTypeId ?? ""}
-              onChange={(e) =>
+              onChange={(e) => {
+                const selectedId = e.target.value || null;
+                const selectedType = selectedId
+                  ? ticketTypes.find((t) => t.id === selectedId)
+                  : undefined;
                 onUpdate({
-                  ticketTypeId: e.target.value || null,
-                })
-              }
+                  ticketTypeId: selectedId,
+                  ticketTypeLabel: selectedType?.label,
+                  ticketTypeColor: selectedType?.color,
+                });
+              }}
               className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
               data-testid="card-detail-type"
             >

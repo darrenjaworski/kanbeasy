@@ -150,6 +150,46 @@ describe("migration", () => {
       const result = migrateCard(raw, "col-1");
       expect(result.dueDate).toBeNull();
     });
+
+    it("preserves ticketTypeLabel and ticketTypeColor snapshot fields", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        ticketTypeId: "feat",
+        ticketTypeLabel: "Feature",
+        ticketTypeColor: "#22c55e",
+        createdAt: 1000,
+        updatedAt: 2000,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result.ticketTypeLabel).toBe("Feature");
+      expect(result.ticketTypeColor).toBe("#22c55e");
+    });
+
+    it("omits snapshot fields when not present (legacy cards)", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        ticketTypeId: "feat",
+        createdAt: 1000,
+        updatedAt: 2000,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result).not.toHaveProperty("ticketTypeLabel");
+      expect(result).not.toHaveProperty("ticketTypeColor");
+    });
+
+    it("ignores non-string snapshot fields", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        ticketTypeLabel: 42,
+        ticketTypeColor: true,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result).not.toHaveProperty("ticketTypeLabel");
+      expect(result).not.toHaveProperty("ticketTypeColor");
+    });
   });
 
   describe("migrateColumn", () => {

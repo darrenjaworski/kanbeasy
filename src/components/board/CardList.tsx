@@ -1,5 +1,4 @@
 import { useBoard } from "../../board/useBoard";
-import { useTheme } from "../../theme/useTheme";
 import { tc } from "../../theme/classNames";
 import { useDroppable, useDndContext } from "@dnd-kit/core";
 import {
@@ -32,7 +31,6 @@ export function CardList({
   onAutoFocused?: () => void;
 }>) {
   const { columns, matchingCardIds } = useBoard();
-  const { ticketTypes } = useTheme();
   // Register the column list as a droppable target (works even when empty)
   const { setNodeRef, isOver } = useDroppable({
     id: `col:${columnId}`,
@@ -79,7 +77,6 @@ export function CardList({
               // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: auto-select new card title for immediate editing
               autoFocus={card.id === autoFocusCardId}
               onAutoFocused={onAutoFocused}
-              ticketTypes={ticketTypes}
             />
           ))
         )}

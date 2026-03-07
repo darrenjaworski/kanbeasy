@@ -55,6 +55,7 @@ export function Column({
     columnResizingEnabled,
     deleteColumnWarningEnabled,
     defaultTicketTypeId,
+    ticketTypes,
   } = useTheme();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [autoFocusCardId, setAutoFocusCardId] = useState<string | null>(null);
@@ -207,7 +208,16 @@ export function Column({
           type="button"
           className={`flex-1 rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
           onClick={(e) => {
-            const cardId = addCard(id, "New card", defaultTicketTypeId);
+            const defaultType = defaultTicketTypeId
+              ? ticketTypes.find((t) => t.id === defaultTicketTypeId)
+              : undefined;
+            const cardId = addCard(
+              id,
+              "New card",
+              defaultTicketTypeId,
+              defaultType?.label,
+              defaultType?.color,
+            );
             setAutoFocusCardId(cardId);
             e.currentTarget.blur();
           }}
@@ -241,6 +251,8 @@ export function Column({
               title: card.title,
               description: card.description,
               ticketTypeId: card.ticketTypeId,
+              ticketTypeLabel: card.ticketTypeLabel,
+              ticketTypeColor: card.ticketTypeColor,
             });
         }}
         onArchive={(cardId) => archiveCard(id, cardId)}

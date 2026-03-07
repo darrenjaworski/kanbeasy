@@ -10,7 +10,14 @@ const devPreset = TICKET_TYPE_PRESETS.find((p) => p.id === "development")!;
 
 function seedBoard({
   ticketTypeId = null as string | null,
+  ticketTypeLabel,
+  ticketTypeColor,
   description = "",
+}: {
+  ticketTypeId?: string | null;
+  ticketTypeLabel?: string;
+  ticketTypeColor?: string;
+  description?: string;
 } = {}) {
   localStorage.setItem(
     STORAGE_KEYS.BOARD,
@@ -28,6 +35,8 @@ function seedBoard({
               title: "Typed card",
               description,
               ticketTypeId,
+              ...(ticketTypeLabel !== undefined && { ticketTypeLabel }),
+              ...(ticketTypeColor !== undefined && { ticketTypeColor }),
               createdAt: Date.now(),
               updatedAt: Date.now(),
               columnHistory: [{ columnId: "col-1", enteredAt: Date.now() }],
@@ -63,7 +72,11 @@ describe("ListView type column", () => {
 
   it("displays ticket type label with color when card has a type", () => {
     const featType = devPreset.types.find((t) => t.id === "feat")!;
-    seedBoard({ ticketTypeId: "feat" });
+    seedBoard({
+      ticketTypeId: "feat",
+      ticketTypeLabel: featType.label,
+      ticketTypeColor: featType.color,
+    });
     localStorage.setItem(STORAGE_KEYS.TICKET_TYPE_PRESET, "development");
     localStorage.setItem(
       STORAGE_KEYS.TICKET_TYPES,
@@ -128,6 +141,10 @@ describe("ListView type column", () => {
                 title: "Test",
                 description: "",
                 ticketTypeId: "fix",
+                ticketTypeLabel: devPreset.types.find((t) => t.id === "fix")!
+                  .label,
+                ticketTypeColor: devPreset.types.find((t) => t.id === "fix")!
+                  .color,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
                 columnHistory: [{ columnId: "col-1", enteredAt: Date.now() }],

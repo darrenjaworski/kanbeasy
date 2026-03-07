@@ -28,6 +28,8 @@ interface CardEntry {
   number: number;
   title: string;
   ticketTypeId: string | null;
+  ticketTypeLabel?: string;
+  ticketTypeColor?: string;
   dueDate: string;
 }
 
@@ -68,6 +70,8 @@ export function CalendarView() {
           number: card.number,
           title: card.title,
           ticketTypeId: card.ticketTypeId,
+          ticketTypeLabel: card.ticketTypeLabel,
+          ticketTypeColor: card.ticketTypeColor,
           dueDate: card.dueDate,
         });
         map.set(card.dueDate, existing);
@@ -259,7 +263,7 @@ export function CalendarView() {
                               <TicketTypeBadge
                                 number={card.number}
                                 ticketTypeId={card.ticketTypeId}
-                                ticketTypes={ticketTypes}
+                                ticketTypeColor={card.ticketTypeColor}
                               />
                               <span className="ml-1">{card.title}</span>
                             </button>

@@ -77,7 +77,7 @@ export function useBoardMutations(
   );
 
   const addCard = useCallback<BoardContextValue["addCard"]>(
-    (columnId, title = "", ticketTypeId) => {
+    (columnId, title = "", ticketTypeId, ticketTypeLabel, ticketTypeColor) => {
       const now = Date.now();
       const number = nextCardNumberRef.current;
       saveCounter(number + 1);
@@ -87,6 +87,8 @@ export function useBoardMutations(
         title,
         description: "",
         ticketTypeId: ticketTypeId ?? null,
+        ...(ticketTypeLabel !== undefined && { ticketTypeLabel }),
+        ...(ticketTypeColor !== undefined && { ticketTypeColor }),
         dueDate: null,
         createdAt: now,
         updatedAt: now,
@@ -197,6 +199,12 @@ export function useBoardMutations(
         title: source.title,
         description: source.description,
         ticketTypeId: source.ticketTypeId ?? null,
+        ...(source.ticketTypeLabel !== undefined && {
+          ticketTypeLabel: source.ticketTypeLabel,
+        }),
+        ...(source.ticketTypeColor !== undefined && {
+          ticketTypeColor: source.ticketTypeColor,
+        }),
         dueDate: null,
         createdAt: now,
         updatedAt: now,

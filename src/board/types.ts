@@ -9,6 +9,10 @@ export type Card = Readonly<{
   title: string;
   description: string;
   ticketTypeId: string | null;
+  /** Snapshot of the ticket type label at assignment time (for rendering after type deletion) */
+  ticketTypeLabel?: string;
+  /** Snapshot of the ticket type color at assignment time (for rendering after type deletion) */
+  ticketTypeColor?: string;
   dueDate: string | null;
   createdAt: number;
   updatedAt: number;
@@ -23,11 +27,19 @@ export type ArchivedCard = Card &
 
 export type CardClipboard = Pick<
   Card,
-  "title" | "description" | "ticketTypeId"
+  | "title"
+  | "description"
+  | "ticketTypeId"
+  | "ticketTypeLabel"
+  | "ticketTypeColor"
 >;
 
 export type CardUpdates = Partial<
-  CardClipboard & Pick<Card, "ticketTypeId" | "dueDate">
+  CardClipboard &
+    Pick<
+      Card,
+      "ticketTypeId" | "ticketTypeLabel" | "ticketTypeColor" | "dueDate"
+    >
 >;
 
 export type Column = Readonly<{
@@ -52,6 +64,8 @@ export type BoardContextValue = Readonly<{
     columnId: string,
     title?: string,
     ticketTypeId?: string | null,
+    ticketTypeLabel?: string,
+    ticketTypeColor?: string,
   ) => string;
   removeCard: (columnId: string, cardId: string) => void;
   updateCard: (columnId: string, cardId: string, updates: CardUpdates) => void;

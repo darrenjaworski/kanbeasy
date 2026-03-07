@@ -8,7 +8,6 @@ import {
   type CSSProperties,
 } from "react";
 import type { Card, CardUpdates } from "../../board/types";
-import type { TicketType } from "../../constants/ticketTypes";
 import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
@@ -30,7 +29,6 @@ type SortableCardItemProps = Readonly<{
   isSearchMatch?: boolean;
   autoFocus?: boolean;
   onAutoFocused?: () => void;
-  ticketTypes: TicketType[];
 }>;
 
 export function SortableCardItem({
@@ -46,7 +44,6 @@ export function SortableCardItem({
   isSearchMatch = false,
   autoFocus = false,
   onAutoFocused,
-  ticketTypes,
 }: SortableCardItemProps) {
   const {
     attributes,
@@ -122,7 +119,7 @@ export function SortableCardItem({
       <TicketTypeBadge
         number={card.number}
         ticketTypeId={card.ticketTypeId}
-        ticketTypes={ticketTypes}
+        ticketTypeColor={card.ticketTypeColor}
       />
 
       {!isDragging && (

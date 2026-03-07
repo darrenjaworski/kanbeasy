@@ -5,7 +5,6 @@ import { tc } from "../theme/classNames";
 
 import { TicketTypeBadge } from "./shared/TicketTypeBadge";
 import { CardDetailModal } from "./board/CardDetailModal";
-import { findTicketType } from "../utils/formatCardId";
 import { formatDate } from "../utils/formatDate";
 
 interface CardRow {
@@ -13,6 +12,8 @@ interface CardRow {
   number: number;
   title: string;
   ticketTypeId: string | null;
+  ticketTypeLabel?: string;
+  ticketTypeColor?: string;
   dueDate: string | null;
   columnTitle: string;
   createdAt: number;
@@ -48,6 +49,8 @@ export function ListView() {
           number: card.number,
           title: card.title,
           ticketTypeId: card.ticketTypeId,
+          ticketTypeLabel: card.ticketTypeLabel,
+          ticketTypeColor: card.ticketTypeColor,
           dueDate: card.dueDate,
           columnTitle: col.title,
           createdAt: card.createdAt,
@@ -121,26 +124,20 @@ export function ListView() {
                         <TicketTypeBadge
                           number={row.number}
                           ticketTypeId={row.ticketTypeId}
-                          ticketTypes={ticketTypes}
+                          ticketTypeColor={row.ticketTypeColor}
                         />
                       </td>
                       <td
                         className={`px-3 py-2 ${tc.textMuted}`}
                         data-testid="list-cell-type"
                       >
-                        {(() => {
-                          const type = findTicketType(
-                            ticketTypes,
-                            row.ticketTypeId,
-                          );
-                          return type ? (
-                            <span style={{ color: type.color }}>
-                              {type.label}
-                            </span>
-                          ) : (
-                            "\u2014"
-                          );
-                        })()}
+                        {row.ticketTypeLabel ? (
+                          <span style={{ color: row.ticketTypeColor }}>
+                            {row.ticketTypeLabel}
+                          </span>
+                        ) : (
+                          "\u2014"
+                        )}
                       </td>
                       <td
                         className={`px-3 py-2 ${tc.text}`}

@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Card ticket type data is now static — badge color and label are snapshot at assignment time and no longer depend on current type configuration
+- TicketTypeBadge renders from card snapshot data instead of looking up the live type definition
+- ListView type column uses card snapshot data for label and color
+
 ### Fixed
 
 - Fix ticket type ID rename firing on every keystroke instead of on blur (corrupted card data during editing)
 - Fix duplicate ticket type IDs allowed — now reverts on blur and shows red border while duplicate
 - Fix removing a ticket type definition permanently clearing card type assignments (now preserves card data)
+- Fix card migration stripping `ticketTypeLabel` and `ticketTypeColor` snapshot fields from localStorage data
 
 ## [1.32.2]
 
