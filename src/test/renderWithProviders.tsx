@@ -97,18 +97,16 @@ type ProviderOverrides = {
   clipboard?: Partial<ClipboardContextValue>;
 };
 
-function AllProviders({
-  overrides,
-  children,
-}: {
-  overrides: ProviderOverrides;
-  children: React.ReactNode;
-}) {
+export function renderWithProviders(
+  ui: React.ReactElement,
+  overrides: ProviderOverrides = {},
+  renderOptions?: Omit<RenderOptions, "wrapper">,
+) {
   const board = makeBoardContext(overrides.board);
   const theme = makeThemeContext(overrides.theme);
   const clipboard = makeClipboardContext(overrides.clipboard);
 
-  return (
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <BoardContext.Provider value={board}>
       <ThemeContext.Provider value={theme}>
         <ClipboardContext.Provider value={clipboard}>
@@ -116,16 +114,6 @@ function AllProviders({
         </ClipboardContext.Provider>
       </ThemeContext.Provider>
     </BoardContext.Provider>
-  );
-}
-
-export function renderWithProviders(
-  ui: React.ReactElement,
-  overrides: ProviderOverrides = {},
-  renderOptions?: Omit<RenderOptions, "wrapper">,
-) {
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <AllProviders overrides={overrides}>{children}</AllProviders>
   );
 
   return render(ui, { wrapper: Wrapper, ...renderOptions });
