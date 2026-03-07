@@ -78,6 +78,7 @@ an ultra simple task organizer
 - ✅ calendar view — visualize cards with due dates on a monthly/weekly calendar
 - ✅ simplified header buttons — compact header setting to hide text labels on header buttons
 - ✅ due date badge on board cards — color-coded urgency indicator (red for overdue, amber for due soon, muted for further out)
+- ✅ search highlighting on calendar view — highlight matching cards and show match count badge on busy days
 
 Settings
 

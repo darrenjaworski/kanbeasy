@@ -7,17 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.32.0]
+
 ### Features
 
 - Add due date badge to column-view cards with color-coded urgency (red for overdue, amber for due within 2 days, muted for further out)
 - Add search highlighting to calendar view cards, matching board and list view behavior
 - Add match count badge on calendar days with 5+ cards when search matches are present
+- Sticky day header with backdrop blur on calendar day cells
+
+### Fixed
+
+- Hide card controls during drag to prevent tooltip flash on source card
+- Inline AllProviders to resolve react-refresh lint error
 
 ### Changed
 
 - Adjust card action buttons positioning to `top: 8px, right: 8px`
 - Add `margin-top: 4px` to card textarea for improved spacing
 - Place checklist progress and due date badge on the same line within cards
+- Increase calendar "Today" button size for easier click target
+
+### Tests
 
 - Extract shared Playwright fixture (`tests-e2e/fixtures.ts`) to eliminate duplicated `beforeEach` setup across 19 e2e spec files
 - Extract shared `makeE2eCard` and `seedBoard` helpers for e2e test data seeding, replacing 3 duplicate `makeCard` definitions
