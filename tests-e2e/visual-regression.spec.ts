@@ -296,7 +296,20 @@ test.describe("Visual regression", () => {
       // Determine direction: if current date is after June 2025, go back
       if (label && label.includes("2026")) await prevBtn.click();
       else if (label && label.includes("2025")) {
-        const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const monthNames = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
         const currentMonth = monthNames.findIndex((m) => label.includes(m));
         if (currentMonth > 5) await prevBtn.click();
         else await nextBtn.click();
@@ -311,10 +324,7 @@ test.describe("Visual regression", () => {
 
   test("empty board", async ({ page }) => {
     await page.addInitScript(() => {
-      localStorage.setItem(
-        "kanbeasy:board",
-        JSON.stringify({ columns: [] }),
-      );
+      localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
       localStorage.setItem("hasSeenWelcome", "true");
     });
     const target = process.env.CI === "true" ? "/kanbeasy" : "/";

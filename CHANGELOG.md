@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Apply prettier formatting to check skill and visual regression spec
+
 ### Tests
 
 - Add Playwright visual regression snapshot tests covering all 6 themes (Slate, Stone, Rose, Midnight, Forest, Twilight), welcome modal, card detail, settings, analytics, archive, list view, calendar view, and empty board
