@@ -20,7 +20,7 @@ Present the proposed version bump to the user and wait for confirmation before p
 
 ## 2. Run all checks
 
-Run `npm run kitchen-sink`. This runs static-checks (format, lint, knip, typecheck, build, unit tests) followed by lighthouse and e2e tests (including visual regression snapshots). Everything must pass. If visual regression snapshots need updating due to intentional UI changes, run `npm run e2e:snapshot` to regenerate baselines, verify the new snapshots look correct, and include them in the release commit. If anything else fails, diagnose and fix the issue, then re-run. If you cannot fix after 3 attempts, stop and report.
+Run `npm run kitchen-sink`. This runs static-checks (format, lint, knip, typecheck, build, unit tests) followed by lighthouse and e2e tests (including visual regression snapshots). Everything must pass. If visual regression snapshots need updating due to intentional UI changes, run `npm run e2e:snapshot` to regenerate baselines, then ask the user to manually review the updated snapshots in `tests-e2e/visual-regression.spec.ts-snapshots/` before continuing. Do NOT proceed until the user confirms the snapshots look correct. Include the updated snapshots in the release commit. If anything else fails, diagnose and fix the issue, then re-run. If you cannot fix after 3 attempts, stop and report.
 
 ## 3. Update ROADMAP.md
 
