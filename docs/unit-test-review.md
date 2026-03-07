@@ -61,13 +61,12 @@ Resolved: Consolidated repetitive tests using `it.each` in all three files:
 
 ---
 
-## 6. Weak/Vague Assertions (MEDIUM -- Validity)
+## 6. ~~Weak/Vague Assertions~~ ✅ DONE
 
-- **`AnalyticsModal.test.tsx`**: Asserts `getByText("3")` and `getByText("2")` exist somewhere in the modal without scoping to the specific metric card. These would pass even if the numbers appeared in the wrong metric.
-
-- **`exportBoard.test.ts`**: Captures the exported JSON but only checks `blob.type === "application/json"`. Doesn't verify the actual exported data structure.
-
-- **`formatDate.test.ts`**: Uses regex like `expect(result).toContain("Jun")` instead of checking the full formatted string.
+Resolved:
+- `AnalyticsModal.test.tsx`: Metric value assertions now scoped to specific `data-testid="metric-*"` containers via `within()`
+- `exportBoard.test.ts`: Already had full JSON structure verification in the second test — no change needed
+- `formatDate.test.ts`: Tightened from individual `.toContain()` calls to single regex matching date components in order
 
 ---
 

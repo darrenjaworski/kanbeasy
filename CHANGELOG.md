@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extract shared `renderWithProviders` test helper to eliminate duplicated provider/context boilerplate across Column tests
 - Replace SVG DOM queries in OwlBuddy tests with `data-testid` attributes on owl icon components
 - Consolidate repetitive tests using `it.each` in importBoard, badgeHeat, and validation test files
+- Scope AnalyticsModal metric assertions to specific MetricCard containers and tighten formatDate assertions
 
 ## [1.31.0]
 

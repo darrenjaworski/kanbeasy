@@ -89,7 +89,8 @@ describe("AnalyticsModal", () => {
     const dlg = await openAnalytics(user);
 
     // Total Cards metric should show 3
-    expect(within(dlg).getByText("3")).toBeInTheDocument();
+    const totalCards = within(dlg).getByTestId("metric-total-cards");
+    expect(within(totalCards).getByText("3")).toBeInTheDocument();
   });
 
   it("shows cards in flight count with 3+ columns", async () => {
@@ -131,8 +132,10 @@ describe("AnalyticsModal", () => {
     const dlg = await openAnalytics(user);
 
     // Total cards = 3, cards in flight = 2 (middle column)
-    expect(within(dlg).getByText("3")).toBeInTheDocument();
-    expect(within(dlg).getByText("2")).toBeInTheDocument();
+    const totalCards = within(dlg).getByTestId("metric-total-cards");
+    expect(within(totalCards).getByText("3")).toBeInTheDocument();
+    const inFlight = within(dlg).getByTestId("metric-cards-in-flight");
+    expect(within(inFlight).getByText("2")).toBeInTheDocument();
   });
 
   it("shows fallback text when no cycle time data available", async () => {
@@ -422,9 +425,8 @@ describe("AnalyticsModal", () => {
     const dlg = await openAnalytics(user);
 
     // Total Cards should only count board cards (1), not archived
-    const totalCardsMetric = within(dlg).getByText("Total Cards");
-    const metricCard = totalCardsMetric.closest("div")!;
-    expect(within(metricCard).getByText("1")).toBeInTheDocument();
+    const totalCards = within(dlg).getByTestId("metric-total-cards");
+    expect(within(totalCards).getByText("1")).toBeInTheDocument();
   });
 
   it("shows updated disclaimer text about archived cards", async () => {
