@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tests
 
-- Add Playwright visual regression snapshot tests covering board (light/dark), welcome modal, card detail, settings, analytics, archive, list view, calendar view, and empty board
+- Add Playwright visual regression snapshot tests covering all 6 themes (Slate, Stone, Rose, Midnight, Forest, Twilight), welcome modal, card detail, settings, analytics, archive, list view, calendar view, and empty board
+- Pin calendar view visual regression test date to June 2025 to match seeded card due dates
 
 ## [1.32.4]
 

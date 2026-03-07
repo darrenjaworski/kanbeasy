@@ -150,13 +150,60 @@ test.describe("Visual regression", () => {
     });
   });
 
-  test("board view — dark theme", async ({ page }) => {
+  // ── Theme variants ────────────────────────────────────
+  // Light themes
+  test("board view — stone theme", async ({ page }) => {
     await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "midnight");
+      localStorage.setItem("kanbeasy:theme", "light-stone");
+      localStorage.setItem("kanbeasy:themePreference", "light");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-stone.png", {
+      maxDiffPixelRatio: 0.01,
+    });
+  });
+
+  test("board view — rose theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "light-rose");
+      localStorage.setItem("kanbeasy:themePreference", "light");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-rose.png", {
+      maxDiffPixelRatio: 0.01,
+    });
+  });
+
+  // Dark themes
+  test("board view — midnight theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "dark-slate");
       localStorage.setItem("kanbeasy:themePreference", "dark");
     });
     await seedAndNavigate(page);
-    await expect(page).toHaveScreenshot("board-dark.png", {
+    await expect(page).toHaveScreenshot("board-midnight.png", {
+      maxDiffPixelRatio: 0.01,
+    });
+  });
+
+  test("board view — forest theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "dark-emerald");
+      localStorage.setItem("kanbeasy:themePreference", "dark");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-forest.png", {
+      maxDiffPixelRatio: 0.01,
+    });
+  });
+
+  test("board view — twilight theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "dark-purple");
+      localStorage.setItem("kanbeasy:themePreference", "dark");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-twilight.png", {
       maxDiffPixelRatio: 0.01,
     });
   });
