@@ -18,32 +18,16 @@ describe("isCard", () => {
     expect(isCard({ id: "c1", title: "Task" })).toBe(true);
   });
 
-  it("returns false for null", () => {
-    expect(isCard(null)).toBe(false);
-  });
-
-  it("returns false for undefined", () => {
-    expect(isCard(undefined)).toBe(false);
-  });
-
-  it("returns false for a string", () => {
-    expect(isCard("card")).toBe(false);
-  });
-
-  it("returns false when id is missing", () => {
-    expect(isCard({ title: "Task" })).toBe(false);
-  });
-
-  it("returns false when title is missing", () => {
-    expect(isCard({ id: "c1" })).toBe(false);
-  });
-
-  it("returns false when id is not a string", () => {
-    expect(isCard({ id: 123, title: "Task" })).toBe(false);
-  });
-
-  it("returns false when title is not a string", () => {
-    expect(isCard({ id: "c1", title: 42 })).toBe(false);
+  it.each<[unknown, string]>([
+    [null, "null"],
+    [undefined, "undefined"],
+    ["card", "a string"],
+    [{ title: "Task" }, "missing id"],
+    [{ id: "c1" }, "missing title"],
+    [{ id: 123, title: "Task" }, "id is not a string"],
+    [{ id: "c1", title: 42 }, "title is not a string"],
+  ])("returns false for %s (%s)", (input) => {
+    expect(isCard(input)).toBe(false);
   });
 });
 
@@ -66,32 +50,15 @@ describe("isColumn", () => {
     expect(isColumn({ id: "col1", title: "To Do", cards: [] })).toBe(true);
   });
 
-  it("returns false for null", () => {
-    expect(isColumn(null)).toBe(false);
-  });
-
-  it("returns false when id is missing", () => {
-    expect(isColumn({ title: "To Do", cards: [] })).toBe(false);
-  });
-
-  it("returns false when title is missing", () => {
-    expect(isColumn({ id: "col1", cards: [] })).toBe(false);
-  });
-
-  it("returns false when cards is missing", () => {
-    expect(isColumn({ id: "col1", title: "To Do" })).toBe(false);
-  });
-
-  it("returns false when cards is not an array", () => {
-    expect(isColumn({ id: "col1", title: "To Do", cards: "not-array" })).toBe(
-      false,
-    );
-  });
-
-  it("returns false when cards contains an invalid card", () => {
-    expect(isColumn({ id: "col1", title: "To Do", cards: [{ id: 123 }] })).toBe(
-      false,
-    );
+  it.each<[unknown, string]>([
+    [null, "null"],
+    [{ title: "To Do", cards: [] }, "missing id"],
+    [{ id: "col1", cards: [] }, "missing title"],
+    [{ id: "col1", title: "To Do" }, "missing cards"],
+    [{ id: "col1", title: "To Do", cards: "not-array" }, "cards is not an array"],
+    [{ id: "col1", title: "To Do", cards: [{ id: 123 }] }, "cards contains invalid card"],
+  ])("returns false for %s (%s)", (input) => {
+    expect(isColumn(input)).toBe(false);
   });
 });
 

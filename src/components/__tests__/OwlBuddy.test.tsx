@@ -147,10 +147,8 @@ describe("OwlBuddy", () => {
       mockIsNight = true;
       render(<OwlBuddy />);
 
-      const button = screen.getByRole("button", { name: "Owl buddy" });
-      const svg = button.querySelector("svg");
-      // SleepyOwlIcon has <ellipse> elements for half-closed eyes
-      expect(svg?.querySelector("ellipse")).toBeTruthy();
+      expect(screen.getByTestId("sleepy-owl-icon")).toBeInTheDocument();
+      expect(screen.queryByTestId("owl-icon")).not.toBeInTheDocument();
     });
 
     it("renders normal owl icon during day hours", () => {
@@ -158,10 +156,8 @@ describe("OwlBuddy", () => {
       mockIsNight = false;
       render(<OwlBuddy />);
 
-      const button = screen.getByRole("button", { name: "Owl buddy" });
-      const svg = button.querySelector("svg");
-      // Normal OwlIcon has no <ellipse> elements
-      expect(svg?.querySelector("ellipse")).toBeNull();
+      expect(screen.getByTestId("owl-icon")).toBeInTheDocument();
+      expect(screen.queryByTestId("sleepy-owl-icon")).not.toBeInTheDocument();
     });
 
     it("shows night tips during night hours", async () => {

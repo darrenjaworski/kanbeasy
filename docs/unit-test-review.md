@@ -44,23 +44,20 @@ Resolved: Created `src/test/renderWithProviders.tsx` with shared `makeThemeConte
 
 ## 4. Implementation-Coupled Tests (MEDIUM -- Validity)
 
-- **`useBoardMutations.test.ts`** (910 lines): Extracts `setState` callbacks from mock calls via `applyLatest()` helper, then manually reconstructs state. Tests *how* the hook updates state internally rather than *what* the resulting state looks like. If the hook's internal setState pattern changes, all 55 tests break.
+- **`useBoardMutations.test.ts`** (910 lines): Extracts `setState` callbacks from mock calls via `applyLatest()` helper, then manually reconstructs state. Tests *how* the hook updates state internally rather than *what* the resulting state looks like. If the hook's internal setState pattern changes, all 55 tests break. *(Deferred — large rewrite scope)*
 
-- **`useBoardDragAndDrop.test.ts`**: 70-line mock event builders (`createDragStartEvent`, `createDragEndEvent`) that construct deeply nested `@dnd-kit` event objects. Tests blur behavior on `document.activeElement` -- an implementation detail.
+- **`useBoardDragAndDrop.test.ts`**: 70-line mock event builders (`createDragStartEvent`, `createDragEndEvent`) that construct deeply nested `@dnd-kit` event objects. Tests blur behavior on `document.activeElement` -- an implementation detail. *(Deferred — large rewrite scope)*
 
-- **`OwlBuddy.test.tsx`** (lines 144-177): Tests night owl mode by querying SVG internals (`svg?.querySelector("ellipse")`). Will break if the icon changes from `<ellipse>` to `<circle>`.
-
-**Recommendation**: Test observable outputs. For `useBoardMutations`, use `renderHook` with real state. For OwlBuddy, add `data-testid="sleepy-owl"` instead of querying SVG structure.
+- ~~**`OwlBuddy.test.tsx`**: Tests night owl mode by querying SVG internals~~ ✅ DONE — Added `data-testid="owl-icon"` / `data-testid="sleepy-owl-icon"` to icon components; tests now use `getByTestId` instead of `querySelector("ellipse")`.
 
 ---
 
-## 5. Repetitive Tests That Should Be Parameterized (MEDIUM -- Maintainability)
+## 5. ~~Repetitive Tests That Should Be Parameterized~~ ✅ DONE
 
-- **`importBoard.test.ts`**: Version acceptance tests (v2, v3, v4, v5, v6, v7, v8) are identical except the version number. Should be `it.each`.
-
-- **`badgeHeat.test.ts`**: Four separate tests for "returns null for edge columns" with hardcoded inputs. One `it.each` would cover them.
-
-- **`validation.test.ts`**: 20+ individual tests for type guard field checks (`"returns false when id is not a string"`, `"returns false when title is not a string"`). These could be consolidated.
+Resolved: Consolidated repetitive tests using `it.each` in all three files:
+- `importBoard.test.ts`: 6 version acceptance tests → single `it.each([2,3,4,5,6,7])`
+- `badgeHeat.test.ts`: Null-case tests and middle column tests → `it.each`
+- `validation.test.ts`: `isCard` and `isColumn` rejection tests → `it.each`
 
 ---
 

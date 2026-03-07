@@ -3,42 +3,24 @@ import { getBadgeHeat } from "../badgeHeat";
 
 describe("getBadgeHeat", () => {
   describe("returns null for non-middle columns", () => {
-    it("returns null when index is undefined", () => {
-      expect(getBadgeHeat(5, undefined, 3)).toBeNull();
-    });
-
-    it("returns null when columnCount is undefined", () => {
-      expect(getBadgeHeat(5, 1, undefined)).toBeNull();
-    });
-
-    it("returns null for first column (index === 0)", () => {
-      expect(getBadgeHeat(5, 0, 3)).toBeNull();
-    });
-
-    it("returns null for last column (index === columnCount - 1)", () => {
-      expect(getBadgeHeat(5, 2, 3)).toBeNull();
-    });
-
-    it("returns null when columnCount < 3 (1 column)", () => {
-      expect(getBadgeHeat(5, 0, 1)).toBeNull();
-    });
-
-    it("returns null when columnCount < 3 (2 columns)", () => {
-      expect(getBadgeHeat(5, 1, 2)).toBeNull();
-    });
+    it.each([
+      [5, undefined, 3, "index is undefined"],
+      [5, 1, undefined, "columnCount is undefined"],
+      [5, 0, 3, "first column (index === 0)"],
+      [5, 2, 3, "last column (index === columnCount - 1)"],
+      [5, 0, 1, "columnCount < 3 (1 column)"],
+      [5, 1, 2, "columnCount < 3 (2 columns)"],
+    ] as const)(
+      "returns null when %s",
+      (cardCount, index, columnCount, _desc) => {
+        expect(getBadgeHeat(cardCount, index, columnCount)).toBeNull();
+      },
+    );
   });
 
   describe("returns null for low card counts on middle columns", () => {
-    it("returns null for 0 cards", () => {
-      expect(getBadgeHeat(0, 1, 3)).toBeNull();
-    });
-
-    it("returns null for 1 card", () => {
-      expect(getBadgeHeat(1, 1, 3)).toBeNull();
-    });
-
-    it("returns null for 2 cards", () => {
-      expect(getBadgeHeat(2, 1, 3)).toBeNull();
+    it.each([0, 1, 2])("returns null for %i cards", (cardCount) => {
+      expect(getBadgeHeat(cardCount, 1, 3)).toBeNull();
     });
   });
 
@@ -97,22 +79,8 @@ describe("getBadgeHeat", () => {
   });
 
   describe("works with various middle column indices", () => {
-    it("works for index 1 of 5 columns", () => {
-      expect(getBadgeHeat(5, 1, 5)).toEqual({
-        accentPercent: 25,
-        bold: false,
-      });
-    });
-
-    it("works for index 2 of 5 columns", () => {
-      expect(getBadgeHeat(5, 2, 5)).toEqual({
-        accentPercent: 25,
-        bold: false,
-      });
-    });
-
-    it("works for index 3 of 5 columns", () => {
-      expect(getBadgeHeat(5, 3, 5)).toEqual({
+    it.each([1, 2, 3])("works for index %i of 5 columns", (index) => {
+      expect(getBadgeHeat(5, index, 5)).toEqual({
         accentPercent: 25,
         bold: false,
       });

@@ -68,23 +68,8 @@ describe("validateExportData", () => {
     expect(result.error).toContain("Unsupported export version: 99");
   });
 
-  it("accepts v5 export data", () => {
-    const result = validateExportData(makeExportData({ version: 5 }));
-    expect(result.ok).toBe(true);
-  });
-
-  it("accepts v4 export data", () => {
-    const result = validateExportData(makeExportData({ version: 4 }));
-    expect(result.ok).toBe(true);
-  });
-
-  it("accepts v3 export data", () => {
-    const result = validateExportData(makeExportData({ version: 3 }));
-    expect(result.ok).toBe(true);
-  });
-
-  it("accepts v2 export data", () => {
-    const result = validateExportData(makeExportData({ version: 2 }));
+  it.each([2, 3, 4, 5, 6, 7])("accepts v%i export data", (version) => {
+    const result = validateExportData(makeExportData({ version }));
     expect(result.ok).toBe(true);
   });
 
@@ -341,11 +326,6 @@ describe("validateExportData", () => {
     expect(result.data.nextCardNumber).toBe(43);
   });
 
-  it("accepts v6 export data", () => {
-    const result = validateExportData(makeExportData({ version: 6 }));
-    expect(result.ok).toBe(true);
-  });
-
   it("v6 import includes archive data", () => {
     const result = validateExportData(
       makeExportData({
@@ -461,11 +441,6 @@ describe("validateExportData", () => {
     expect(result.data.settings.ticketTypePresetId).toBe("development");
     // Falls back to default types
     expect(result.data.settings.ticketTypes.length).toBeGreaterThan(0);
-  });
-
-  it("accepts v7 export data", () => {
-    const result = validateExportData(makeExportData({ version: 7 }));
-    expect(result.ok).toBe(true);
   });
 
   it("v7 import preserves defaultTicketTypeId", () => {

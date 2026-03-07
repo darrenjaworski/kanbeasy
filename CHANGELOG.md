@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replace Tailwind class assertions with `data-*` attributes in search, tooltip, and badge heat tests for resilience against styling refactors
 - Extract shared `renderWithProviders` test helper to eliminate duplicated provider/context boilerplate across Column tests
+- Replace SVG DOM queries in OwlBuddy tests with `data-testid` attributes on owl icon components
+- Consolidate repetitive tests using `it.each` in importBoard, badgeHeat, and validation test files
 
 ## [1.31.0]
 
