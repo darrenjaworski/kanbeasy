@@ -294,5 +294,20 @@ describe("BoardTabs", () => {
         screen.queryByRole("button", { name: "Rename" }),
       ).not.toBeInTheDocument();
     });
+
+    it("closes context menu on Escape", async () => {
+      renderTabs();
+
+      fireEvent.contextMenu(screen.getByTestId("board-tab-board-1"));
+      expect(
+        screen.getByRole("button", { name: "Rename" }),
+      ).toBeInTheDocument();
+
+      await userEvent.keyboard("{Escape}");
+
+      expect(
+        screen.queryByRole("button", { name: "Rename" }),
+      ).not.toBeInTheDocument();
+    });
   });
 });

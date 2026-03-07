@@ -161,6 +161,26 @@ describe("board switching integration", () => {
     expect(result.current.board.canRedo).toBe(false);
   });
 
+  it("new boards created via createBoard have empty columns", () => {
+    const { result } = renderHook(
+      () => ({ boards: useBoards(), board: useBoard() }),
+      { wrapper },
+    );
+
+    // Create a second board
+    act(() => {
+      result.current.boards.createBoard("Second Board");
+    });
+
+    // New board should have 3 columns with zero cards
+    expect(result.current.board.columns).toHaveLength(3);
+    const totalCards = result.current.board.columns.reduce(
+      (sum, col) => sum + col.cards.length,
+      0,
+    );
+    expect(totalCards).toBe(0);
+  });
+
   it("persists board data to the correct storage key", () => {
     const { result } = renderHook(
       () => ({ boards: useBoards(), board: useBoard() }),

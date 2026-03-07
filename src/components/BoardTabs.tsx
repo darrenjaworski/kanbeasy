@@ -45,10 +45,10 @@ export function BoardTabs() {
     }
   }, [creatingNew]);
 
-  // Close context menu on outside click
+  // Close context menu on outside click or Escape
   useEffect(() => {
     if (!contextMenu) return;
-    const handler = (e: MouseEvent) => {
+    const handleMouseDown = (e: MouseEvent) => {
       if (
         contextMenuRef.current &&
         !contextMenuRef.current.contains(e.target as Node)
@@ -56,8 +56,15 @@ export function BoardTabs() {
         setContextMenu(null);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setContextMenu(null);
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [contextMenu]);
 
   const handleContextMenu = useCallback(

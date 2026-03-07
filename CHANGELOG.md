@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Board data now stored per-board (`kanbeasy:board:<id>`) instead of single key
 - Card number counter moved to global board index for cross-board uniqueness
 - Export reads from active board's storage key
+- New boards created via "+" button start with empty columns instead of example cards
+- `nextCardNumber` in BoardsProvider is now reactive state (was a non-reactive ref)
+- `deleteBoard` no longer performs side effects inside React setState callback
+- Export utility uses `getFromStorage` instead of manual JSON parsing
 
 ## [1.32.7]
 

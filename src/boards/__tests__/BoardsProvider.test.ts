@@ -299,6 +299,18 @@ describe("BoardsProvider", () => {
       );
       expect(index.nextCardNumber).toBe(42);
     });
+
+    it("updates the context value reactively", () => {
+      const { result } = renderHook(() => useBoards(), { wrapper });
+
+      expect(result.current.nextCardNumber).toBe(0);
+
+      act(() => {
+        result.current.setNextCardNumber(10);
+      });
+
+      expect(result.current.nextCardNumber).toBe(10);
+    });
   });
 
   describe("useBoards hook", () => {

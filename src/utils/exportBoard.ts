@@ -1,5 +1,6 @@
 import { STORAGE_KEYS, boardStorageKey } from "../constants/storage";
 import type { BoardIndex } from "../boards/types";
+import { getFromStorage } from "./storage";
 
 interface ExportData {
   version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -25,18 +26,13 @@ function readRaw(key: string): string {
 }
 
 function getActiveBoardStorageKey(): string {
-  const raw = window.localStorage.getItem(STORAGE_KEYS.BOARD_INDEX);
-  if (raw) {
-    try {
-      const index = JSON.parse(raw) as BoardIndex;
-      if (index.activeBoardId) {
-        return boardStorageKey(index.activeBoardId);
-      }
-    } catch {
-      // fall through
-    }
+  const index = getFromStorage<BoardIndex | null>(
+    STORAGE_KEYS.BOARD_INDEX,
+    null,
+  );
+  if (index?.activeBoardId) {
+    return boardStorageKey(index.activeBoardId);
   }
-  // Fallback to legacy key
   return STORAGE_KEYS.BOARD;
 }
 

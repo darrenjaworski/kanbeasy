@@ -86,30 +86,15 @@ export function BoardsProvider({
   const [activeBoardId, setActiveBoardId] = useState<string>(
     indexRef.current.activeBoardId,
   );
-  const nextCardNumberRef = useRef(indexRef.current.nextCardNumber);
-
-  // Persist index whenever boards or activeBoardId change
-  useEffect(() => {
-    const index: BoardIndex = {
-      boards,
-      activeBoardId,
-      nextCardNumber: nextCardNumberRef.current,
-    };
-    saveToStorage(STORAGE_KEYS.BOARD_INDEX, index);
-  }, [boards, activeBoardId]);
-
-  const setNextCardNumber = useCallback(
-    (n: number) => {
-      nextCardNumberRef.current = n;
-      const index: BoardIndex = {
-        boards,
-        activeBoardId,
-        nextCardNumber: n,
-      };
-      saveToStorage(STORAGE_KEYS.BOARD_INDEX, index);
-    },
-    [boards, activeBoardId],
+  const [nextCardNumber, setNextCardNumber] = useState(
+    indexRef.current.nextCardNumber,
   );
+
+  // Persist index whenever any part of it changes
+  useEffect(() => {
+    const index: BoardIndex = { boards, activeBoardId, nextCardNumber };
+    saveToStorage(STORAGE_KEYS.BOARD_INDEX, index);
+  }, [boards, activeBoardId, nextCardNumber]);
 
   const createBoard = useCallback((title: string): string => {
     const id = crypto.randomUUID();
@@ -125,22 +110,22 @@ export function BoardsProvider({
     return id;
   }, []);
 
+  const boardsRef = useRef(boards);
+  boardsRef.current = boards;
+
   const deleteBoard = useCallback(
     (id: string) => {
-      setBoards((prev) => {
-        if (prev.length <= 1) return prev;
-        const next = prev.filter((b) => b.id !== id);
-        if (next.length === prev.length) return prev;
+      const current = boardsRef.current;
+      if (current.length <= 1) return;
+      const next = current.filter((b) => b.id !== id);
+      if (next.length === current.length) return;
 
-        // Clean up board data from localStorage
-        window.localStorage.removeItem(boardStorageKey(id));
+      setBoards(next);
+      window.localStorage.removeItem(boardStorageKey(id));
 
-        // If deleting the active board, switch to the first remaining
-        if (id === activeBoardId) {
-          setActiveBoardId(next[0].id);
-        }
-        return next;
-      });
+      if (id === activeBoardId) {
+        setActiveBoardId(next[0].id);
+      }
     },
     [activeBoardId],
   );
@@ -187,7 +172,7 @@ export function BoardsProvider({
     () => ({
       boards,
       activeBoardId,
-      nextCardNumber: nextCardNumberRef.current,
+      nextCardNumber,
       createBoard,
       deleteBoard,
       renameBoard,
@@ -198,6 +183,7 @@ export function BoardsProvider({
     [
       boards,
       activeBoardId,
+      nextCardNumber,
       createBoard,
       deleteBoard,
       renameBoard,

@@ -12,7 +12,40 @@ import { useBoards } from "../boards/useBoards";
 
 type LoadResult = { state: BoardState; nextCardNumber: number };
 
-function createInitialBoard(): LoadResult {
+function createEmptyBoard(): LoadResult {
+  const now = Date.now();
+  return {
+    state: {
+      archive: [],
+      columns: [
+        {
+          id: crypto.randomUUID(),
+          title: "To Do",
+          createdAt: now,
+          updatedAt: now,
+          cards: [],
+        },
+        {
+          id: crypto.randomUUID(),
+          title: "In Progress",
+          createdAt: now,
+          updatedAt: now,
+          cards: [],
+        },
+        {
+          id: crypto.randomUUID(),
+          title: "Done",
+          createdAt: now,
+          updatedAt: now,
+          cards: [],
+        },
+      ],
+    },
+    nextCardNumber: 0,
+  };
+}
+
+function createWelcomeBoard(): LoadResult {
   const now = Date.now();
   const todoId = crypto.randomUUID();
   const inProgressId = crypto.randomUUID();
@@ -96,14 +129,18 @@ function createInitialBoard(): LoadResult {
   };
 }
 
-function loadState(storageKey: string, globalCounter: number): LoadResult {
+function loadState(
+  storageKey: string,
+  globalCounter: number,
+  isFirstBoard: boolean,
+): LoadResult {
   const raw =
     typeof window !== "undefined"
       ? window.localStorage.getItem(storageKey)
       : null;
 
   if (raw === null) {
-    return createInitialBoard();
+    return isFirstBoard ? createWelcomeBoard() : createEmptyBoard();
   }
 
   const stored = getFromStorage<{ columns?: unknown; archive?: unknown }>(
@@ -148,18 +185,20 @@ export function BoardProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const {
+    boards,
     activeBoardId,
     nextCardNumber: globalCounter,
     setNextCardNumber: setGlobalCounter,
   } = useBoards();
 
   const storageKey = boardStorageKey(activeBoardId);
+  const isFirstBoard = boards.length === 1 && boards[0].id === activeBoardId;
 
   // Track which board we're currently showing
   const currentBoardIdRef = useRef(activeBoardId);
   const loadResult = useRef<LoadResult | null>(null);
   if (loadResult.current === null) {
-    loadResult.current = loadState(storageKey, globalCounter);
+    loadResult.current = loadState(storageKey, globalCounter, isFirstBoard);
   }
 
   const { state, setState, undo, redo, canUndo, canRedo, reset } =
@@ -175,7 +214,7 @@ export function BoardProvider({
     currentBoardIdRef.current = activeBoardId;
 
     const key = boardStorageKey(activeBoardId);
-    const result = loadState(key, globalCounter);
+    const result = loadState(key, globalCounter, false);
     nextCardNumberRef.current = result.nextCardNumber;
     reset(result.state);
   }, [activeBoardId, globalCounter, reset]);
