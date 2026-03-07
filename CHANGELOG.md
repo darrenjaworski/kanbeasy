@@ -9,7 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Multiple boards support: create, switch, rename, duplicate, and delete boards
+- Board tab bar below the header for quick board switching
+- Right-click context menu on board tabs for rename/duplicate/delete
+- Double-click board tab to rename inline
+- Keyboard shortcuts: Cmd+Shift+[ / Cmd+Shift+] to switch between boards
+- BoardsProvider and BoardsContext for managing board index state
+- Automatic migration from single-board to multi-board storage format
+- `reset()` method on `useUndoableState` for board switching
+- PlusIcon SVG component
 - Card layout editor design document (`docs/card-layout-editor.md`)
+
+### Changed
+
+- Board data now stored per-board (`kanbeasy:board:<id>`) instead of single key
+- Card number counter moved to global board index for cross-board uniqueness
+- Export reads from active board's storage key
+- New boards created via "+" button start with empty columns instead of example cards
+- `nextCardNumber` in BoardsProvider is now reactive state (was a non-reactive ref)
+- `deleteBoard` no longer performs side effects inside React setState callback
+- Export utility uses `getFromStorage` instead of manual JSON parsing
 
 ## [1.32.7]
 

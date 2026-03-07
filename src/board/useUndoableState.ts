@@ -18,6 +18,7 @@ type UseUndoableStateReturn<T> = {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  reset: (newState: T) => void;
 };
 
 export function useUndoableState<T>(
@@ -90,8 +91,20 @@ export function useUndoableState<T>(
     });
   }, []);
 
+  const reset = useCallback((newState: T) => {
+    setHistory({ past: [], present: newState, future: [] });
+  }, []);
+
   const canUndo = enabled && history.past.length > 0;
   const canRedo = enabled && history.future.length > 0;
 
-  return { state: history.present, setState, undo, redo, canUndo, canRedo };
+  return {
+    state: history.present,
+    setState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    reset,
+  };
 }

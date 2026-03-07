@@ -110,6 +110,31 @@ describe("useUndoableState", () => {
     expect(result.current.state).toBe("x");
   });
 
+  it("reset replaces state and clears history", () => {
+    const { result } = renderHook(() => useUndoableState(0));
+    act(() => result.current.setState(1));
+    act(() => result.current.setState(2));
+    expect(result.current.canUndo).toBe(true);
+
+    act(() => result.current.reset(99));
+
+    expect(result.current.state).toBe(99);
+    expect(result.current.canUndo).toBe(false);
+    expect(result.current.canRedo).toBe(false);
+  });
+
+  it("reset clears redo stack", () => {
+    const { result } = renderHook(() => useUndoableState(0));
+    act(() => result.current.setState(1));
+    act(() => result.current.undo());
+    expect(result.current.canRedo).toBe(true);
+
+    act(() => result.current.reset(50));
+
+    expect(result.current.state).toBe(50);
+    expect(result.current.canRedo).toBe(false);
+  });
+
   it("does not track history when disabled", () => {
     const { result } = renderHook(() =>
       useUndoableState(0, { enabled: false }),

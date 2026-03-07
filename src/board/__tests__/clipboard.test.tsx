@@ -3,15 +3,18 @@ import { describe, it, expect } from "vitest";
 import { useClipboard } from "../useClipboard";
 import { useBoard } from "../useBoard";
 import { ClipboardProvider } from "../ClipboardProvider";
+import { BoardsProvider } from "../../boards/BoardsProvider";
 import { BoardProvider } from "../BoardProvider";
 import type { CardClipboard } from "../types";
 import { STORAGE_KEYS } from "../../constants/storage";
 
 function wrapper({ children }: { children: React.ReactNode }) {
   return (
-    <BoardProvider>
-      <ClipboardProvider>{children}</ClipboardProvider>
-    </BoardProvider>
+    <BoardsProvider>
+      <BoardProvider>
+        <ClipboardProvider>{children}</ClipboardProvider>
+      </BoardProvider>
+    </BoardsProvider>
   );
 }
 

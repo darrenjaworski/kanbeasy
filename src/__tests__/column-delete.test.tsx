@@ -1,6 +1,6 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { STORAGE_KEYS } from "../constants/storage";
+import { STORAGE_KEYS, boardStorageKey } from "../constants/storage";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach } from "vitest";
 
@@ -102,7 +102,9 @@ describe("column delete", () => {
     ).not.toBeInTheDocument();
 
     // Verify cards were archived, not destroyed
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}");
+    const stored = JSON.parse(
+      localStorage.getItem(boardStorageKey("default")) ?? "{}",
+    );
     expect(stored.archive).toHaveLength(1);
     expect(stored.archive[0].title).toBe("New card");
     expect(stored.archive[0].archivedAt).toBeGreaterThan(0);
@@ -155,7 +157,9 @@ describe("column delete", () => {
     ).not.toBeInTheDocument();
 
     // Cards should still be archived even without the warning dialog
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}");
+    const stored = JSON.parse(
+      localStorage.getItem(boardStorageKey("default")) ?? "{}",
+    );
     expect(stored.archive).toHaveLength(1);
   });
 });

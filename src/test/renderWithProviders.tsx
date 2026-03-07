@@ -1,9 +1,11 @@
 import * as React from "react";
 import { render, type RenderOptions } from "@testing-library/react";
 import { BoardContext } from "../board/BoardContext";
+import { BoardsContext } from "../boards/BoardsContext";
 import { ClipboardContext } from "../board/ClipboardContext";
 import { ThemeContext } from "../theme/ThemeContext";
 import type { BoardContextValue } from "../board/types";
+import type { BoardsContextValue } from "../boards/types";
 import type { ClipboardContextValue } from "../board/ClipboardContext";
 import type { ThemeContextValue } from "../theme/types";
 
@@ -80,6 +82,30 @@ export function makeBoardContext(
   };
 }
 
+function makeBoardsContext(
+  overrides: Partial<BoardsContextValue> = {},
+): BoardsContextValue {
+  return {
+    boards: [
+      {
+        id: "test-board",
+        title: "Test Board",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    ],
+    activeBoardId: "test-board",
+    nextCardNumber: 1,
+    createBoard: () => "new-board-id",
+    deleteBoard: noop,
+    renameBoard: noop,
+    switchBoard: noop,
+    duplicateBoard: () => "dup-board-id",
+    setNextCardNumber: noop,
+    ...overrides,
+  };
+}
+
 export function makeClipboardContext(
   overrides: Partial<ClipboardContextValue> = {},
 ): ClipboardContextValue {
@@ -93,6 +119,7 @@ export function makeClipboardContext(
 
 type ProviderOverrides = {
   board?: Partial<BoardContextValue>;
+  boards?: Partial<BoardsContextValue>;
   theme?: Partial<ThemeContextValue>;
   clipboard?: Partial<ClipboardContextValue>;
 };
@@ -103,17 +130,20 @@ export function renderWithProviders(
   renderOptions?: Omit<RenderOptions, "wrapper">,
 ) {
   const board = makeBoardContext(overrides.board);
+  const boards = makeBoardsContext(overrides.boards);
   const theme = makeThemeContext(overrides.theme);
   const clipboard = makeClipboardContext(overrides.clipboard);
 
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <BoardContext.Provider value={board}>
-      <ThemeContext.Provider value={theme}>
-        <ClipboardContext.Provider value={clipboard}>
-          {children}
-        </ClipboardContext.Provider>
-      </ThemeContext.Provider>
-    </BoardContext.Provider>
+    <BoardsContext.Provider value={boards}>
+      <BoardContext.Provider value={board}>
+        <ThemeContext.Provider value={theme}>
+          <ClipboardContext.Provider value={clipboard}>
+            {children}
+          </ClipboardContext.Provider>
+        </ThemeContext.Provider>
+      </BoardContext.Provider>
+    </BoardsContext.Provider>
   );
 
   return render(ui, { wrapper: Wrapper, ...renderOptions });
