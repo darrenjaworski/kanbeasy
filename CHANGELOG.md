@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Add kitchen-sink checks (static checks, lighthouse, e2e) to `/commit` skill
 - Apply prettier formatting to check skill and visual regression spec
 
 ### Tests

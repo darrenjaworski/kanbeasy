@@ -27,7 +27,11 @@ Present the proposed commit message to the user and wait for confirmation before
 
 Add an entry under `## [Unreleased]` in CHANGELOG.md matching the commit. Use the appropriate heading (`### Features`, `### Fixed`, `### Changed`, `### Removed`, `### Tests`) following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
-## 4. Stage and commit
+## 4. Run static checks
+
+Run `npm run kitchen-sink` (format:check, lint, knip, type:check, build, unit tests, lighthouse, and e2e tests including visual regression). If any check fails, stop and report the failure — do NOT commit. Fix formatting issues automatically with `npm run format` if that is the only failure, then re-run. If visual regression snapshots need updating due to intentional changes, run `npm run e2e:snapshot` and ask the user to review before continuing.
+
+## 5. Stage and commit
 
 Stage the changed files (including CHANGELOG.md) and create the commit. Do NOT use `git add -A` or `git add .` — add specific files by name.
 
@@ -37,6 +41,6 @@ End the commit message with:
 Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 ```
 
-## 5. Confirm
+## 6. Confirm
 
 Run `git status` and report the commit was created. Do NOT push unless the user asks.
