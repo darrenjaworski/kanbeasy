@@ -32,7 +32,14 @@ interface CardEntry {
 }
 
 export function CalendarView() {
-  const { columns, updateCard, moveCard, archiveCard, matchingCardIds, searchQuery } = useBoard();
+  const {
+    columns,
+    updateCard,
+    moveCard,
+    archiveCard,
+    matchingCardIds,
+    searchQuery,
+  } = useBoard();
   const { ticketTypes, cardDensity } = useTheme();
 
   const [detailCardId, setDetailCardId] = useState<string | null>(null);
@@ -210,7 +217,9 @@ export function CalendarView() {
                 >
                   {day && (
                     <>
-                      <div className={`sticky top-0 z-[1] flex items-center justify-between px-1 py-1 bg-surface backdrop-blur-sm`}>
+                      <div
+                        className={`sticky top-0 z-[1] flex items-center justify-between px-1 py-1 bg-surface backdrop-blur-sm`}
+                      >
                         <span
                           className={`text-xs inline-flex items-center justify-center size-6 rounded-full ${
                             isToday
@@ -225,33 +234,35 @@ export function CalendarView() {
                             className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-accent/15 text-accent"
                             data-testid="calendar-match-badge"
                           >
-                            {matchCount} {matchCount === 1 ? "match" : "matches"}
+                            {matchCount}{" "}
+                            {matchCount === 1 ? "match" : "matches"}
                           </span>
                         )}
                       </div>
                       <div className="px-1 pb-1 space-y-1">
                         {cards.map((card) => {
-                          const isMatch = hasSearch && matchingCardIds.has(card.id);
+                          const isMatch =
+                            hasSearch && matchingCardIds.has(card.id);
                           return (
-                          <button
-                            type="button"
-                            key={card.id}
-                            onClick={() => setDetailCardId(card.id)}
-                            className={`w-full text-left text-xs truncate rounded px-1 py-0.5 ${
-                              isMatch
-                                ? `border-accent ${tc.searchHighlight}`
-                                : `${tc.glass} ${tc.border} border`
-                            } ${tc.bgHover} cursor-pointer`}
-                            title={card.title}
-                            data-search-highlight={isMatch || undefined}
-                          >
-                            <TicketTypeBadge
-                              number={card.number}
-                              ticketTypeId={card.ticketTypeId}
-                              ticketTypes={ticketTypes}
-                            />
-                            <span className="ml-1">{card.title}</span>
-                          </button>
+                            <button
+                              type="button"
+                              key={card.id}
+                              onClick={() => setDetailCardId(card.id)}
+                              className={`w-full text-left text-xs truncate rounded px-1 py-0.5 ${
+                                isMatch
+                                  ? `border-accent ${tc.searchHighlight}`
+                                  : `${tc.glass} ${tc.border} border`
+                              } ${tc.bgHover} cursor-pointer`}
+                              title={card.title}
+                              data-search-highlight={isMatch || undefined}
+                            >
+                              <TicketTypeBadge
+                                number={card.number}
+                                ticketTypeId={card.ticketTypeId}
+                                ticketTypes={ticketTypes}
+                              />
+                              <span className="ml-1">{card.title}</span>
+                            </button>
                           );
                         })}
                       </div>

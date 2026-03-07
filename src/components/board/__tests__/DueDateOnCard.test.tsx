@@ -58,7 +58,9 @@ describe("Due date badge on column-view cards", () => {
     renderApp();
 
     const card = screen.getByTestId("card-0");
-    expect(within(card).queryByTestId("due-date-badge")).not.toBeInTheDocument();
+    expect(
+      within(card).queryByTestId("due-date-badge"),
+    ).not.toBeInTheDocument();
   });
 
   it("shows overdue styling for past-due cards", () => {

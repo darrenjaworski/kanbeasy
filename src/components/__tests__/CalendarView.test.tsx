@@ -353,11 +353,36 @@ describe("CalendarView", () => {
         id: "col-1",
         title: "Todo",
         cards: [
-          makeCard({ id: "c1", number: 1, title: "Alpha", dueDate: "2025-06-15" }),
-          makeCard({ id: "c2", number: 2, title: "Bravo", dueDate: "2025-06-15" }),
-          makeCard({ id: "c3", number: 3, title: "Charlie", dueDate: "2025-06-15" }),
-          makeCard({ id: "c4", number: 4, title: "Delta", dueDate: "2025-06-15" }),
-          makeCard({ id: "c5", number: 5, title: "Echo", dueDate: "2025-06-15" }),
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Alpha",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c2",
+            number: 2,
+            title: "Bravo",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c3",
+            number: 3,
+            title: "Charlie",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c4",
+            number: 4,
+            title: "Delta",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c5",
+            number: 5,
+            title: "Echo",
+            dueDate: "2025-06-15",
+          }),
         ],
       }),
     ]);
@@ -366,7 +391,9 @@ describe("CalendarView", () => {
 
     await user.type(screen.getByPlaceholderText(/search/i), "Echo");
 
-    expect(screen.getByTestId("calendar-match-badge")).toHaveTextContent("1 match");
+    expect(screen.getByTestId("calendar-match-badge")).toHaveTextContent(
+      "1 match",
+    );
   });
 
   it("does not show match badge when day has 4 or fewer cards", async () => {
@@ -375,8 +402,18 @@ describe("CalendarView", () => {
         id: "col-1",
         title: "Todo",
         cards: [
-          makeCard({ id: "c1", number: 1, title: "Alpha", dueDate: "2025-06-15" }),
-          makeCard({ id: "c2", number: 2, title: "Bravo", dueDate: "2025-06-15" }),
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Alpha",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c2",
+            number: 2,
+            title: "Bravo",
+            dueDate: "2025-06-15",
+          }),
         ],
       }),
     ]);
@@ -385,7 +422,9 @@ describe("CalendarView", () => {
 
     await user.type(screen.getByPlaceholderText(/search/i), "Alpha");
 
-    expect(screen.queryByTestId("calendar-match-badge")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("calendar-match-badge"),
+    ).not.toBeInTheDocument();
   });
 
   it("shows plural matches text when multiple cards match", async () => {
@@ -394,11 +433,36 @@ describe("CalendarView", () => {
         id: "col-1",
         title: "Todo",
         cards: [
-          makeCard({ id: "c1", number: 1, title: "Alpha One", dueDate: "2025-06-15" }),
-          makeCard({ id: "c2", number: 2, title: "Alpha Two", dueDate: "2025-06-15" }),
-          makeCard({ id: "c3", number: 3, title: "Bravo", dueDate: "2025-06-15" }),
-          makeCard({ id: "c4", number: 4, title: "Charlie", dueDate: "2025-06-15" }),
-          makeCard({ id: "c5", number: 5, title: "Delta", dueDate: "2025-06-15" }),
+          makeCard({
+            id: "c1",
+            number: 1,
+            title: "Alpha One",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c2",
+            number: 2,
+            title: "Alpha Two",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c3",
+            number: 3,
+            title: "Bravo",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c4",
+            number: 4,
+            title: "Charlie",
+            dueDate: "2025-06-15",
+          }),
+          makeCard({
+            id: "c5",
+            number: 5,
+            title: "Delta",
+            dueDate: "2025-06-15",
+          }),
         ],
       }),
     ]);
@@ -407,6 +471,8 @@ describe("CalendarView", () => {
 
     await user.type(screen.getByPlaceholderText(/search/i), "Alpha");
 
-    expect(screen.getByTestId("calendar-match-badge")).toHaveTextContent("2 matches");
+    expect(screen.getByTestId("calendar-match-badge")).toHaveTextContent(
+      "2 matches",
+    );
   });
 });
