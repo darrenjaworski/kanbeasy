@@ -26,7 +26,7 @@ const modes: readonly {
 ];
 
 export function ViewToggle() {
-  const { viewMode, setViewMode } = useTheme();
+  const { viewMode, setViewMode, compactHeader } = useTheme();
   const { columns } = useBoard();
   const hasCards = columns.some((c) => c.cards.length > 0);
 
@@ -51,7 +51,9 @@ export function ViewToggle() {
             onClick={() => setViewMode(mode)}
           >
             <Icon className="size-4" />
-            <span className="text-xs font-medium">{shortLabel}</span>
+            {!compactHeader && (
+              <span className="text-xs font-medium">{shortLabel}</span>
+            )}
           </button>
         );
       })}

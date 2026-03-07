@@ -40,6 +40,9 @@ export const STORAGE_KEYS = {
   /** Default ticket type for new cards */
   DEFAULT_TICKET_TYPE: "kanbeasy:defaultTicketType",
 
+  /** Compact header buttons (icon-only, no text labels) */
+  COMPACT_HEADER: "kanbeasy:compactHeader",
+
   /** Settings modal section collapse state (JSON object) */
   SETTINGS_SECTIONS: "kanbeasy:settingsSections",
 

@@ -14,12 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replace description column with due date column in list view
 - Add scrollable day cells in calendar view with fixed-height layout
 - Reduce search bar width for better header layout
+- Add compact header setting to hide text labels on header buttons (Appearance > Compact header)
 
 ### Tests
 
 - Add CalendarView unit tests (12 tests: empty state, grid rendering, navigation, year boundary wrap)
 - Add CalendarView e2e tests (8 tests: grid display, card visibility, month navigation, persistence)
 - Add calendar view toggle tests to ViewToggle test suite
+- Add compact header unit tests (5 tests: default state, label hiding, aria labels, persistence, toggle)
+- Add list view due date column tests (4 tests: header, formatted date, em dash, card detail modal)
+- Add calendar view card detail modal test
 
 ### Fixed
 

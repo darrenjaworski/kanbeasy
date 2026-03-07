@@ -36,5 +36,7 @@ export type ThemeContextValue = Readonly<{
   setTicketTypePresetId: (id: string) => void;
   defaultTicketTypeId: string | null;
   setDefaultTicketTypeId: (id: string | null) => void;
+  compactHeader: boolean;
+  setCompactHeader: (enabled: boolean) => void;
   resetSettings: () => void;
 }>;

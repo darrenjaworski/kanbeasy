@@ -1,7 +1,7 @@
 import { STORAGE_KEYS } from "../constants/storage";
 
 interface ExportData {
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
   exportedAt: string;
   board: unknown;
   settings: {
@@ -15,6 +15,7 @@ interface ExportData {
     ticketTypePreset: string;
     ticketTypes: string;
     defaultTicketType: string;
+    compactHeader: string;
   };
 }
 
@@ -34,7 +35,7 @@ function buildExportData(): ExportData {
   }
 
   return {
-    version: 7,
+    version: 8,
     exportedAt: new Date().toISOString(),
     board,
     settings: {
@@ -48,6 +49,7 @@ function buildExportData(): ExportData {
       ticketTypePreset: readRaw(STORAGE_KEYS.TICKET_TYPE_PRESET),
       ticketTypes: readRaw(STORAGE_KEYS.TICKET_TYPES),
       defaultTicketType: readRaw(STORAGE_KEYS.DEFAULT_TICKET_TYPE),
+      compactHeader: readRaw(STORAGE_KEYS.COMPACT_HEADER),
     },
   };
 }

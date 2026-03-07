@@ -7,6 +7,7 @@ import {
   DensityMediumIcon,
   DensityLargeIcon,
 } from "../icons";
+import { ToggleSwitch } from "../shared/ToggleSwitch";
 
 const lightThemes = themes.filter((t) => t.mode === "light");
 const darkThemes = themes.filter((t) => t.mode === "dark");
@@ -30,6 +31,8 @@ export function ThemeSection() {
     setThemePreference,
     cardDensity,
     setCardDensity,
+    compactHeader,
+    setCompactHeader,
   } = useTheme();
 
   const handleModeSwitch = (pref: ThemePreference) => {
@@ -129,6 +132,13 @@ export function ThemeSection() {
           </button>
         </div>
       </fieldset>
+      <ToggleSwitch
+        id="compact-header"
+        label="Compact header"
+        description="Hide text labels on header buttons"
+        checked={compactHeader}
+        onChange={setCompactHeader}
+      />
     </fieldset>
   );
 }

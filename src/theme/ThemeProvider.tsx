@@ -147,6 +147,10 @@ export function ThemeProvider({
   const [defaultTicketTypeId, setDefaultTicketTypeId] = useState<string | null>(
     () => getStringFromStorage(STORAGE_KEYS.DEFAULT_TICKET_TYPE, "") || null,
   );
+  const [compactHeader, setCompactHeader] = useState<boolean>(() => {
+    const stored = getStringFromStorage(STORAGE_KEYS.COMPACT_HEADER, "false");
+    return stored === "true";
+  });
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -248,6 +252,10 @@ export function ThemeProvider({
     }
   }, [defaultTicketTypeId]);
 
+  useEffect(() => {
+    saveStringToStorage(STORAGE_KEYS.COMPACT_HEADER, String(compactHeader));
+  }, [compactHeader]);
+
   // Clear default ticket type if it no longer exists in the current types
   useEffect(() => {
     if (
@@ -270,6 +278,7 @@ export function ThemeProvider({
     localStorage.removeItem(STORAGE_KEYS.TICKET_TYPE_PRESET);
     localStorage.removeItem(STORAGE_KEYS.TICKET_TYPES);
     localStorage.removeItem(STORAGE_KEYS.DEFAULT_TICKET_TYPE);
+    localStorage.removeItem(STORAGE_KEYS.COMPACT_HEADER);
     localStorage.removeItem(STORAGE_KEYS.SETTINGS_SECTIONS);
     localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
@@ -285,6 +294,7 @@ export function ThemeProvider({
     const preset = TICKET_TYPE_PRESETS.find((p) => p.id === DEFAULT_PRESET_ID);
     if (preset) setTicketTypes([...preset.types]);
     setDefaultTicketTypeId(null);
+    setCompactHeader(false);
   }, []);
 
   const theme = getThemeById(themeId);
@@ -313,6 +323,8 @@ export function ThemeProvider({
       setTicketTypePresetId,
       defaultTicketTypeId,
       setDefaultTicketTypeId,
+      compactHeader,
+      setCompactHeader,
       resetSettings,
     }),
     [
@@ -328,6 +340,7 @@ export function ThemeProvider({
       ticketTypes,
       ticketTypePresetId,
       defaultTicketTypeId,
+      compactHeader,
       resetSettings,
     ],
   );

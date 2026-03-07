@@ -181,4 +181,20 @@ describe("CalendarView", () => {
     await user.click(screen.getByLabelText("Previous month"));
     expect(screen.getByText(/december 2024/i)).toBeInTheDocument();
   });
+
+  it("opens card detail modal when clicking a card", async () => {
+    seedBoard([
+      makeColumn("col-1", "Todo", [
+        makeCard("c1", 1, "Clickable Task", "2025-06-15"),
+      ]),
+    ]);
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    renderApp();
+
+    const grid = screen.getByTestId("calendar-grid");
+    await user.click(within(grid).getByText("Clickable Task"));
+
+    // Card detail modal should open with the card title and due date field
+    expect(screen.getByTestId("card-detail-due-date")).toBeInTheDocument();
+  });
 });

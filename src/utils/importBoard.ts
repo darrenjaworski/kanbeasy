@@ -24,6 +24,7 @@ interface ValidatedImport {
     ticketTypePresetId: string;
     ticketTypes: TicketType[];
     defaultTicketTypeId: string | null;
+    compactHeader: boolean;
   };
 }
 
@@ -64,12 +65,13 @@ export function validateExportData(parsed: unknown): ImportResult {
     version !== 4 &&
     version !== 5 &&
     version !== 6 &&
-    version !== 7
+    version !== 7 &&
+    version !== 8
   ) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–7 are supported.`
+        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–8 are supported.`
         : "Missing export version.",
     };
   }
@@ -200,6 +202,16 @@ export function validateExportData(parsed: unknown): ImportResult {
     }
   }
 
+  // Compact header (v8+). Fall back to false for older versions.
+  const compactHeader =
+    version >= 8
+      ? typeof s.compactHeader === "string"
+        ? s.compactHeader === "true"
+        : typeof s.compactHeader === "boolean"
+          ? s.compactHeader
+          : false
+      : false;
+
   return {
     ok: true,
     data: {
@@ -217,6 +229,7 @@ export function validateExportData(parsed: unknown): ImportResult {
         ticketTypePresetId,
         ticketTypes,
         defaultTicketTypeId,
+        compactHeader,
       },
     },
   };

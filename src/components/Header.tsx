@@ -7,10 +7,12 @@ import { SettingsGearIcon, AnalyticsIcon, ArchiveIcon } from "./icons";
 import { SearchInput } from "./SearchInput";
 import { ViewToggle } from "./ViewToggle";
 import { useBoard } from "../board/useBoard";
+import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 
 export function Header() {
   const { columns, archive } = useBoard();
+  const { compactHeader } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
@@ -41,7 +43,9 @@ export function Header() {
             disabled={!hasCards}
           >
             <AnalyticsIcon className="size-5" />
-            <span className="text-sm font-medium">Analytics</span>
+            {!compactHeader && (
+              <span className="text-sm font-medium">Analytics</span>
+            )}
           </button>
           <button
             type="button"
@@ -52,7 +56,9 @@ export function Header() {
             disabled={!hasArchive}
           >
             <ArchiveIcon className="size-5" />
-            <span className="text-sm font-medium">Archive</span>
+            {!compactHeader && (
+              <span className="text-sm font-medium">Archive</span>
+            )}
           </button>
           <button
             type="button"
@@ -61,7 +67,9 @@ export function Header() {
             onClick={() => setSettingsOpen(true)}
           >
             <SettingsGearIcon className="size-5" />
-            <span className="text-sm font-medium">Settings</span>
+            {!compactHeader && (
+              <span className="text-sm font-medium">Settings</span>
+            )}
           </button>
         </div>
       </div>
