@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add due date badge to column-view cards with color-coded urgency (red for overdue, amber for due within 2 days, muted for further out)
+
 ### Changed
+
+- Adjust card action buttons positioning to `top: 8px, right: 8px`
+- Add `margin-top: 4px` to card textarea for improved spacing
+- Place checklist progress and due date badge on the same line within cards
 
 - Extract shared Playwright fixture (`tests-e2e/fixtures.ts`) to eliminate duplicated `beforeEach` setup across 19 e2e spec files
 - Extract shared `makeE2eCard` and `seedBoard` helpers for e2e test data seeding, replacing 3 duplicate `makeCard` definitions

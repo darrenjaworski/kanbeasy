@@ -28,7 +28,7 @@ export function CardControls({
 }: CardControlsProps) {
   return (
     <div
-      className={`absolute right-1 top-1 z-1 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
+      className={`absolute right-2 top-2 z-1 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
     >
       {canDrag && (
         <Tooltip content="Drag to reorder">

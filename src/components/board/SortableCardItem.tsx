@@ -14,6 +14,7 @@ import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
 import { ChecklistProgress } from "../shared/ChecklistProgress";
+import { DueDateBadge } from "../shared/DueDateBadge";
 import { TicketTypeBadge } from "../shared/TicketTypeBadge";
 
 type SortableCardItemProps = Readonly<{
@@ -141,17 +142,20 @@ export function SortableCardItem({
         id={`${columnId}-${card.id}-content`}
         aria-label="Card content"
         defaultValue={cardValue}
-        className={`${tc.input} w-full resize-none hover:resize-y focus:resize-y rounded-xs`}
+        className={`${tc.input} mt-1 w-full resize-none hover:resize-y focus:resize-y rounded-xs`}
         rows={rowsForDensity}
         onKeyDown={cardKeyDown}
         onBlur={cardBlur}
         data-testid={`card-content-${index}`}
       />
-      <ChecklistProgress
-        description={card.description}
-        className="mt-1"
-        showCount={false}
-      />
+      <div className="flex items-center gap-2 mt-1 empty:hidden">
+        <ChecklistProgress
+          description={card.description}
+          className="flex-1"
+          showCount={false}
+        />
+        <DueDateBadge dueDate={card.dueDate} />
+      </div>
     </div>
   );
 }
