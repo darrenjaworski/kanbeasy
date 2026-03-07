@@ -53,6 +53,7 @@ export function SortableColumnItem({
         canDrag={canDrag}
         columnCount={columnCount}
         onOpenDetail={onOpenDetail}
+        isDragging={isDragging}
         dragHandleRef={setActivatorNodeRef}
         dragHandleProps={{
           ...(attributes as unknown as ButtonHTMLAttributes<HTMLButtonElement>),

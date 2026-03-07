@@ -25,6 +25,7 @@ type Props = Readonly<{
   dragHandleRef?: (el: HTMLButtonElement | null) => void;
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
   overlayMode?: boolean;
+  isDragging?: boolean;
   index?: number;
   columnCount?: number;
   onOpenDetail?: (cardId: string) => void;
@@ -38,6 +39,7 @@ export function Column({
   dragHandleRef,
   dragHandleProps,
   overlayMode = false,
+  isDragging = false,
   index,
   columnCount,
   onOpenDetail,
@@ -138,7 +140,10 @@ export function Column({
         className={`absolute right-2 top-2 z-2 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
       >
         {canDrag && (
-          <Tooltip content="Drag to reorder">
+          <Tooltip
+            content="Drag to reorder"
+            disabled={isDragging || overlayMode}
+          >
             <button
               type="button"
               ref={dragHandleRef}
@@ -152,7 +157,7 @@ export function Column({
           </Tooltip>
         )}
         {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
-        <Tooltip content="Remove column">
+        <Tooltip content="Remove column" disabled={isDragging || overlayMode}>
           <button
             type="button"
             onClick={() =>
