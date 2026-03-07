@@ -79,6 +79,8 @@ an ultra simple task organizer
 - ✅ simplified header buttons — compact header setting to hide text labels on header buttons
 - ✅ due date badge on board cards — color-coded urgency indicator (red for overdue, amber for due soon, muted for further out)
 - ✅ search highlighting on calendar view — highlight matching cards and show match count badge on busy days
+- ✅ command palette (`Cmd+K` / `Ctrl+K`) with quick actions for adding cards, columns, switching views, and opening modals
+- ✅ keyboard shortcuts toggle in Settings > Preferences (defaults to off)
 
 Settings
 

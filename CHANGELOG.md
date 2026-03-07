@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.33.0]
+
 ### Features
 
 - Add command palette (`Cmd+K` / `Ctrl+K`) with filtered quick actions: add card, add column, switch views, open analytics/archive/settings, and focus search
