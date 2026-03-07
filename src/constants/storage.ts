@@ -4,8 +4,11 @@
  */
 
 export const STORAGE_KEYS = {
-  /** Board state (columns and cards) */
+  /** Board state (columns and cards) — legacy single-board key */
   BOARD: "kanbeasy:board",
+
+  /** Board index (board list + active ID + global card counter) */
+  BOARD_INDEX: "kanbeasy:boardIndex",
 
   /** Theme preference (light/dark) */
   THEME: "kanbeasy:theme",
@@ -49,3 +52,8 @@ export const STORAGE_KEYS = {
   /** Whether the user has seen the welcome modal */
   HAS_SEEN_WELCOME: "hasSeenWelcome",
 } as const;
+
+/** Returns the localStorage key for a specific board's data */
+export function boardStorageKey(boardId: string): string {
+  return `kanbeasy:board:${boardId}`;
+}

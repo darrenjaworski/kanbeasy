@@ -12,6 +12,7 @@ export { DragIndicatorIcon } from "./DragIndicatorIcon";
 export { ListViewIcon } from "./ListViewIcon";
 export { MoreIcon } from "./MoreIcon";
 export { OwlIcon, SleepyOwlIcon } from "./OwlIcon";
+export { PlusIcon } from "./PlusIcon";
 export { RedoIcon } from "./RedoIcon";
 export { SettingsGearIcon } from "./SettingsGearIcon";
 export { UndoIcon } from "./UndoIcon";

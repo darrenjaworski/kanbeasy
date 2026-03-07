@@ -1,11 +1,16 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { createElement, type ReactNode } from "react";
+import { BoardsProvider } from "../../boards/BoardsProvider";
 import { BoardProvider } from "../BoardProvider";
 import { useBoard } from "../useBoard";
 
 function wrapper({ children }: { children: ReactNode }) {
-  return createElement(BoardProvider, null, children);
+  return createElement(
+    BoardsProvider,
+    null,
+    createElement(BoardProvider, null, children),
+  );
 }
 
 describe("card archive through BoardProvider", () => {

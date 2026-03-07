@@ -2,18 +2,21 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CardTypeSection } from "../CardTypeSection";
 import { ThemeProvider } from "../../../theme/ThemeProvider";
+import { BoardsProvider } from "../../../boards/BoardsProvider";
 import { BoardProvider } from "../../../board/BoardProvider";
 import { CARD_TYPE_PRESETS } from "../../../constants/cardTypes";
-import { STORAGE_KEYS } from "../../../constants/storage";
+import { STORAGE_KEYS, boardStorageKey } from "../../../constants/storage";
 import { describe, beforeEach, it, expect, vi } from "vitest";
 
 function renderSection() {
   return render(
-    <BoardProvider>
-      <ThemeProvider>
-        <CardTypeSection />
-      </ThemeProvider>
-    </BoardProvider>,
+    <BoardsProvider>
+      <BoardProvider>
+        <ThemeProvider>
+          <CardTypeSection />
+        </ThemeProvider>
+      </BoardProvider>
+    </BoardsProvider>,
   );
 }
 
@@ -218,7 +221,7 @@ describe("CardTypeSection", () => {
       // While typing, the card should still have cardTypeId "feat" in localStorage
       // because renameCardType hasn't been called yet
       const boardDuringTyping = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
+        localStorage.getItem(boardStorageKey("default")) ?? "{}",
       );
       expect(boardDuringTyping.columns[0].cards[0].cardTypeId).toBe("feat");
 
@@ -229,7 +232,7 @@ describe("CardTypeSection", () => {
       // Wait for state to settle
       await vi.waitFor(() => {
         const boardAfterBlur = JSON.parse(
-          localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
+          localStorage.getItem(boardStorageKey("default")) ?? "{}",
         );
         expect(boardAfterBlur.columns[0].cards[0].cardTypeId).toBe("story");
       });
@@ -324,7 +327,7 @@ describe("CardTypeSection", () => {
       // Card should still have cardTypeId "feat" — type definition
       // removal should not wipe card data
       const board = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
+        localStorage.getItem(boardStorageKey("default")) ?? "{}",
       );
       expect(board.columns[0].cards[0].cardTypeId).toBe("feat");
     });

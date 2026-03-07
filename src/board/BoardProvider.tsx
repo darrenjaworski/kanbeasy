@@ -2,12 +2,13 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState } from "./types";
 import { getFromStorage, saveToStorage } from "../utils/storage";
-import { STORAGE_KEYS } from "../constants/storage";
+import { boardStorageKey } from "../constants/storage";
 import { isArchivedCard, isColumn } from "./validation";
 import { migrateColumnsWithNumbering } from "./migration";
 import { useUndoableState } from "./useUndoableState";
 import { useBoardMutations } from "./useBoardMutations";
 import { useCardSearch } from "./useCardSearch";
+import { useBoards } from "../boards/useBoards";
 
 type LoadResult = { state: BoardState; nextCardNumber: number };
 
@@ -95,12 +96,10 @@ function createInitialBoard(): LoadResult {
   };
 }
 
-function loadState(): LoadResult {
-  // When no board data has ever been saved, seed with example columns.
-  // After "Clear board data", the key exists with { columns: [] }, so we won't re-seed.
+function loadState(storageKey: string, globalCounter: number): LoadResult {
   const raw =
     typeof window !== "undefined"
-      ? window.localStorage.getItem(STORAGE_KEYS.BOARD)
+      ? window.localStorage.getItem(storageKey)
       : null;
 
   if (raw === null) {
@@ -108,14 +107,13 @@ function loadState(): LoadResult {
   }
 
   const stored = getFromStorage<{ columns?: unknown; archive?: unknown }>(
-    STORAGE_KEYS.BOARD,
+    storageKey,
     {},
   );
 
   const cols = Array.isArray(stored.columns)
     ? (stored.columns as unknown[])
         .map((c) => {
-          // migrate legacy columns lacking cards
           if (
             c &&
             typeof c === "object" &&
@@ -135,51 +133,64 @@ function loadState(): LoadResult {
     ? (stored.archive as unknown[]).filter(isArchivedCard)
     : [];
 
-  // Migrate timestamps and assign card numbers
   const { columns, archive, nextCardNumber } = migrateColumnsWithNumbering(
     cols as unknown as Record<string, unknown>[],
     rawArchive as unknown as Record<string, unknown>[],
   );
 
-  // Reconcile with persisted counter (take the max)
-  const persistedCounter = getFromStorage<number>(
-    STORAGE_KEYS.NEXT_CARD_NUMBER,
-    0,
-  );
-
   return {
     state: { columns, archive },
-    nextCardNumber: Math.max(nextCardNumber, persistedCounter),
+    nextCardNumber: Math.max(nextCardNumber, globalCounter),
   };
-}
-
-function saveState(state: BoardState) {
-  saveToStorage(STORAGE_KEYS.BOARD, state);
 }
 
 export function BoardProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // Use lazy init to call loadState once and split state + counter
+  const {
+    activeBoardId,
+    nextCardNumber: globalCounter,
+    setNextCardNumber: setGlobalCounter,
+  } = useBoards();
+
+  const storageKey = boardStorageKey(activeBoardId);
+
+  // Track which board we're currently showing
+  const currentBoardIdRef = useRef(activeBoardId);
   const loadResult = useRef<LoadResult | null>(null);
   if (loadResult.current === null) {
-    loadResult.current = loadState();
+    loadResult.current = loadState(storageKey, globalCounter);
   }
 
-  const { state, setState, undo, redo, canUndo, canRedo } =
+  const { state, setState, undo, redo, canUndo, canRedo, reset } =
     useUndoableState<BoardState>(() => loadResult.current!.state, {
       maxHistory: 50,
     });
 
   const nextCardNumberRef = useRef(loadResult.current.nextCardNumber);
 
-  const saveCounter = useCallback((n: number) => {
-    nextCardNumberRef.current = n;
-    saveToStorage(STORAGE_KEYS.NEXT_CARD_NUMBER, n);
-  }, []);
-
+  // When the active board changes, reload state
   useEffect(() => {
-    saveState(state);
+    if (activeBoardId === currentBoardIdRef.current) return;
+    currentBoardIdRef.current = activeBoardId;
+
+    const key = boardStorageKey(activeBoardId);
+    const result = loadState(key, globalCounter);
+    nextCardNumberRef.current = result.nextCardNumber;
+    reset(result.state);
+  }, [activeBoardId, globalCounter, reset]);
+
+  const saveCounter = useCallback(
+    (n: number) => {
+      nextCardNumberRef.current = n;
+      setGlobalCounter(n);
+    },
+    [setGlobalCounter],
+  );
+
+  // Save board state to its storage key whenever it changes
+  useEffect(() => {
+    saveToStorage(boardStorageKey(currentBoardIdRef.current), state);
   }, [state]);
 
   const mutations = useBoardMutations(setState, nextCardNumberRef, saveCounter);
