@@ -100,9 +100,7 @@ test("compact header hides text labels", async ({ page }) => {
   await expect(page.getByText("Analytics")).not.toBeVisible();
 
   // Icon buttons should still be accessible
-  await expect(
-    page.getByRole("radio", { name: /board view/i }),
-  ).toBeVisible();
+  await expect(page.getByRole("radio", { name: /board view/i })).toBeVisible();
   await expect(page.getByLabel("Open settings")).toBeVisible();
 
   // Setting is persisted to localStorage
