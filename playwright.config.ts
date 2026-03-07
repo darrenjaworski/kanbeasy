@@ -6,9 +6,6 @@ const isCI = process.env.CI === "true";
 
 export default defineConfig({
   testDir: "./tests-e2e",
-  // Exclude visual regression tests when running against a deployed site
-  // (they need a local dev server for localStorage seeding)
-  testIgnore: isDeployedRun ? ["**/visual-regression*"] : undefined,
   timeout: 30_000,
   retries: isCI ? 2 : 0,
   reporter: isCI ? [["github"], ["html"]] : [["list"], ["html"]],
