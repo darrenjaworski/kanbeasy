@@ -13,6 +13,7 @@ import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
+import { ChecklistProgress } from "../shared/ChecklistProgress";
 import { TicketTypeBadge } from "../shared/TicketTypeBadge";
 
 type SortableCardItemProps = Readonly<{
@@ -144,6 +145,11 @@ export function SortableCardItem({
         onKeyDown={cardKeyDown}
         onBlur={cardBlur}
         data-testid={`card-content-${index}`}
+      />
+      <ChecklistProgress
+        description={card.description}
+        className="mt-1"
+        showCount={false}
       />
     </div>
   );

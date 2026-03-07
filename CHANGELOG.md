@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add interactive checklists in card descriptions — click checkboxes to toggle in preview mode without entering edit mode
 - Add "+ Add checklist item" button below description for easy item creation without typing markdown syntax
 - Inline input stays focused for rapid multi-item entry (Enter to add, Escape to dismiss)
+- Add checklist progress bar on board cards and card detail modal showing checked/total with color-coded fill
 
 ### Tests
 

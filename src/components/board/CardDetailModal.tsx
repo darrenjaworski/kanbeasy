@@ -6,6 +6,7 @@ import { Modal } from "../shared/Modal";
 import { ModalHeader } from "../shared/ModalHeader";
 import { DescriptionField } from "./DescriptionField";
 import { ArchiveIcon, MoreIcon } from "../icons";
+import { ChecklistProgress } from "../shared/ChecklistProgress";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
 import { formatDateTime } from "../../utils/formatDate";
@@ -190,6 +191,7 @@ export function CardDetailModal({
             description={card.description}
             onSave={handleDescriptionSave}
           />
+          <ChecklistProgress description={card.description} className="mt-2" />
         </div>
 
         {/* Archive button */}
