@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:analyze": "ANALYZE=true vite build",
+    "build:clean": "rm -rf node_modules && rm -rf dist && rm -rf coverage && rm -rf test-results && rm -rf .lighthouseci && rm -rf playwright-report",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
