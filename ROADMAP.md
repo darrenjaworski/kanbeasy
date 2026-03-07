@@ -99,7 +99,7 @@ Settings
 - customizable icons on the lefthand side of each todo
 - keyboard shortcuts
   - cmd + n to create a new card
-  - cmd + k for command palette / quick actions
+  - ✅ cmd + k for command palette / quick actions
   - arrow key navigation between cards and columns
   - Enter to open card detail, Escape to close modals
 - card enhancements

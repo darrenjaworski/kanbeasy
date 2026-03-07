@@ -153,6 +153,14 @@ export function ThemeProvider({
     const stored = getStringFromStorage(STORAGE_KEYS.COMPACT_HEADER, "false");
     return stored === "true";
   });
+  const [keyboardShortcutsEnabled, setKeyboardShortcutsEnabled] =
+    useState<boolean>(() => {
+      const stored = getStringFromStorage(
+        STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED,
+        "false",
+      );
+      return stored === "true";
+    });
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -255,6 +263,13 @@ export function ThemeProvider({
     saveStringToStorage(STORAGE_KEYS.COMPACT_HEADER, String(compactHeader));
   }, [compactHeader]);
 
+  useEffect(() => {
+    saveStringToStorage(
+      STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED,
+      String(keyboardShortcutsEnabled),
+    );
+  }, [keyboardShortcutsEnabled]);
+
   // Clear default card type if it no longer exists in the current types
   useEffect(() => {
     if (
@@ -278,6 +293,7 @@ export function ThemeProvider({
     localStorage.removeItem(STORAGE_KEYS.CARD_TYPES);
     localStorage.removeItem(STORAGE_KEYS.DEFAULT_CARD_TYPE);
     localStorage.removeItem(STORAGE_KEYS.COMPACT_HEADER);
+    localStorage.removeItem(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
     localStorage.removeItem(STORAGE_KEYS.SETTINGS_SECTIONS);
     localStorage.removeItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
@@ -294,6 +310,7 @@ export function ThemeProvider({
     if (preset) setCardTypes([...preset.types]);
     setDefaultCardTypeId(null);
     setCompactHeader(false);
+    setKeyboardShortcutsEnabled(false);
   }, []);
 
   const theme = getThemeById(themeId);
@@ -324,6 +341,8 @@ export function ThemeProvider({
       setDefaultCardTypeId,
       compactHeader,
       setCompactHeader,
+      keyboardShortcutsEnabled,
+      setKeyboardShortcutsEnabled,
       resetSettings,
     }),
     [
@@ -340,6 +359,7 @@ export function ThemeProvider({
       cardTypePresetId,
       defaultCardTypeId,
       compactHeader,
+      keyboardShortcutsEnabled,
       resetSettings,
     ],
   );

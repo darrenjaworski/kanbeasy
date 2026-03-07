@@ -7,9 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add command palette (`Cmd+K` / `Ctrl+K`) with filtered quick actions: add card, add column, switch views, open analytics/archive/settings, and focus search
+- Add keyboard shortcut hint pill in bottom-right corner showing `⌘k Shortcuts`
+- Add keyboard shortcuts toggle in Settings > Preferences to enable/disable shortcuts and hint (defaults to off)
+
 ### Added
 
 - Card layout editor design document (`docs/card-layout-editor.md`)
+
+### Tests
+
+- Add unit tests for `useCommandPaletteShortcut` hook (5 tests: Cmd+K, Ctrl+K, works in inputs, modifier guard, unrelated keys)
+- Add unit tests for `CommandPalette` component (23 tests: rendering, filtering, keyboard navigation, action execution, default card type, disabled states, view mode filtering, selection wrapping, query reset, settings via header button)
+- Add unit tests for `KeyboardShortcutHint` component (2 tests: renders hint text, kbd element)
+- Add regression test for keyboard shortcuts defaulting to off
 
 ## [1.32.7]
 

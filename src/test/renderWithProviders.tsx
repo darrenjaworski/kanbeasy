@@ -37,6 +37,8 @@ export function makeThemeContext(
     setDefaultCardTypeId: noop,
     compactHeader: false,
     setCompactHeader: noop,
+    keyboardShortcutsEnabled: false,
+    setKeyboardShortcutsEnabled: noop,
     resetSettings: noop,
     ...overrides,
   };

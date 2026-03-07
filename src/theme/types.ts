@@ -38,5 +38,7 @@ export type ThemeContextValue = Readonly<{
   setDefaultCardTypeId: (id: string | null) => void;
   compactHeader: boolean;
   setCompactHeader: (enabled: boolean) => void;
+  keyboardShortcutsEnabled: boolean;
+  setKeyboardShortcutsEnabled: (enabled: boolean) => void;
   resetSettings: () => void;
 }>;

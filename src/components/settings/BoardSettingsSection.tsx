@@ -9,6 +9,8 @@ export function BoardSettingsSection() {
     setDeleteColumnWarningEnabled,
     owlModeEnabled,
     setOwlModeEnabled,
+    keyboardShortcutsEnabled,
+    setKeyboardShortcutsEnabled,
   } = useTheme();
 
   return (
@@ -24,6 +26,13 @@ export function BoardSettingsSection() {
         label="Warn before removing columns with cards"
         checked={deleteColumnWarningEnabled}
         onChange={setDeleteColumnWarningEnabled}
+      />
+      <ToggleSwitch
+        id="keyboard-shortcuts"
+        label="Keyboard shortcuts"
+        description="Use Cmd+K to open the command palette"
+        checked={keyboardShortcutsEnabled}
+        onChange={setKeyboardShortcutsEnabled}
       />
       <ToggleSwitch
         id="owl-mode"

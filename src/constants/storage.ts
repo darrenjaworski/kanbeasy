@@ -46,6 +46,9 @@ export const STORAGE_KEYS = {
   /** Settings modal section collapse state (JSON object) */
   SETTINGS_SECTIONS: "kanbeasy:settingsSections",
 
+  /** Keyboard shortcuts enabled */
+  KEYBOARD_SHORTCUTS_ENABLED: "kanbeasy:keyboardShortcutsEnabled",
+
   /** Whether the user has seen the welcome modal */
   HAS_SEEN_WELCOME: "hasSeenWelcome",
 } as const;

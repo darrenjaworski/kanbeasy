@@ -53,6 +53,19 @@ describe("BoardSettingsSection", () => {
     ).toBeInTheDocument();
   });
 
+  it("defaults keyboard shortcuts to off", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await openSettings(user);
+
+    await user.click(screen.getByText("Preferences"));
+
+    const toggle = screen.getByRole("switch", {
+      name: /keyboard shortcuts/i,
+    });
+    expect(toggle).not.toBeChecked();
+  });
+
   it("toggles column resizing on and off", async () => {
     const user = userEvent.setup();
     renderApp();
