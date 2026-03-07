@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add compact header unit tests (5 tests: default state, label hiding, aria labels, persistence, toggle)
 - Add list view due date column tests (4 tests: header, formatted date, em dash, card detail modal)
 - Add calendar view card detail modal test
+- Add list view card detail modal e2e test
+- Add compact header e2e test (label hiding, icon accessibility, localStorage persistence)
+- Fix export version expectation in e2e tests (v7 → v8)
 
 ### Fixed
 

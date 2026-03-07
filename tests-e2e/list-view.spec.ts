@@ -114,6 +114,14 @@ test.describe("List view", () => {
     await expect(thirdRowColumn).toHaveText("Done");
   });
 
+  test("opens card detail modal when clicking a row", async ({ page }) => {
+    const rows = page.locator("tbody tr");
+    await rows.nth(0).click();
+
+    // Card detail modal should open with the due date field
+    await expect(page.getByTestId("card-detail-due-date")).toBeVisible();
+  });
+
   test("displays due date when present", async ({ page }) => {
     const rows = page.locator("tbody tr");
 

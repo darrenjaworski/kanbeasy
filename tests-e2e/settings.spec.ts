@@ -77,6 +77,41 @@ test("has a setting to adjust the size of the cards", async ({ page }) => {
   );
 });
 
+test("compact header hides text labels", async ({ page }) => {
+  // Add a column so view toggles are enabled
+  await page.getByTestId("add-column-button").click();
+  const col = page.getByTestId("column-0");
+  await col.getByTestId("add-card-button-0").click();
+
+  // Labels should be visible by default
+  await expect(page.getByText("Settings")).toBeVisible();
+  await expect(page.getByText("Board")).toBeVisible();
+
+  // Enable compact header
+  await page.getByRole("button", { name: /open settings/i }).click();
+  const dlg = page.getByRole("dialog", { name: /settings/i });
+  await dlg.getByRole("button", { name: /appearance/i }).click();
+  await dlg.getByText("Compact header").click();
+  await dlg.getByRole("button", { name: /close settings/i }).click();
+
+  // Text labels should be hidden
+  await expect(page.getByText("Board")).not.toBeVisible();
+  await expect(page.getByText("Settings")).not.toBeVisible();
+  await expect(page.getByText("Analytics")).not.toBeVisible();
+
+  // Icon buttons should still be accessible
+  await expect(
+    page.getByRole("radio", { name: /board view/i }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Open settings")).toBeVisible();
+
+  // Setting is persisted to localStorage
+  const stored = await page.evaluate(() =>
+    localStorage.getItem("kanbeasy:compactHeader"),
+  );
+  expect(stored).toBe("true");
+});
+
 test("can wipe the board data", async ({ page }) => {
   // Create some board data
   await page.getByTestId("add-column-button").click();

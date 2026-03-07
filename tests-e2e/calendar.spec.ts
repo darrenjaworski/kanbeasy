@@ -94,6 +94,13 @@ test.describe("Calendar view", () => {
     await expect(grid.getByText("Also Due Today")).toBeVisible();
   });
 
+  test("opens card detail modal when clicking a card", async ({ page }) => {
+    const grid = page.getByTestId("calendar-grid");
+    await grid.getByText("Due Today", { exact: true }).click();
+
+    await expect(page.getByTestId("card-detail-due-date")).toBeVisible();
+  });
+
   test("does not show cards without due dates on the calendar", async ({
     page,
   }) => {
