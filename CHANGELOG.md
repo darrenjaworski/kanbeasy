@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.32.1]
+
+### Fixed
+
+- Preserve non-default theme on page reload when theme preference is set to "system"
+- Disable calendar view toggle when no cards have due dates
+
+### Tests
+
+- Add regression test for card controls hidden during drag (tooltip flash prevention)
+- Add regression test for system theme preference preserving theme choice on reload
+- Add tests for calendar view disabled without due dates
+
 ## [1.32.0]
 
 ### Features

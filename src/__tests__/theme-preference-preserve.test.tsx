@@ -154,8 +154,7 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     expect(localStorage.getItem(STORAGE_KEYS.THEME_PREFERENCE)).toBe("system");
 
     // Simulate reload: re-render with same localStorage
-    const { unmount } = renderApp();
-    unmount;
+    renderApp();
 
     // Theme should still be Twilight, not reset to default dark-slate
     expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
