@@ -21,6 +21,7 @@ export function migrateCard(
   const number = typeof raw.number === "number" ? raw.number : 0;
   const ticketTypeId =
     typeof raw.ticketTypeId === "string" ? raw.ticketTypeId : null;
+  const dueDate = typeof raw.dueDate === "string" ? raw.dueDate : null;
 
   return {
     id: raw.id as string,
@@ -28,6 +29,7 @@ export function migrateCard(
     title: raw.title as string,
     description,
     ticketTypeId,
+    dueDate,
     createdAt,
     updatedAt,
     columnHistory,

@@ -9,6 +9,7 @@ export type Card = Readonly<{
   title: string;
   description: string;
   ticketTypeId: string | null;
+  dueDate: string | null;
   createdAt: number;
   updatedAt: number;
   columnHistory: ColumnHistoryEntry[];
@@ -25,7 +26,9 @@ export type CardClipboard = Pick<
   "title" | "description" | "ticketTypeId"
 >;
 
-export type CardUpdates = Partial<CardClipboard & Pick<Card, "ticketTypeId">>;
+export type CardUpdates = Partial<
+  CardClipboard & Pick<Card, "ticketTypeId" | "dueDate">
+>;
 
 export type Column = Readonly<{
   id: string;

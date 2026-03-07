@@ -11,6 +11,7 @@ const baseCard: Card = {
   title: "Test Card",
   description: "Test description",
   ticketTypeId: null,
+  dueDate: null,
   createdAt: new Date("2025-06-15T12:00:00Z").getTime(),
   updatedAt: new Date("2025-06-16T12:00:00Z").getTime(),
   columnHistory: [
@@ -388,6 +389,43 @@ describe("CardDetailModal", () => {
       expect(
         screen.getByTestId("card-detail-description-preview"),
       ).toBeInTheDocument();
+    });
+  });
+
+  describe("due date field", () => {
+    it("renders due date input with empty value when no due date set", () => {
+      renderModal();
+      const input = screen.getByTestId("card-detail-due-date");
+      expect(input).toBeInTheDocument();
+      expect(input).toHaveValue("");
+    });
+
+    it("renders due date input with value when due date is set", () => {
+      renderModal({ card: { ...baseCard, dueDate: "2025-12-31" } });
+      const input = screen.getByTestId("card-detail-due-date");
+      expect(input).toHaveValue("2025-12-31");
+    });
+
+    it("calls onUpdate when due date is changed", async () => {
+      const user = userEvent.setup();
+      const { onUpdate } = renderModal();
+
+      const input = screen.getByTestId("card-detail-due-date");
+      await user.clear(input);
+      fireEvent.change(input, { target: { value: "2025-07-15" } });
+
+      expect(onUpdate).toHaveBeenCalledWith({ dueDate: "2025-07-15" });
+    });
+
+    it("calls onUpdate with null when due date is cleared", () => {
+      const { onUpdate } = renderModal({
+        card: { ...baseCard, dueDate: "2025-12-31" },
+      });
+
+      const input = screen.getByTestId("card-detail-due-date");
+      fireEvent.change(input, { target: { value: "" } });
+
+      expect(onUpdate).toHaveBeenCalledWith({ dueDate: null });
     });
   });
 

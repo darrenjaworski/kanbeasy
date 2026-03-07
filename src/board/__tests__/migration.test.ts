@@ -29,6 +29,7 @@ describe("migration", () => {
         title: "Task 1",
         description: "",
         ticketTypeId: null,
+        dueDate: null,
         createdAt: NOW,
         updatedAt: NOW,
         columnHistory: [{ columnId: "col-1", enteredAt: NOW }],
@@ -70,6 +71,7 @@ describe("migration", () => {
         title: "Task 1",
         description: "Some notes",
         ticketTypeId: null,
+        dueDate: null,
         createdAt: 1000,
         updatedAt: 2000,
         columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
@@ -119,6 +121,34 @@ describe("migration", () => {
       };
       const result = migrateCard(raw, "col-1");
       expect(result.description).toBe("Important notes");
+    });
+
+    it("backfills dueDate to null when missing", () => {
+      const raw = { id: "card-1", title: "Task 1" };
+      const result = migrateCard(raw, "col-1");
+      expect(result.dueDate).toBeNull();
+    });
+
+    it("preserves existing dueDate", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        dueDate: "2025-12-31",
+        createdAt: 1000,
+        updatedAt: 2000,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result.dueDate).toBe("2025-12-31");
+    });
+
+    it("treats non-string dueDate as null", () => {
+      const raw = {
+        id: "card-1",
+        title: "Task 1",
+        dueDate: 12345,
+      };
+      const result = migrateCard(raw, "col-1");
+      expect(result.dueDate).toBeNull();
     });
   });
 

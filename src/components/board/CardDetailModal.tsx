@@ -160,6 +160,26 @@ export function CardDetailModal({
           </div>
         </div>
 
+        {/* Due date */}
+        <div>
+          <label
+            htmlFor="card-detail-due-date"
+            className={`block text-xs font-medium ${tc.textMuted} mb-1`}
+          >
+            Due date
+          </label>
+          <input
+            type="date"
+            id="card-detail-due-date"
+            value={card.dueDate ?? ""}
+            onChange={(e) =>
+              onUpdate({ dueDate: e.target.value || null })
+            }
+            className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing}`}
+            data-testid="card-detail-due-date"
+          />
+        </div>
+
         {/* Title */}
         <div>
           <label
