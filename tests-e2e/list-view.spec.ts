@@ -32,7 +32,7 @@ function seedBoard() {
         cards: [
           makeCard("c1", 1, "col-0", {
             ticketTypeId: "feat",
-            description: "A feature card",
+            dueDate: "2025-06-15",
           }),
           makeCard("c2", 2, "col-0", { ticketTypeId: "fix" }),
         ],
@@ -69,7 +69,7 @@ test.describe("List view", () => {
     await expect(headers.nth(0)).toHaveText("#");
     await expect(headers.nth(1)).toHaveText("Type");
     await expect(headers.nth(2)).toHaveText("Title");
-    await expect(headers.nth(3)).toHaveText("Description");
+    await expect(headers.nth(3)).toHaveText("Due Date");
     await expect(headers.nth(4)).toHaveText("Column");
     await expect(headers.nth(5)).toHaveText("Created");
   });
@@ -114,16 +114,16 @@ test.describe("List view", () => {
     await expect(thirdRowColumn).toHaveText("Done");
   });
 
-  test("displays description when present", async ({ page }) => {
+  test("displays due date when present", async ({ page }) => {
     const rows = page.locator("tbody tr");
 
-    // First card has description
-    const firstRowDesc = rows.nth(0).locator("td").nth(3);
-    await expect(firstRowDesc).toContainText("A feature card");
+    // First card has due date
+    const firstRowDue = rows.nth(0).locator("td").nth(3);
+    await expect(firstRowDue).toContainText("Jun");
 
-    // Second card has no description — shows em dash
-    const secondRowDesc = rows.nth(1).locator("td").nth(3);
-    await expect(secondRowDesc).toHaveText("\u2014");
+    // Second card has no due date — shows em dash
+    const secondRowDue = rows.nth(1).locator("td").nth(3);
+    await expect(secondRowDue).toHaveText("\u2014");
   });
 });
 

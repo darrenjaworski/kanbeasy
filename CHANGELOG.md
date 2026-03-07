@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Add calendar view as third viewing mode (Board | List | Calendar) with month navigation
+- Add card detail modal to calendar and list views (click card/row to open)
+- Replace description column with due date column in list view
+- Add scrollable day cells in calendar view with fixed-height layout
 - Reduce search bar width for better header layout
 
 ### Tests

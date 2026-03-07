@@ -3,6 +3,7 @@ import { useBoard } from "../board/useBoard";
 import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 import { TicketTypeBadge } from "./shared/TicketTypeBadge";
+import { CardDetailModal } from "./board/CardDetailModal";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -31,8 +32,19 @@ interface CardEntry {
 }
 
 export function CalendarView() {
-  const { columns } = useBoard();
-  const { ticketTypes } = useTheme();
+  const { columns, updateCard, moveCard, archiveCard } = useBoard();
+  const { ticketTypes, cardDensity } = useTheme();
+
+  const [detailCardId, setDetailCardId] = useState<string | null>(null);
+  const detailCard = detailCardId
+    ? (() => {
+        for (const col of columns) {
+          const card = col.cards.find((c) => c.id === detailCardId);
+          if (card) return { card, columnId: col.id };
+        }
+        return null;
+      })()
+    : null;
 
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
@@ -99,7 +111,7 @@ export function CalendarView() {
   );
 
   return (
-    <main className="px-4 py-6 pb-16">
+    <main className="p-6">
       {totalDue === 0 ? (
         <p className={`text-center py-12 ${tc.textMuted}`}>
           No cards with due dates. Set due dates in the card detail modal to see
@@ -186,14 +198,14 @@ export function CalendarView() {
               return (
                 <div
                   key={i}
-                  className={`border-r border-b ${tc.border} min-h-32 p-1 ${
+                  className={`border-r border-b ${tc.border} h-32 p-1 overflow-y-auto ${
                     day ? "" : "bg-black/5 dark:bg-white/5"
                   }`}
                 >
                   {day && (
                     <>
                       <span
-                        className={`text-xs inline-flex items-center justify-center size-6 rounded-full ${
+                        className={`sticky top-0 z-[1] text-xs inline-flex items-center justify-center size-6 rounded-full ${
                           isToday
                             ? "bg-accent text-white font-bold"
                             : tc.textMuted
@@ -201,11 +213,13 @@ export function CalendarView() {
                       >
                         {day}
                       </span>
-                      <div className="mt-0.5 space-y-0.5">
+                      <div className="mt-1 space-y-1">
                         {cards.map((card) => (
-                          <div
+                          <button
+                            type="button"
                             key={card.id}
-                            className={`text-xs truncate rounded px-1 py-0.5 ${tc.glass} ${tc.border} border`}
+                            onClick={() => setDetailCardId(card.id)}
+                            className={`w-full text-left text-xs truncate rounded px-1 py-0.5 ${tc.glass} ${tc.border} border ${tc.bgHover} cursor-pointer`}
                             title={card.title}
                           >
                             <TicketTypeBadge
@@ -214,7 +228,7 @@ export function CalendarView() {
                               ticketTypes={ticketTypes}
                             />
                             <span className="ml-1">{card.title}</span>
-                          </div>
+                          </button>
                         ))}
                       </div>
                     </>
@@ -224,6 +238,27 @@ export function CalendarView() {
             })}
           </div>
         </div>
+      )}
+      {detailCard && (
+        <CardDetailModal
+          open={!!detailCard}
+          onClose={() => setDetailCardId(null)}
+          card={detailCard.card}
+          columnId={detailCard.columnId}
+          columns={columns}
+          density={cardDensity}
+          onUpdate={(updates) =>
+            updateCard(detailCard.columnId, detailCard.card.id, updates)
+          }
+          onMoveCard={(toColumnId) =>
+            moveCard(detailCard.columnId, toColumnId, detailCard.card.id)
+          }
+          onArchive={() => {
+            archiveCard(detailCard.columnId, detailCard.card.id);
+            setDetailCardId(null);
+          }}
+          ticketTypes={ticketTypes}
+        />
       )}
     </main>
   );

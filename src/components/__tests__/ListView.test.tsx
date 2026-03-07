@@ -84,7 +84,7 @@ describe("ListView type column", () => {
     const rows = within(table).getAllByRole("row");
     // rows[0] is header, rows[1] is the data row
     const cells = within(rows[1]).getAllByRole("cell");
-    // Type is the second cell (index 1): #, Type, Title, Description, Column, Created
+    // Type is the second cell (index 1): #, Type, Title, Due Date, Column, Created
     expect(cells[1]).toHaveTextContent("\u2014");
   });
 
@@ -104,7 +104,7 @@ describe("ListView type column", () => {
       "#",
       "Type",
       "Title",
-      "Description",
+      "Due Date",
       "Column",
       "Created",
     ]);
