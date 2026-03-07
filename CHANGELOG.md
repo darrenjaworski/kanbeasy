@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Add push step with user confirmation to `/release` skill
+- Add multi-board design document (`docs/multi-board-design.md`)
 
 ## [1.32.5]
 
