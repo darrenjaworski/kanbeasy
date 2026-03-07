@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CardList } from "../CardList";
 import type { Card } from "../../../board/types";
+import { makeCard } from "../../../test/builders";
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -63,21 +64,6 @@ vi.mock("../SortableCardItem", () => ({
 // Helpers
 // ---------------------------------------------------------------------------
 
-const now = Date.now();
-
-function makeCard(id: string, title: string): Card {
-  return {
-    id,
-    number: 1,
-    title,
-    description: "",
-    ticketTypeId: null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [],
-  };
-}
-
 const defaultProps = {
   cards: [] as Card[],
   onCopy: vi.fn(),
@@ -117,14 +103,14 @@ describe("CardList", () => {
   // --- Card rendering ---
 
   it("renders one item per card", () => {
-    const cards = [makeCard("a", "Alpha"), makeCard("b", "Beta")];
+    const cards = [makeCard({ id: "a", title: "Alpha" }), makeCard({ id: "b", title: "Beta" })];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-a")).toHaveTextContent("Alpha");
     expect(screen.getByTestId("stub-card-b")).toHaveTextContent("Beta");
   });
 
   it("does not show 'No cards yet' when cards exist", () => {
-    render(<CardList {...defaultProps} cards={[makeCard("x", "X")]} />);
+    render(<CardList {...defaultProps} cards={[makeCard({ id: "x", title: "X" })]} />);
     expect(screen.queryByText("No cards yet")).not.toBeInTheDocument();
   });
 
@@ -149,7 +135,7 @@ describe("CardList", () => {
   // --- Density forwarding ---
 
   it("passes density to each card", () => {
-    const cards = [makeCard("c", "Card C")];
+    const cards = [makeCard({ id: "c", title: "Card C" })];
     render(<CardList {...defaultProps} density="large" cards={cards} />);
     expect(screen.getByTestId("stub-card-c")).toHaveAttribute(
       "data-density",
@@ -161,7 +147,7 @@ describe("CardList", () => {
 
   it("sets isSearchMatch=true for cards in matchingCardIds", () => {
     mockMatchingCardIds.mockReturnValue(new Set(["m1"]));
-    const cards = [makeCard("m1", "Match"), makeCard("m2", "No match")];
+    const cards = [makeCard({ id: "m1", title: "Match" }), makeCard({ id: "m2", title: "No match" })];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-m1")).toHaveAttribute(
       "data-is-search-match",
@@ -177,7 +163,7 @@ describe("CardList", () => {
 
   it("sets canDrag=true when multiple cards exist", () => {
     mockColumns.mockReturnValue([{ id: "col-1", title: "Only" }]);
-    const cards = [makeCard("d1", "D1"), makeCard("d2", "D2")];
+    const cards = [makeCard({ id: "d1", title: "D1" }), makeCard({ id: "d2", title: "D2" })];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-d1")).toHaveAttribute(
       "data-can-drag",
@@ -190,7 +176,7 @@ describe("CardList", () => {
       { id: "col-1", title: "A" },
       { id: "col-2", title: "B" },
     ]);
-    const cards = [makeCard("e1", "E1")];
+    const cards = [makeCard({ id: "e1", title: "E1" })];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-e1")).toHaveAttribute(
       "data-can-drag",
@@ -200,7 +186,7 @@ describe("CardList", () => {
 
   it("sets canDrag=false when single card and single column", () => {
     mockColumns.mockReturnValue([{ id: "col-1", title: "Only" }]);
-    const cards = [makeCard("f1", "F1")];
+    const cards = [makeCard({ id: "f1", title: "F1" })];
     render(<CardList {...defaultProps} cards={cards} />);
     expect(screen.getByTestId("stub-card-f1")).toHaveAttribute(
       "data-can-drag",
@@ -211,7 +197,7 @@ describe("CardList", () => {
   // --- autoFocus ---
 
   it("passes autoFocus=true to the matching card", () => {
-    const cards = [makeCard("g1", "G1"), makeCard("g2", "G2")];
+    const cards = [makeCard({ id: "g1", title: "G1" }), makeCard({ id: "g2", title: "G2" })];
     render(
       <CardList
         {...defaultProps}
@@ -231,7 +217,7 @@ describe("CardList", () => {
   });
 
   it("passes autoFocus=false to all cards when autoFocusCardId is null", () => {
-    const cards = [makeCard("h1", "H1")];
+    const cards = [makeCard({ id: "h1", title: "H1" })];
     render(<CardList {...defaultProps} cards={cards} autoFocusCardId={null} />);
     expect(screen.getByTestId("stub-card-h1")).toHaveAttribute(
       "data-auto-focus",

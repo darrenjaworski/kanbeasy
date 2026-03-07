@@ -8,27 +8,16 @@ import {
   moveCardAcrossColumns,
   dropCardOnColumn,
 } from "../dragUtils";
-import type { Card, Column } from "../types";
-
-let cardCounter = 0;
-function makeCard(id: string, title: string, columnId: string): Card {
-  return {
-    id,
-    number: ++cardCounter,
-    title,
-    description: "",
-    createdAt: 1000,
-    updatedAt: 1000,
-    columnHistory: [{ columnId, enteredAt: 1000 }],
-  };
-}
-
-function makeColumn(id: string, title: string, cards: Card[]): Column {
-  return { id, title, cards, createdAt: 1000, updatedAt: 1000 };
-}
+import type { Column } from "../types";
+import {
+  makeCard,
+  makeColumn,
+  resetCardNumber,
+} from "../../test/builders";
 
 describe("dragUtils", () => {
   beforeEach(() => {
+    resetCardNumber(0);
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2025-06-15T12:00:00Z"));
   });
@@ -40,16 +29,44 @@ describe("dragUtils", () => {
   const NOW = new Date("2025-06-15T12:00:00Z").getTime();
 
   const mockColumns: Column[] = [
-    makeColumn("col-1", "Column 1", [
-      makeCard("card-1", "Card 1", "col-1"),
-      makeCard("card-2", "Card 2", "col-1"),
-      makeCard("card-3", "Card 3", "col-1"),
-    ]),
-    makeColumn("col-2", "Column 2", [
-      makeCard("card-4", "Card 4", "col-2"),
-      makeCard("card-5", "Card 5", "col-2"),
-    ]),
-    makeColumn("col-3", "Column 3", []),
+    makeColumn({
+      id: "col-1",
+      title: "Column 1",
+      cards: [
+        makeCard({
+          id: "card-1",
+          title: "Card 1",
+          columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
+        }),
+        makeCard({
+          id: "card-2",
+          title: "Card 2",
+          columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
+        }),
+        makeCard({
+          id: "card-3",
+          title: "Card 3",
+          columnHistory: [{ columnId: "col-1", enteredAt: 1000 }],
+        }),
+      ],
+    }),
+    makeColumn({
+      id: "col-2",
+      title: "Column 2",
+      cards: [
+        makeCard({
+          id: "card-4",
+          title: "Card 4",
+          columnHistory: [{ columnId: "col-2", enteredAt: 1000 }],
+        }),
+        makeCard({
+          id: "card-5",
+          title: "Card 5",
+          columnHistory: [{ columnId: "col-2", enteredAt: 1000 }],
+        }),
+      ],
+    }),
+    makeColumn({ id: "col-3", title: "Column 3", cards: [] }),
   ];
 
   describe("findColumnIndex", () => {
@@ -127,20 +144,33 @@ describe("dragUtils", () => {
     it("resets card columnHistory to a single entry for the current column", () => {
       // Give card-1 a multi-step history (col-1 → col-2 → back to col-1)
       const columnsWithHistory: Column[] = [
-        makeColumn("col-1", "Column 1", [
-          {
-            ...makeCard("card-1", "Card 1", "col-1"),
-            columnHistory: [
-              { columnId: "col-1", enteredAt: 500 },
-              { columnId: "col-2", enteredAt: 700 },
-              { columnId: "col-1", enteredAt: 900 },
-            ],
-          },
-        ]),
-        makeColumn("col-2", "Column 2", [
-          makeCard("card-4", "Card 4", "col-2"),
-        ]),
-        makeColumn("col-3", "Column 3", []),
+        makeColumn({
+          id: "col-1",
+          title: "Column 1",
+          cards: [
+            makeCard({
+              id: "card-1",
+              title: "Card 1",
+              columnHistory: [
+                { columnId: "col-1", enteredAt: 500 },
+                { columnId: "col-2", enteredAt: 700 },
+                { columnId: "col-1", enteredAt: 900 },
+              ],
+            }),
+          ],
+        }),
+        makeColumn({
+          id: "col-2",
+          title: "Column 2",
+          cards: [
+            makeCard({
+              id: "card-4",
+              title: "Card 4",
+              columnHistory: [{ columnId: "col-2", enteredAt: 1000 }],
+            }),
+          ],
+        }),
+        makeColumn({ id: "col-3", title: "Column 3", cards: [] }),
       ];
 
       const result = reorderColumns(columnsWithHistory, "col-1", "col-3");

@@ -1,99 +1,99 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import {
   computeAverageCycleTime,
   formatDuration,
   getCardCycleTimes,
 } from "../cycleTime";
-import type { Card, Column, ColumnHistoryEntry } from "../../board/types";
-
-let cardNum = 1;
-function makeCard(
-  id: string,
-  title: string,
-  opts: {
-    createdAt?: number;
-    updatedAt?: number;
-    columnHistory?: ColumnHistoryEntry[];
-  } = {},
-): Card {
-  return {
-    id,
-    number: cardNum++,
-    title,
-    description: "",
-    ticketTypeId: null,
-    createdAt: opts.createdAt ?? 0,
-    updatedAt: opts.updatedAt ?? 0,
-    columnHistory: opts.columnHistory ?? [],
-  };
-}
-
-function makeColumn(cards: Column["cards"]): Column {
-  return {
-    id: crypto.randomUUID(),
-    title: "Col",
-    cards,
-    createdAt: 0,
-    updatedAt: 0,
-  };
-}
+import { makeCard, makeColumn, resetCardNumber } from "../../test/builders";
 
 describe("computeAverageCycleTime", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("returns null when there are no cards", () => {
     expect(computeAverageCycleTime([])).toBeNull();
-    expect(computeAverageCycleTime([makeColumn([])])).toBeNull();
+    expect(computeAverageCycleTime([makeColumn({ id: crypto.randomUUID() })])).toBeNull();
   });
 
   it("returns null when all cards have only 1 history entry (never moved)", () => {
-    const col = makeColumn([
-      makeCard("c1", "Card 1", {
-        createdAt: 1000,
-        updatedAt: 1000,
-        columnHistory: [{ columnId: "col1", enteredAt: 1000 }],
-      }),
-    ]);
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Card 1",
+          createdAt: 1000,
+          updatedAt: 1000,
+          columnHistory: [{ columnId: "col1", enteredAt: 1000 }],
+        }),
+      ],
+    });
     expect(computeAverageCycleTime([col])).toBeNull();
   });
 
   it("returns null when cards have empty history (grandfathered)", () => {
-    const col = makeColumn([
-      makeCard("c1", "Card 1", { createdAt: 1000, updatedAt: 1000 }),
-    ]);
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Card 1",
+          createdAt: 1000,
+          updatedAt: 1000,
+        }),
+      ],
+    });
     expect(computeAverageCycleTime([col])).toBeNull();
   });
 
   it("computes cycle time for a single moved card", () => {
-    const col = makeColumn([
-      makeCard("c1", "Card 1", {
-        createdAt: 1000,
-        updatedAt: 5000,
-        columnHistory: [
-          { columnId: "col1", enteredAt: 1000 },
-          { columnId: "col2", enteredAt: 5000 },
-        ],
-      }),
-    ]);
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Card 1",
+          createdAt: 1000,
+          updatedAt: 5000,
+          columnHistory: [
+            { columnId: "col1", enteredAt: 1000 },
+            { columnId: "col2", enteredAt: 5000 },
+          ],
+        }),
+      ],
+    });
     expect(computeAverageCycleTime([col])).toBe(4000);
   });
 
   it("averages cycle times across multiple moved cards", () => {
-    const col1 = makeColumn([
-      makeCard("c1", "Card 1", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 3000 },
-        ],
-      }),
-    ]);
-    const col2 = makeColumn([
-      makeCard("c2", "Card 2", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 5000 },
-          { columnId: "c", enteredAt: 9000 },
-        ],
-      }),
-    ]);
+    const col1 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Card 1",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 3000 },
+          ],
+        }),
+      ],
+    });
+    const col2 = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c2",
+          title: "Card 2",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 5000 },
+            { columnId: "c", enteredAt: 9000 },
+          ],
+        }),
+      ],
+    });
     // Card 1: 3000 - 1000 = 2000
     // Card 2: 9000 - 1000 = 8000
     // Average: (2000 + 8000) / 2 = 5000
@@ -101,53 +101,79 @@ describe("computeAverageCycleTime", () => {
   });
 
   it("excludes unmoved cards from the average", () => {
-    const col = makeColumn([
-      makeCard("c1", "Moved", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 7000 },
-        ],
-      }),
-      makeCard("c2", "Unmoved", {
-        columnHistory: [{ columnId: "a", enteredAt: 1000 }],
-      }),
-      makeCard("c3", "Grandfathered"),
-    ]);
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Moved",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 7000 },
+          ],
+        }),
+        makeCard({
+          id: "c2",
+          title: "Unmoved",
+          columnHistory: [{ columnId: "a", enteredAt: 1000 }],
+        }),
+        makeCard({
+          id: "c3",
+          title: "Grandfathered",
+        }),
+      ],
+    });
     // Only c1 qualifies: 7000 - 1000 = 6000
     expect(computeAverageCycleTime([col])).toBe(6000);
   });
 });
 
 describe("getCardCycleTimes", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("returns empty array when no cards qualify", () => {
     expect(getCardCycleTimes([])).toEqual([]);
-    expect(getCardCycleTimes([makeColumn([])])).toEqual([]);
+    expect(getCardCycleTimes([makeColumn({ id: crypto.randomUUID() })])).toEqual([]);
     expect(
       getCardCycleTimes([
-        makeColumn([
-          makeCard("c1", "Unmoved", {
-            columnHistory: [{ columnId: "a", enteredAt: 1000 }],
-          }),
-        ]),
+        makeColumn({
+          id: crypto.randomUUID(),
+          cards: [
+            makeCard({
+              id: "c1",
+              title: "Unmoved",
+              columnHistory: [{ columnId: "a", enteredAt: 1000 }],
+            }),
+          ],
+        }),
       ]),
     ).toEqual([]);
   });
 
   it("returns cards sorted descending by cycle time", () => {
-    const col = makeColumn([
-      makeCard("c1", "Fast Card", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 3000 },
-        ],
-      }),
-      makeCard("c2", "Slow Card", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 9000 },
-        ],
-      }),
-    ]);
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Fast Card",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 3000 },
+          ],
+        }),
+        makeCard({
+          id: "c2",
+          title: "Slow Card",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 9000 },
+          ],
+        }),
+      ],
+    });
     const result = getCardCycleTimes([col]);
     // Card titles now include #N prefix
     expect(result).toHaveLength(2);
@@ -158,18 +184,28 @@ describe("getCardCycleTimes", () => {
   });
 
   it("excludes cards with fewer than 2 history entries", () => {
-    const col = makeColumn([
-      makeCard("c1", "Moved", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 5000 },
-        ],
-      }),
-      makeCard("c2", "Unmoved", {
-        columnHistory: [{ columnId: "a", enteredAt: 1000 }],
-      }),
-      makeCard("c3", "Grandfathered"),
-    ]);
+    const col = makeColumn({
+      id: crypto.randomUUID(),
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Moved",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 5000 },
+          ],
+        }),
+        makeCard({
+          id: "c2",
+          title: "Unmoved",
+          columnHistory: [{ columnId: "a", enteredAt: 1000 }],
+        }),
+        makeCard({
+          id: "c3",
+          title: "Grandfathered",
+        }),
+      ],
+    });
     const result = getCardCycleTimes([col]);
     expect(result).toHaveLength(1);
     expect(result[0].cycleTimeMs).toBe(4000);
@@ -179,15 +215,22 @@ describe("getCardCycleTimes", () => {
 
 describe("getCardCycleTimes with additionalCards", () => {
   it("includes additional cards in cycle time results", () => {
-    const col = makeColumn([
-      makeCard("c1", "Board Card", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 3000 },
-        ],
-      }),
-    ]);
-    const archivedCard = makeCard("c2", "Archived Card", {
+    const col = makeColumn({
+      id: "col-1",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Board Card",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 3000 },
+          ],
+        }),
+      ],
+    });
+    const archivedCard = makeCard({
+      id: "c2",
+      title: "Archived Card",
       columnHistory: [
         { columnId: "a", enteredAt: 1000 },
         { columnId: "b", enteredAt: 6000 },
@@ -204,8 +247,10 @@ describe("getCardCycleTimes with additionalCards", () => {
   });
 
   it("excludes additional cards with fewer than 2 history entries", () => {
-    const col = makeColumn([]);
-    const archivedCard = makeCard("c1", "Unmoved Archived", {
+    const col = makeColumn({ id: "col-1" });
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Unmoved Archived",
       columnHistory: [{ columnId: "a", enteredAt: 1000 }],
     });
 
@@ -213,15 +258,22 @@ describe("getCardCycleTimes with additionalCards", () => {
   });
 
   it("marks additional cards as isArchived", () => {
-    const col = makeColumn([
-      makeCard("c1", "Board Card", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 3000 },
-        ],
-      }),
-    ]);
-    const archivedCard = makeCard("c2", "Archived Card", {
+    const col = makeColumn({
+      id: "col-1",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Board Card",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 3000 },
+          ],
+        }),
+      ],
+    });
+    const archivedCard = makeCard({
+      id: "c2",
+      title: "Archived Card",
       columnHistory: [
         { columnId: "a", enteredAt: 1000 },
         { columnId: "b", enteredAt: 6000 },
@@ -236,8 +288,10 @@ describe("getCardCycleTimes with additionalCards", () => {
   });
 
   it("excludes additional cards with empty columnHistory", () => {
-    const col = makeColumn([]);
-    const archivedCard = makeCard("c1", "Empty history", {
+    const col = makeColumn({ id: "col-1" });
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Empty history",
       columnHistory: [],
     });
 
@@ -245,15 +299,19 @@ describe("getCardCycleTimes with additionalCards", () => {
   });
 
   it("returns results when all cards come from additionalCards", () => {
-    const col = makeColumn([]);
+    const col = makeColumn({ id: "col-1" });
     const archivedCards = [
-      makeCard("c1", "Archived A", {
+      makeCard({
+        id: "c1",
+        title: "Archived A",
         columnHistory: [
           { columnId: "a", enteredAt: 1000 },
           { columnId: "b", enteredAt: 4000 },
         ],
       }),
-      makeCard("c2", "Archived B", {
+      makeCard({
+        id: "c2",
+        title: "Archived B",
         columnHistory: [
           { columnId: "a", enteredAt: 1000 },
           { columnId: "b", enteredAt: 7000 },
@@ -268,15 +326,22 @@ describe("getCardCycleTimes with additionalCards", () => {
 
   it("includes both board and additional cards independently even with duplicate IDs", () => {
     const sharedId = "same-id";
-    const col = makeColumn([
-      makeCard(sharedId, "Board version", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 3000 },
-        ],
-      }),
-    ]);
-    const archivedCard = makeCard(sharedId, "Archived version", {
+    const col = makeColumn({
+      id: "col-1",
+      cards: [
+        makeCard({
+          id: sharedId,
+          title: "Board version",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 3000 },
+          ],
+        }),
+      ],
+    });
+    const archivedCard = makeCard({
+      id: sharedId,
+      title: "Archived version",
       columnHistory: [
         { columnId: "a", enteredAt: 1000 },
         { columnId: "b", enteredAt: 5000 },
@@ -288,15 +353,22 @@ describe("getCardCycleTimes with additionalCards", () => {
   });
 
   it("computes average including additional cards", () => {
-    const col = makeColumn([
-      makeCard("c1", "Board Card", {
-        columnHistory: [
-          { columnId: "a", enteredAt: 1000 },
-          { columnId: "b", enteredAt: 3000 },
-        ],
-      }),
-    ]);
-    const archivedCard = makeCard("c2", "Archived Card", {
+    const col = makeColumn({
+      id: "col-1",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Board Card",
+          columnHistory: [
+            { columnId: "a", enteredAt: 1000 },
+            { columnId: "b", enteredAt: 3000 },
+          ],
+        }),
+      ],
+    });
+    const archivedCard = makeCard({
+      id: "c2",
+      title: "Archived Card",
       columnHistory: [
         { columnId: "a", enteredAt: 1000 },
         { columnId: "b", enteredAt: 7000 },

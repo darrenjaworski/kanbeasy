@@ -1,52 +1,12 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useBoardMutations } from "../useBoardMutations";
-import type { ArchivedCard, BoardState, Card, Column } from "../types";
-
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                           */
-/* ------------------------------------------------------------------ */
-
-function makeCard(overrides: Partial<Card> & { id: string }): Card {
-  return {
-    number: 1,
-    title: "",
-    description: "",
-    ticketTypeId: null,
-    createdAt: 1000,
-    updatedAt: 1000,
-    columnHistory: [],
-    ...overrides,
-  };
-}
-
-function makeColumn(
-  overrides: Partial<Column> & { id: string; cards: Card[] },
-): Column {
-  return {
-    title: "",
-    createdAt: 1000,
-    updatedAt: 1000,
-    ...overrides,
-  };
-}
-
-function makeArchivedCard(
-  overrides: Partial<ArchivedCard> & { id: string },
-): ArchivedCard {
-  return {
-    number: 1,
-    title: "",
-    description: "",
-    ticketTypeId: null,
-    createdAt: 1000,
-    updatedAt: 1000,
-    columnHistory: [],
-    archivedAt: 2000,
-    archivedFromColumnId: "col-1",
-    ...overrides,
-  };
-}
+import type { BoardState } from "../types";
+import {
+  makeCard,
+  makeColumn,
+  makeArchivedCard,
+} from "../../test/builders";
 
 /**
  * Renders the hook with mocked dependencies and returns helpers

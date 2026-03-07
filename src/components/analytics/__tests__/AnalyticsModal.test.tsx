@@ -3,35 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../../../constants/storage";
 import { renderApp } from "../../../test/renderApp";
-import type { ArchivedCard, Column } from "../../../board/types";
-
-function makeColumn(
-  id: string,
-  title: string,
-  cards: Column["cards"] = [],
-): Column {
-  const now = Date.now();
-  return { id, title, cards, createdAt: now, updatedAt: now };
-}
-
-let cardNum = 1;
-function makeCard(
-  id: string,
-  title: string,
-  columnHistory: { columnId: string; enteredAt: number }[] = [],
-) {
-  const now = Date.now();
-  return {
-    id,
-    number: cardNum++,
-    title,
-    description: "",
-    ticketTypeId: null as string | null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory,
-  };
-}
+import { makeCard, makeColumn, resetCardNumber } from "../../../test/builders";
+import type { ArchivedCard } from "../../../board/types";
 
 async function openAnalytics(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: /open analytics/i }));
@@ -41,13 +14,13 @@ async function openAnalytics(user: ReturnType<typeof userEvent.setup>) {
 describe("AnalyticsModal", () => {
   beforeEach(() => {
     localStorage.clear();
-    cardNum = 1;
+    resetCardNumber();
   });
 
   it("disables analytics button when there are no cards", () => {
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")] }),
+      JSON.stringify({ columns: [makeColumn({ id: "c1", title: "Todo" })] }),
     );
     renderApp();
 
@@ -61,11 +34,19 @@ describe("AnalyticsModal", () => {
       STORAGE_KEYS.BOARD,
       JSON.stringify({
         columns: [
-          makeColumn("c1", "Todo", [
-            makeCard("x", "Placeholder", [
-              { columnId: "c1", enteredAt: Date.now() },
-            ]),
-          ]),
+          makeColumn({
+            id: "c1",
+            title: "Todo",
+            cards: [
+              makeCard({
+                id: "x",
+                title: "Placeholder",
+                columnHistory: [
+                  { columnId: "c1", enteredAt: Date.now() },
+                ],
+              }),
+            ],
+          }),
         ],
       }),
     );
@@ -84,13 +65,21 @@ describe("AnalyticsModal", () => {
 
   it("shows total card count", async () => {
     const columns = [
-      makeColumn("c1", "Todo", [
-        makeCard("a", "Card A", [{ columnId: "c1", enteredAt: Date.now() }]),
-        makeCard("b", "Card B", [{ columnId: "c1", enteredAt: Date.now() }]),
-      ]),
-      makeColumn("c2", "Done", [
-        makeCard("c", "Card C", [{ columnId: "c2", enteredAt: Date.now() }]),
-      ]),
+      makeColumn({
+        id: "c1",
+        title: "Todo",
+        cards: [
+          makeCard({ id: "a", title: "Card A", columnHistory: [{ columnId: "c1", enteredAt: Date.now() }] }),
+          makeCard({ id: "b", title: "Card B", columnHistory: [{ columnId: "c1", enteredAt: Date.now() }] }),
+        ],
+      }),
+      makeColumn({
+        id: "c2",
+        title: "Done",
+        cards: [
+          makeCard({ id: "c", title: "Card C", columnHistory: [{ columnId: "c2", enteredAt: Date.now() }] }),
+        ],
+      }),
     ];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
@@ -105,14 +94,34 @@ describe("AnalyticsModal", () => {
 
   it("shows cards in flight count with 3+ columns", async () => {
     const columns = [
-      makeColumn("c1", "Todo", [
-        makeCard("a", "Card A", [{ columnId: "c1", enteredAt: Date.now() }]),
-      ]),
-      makeColumn("c2", "In Progress", [
-        makeCard("b", "Card B", [{ columnId: "c2", enteredAt: Date.now() }]),
-        makeCard("c", "Card C", [{ columnId: "c2", enteredAt: Date.now() }]),
-      ]),
-      makeColumn("c3", "Done"),
+      makeColumn({
+        id: "c1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "a",
+            title: "Card A",
+            columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
+          }),
+        ],
+      }),
+      makeColumn({
+        id: "c2",
+        title: "In Progress",
+        cards: [
+          makeCard({
+            id: "b",
+            title: "Card B",
+            columnHistory: [{ columnId: "c2", enteredAt: Date.now() }],
+          }),
+          makeCard({
+            id: "c",
+            title: "Card C",
+            columnHistory: [{ columnId: "c2", enteredAt: Date.now() }],
+          }),
+        ],
+      }),
+      makeColumn({ id: "c3", title: "Done" }),
     ];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
@@ -129,9 +138,17 @@ describe("AnalyticsModal", () => {
   it("shows fallback text when no cycle time data available", async () => {
     // Cards with only 1 column history entry have no cycle time
     const columns = [
-      makeColumn("c1", "Todo", [
-        makeCard("a", "Card A", [{ columnId: "c1", enteredAt: Date.now() }]),
-      ]),
+      makeColumn({
+        id: "c1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "a",
+            title: "Card A",
+            columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
+          }),
+        ],
+      }),
     ];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
@@ -149,13 +166,21 @@ describe("AnalyticsModal", () => {
     const oneHourAgo = now - 60 * 60 * 1000;
 
     const columns = [
-      makeColumn("c1", "Todo"),
-      makeColumn("c2", "Done", [
-        makeCard("a", "Completed task", [
-          { columnId: "c1", enteredAt: oneHourAgo },
-          { columnId: "c2", enteredAt: now },
-        ]),
-      ]),
+      makeColumn({ id: "c1", title: "Todo" }),
+      makeColumn({
+        id: "c2",
+        title: "Done",
+        cards: [
+          makeCard({
+            id: "a",
+            title: "Completed task",
+            columnHistory: [
+              { columnId: "c1", enteredAt: oneHourAgo },
+              { columnId: "c2", enteredAt: now },
+            ],
+          }),
+        ],
+      }),
     ];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
@@ -178,13 +203,21 @@ describe("AnalyticsModal", () => {
     const twoDaysAgo = now - 2 * 24 * 60 * 60 * 1000;
 
     const columns = [
-      makeColumn("c1", "Todo"),
-      makeColumn("c2", "Done", [
-        makeCard("a", "Recent card", [
-          { columnId: "c1", enteredAt: twoDaysAgo },
-          { columnId: "c2", enteredAt: twoDaysAgo },
-        ]),
-      ]),
+      makeColumn({ id: "c1", title: "Todo" }),
+      makeColumn({
+        id: "c2",
+        title: "Done",
+        cards: [
+          makeCard({
+            id: "a",
+            title: "Recent card",
+            columnHistory: [
+              { columnId: "c1", enteredAt: twoDaysAgo },
+              { columnId: "c2", enteredAt: twoDaysAgo },
+            ],
+          }),
+        ],
+      }),
     ];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
@@ -203,11 +236,19 @@ describe("AnalyticsModal", () => {
       STORAGE_KEYS.BOARD,
       JSON.stringify({
         columns: [
-          makeColumn("c1", "Todo", [
-            makeCard("x", "Placeholder", [
-              { columnId: "c1", enteredAt: Date.now() },
-            ]),
-          ]),
+          makeColumn({
+            id: "c1",
+            title: "Todo",
+            cards: [
+              makeCard({
+                id: "x",
+                title: "Placeholder",
+                columnHistory: [
+                  { columnId: "c1", enteredAt: Date.now() },
+                ],
+              }),
+            ],
+          }),
         ],
       }),
     );
@@ -230,17 +271,29 @@ describe("AnalyticsModal", () => {
     const twoHoursAgo = now - 2 * 60 * 60 * 1000;
 
     const columns = [
-      makeColumn("c1", "Todo", [
-        makeCard("board1", "Board card", [{ columnId: "c1", enteredAt: now }]),
-      ]),
-      makeColumn("c2", "Done"),
+      makeColumn({
+        id: "c1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "board1",
+            title: "Board card",
+            columnHistory: [{ columnId: "c1", enteredAt: now }],
+          }),
+        ],
+      }),
+      makeColumn({ id: "c2", title: "Done" }),
     ];
     const archive: ArchivedCard[] = [
       {
-        ...makeCard("archived1", "Archived task", [
-          { columnId: "c1", enteredAt: twoHoursAgo },
-          { columnId: "c2", enteredAt: now },
-        ]),
+        ...makeCard({
+          id: "archived1",
+          title: "Archived task",
+          columnHistory: [
+            { columnId: "c1", enteredAt: twoHoursAgo },
+            { columnId: "c2", enteredAt: now },
+          ],
+        }),
         ticketTypeId: null,
         archivedAt: now,
         archivedFromColumnId: "c2",
@@ -269,20 +322,32 @@ describe("AnalyticsModal", () => {
     const twoHoursAgo = now - 2 * 60 * 60 * 1000;
 
     const columns = [
-      makeColumn("c1", "Todo"),
-      makeColumn("c2", "Done", [
-        makeCard("board1", "Board task", [
-          { columnId: "c1", enteredAt: twoHoursAgo },
-          { columnId: "c2", enteredAt: now },
-        ]),
-      ]),
+      makeColumn({ id: "c1", title: "Todo" }),
+      makeColumn({
+        id: "c2",
+        title: "Done",
+        cards: [
+          makeCard({
+            id: "board1",
+            title: "Board task",
+            columnHistory: [
+              { columnId: "c1", enteredAt: twoHoursAgo },
+              { columnId: "c2", enteredAt: now },
+            ],
+          }),
+        ],
+      }),
     ];
     const archive: ArchivedCard[] = [
       {
-        ...makeCard("archived1", "Archived task", [
-          { columnId: "c1", enteredAt: twoHoursAgo },
-          { columnId: "c2", enteredAt: now },
-        ]),
+        ...makeCard({
+          id: "archived1",
+          title: "Archived task",
+          columnHistory: [
+            { columnId: "c1", enteredAt: twoHoursAgo },
+            { columnId: "c2", enteredAt: now },
+          ],
+        }),
         ticketTypeId: null,
         archivedAt: now,
         archivedFromColumnId: "c2",
@@ -319,15 +384,27 @@ describe("AnalyticsModal", () => {
     const now = Date.now();
 
     const columns = [
-      makeColumn("c1", "Todo", [
-        makeCard("a", "Board Card", [{ columnId: "c1", enteredAt: now }]),
-      ]),
+      makeColumn({
+        id: "c1",
+        title: "Todo",
+        cards: [
+          makeCard({
+            id: "a",
+            title: "Board Card",
+            columnHistory: [{ columnId: "c1", enteredAt: now }],
+          }),
+        ],
+      }),
     ];
     const archive: ArchivedCard[] = [
       {
-        ...makeCard("archived1", "Archived Card", [
-          { columnId: "c1", enteredAt: now },
-        ]),
+        ...makeCard({
+          id: "archived1",
+          title: "Archived Card",
+          columnHistory: [
+            { columnId: "c1", enteredAt: now },
+          ],
+        }),
         ticketTypeId: null,
         archivedAt: now,
         archivedFromColumnId: "c1",
@@ -355,11 +432,19 @@ describe("AnalyticsModal", () => {
       STORAGE_KEYS.BOARD,
       JSON.stringify({
         columns: [
-          makeColumn("c1", "Todo", [
-            makeCard("x", "Placeholder", [
-              { columnId: "c1", enteredAt: Date.now() },
-            ]),
-          ]),
+          makeColumn({
+            id: "c1",
+            title: "Todo",
+            cards: [
+              makeCard({
+                id: "x",
+                title: "Placeholder",
+                columnHistory: [
+                  { columnId: "c1", enteredAt: Date.now() },
+                ],
+              }),
+            ],
+          }),
         ],
       }),
     );
@@ -380,18 +465,22 @@ describe("AnalyticsModal", () => {
     // c1 (index 0), c2 (index 1), c3 (index 2)
     // History: c1 → c3 → c1 → c3 means the c3→c1 move is backwards
     const cards = Array.from({ length: 12 }, (_, i) =>
-      makeCard(`rt-${i}`, `Rev ${i + 1}`, [
-        { columnId: "c1", enteredAt: now - (i + 3) * 60 * 60 * 1000 },
-        { columnId: "c3", enteredAt: now - (i + 2) * 60 * 60 * 1000 },
-        { columnId: "c1", enteredAt: now - (i + 1) * 60 * 60 * 1000 },
-        { columnId: "c3", enteredAt: now - i * 60 * 60 * 1000 },
-      ]),
+      makeCard({
+        id: `rt-${i}`,
+        title: `Rev ${i + 1}`,
+        columnHistory: [
+          { columnId: "c1", enteredAt: now - (i + 3) * 60 * 60 * 1000 },
+          { columnId: "c3", enteredAt: now - (i + 2) * 60 * 60 * 1000 },
+          { columnId: "c1", enteredAt: now - (i + 1) * 60 * 60 * 1000 },
+          { columnId: "c3", enteredAt: now - i * 60 * 60 * 1000 },
+        ],
+      }),
     );
 
     const columns = [
-      makeColumn("c1", "Todo"),
-      makeColumn("c2", "In Progress"),
-      makeColumn("c3", "Done", cards),
+      makeColumn({ id: "c1", title: "Todo" }),
+      makeColumn({ id: "c2", title: "In Progress" }),
+      makeColumn({ id: "c3", title: "Done", cards }),
     ];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
@@ -421,13 +510,17 @@ describe("AnalyticsModal", () => {
   it("shows 'show more' button when more than 10 cycle time entries", async () => {
     const now = Date.now();
     const cards = Array.from({ length: 12 }, (_, i) =>
-      makeCard(`card-${i}`, `Task ${i + 1}`, [
-        { columnId: "c1", enteredAt: now - (i + 1) * 60 * 60 * 1000 },
-        { columnId: "c2", enteredAt: now - i * 60 * 60 * 1000 },
-      ]),
+      makeCard({
+        id: `card-${i}`,
+        title: `Task ${i + 1}`,
+        columnHistory: [
+          { columnId: "c1", enteredAt: now - (i + 1) * 60 * 60 * 1000 },
+          { columnId: "c2", enteredAt: now - i * 60 * 60 * 1000 },
+        ],
+      }),
     );
 
-    const columns = [makeColumn("c1", "Todo"), makeColumn("c2", "Done", cards)];
+    const columns = [makeColumn({ id: "c1", title: "Todo" }), makeColumn({ id: "c2", title: "Done", cards })];
     localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
 
     const user = userEvent.setup();

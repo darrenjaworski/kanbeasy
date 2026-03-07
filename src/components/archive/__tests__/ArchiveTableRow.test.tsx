@@ -1,31 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ArchiveTableRow } from "../ArchiveTableRow";
-import type { ArchivedCard } from "../../../board/types";
-
-function makeArchivedCard(overrides: Partial<ArchivedCard> = {}): ArchivedCard {
-  const now = Date.now();
-  return {
-    id: "card-1",
-    number: 42,
-    title: "Test Card",
-    description: "",
-    ticketTypeId: null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [{ columnId: "col-1", enteredAt: now }],
-    archivedAt: now,
-    archivedFromColumnId: "col-1",
-    ...overrides,
-  };
-}
+import { makeArchivedCard, resetCardNumber } from "../../../test/builders";
 
 function renderRow(
   props: Partial<React.ComponentProps<typeof ArchiveTableRow>> = {},
 ) {
   const defaultProps = {
-    card: makeArchivedCard(),
+    card: makeArchivedCard({ id: "card-1" }),
     selected: false,
     onToggle: vi.fn(),
     isLast: false,
@@ -41,26 +24,30 @@ function renderRow(
 }
 
 describe("ArchiveTableRow", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("renders card number and title", () => {
-    renderRow({ card: makeArchivedCard({ number: 7, title: "My Task" }) });
+    renderRow({ card: makeArchivedCard({ id: "card-1", number: 7, title: "My Task" }) });
     expect(screen.getByText("#7")).toBeInTheDocument();
     expect(screen.getByText("My Task")).toBeInTheDocument();
   });
 
   it("renders 'Untitled' for cards with empty title", () => {
-    renderRow({ card: makeArchivedCard({ title: "" }) });
+    renderRow({ card: makeArchivedCard({ id: "card-1", title: "" }) });
     expect(screen.getByText("Untitled")).toBeInTheDocument();
   });
 
   it("renders checkbox with correct checked state", () => {
     renderRow({ selected: true });
-    const checkbox = screen.getByRole("checkbox", { name: /select card #42/i });
+    const checkbox = screen.getByRole("checkbox", { name: /select card #\d+/i });
     expect(checkbox).toBeChecked();
   });
 
   it("renders unchecked checkbox when not selected", () => {
     renderRow({ selected: false });
-    const checkbox = screen.getByRole("checkbox", { name: /select card #42/i });
+    const checkbox = screen.getByRole("checkbox", { name: /select card #\d+/i });
     expect(checkbox).not.toBeChecked();
   });
 
@@ -75,7 +62,7 @@ describe("ArchiveTableRow", () => {
 
   it("renders formatted archived date", () => {
     const archivedAt = new Date("2025-06-15T10:30:00").getTime();
-    renderRow({ card: makeArchivedCard({ archivedAt }) });
+    renderRow({ card: makeArchivedCard({ id: "card-1", archivedAt }) });
     // formatDateTime produces a date string — just verify the row has a test id
     expect(screen.getByTestId("archive-card-row")).toBeInTheDocument();
   });

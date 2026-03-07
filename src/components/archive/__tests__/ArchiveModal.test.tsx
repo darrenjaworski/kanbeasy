@@ -3,39 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../../../constants/storage";
 import { renderApp } from "../../../test/renderApp";
-import type { ArchivedCard, Column } from "../../../board/types";
-
-let cardNum = 1;
-
-function makeColumn(
-  id: string,
-  title: string,
-  cards: Column["cards"] = [],
-): Column {
-  const now = Date.now();
-  return { id, title, cards, createdAt: now, updatedAt: now };
-}
-
-function makeArchivedCard(
-  id: string,
-  title: string,
-  fromColumnId = "c1",
-  number?: number,
-): ArchivedCard {
-  const now = Date.now();
-  return {
-    id,
-    number: number ?? cardNum++,
-    title,
-    description: "",
-    ticketTypeId: null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [{ columnId: fromColumnId, enteredAt: now }],
-    archivedAt: now,
-    archivedFromColumnId: fromColumnId,
-  };
-}
+import { makeColumn, makeArchivedCard, resetCardNumber } from "../../../test/builders";
 
 async function openArchive(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByTestId("archive-button"));
@@ -45,13 +13,13 @@ async function openArchive(user: ReturnType<typeof userEvent.setup>) {
 describe("ArchiveModal", () => {
   beforeEach(() => {
     localStorage.clear();
-    cardNum = 1;
+    resetCardNumber();
   });
 
   it("disables archive button when archive is empty", () => {
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive: [] }),
+      JSON.stringify({ columns: [makeColumn({ id: "c1", title: "Todo" })], archive: [] }),
     );
     renderApp();
 
@@ -60,12 +28,12 @@ describe("ArchiveModal", () => {
 
   it("displays archived cards in the table", async () => {
     const archive = [
-      makeArchivedCard("a1", "Task A", "c1", 1),
-      makeArchivedCard("a2", "Task B", "c1", 2),
+      makeArchivedCard({ id: "a1", title: "Task A", archivedFromColumnId: "c1" }),
+      makeArchivedCard({ id: "a2", title: "Task B", archivedFromColumnId: "c1" }),
     ];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive }),
+      JSON.stringify({ columns: [makeColumn({ id: "c1", title: "Todo" })], archive }),
     );
     const user = userEvent.setup();
     renderApp();
@@ -77,12 +45,12 @@ describe("ArchiveModal", () => {
 
   it("select-all checkbox toggles all cards", async () => {
     const archive = [
-      makeArchivedCard("a1", "Task A", "c1", 1),
-      makeArchivedCard("a2", "Task B", "c1", 2),
+      makeArchivedCard({ id: "a1", title: "Task A", archivedFromColumnId: "c1" }),
+      makeArchivedCard({ id: "a2", title: "Task B", archivedFromColumnId: "c1" }),
     ];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive }),
+      JSON.stringify({ columns: [makeColumn({ id: "c1", title: "Todo" })], archive }),
     );
     const user = userEvent.setup();
     renderApp();
@@ -108,10 +76,10 @@ describe("ArchiveModal", () => {
   });
 
   it("individual card selection toggles that card", async () => {
-    const archive = [makeArchivedCard("a1", "Task A", "c1", 1)];
+    const archive = [makeArchivedCard({ id: "a1", title: "Task A", archivedFromColumnId: "c1" })];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive }),
+      JSON.stringify({ columns: [makeColumn({ id: "c1", title: "Todo" })], archive }),
     );
     const user = userEvent.setup();
     renderApp();
@@ -129,11 +97,11 @@ describe("ArchiveModal", () => {
   });
 
   it("bulk restore button shows count and restores cards", async () => {
-    const archive = [makeArchivedCard("a1", "Task A", "c1", 1)];
+    const archive = [makeArchivedCard({ id: "a1", title: "Task A", archivedFromColumnId: "c1" })];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
       JSON.stringify({
-        columns: [makeColumn("c1", "Todo")],
+        columns: [makeColumn({ id: "c1", title: "Todo" })],
         archive,
       }),
     );
@@ -159,11 +127,11 @@ describe("ArchiveModal", () => {
   });
 
   it("bulk delete shows confirmation dialog", async () => {
-    const archive = [makeArchivedCard("a1", "Task A", "c1", 1)];
+    const archive = [makeArchivedCard({ id: "a1", title: "Task A", archivedFromColumnId: "c1" })];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
       JSON.stringify({
-        columns: [makeColumn("c1", "Todo")],
+        columns: [makeColumn({ id: "c1", title: "Todo" })],
         archive,
       }),
     );
@@ -191,11 +159,11 @@ describe("ArchiveModal", () => {
   });
 
   it("delete button is disabled with no selection", async () => {
-    const archive = [makeArchivedCard("a1", "Task A", "c1", 1)];
+    const archive = [makeArchivedCard({ id: "a1", title: "Task A", archivedFromColumnId: "c1" })];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
       JSON.stringify({
-        columns: [makeColumn("c1", "Todo")],
+        columns: [makeColumn({ id: "c1", title: "Todo" })],
         archive,
       }),
     );
@@ -208,10 +176,10 @@ describe("ArchiveModal", () => {
   });
 
   it("closes when close button is clicked", async () => {
-    const archive = [makeArchivedCard("a1", "Task A", "c1", 1)];
+    const archive = [makeArchivedCard({ id: "a1", title: "Task A", archivedFromColumnId: "c1" })];
     localStorage.setItem(
       STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn("c1", "Todo")], archive }),
+      JSON.stringify({ columns: [makeColumn({ id: "c1", title: "Todo" })], archive }),
     );
     const user = userEvent.setup();
     renderApp();

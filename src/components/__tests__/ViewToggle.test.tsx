@@ -5,6 +5,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../../constants/storage";
 import type { Column } from "../../board/types";
 import { renderApp } from "../../test/renderApp";
+import { makeCard, makeColumn, resetCardNumber } from "../../test/builders";
 
 function seedBoard(columns: Column[]) {
   localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
@@ -12,30 +13,28 @@ function seedBoard(columns: Column[]) {
 
 function makeColumnWithCard(): Column {
   const now = Date.now();
-  return {
+  return makeColumn({
     id: "c1",
     title: "Todo",
-    createdAt: now,
-    updatedAt: now,
     cards: [
-      {
+      makeCard({
         id: "card-1",
         number: 1,
         title: "Task",
-        description: "",
-        ticketTypeId: null,
-        dueDate: null,
         createdAt: now,
         updatedAt: now,
         columnHistory: [{ columnId: "c1", enteredAt: now }],
-      },
+      }),
     ],
-  };
+    createdAt: now,
+    updatedAt: now,
+  });
 }
 
 describe("ViewToggle", () => {
   beforeEach(() => {
     localStorage.clear();
+    resetCardNumber();
   });
 
   it("renders board, list, and calendar radio buttons", () => {
@@ -111,9 +110,8 @@ describe("ViewToggle", () => {
   });
 
   it("disables list and calendar views when there are no cards", () => {
-    const now = Date.now();
     seedBoard([
-      { id: "c1", title: "Empty", cards: [], createdAt: now, updatedAt: now },
+      makeColumn({ id: "c1", title: "Empty", cards: [] }),
     ]);
     renderApp();
     expect(screen.getByRole("radio", { name: /list view/i })).toBeDisabled();

@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Board } from "../Board";
 import type { Column, Card } from "../../../board/types";
+import { makeCard, makeColumn } from "../../../test/builders";
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -128,29 +129,6 @@ vi.mock("../CardDetailModal", () => ({
 }));
 
 // ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-const now = Date.now();
-
-function makeCard(id: string, title: string): Card {
-  return {
-    id,
-    number: 1,
-    title,
-    description: "",
-    ticketTypeId: null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [],
-  };
-}
-
-function makeColumn(id: string, title: string, cards: Card[] = []): Column {
-  return { id, title, cards, createdAt: now, updatedAt: now };
-}
-
-// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -173,8 +151,8 @@ describe("Board", () => {
 
   it("renders one item per column plus AddColumn", () => {
     mockColumns.mockReturnValue([
-      makeColumn("c1", "To Do"),
-      makeColumn("c2", "Done"),
+      makeColumn({ id: "c1", title: "To Do" }),
+      makeColumn({ id: "c2", title: "Done" }),
     ]);
     render(<Board />);
     expect(screen.getByTestId("stub-col-c1")).toHaveTextContent("To Do");
@@ -185,7 +163,7 @@ describe("Board", () => {
   // --- canDrag ---
 
   it("sets canDrag=false for a single column", () => {
-    mockColumns.mockReturnValue([makeColumn("c1", "Only")]);
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Only" })]);
     render(<Board />);
     expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
       "data-can-drag",
@@ -194,7 +172,7 @@ describe("Board", () => {
   });
 
   it("sets canDrag=true when multiple columns exist", () => {
-    mockColumns.mockReturnValue([makeColumn("c1", "A"), makeColumn("c2", "B")]);
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "A" }), makeColumn({ id: "c2", title: "B" })]);
     render(<Board />);
     expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
       "data-can-drag",
@@ -213,14 +191,14 @@ describe("Board", () => {
   // --- Detail modal ---
 
   it("does not render detail modal by default", () => {
-    mockColumns.mockReturnValue([makeColumn("c1", "Col")]);
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Col" })]);
     render(<Board />);
     expect(screen.queryByTestId("stub-detail-modal")).not.toBeInTheDocument();
   });
 
   it("opens detail modal when onOpenDetail is called from a column", () => {
-    const card = makeCard("card-1", "Task A");
-    mockColumns.mockReturnValue([makeColumn("c1", "Col", [card])]);
+    const card = makeCard({ id: "card-1", title: "Task A" });
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Col", cards: [card] })]);
     render(<Board />);
     // Trigger the onOpenDetail callback captured from SortableColumnItem
     act(() => {
@@ -231,8 +209,8 @@ describe("Board", () => {
   });
 
   it("closes detail modal on close", async () => {
-    const card = makeCard("card-1", "Task A");
-    mockColumns.mockReturnValue([makeColumn("c1", "Col", [card])]);
+    const card = makeCard({ id: "card-1", title: "Task A" });
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Col", cards: [card] })]);
     render(<Board />);
     act(() => {
       capturedOnOpenDetail?.("card-1");
@@ -243,8 +221,8 @@ describe("Board", () => {
   });
 
   it("calls archiveCard and closes modal on archive", async () => {
-    const card = makeCard("card-1", "Task A");
-    mockColumns.mockReturnValue([makeColumn("c1", "Col", [card])]);
+    const card = makeCard({ id: "card-1", title: "Task A" });
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "Col", cards: [card] })]);
     render(<Board />);
     act(() => {
       capturedOnOpenDetail?.("card-1");

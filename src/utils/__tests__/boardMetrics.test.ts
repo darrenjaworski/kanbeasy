@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import {
   computeAverageReverseTime,
   getCardReverseTimes,
@@ -6,91 +6,75 @@ import {
   getThroughput,
   getTotalCards,
 } from "../boardMetrics";
-import type { Card, Column, ColumnHistoryEntry } from "../../board/types";
-
-let cardNum = 1;
-function makeCard(
-  id: string,
-  title: string,
-  columnHistory: ColumnHistoryEntry[] = [],
-): Card {
-  return {
-    id,
-    number: cardNum++,
-    title,
-    description: "",
-    ticketTypeId: null,
-    createdAt: 0,
-    updatedAt: 0,
-    columnHistory,
-  };
-}
-
-function makeColumn(cards: Column["cards"], id?: string): Column {
-  return {
-    id: id ?? crypto.randomUUID(),
-    title: "Col",
-    cards,
-    createdAt: 0,
-    updatedAt: 0,
-  };
-}
+import { makeCard, makeColumn, resetCardNumber } from "../../test/builders";
 
 describe("getTotalCards", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("returns 0 for no columns", () => {
     expect(getTotalCards([])).toBe(0);
   });
 
   it("returns 0 for empty columns", () => {
-    expect(getTotalCards([makeColumn([]), makeColumn([])])).toBe(0);
+    expect(getTotalCards([makeColumn({ id: crypto.randomUUID() }), makeColumn({ id: crypto.randomUUID() })])).toBe(0);
   });
 
   it("sums cards across all columns", () => {
-    const col1 = makeColumn([makeCard("c1", "A"), makeCard("c2", "B")]);
-    const col2 = makeColumn([makeCard("c3", "C")]);
+    const col1 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" }), makeCard({ id: "c2", title: "B" })] });
+    const col2 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c3", title: "C" })] });
     expect(getTotalCards([col1, col2])).toBe(3);
   });
 });
 
 describe("getCardsInFlight", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("returns 0 for 0 columns", () => {
     expect(getCardsInFlight([])).toBe(0);
   });
 
   it("returns 0 for 1 column", () => {
-    const col = makeColumn([makeCard("c1", "A")]);
+    const col = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
     expect(getCardsInFlight([col])).toBe(0);
   });
 
   it("returns 0 for 2 columns", () => {
-    const col1 = makeColumn([makeCard("c1", "A")]);
-    const col2 = makeColumn([makeCard("c2", "B")]);
+    const col1 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const col2 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" })] });
     expect(getCardsInFlight([col1, col2])).toBe(0);
   });
 
   it("returns 0 for 3 columns with empty middle", () => {
-    const first = makeColumn([makeCard("c1", "A")]);
-    const middle = makeColumn([]);
-    const last = makeColumn([makeCard("c2", "B")]);
+    const first = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const middle = makeColumn({ id: crypto.randomUUID() });
+    const last = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" })] });
     expect(getCardsInFlight([first, middle, last])).toBe(0);
   });
 
   it("counts cards in middle columns for 3+ columns", () => {
-    const first = makeColumn([makeCard("c1", "A")]);
-    const middle1 = makeColumn([makeCard("c2", "B"), makeCard("c3", "C")]);
-    const middle2 = makeColumn([makeCard("c4", "D")]);
-    const last = makeColumn([makeCard("c5", "E")]);
+    const first = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const middle1 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" }), makeCard({ id: "c3", title: "C" })] });
+    const middle2 = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c4", title: "D" })] });
+    const last = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c5", title: "E" })] });
     expect(getCardsInFlight([first, middle1, middle2, last])).toBe(3);
   });
 });
 
 describe("getThroughput", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("returns zeros for empty columns", () => {
     expect(getThroughput([])).toEqual({ last7Days: 0, last30Days: 0 });
   });
 
   it("returns zeros when final column is empty", () => {
-    const col = makeColumn([], "done");
+    const col = makeColumn({ id: "done" });
     expect(getThroughput([col])).toEqual({ last7Days: 0, last30Days: 0 });
   });
 
@@ -99,20 +83,14 @@ describe("getThroughput", () => {
     const ms1Day = 24 * 60 * 60 * 1000;
     const doneId = "done";
 
-    const col = makeColumn(
-      [
-        makeCard("c1", "Recent", [
-          { columnId: doneId, enteredAt: now - ms1Day * 3 },
-        ]),
-        makeCard("c2", "This month", [
-          { columnId: doneId, enteredAt: now - ms1Day * 20 },
-        ]),
-        makeCard("c3", "Old", [
-          { columnId: doneId, enteredAt: now - ms1Day * 60 },
-        ]),
+    const col = makeColumn({
+      id: doneId,
+      cards: [
+        makeCard({ id: "c1", title: "Recent", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 3 }] }),
+        makeCard({ id: "c2", title: "This month", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 20 }] }),
+        makeCard({ id: "c3", title: "Old", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 60 }] }),
       ],
-      doneId,
-    );
+    });
 
     expect(getThroughput([col], now)).toEqual({ last7Days: 1, last30Days: 2 });
   });
@@ -121,21 +99,19 @@ describe("getThroughput", () => {
     const now = 100_000_000;
     const doneId = "done";
 
-    const col = makeColumn(
-      [
-        makeCard("c1", "Wrong column ref", [
-          { columnId: "other", enteredAt: now - 1000 },
-        ]),
+    const col = makeColumn({
+      id: doneId,
+      cards: [
+        makeCard({ id: "c1", title: "Wrong column ref", columnHistory: [{ columnId: "other", enteredAt: now - 1000 }] }),
       ],
-      doneId,
-    );
+    });
 
     expect(getThroughput([col], now)).toEqual({ last7Days: 0, last30Days: 0 });
   });
 
   it("ignores cards with empty history", () => {
     const doneId = "done";
-    const col = makeColumn([makeCard("c1", "No history")], doneId);
+    const col = makeColumn({ id: doneId, cards: [makeCard({ id: "c1", title: "No history" })] });
 
     expect(getThroughput([col], Date.now())).toEqual({
       last7Days: 0,
@@ -148,18 +124,16 @@ describe("getThroughput", () => {
     const ms1Day = 24 * 60 * 60 * 1000;
     const doneId = "done";
 
-    const todo = makeColumn(
-      [
-        makeCard("c1", "In todo", [
-          { columnId: doneId, enteredAt: now - ms1Day },
-        ]),
+    const todo = makeColumn({
+      id: "todo",
+      cards: [
+        makeCard({ id: "c1", title: "In todo", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day }] }),
       ],
-      "todo",
-    );
-    const done = makeColumn(
-      [makeCard("c2", "Done", [{ columnId: doneId, enteredAt: now - ms1Day }])],
-      doneId,
-    );
+    });
+    const done = makeColumn({
+      id: doneId,
+      cards: [makeCard({ id: "c2", title: "Done", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day }] })],
+    });
 
     expect(getThroughput([todo, done], now)).toEqual({
       last7Days: 1,
@@ -172,55 +146,65 @@ describe("getThroughput", () => {
     const ms7Days = 7 * 24 * 60 * 60 * 1000;
     const doneId = "done";
 
-    const col = makeColumn(
-      [
-        makeCard("c1", "Exact boundary", [
-          { columnId: doneId, enteredAt: now - ms7Days },
-        ]),
+    const col = makeColumn({
+      id: doneId,
+      cards: [
+        makeCard({ id: "c1", title: "Exact boundary", columnHistory: [{ columnId: doneId, enteredAt: now - ms7Days }] }),
       ],
-      doneId,
-    );
+    });
 
     expect(getThroughput([col], now)).toEqual({ last7Days: 1, last30Days: 1 });
   });
 });
 
 describe("getCardReverseTimes", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("returns empty array when no cards have history", () => {
-    const col = makeColumn([makeCard("c1", "A")]);
+    const col = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
     expect(getCardReverseTimes([col])).toEqual([]);
   });
 
   it("returns empty array when all moves are forward", () => {
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn([], "colB");
-    const colC = makeColumn(
-      [
-        makeCard("c1", "Forward", [
-          { columnId: "colA", enteredAt: 1000 },
-          { columnId: "colB", enteredAt: 2000 },
-          { columnId: "colC", enteredAt: 3000 },
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({ id: "colB" });
+    const colC = makeColumn({
+      id: "colC",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Forward",
+          columnHistory: [
+            { columnId: "colA", enteredAt: 1000 },
+            { columnId: "colB", enteredAt: 2000 },
+            { columnId: "colC", enteredAt: 3000 },
+          ],
+        }),
       ],
-      "colC",
-    );
+    });
     expect(getCardReverseTimes([colA, colB, colC])).toEqual([]);
   });
 
   it("detects a single backward move", () => {
     const now = 10000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c1", "Bounced", [
-          { columnId: "colA", enteredAt: 1000 },
-          { columnId: "colB", enteredAt: 2000 },
-          { columnId: "colA", enteredAt: 3000 }, // backward
-          { columnId: "colB", enteredAt: 5000 },
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Bounced",
+          columnHistory: [
+            { columnId: "colA", enteredAt: 1000 },
+            { columnId: "colB", enteredAt: 2000 },
+            { columnId: "colA", enteredAt: 3000 }, // backward
+            { columnId: "colB", enteredAt: 5000 },
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
     const result = getCardReverseTimes([colA, colB], now);
     // Backward at index 1→2: colB(1) → colA(0). Time in colA = 5000 - 3000 = 2000
@@ -234,21 +218,25 @@ describe("getCardReverseTimes", () => {
 
   it("accumulates multiple backward moves in one card", () => {
     const now = 20000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn([], "colB");
-    const colC = makeColumn(
-      [
-        makeCard("c1", "Multi-bounce", [
-          { columnId: "colA", enteredAt: 1000 },
-          { columnId: "colC", enteredAt: 2000 },
-          { columnId: "colB", enteredAt: 3000 }, // backward C→B
-          { columnId: "colC", enteredAt: 6000 },
-          { columnId: "colA", enteredAt: 7000 }, // backward C→A
-          { columnId: "colC", enteredAt: 10000 },
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({ id: "colB" });
+    const colC = makeColumn({
+      id: "colC",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Multi-bounce",
+          columnHistory: [
+            { columnId: "colA", enteredAt: 1000 },
+            { columnId: "colC", enteredAt: 2000 },
+            { columnId: "colB", enteredAt: 3000 }, // backward C→B
+            { columnId: "colC", enteredAt: 6000 },
+            { columnId: "colA", enteredAt: 7000 }, // backward C→A
+            { columnId: "colC", enteredAt: 10000 },
+          ],
+        }),
       ],
-      "colC",
-    );
+    });
 
     const result = getCardReverseTimes([colA, colB, colC], now);
     // Backward at 1→2: colC(2) → colB(1), time = 6000 - 3000 = 3000
@@ -259,16 +247,20 @@ describe("getCardReverseTimes", () => {
 
   it("uses now for last entry when it is a backward move", () => {
     const now = 15000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c1", "Still reversed", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 5000 }, // backward, last entry
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Still reversed",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 5000 }, // backward, last entry
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
     const result = getCardReverseTimes([colA, colB], now);
     // Backward: colB(1) → colA(0), time = now - 5000 = 10000
@@ -278,18 +270,22 @@ describe("getCardReverseTimes", () => {
 
   it("skips transitions referencing deleted columns", () => {
     const now = 10000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c1", "Deleted col ref", [
-          { columnId: "colA", enteredAt: 1000 },
-          { columnId: "deleted", enteredAt: 2000 },
-          { columnId: "colA", enteredAt: 3000 },
-          { columnId: "colB", enteredAt: 4000 },
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Deleted col ref",
+          columnHistory: [
+            { columnId: "colA", enteredAt: 1000 },
+            { columnId: "deleted", enteredAt: 2000 },
+            { columnId: "colA", enteredAt: 3000 },
+            { columnId: "colB", enteredAt: 4000 },
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
     const result = getCardReverseTimes([colA, colB], now);
     expect(result).toEqual([]);
@@ -297,22 +293,30 @@ describe("getCardReverseTimes", () => {
 
   it("sorts results descending by reverse time", () => {
     const now = 20000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c1", "Short reverse", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 2000 }, // backward
-          { columnId: "colB", enteredAt: 3000 },
-        ]),
-        makeCard("c2", "Long reverse", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 2000 }, // backward
-          { columnId: "colB", enteredAt: 8000 },
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Short reverse",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 2000 }, // backward
+            { columnId: "colB", enteredAt: 3000 },
+          ],
+        }),
+        makeCard({
+          id: "c2",
+          title: "Long reverse",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 2000 }, // backward
+            { columnId: "colB", enteredAt: 8000 },
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
     const result = getCardReverseTimes([colA, colB], now);
     expect(result).toHaveLength(2);
@@ -322,31 +326,43 @@ describe("getCardReverseTimes", () => {
 });
 
 describe("computeAverageReverseTime", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("returns null when no cards have reverse time", () => {
     expect(computeAverageReverseTime([])).toBeNull();
     expect(
-      computeAverageReverseTime([makeColumn([makeCard("c1", "A")])]),
+      computeAverageReverseTime([makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] })]),
     ).toBeNull();
   });
 
   it("averages reverse times correctly", () => {
     const now = 20000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c1", "Card 1", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 2000 },
-          { columnId: "colB", enteredAt: 4000 }, // 2000ms reverse
-        ]),
-        makeCard("c2", "Card 2", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 2000 },
-          { columnId: "colB", enteredAt: 8000 }, // 6000ms reverse
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Card 1",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 2000 },
+            { columnId: "colB", enteredAt: 4000 }, // 2000ms reverse
+          ],
+        }),
+        makeCard({
+          id: "c2",
+          title: "Card 2",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 2000 },
+            { columnId: "colB", enteredAt: 8000 }, // 6000ms reverse
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
     // Average: (2000 + 6000) / 2 = 4000
     expect(computeAverageReverseTime([colA, colB], now)).toBe(4000);
@@ -354,23 +370,27 @@ describe("computeAverageReverseTime", () => {
 });
 
 describe("additionalCards", () => {
+  beforeEach(() => {
+    resetCardNumber();
+  });
+
   it("getThroughput includes additional cards referencing the final column", () => {
     const now = 100_000_000;
     const ms1Day = 24 * 60 * 60 * 1000;
     const doneId = "done";
 
-    const col = makeColumn(
-      [
-        makeCard("c1", "Board card", [
-          { columnId: doneId, enteredAt: now - ms1Day * 3 },
-        ]),
+    const col = makeColumn({
+      id: doneId,
+      cards: [
+        makeCard({ id: "c1", title: "Board card", columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 3 }] }),
       ],
-      doneId,
-    );
+    });
 
-    const archivedCard = makeCard("c2", "Archived card", [
-      { columnId: doneId, enteredAt: now - ms1Day * 5 },
-    ]);
+    const archivedCard = makeCard({
+      id: "c2",
+      title: "Archived card",
+      columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 5 }],
+    });
 
     expect(getThroughput([col], now, [archivedCard])).toEqual({
       last7Days: 2,
@@ -382,10 +402,12 @@ describe("additionalCards", () => {
     const now = 100_000_000;
     const doneId = "done";
 
-    const col = makeColumn([], doneId);
-    const archivedCard = makeCard("c1", "Wrong col ref", [
-      { columnId: "other", enteredAt: now - 1000 },
-    ]);
+    const col = makeColumn({ id: doneId });
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Wrong col ref",
+      columnHistory: [{ columnId: "other", enteredAt: now - 1000 }],
+    });
 
     expect(getThroughput([col], now, [archivedCard])).toEqual({
       last7Days: 0,
@@ -395,23 +417,31 @@ describe("additionalCards", () => {
 
   it("getCardReverseTimes marks additional cards as isArchived", () => {
     const now = 10000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c1", "Board card", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 2000 },
-          { columnId: "colB", enteredAt: 4000 },
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Board card",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 2000 },
+            { columnId: "colB", enteredAt: 4000 },
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
-    const archivedCard = makeCard("c2", "Archived card", [
-      { columnId: "colB", enteredAt: 1000 },
-      { columnId: "colA", enteredAt: 2000 },
-      { columnId: "colB", enteredAt: 5000 },
-    ]);
+    const archivedCard = makeCard({
+      id: "c2",
+      title: "Archived card",
+      columnHistory: [
+        { columnId: "colB", enteredAt: 1000 },
+        { columnId: "colA", enteredAt: 2000 },
+        { columnId: "colB", enteredAt: 5000 },
+      ],
+    });
 
     const result = getCardReverseTimes([colA, colB], now, [archivedCard]);
     const archived = result.find((r) => r.cardTitle.includes("Archived card"));
@@ -425,10 +455,12 @@ describe("additionalCards", () => {
     const ms1Day = 24 * 60 * 60 * 1000;
     const doneId = "done";
 
-    const col = makeColumn([], doneId);
-    const archivedCard = makeCard("c1", "Old archived", [
-      { columnId: doneId, enteredAt: now - ms1Day * 60 },
-    ]);
+    const col = makeColumn({ id: doneId });
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Old archived",
+      columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 60 }],
+    });
 
     expect(getThroughput([col], now, [archivedCard])).toEqual({
       last7Days: 0,
@@ -441,10 +473,12 @@ describe("additionalCards", () => {
     const ms30Days = 30 * 24 * 60 * 60 * 1000;
     const doneId = "done";
 
-    const col = makeColumn([], doneId);
-    const archivedCard = makeCard("c1", "Boundary archived", [
-      { columnId: doneId, enteredAt: now - ms30Days },
-    ]);
+    const col = makeColumn({ id: doneId });
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Boundary archived",
+      columnHistory: [{ columnId: doneId, enteredAt: now - ms30Days }],
+    });
 
     expect(getThroughput([col], now, [archivedCard])).toEqual({
       last7Days: 0,
@@ -454,14 +488,18 @@ describe("additionalCards", () => {
 
   it("getCardReverseTimes gracefully skips archived card referencing nonexistent columns", () => {
     const now = 10000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn([], "colB");
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({ id: "colB" });
 
-    const archivedCard = makeCard("c1", "Orphan refs", [
-      { columnId: "deleted1", enteredAt: 1000 },
-      { columnId: "deleted2", enteredAt: 2000 },
-      { columnId: "deleted1", enteredAt: 3000 },
-    ]);
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Orphan refs",
+      columnHistory: [
+        { columnId: "deleted1", enteredAt: 1000 },
+        { columnId: "deleted2", enteredAt: 2000 },
+        { columnId: "deleted1", enteredAt: 3000 },
+      ],
+    });
 
     const result = getCardReverseTimes([colA, colB], now, [archivedCard]);
     expect(result).toEqual([]);
@@ -469,15 +507,19 @@ describe("additionalCards", () => {
 
   it("getCardReverseTimes excludes archived card with only forward moves", () => {
     const now = 10000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn([], "colB");
-    const colC = makeColumn([], "colC");
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({ id: "colB" });
+    const colC = makeColumn({ id: "colC" });
 
-    const archivedCard = makeCard("c1", "Forward only", [
-      { columnId: "colA", enteredAt: 1000 },
-      { columnId: "colB", enteredAt: 2000 },
-      { columnId: "colC", enteredAt: 3000 },
-    ]);
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Forward only",
+      columnHistory: [
+        { columnId: "colA", enteredAt: 1000 },
+        { columnId: "colB", enteredAt: 2000 },
+        { columnId: "colC", enteredAt: 3000 },
+      ],
+    });
 
     const result = getCardReverseTimes([colA, colB, colC], now, [archivedCard]);
     expect(result).toEqual([]);
@@ -488,30 +530,36 @@ describe("additionalCards", () => {
     const ms1Day = 24 * 60 * 60 * 1000;
     const doneId = "done";
 
-    const col = makeColumn(
-      [
-        makeCard("c1", "Board card", [
-          { columnId: doneId, enteredAt: now - ms1Day * 3 },
-        ]),
+    const col = makeColumn({
+      id: doneId,
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Board card",
+          columnHistory: [{ columnId: doneId, enteredAt: now - ms1Day * 3 }],
+        }),
       ],
-      doneId,
-    );
+    });
 
     const withEmpty = getThroughput([col], now, []);
     const withoutParam = getThroughput([col], now);
     expect(withEmpty).toEqual(withoutParam);
 
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c2", "Board bounced", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 2000 },
-          { columnId: "colB", enteredAt: 4000 },
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c2",
+          title: "Board bounced",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 2000 },
+            { columnId: "colB", enteredAt: 4000 },
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
     const reverseWithEmpty = getCardReverseTimes([colA, colB], now, []);
     const reverseWithout = getCardReverseTimes([colA, colB], now);
@@ -520,15 +568,19 @@ describe("additionalCards", () => {
 
   it("getCardReverseTimes includes additional cards with backward moves", () => {
     const now = 10000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn([], "colB");
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({ id: "colB" });
 
-    const archivedCard = makeCard("c1", "Archived bounced", [
-      { columnId: "colA", enteredAt: 1000 },
-      { columnId: "colB", enteredAt: 2000 },
-      { columnId: "colA", enteredAt: 3000 }, // backward
-      { columnId: "colB", enteredAt: 5000 },
-    ]);
+    const archivedCard = makeCard({
+      id: "c1",
+      title: "Archived bounced",
+      columnHistory: [
+        { columnId: "colA", enteredAt: 1000 },
+        { columnId: "colB", enteredAt: 2000 },
+        { columnId: "colA", enteredAt: 3000 }, // backward
+        { columnId: "colB", enteredAt: 5000 },
+      ],
+    });
 
     const result = getCardReverseTimes([colA, colB], now, [archivedCard]);
     expect(result).toHaveLength(1);
@@ -538,23 +590,31 @@ describe("additionalCards", () => {
 
   it("computeAverageReverseTime includes additional cards", () => {
     const now = 20000;
-    const colA = makeColumn([], "colA");
-    const colB = makeColumn(
-      [
-        makeCard("c1", "Board card", [
-          { columnId: "colB", enteredAt: 1000 },
-          { columnId: "colA", enteredAt: 2000 },
-          { columnId: "colB", enteredAt: 4000 }, // 2000ms reverse
-        ]),
+    const colA = makeColumn({ id: "colA" });
+    const colB = makeColumn({
+      id: "colB",
+      cards: [
+        makeCard({
+          id: "c1",
+          title: "Board card",
+          columnHistory: [
+            { columnId: "colB", enteredAt: 1000 },
+            { columnId: "colA", enteredAt: 2000 },
+            { columnId: "colB", enteredAt: 4000 }, // 2000ms reverse
+          ],
+        }),
       ],
-      "colB",
-    );
+    });
 
-    const archivedCard = makeCard("c2", "Archived card", [
-      { columnId: "colB", enteredAt: 1000 },
-      { columnId: "colA", enteredAt: 2000 },
-      { columnId: "colB", enteredAt: 8000 }, // 6000ms reverse
-    ]);
+    const archivedCard = makeCard({
+      id: "c2",
+      title: "Archived card",
+      columnHistory: [
+        { columnId: "colB", enteredAt: 1000 },
+        { columnId: "colA", enteredAt: 2000 },
+        { columnId: "colB", enteredAt: 8000 }, // 6000ms reverse
+      ],
+    });
 
     // Average: (2000 + 6000) / 2 = 4000
     expect(computeAverageReverseTime([colA, colB], now, [archivedCard])).toBe(
@@ -563,15 +623,15 @@ describe("additionalCards", () => {
   });
 
   it("getTotalCards does not include additional cards", () => {
-    const col = makeColumn([makeCard("c1", "A")]);
+    const col = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
     // getTotalCards has no additionalCards parameter — snapshot metric only
     expect(getTotalCards([col])).toBe(1);
   });
 
   it("getCardsInFlight does not include additional cards", () => {
-    const first = makeColumn([makeCard("c1", "A")]);
-    const middle = makeColumn([makeCard("c2", "B")]);
-    const last = makeColumn([]);
+    const first = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c1", title: "A" })] });
+    const middle = makeColumn({ id: crypto.randomUUID(), cards: [makeCard({ id: "c2", title: "B" })] });
+    const last = makeColumn({ id: crypto.randomUUID() });
     // getCardsInFlight has no additionalCards parameter — snapshot metric only
     expect(getCardsInFlight([first, middle, last])).toBe(1);
   });

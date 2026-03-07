@@ -7,17 +7,12 @@ import { Column } from "../Column";
 import { ThemeContext } from "../../../theme/ThemeContext";
 import type { ThemeContextValue } from "../../../theme/types";
 import type { Card } from "../../../board/types";
+import { makeCard } from "../../../test/builders";
 
 function makeCards(count: number): Card[] {
-  const now = Date.now();
-  return Array.from({ length: count }, (_, i) => ({
-    id: `card-${i}`,
-    title: `Card ${i}`,
-    description: "",
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [],
-  }));
+  return Array.from({ length: count }, (_, i) =>
+    makeCard({ id: `card-${i}`, title: `Card ${i}` }),
+  );
 }
 
 function ThemeWrapper({ children }: { children: React.ReactNode }) {

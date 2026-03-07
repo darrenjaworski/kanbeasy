@@ -10,6 +10,7 @@ import { ClipboardContext } from "../../../board/ClipboardContext";
 import type { BoardContextValue, Card } from "../../../board/types";
 import type { ThemeContextValue } from "../../../theme/types";
 import type { ClipboardContextValue } from "../../../board/ClipboardContext";
+import { makeCard } from "../../../test/builders";
 
 // ---------------------------------------------------------------------------
 // Mock CardList to avoid @dnd-kit dependency
@@ -29,21 +30,6 @@ vi.mock("../CardList", () => ({
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const now = Date.now();
-
-function makeCard(id: string, title: string): Card {
-  return {
-    id,
-    number: 1,
-    title,
-    description: "",
-    ticketTypeId: null,
-    createdAt: now,
-    updatedAt: now,
-    columnHistory: [],
-  };
-}
 
 function makeBoardContext(
   overrides: Partial<BoardContextValue> = {},
@@ -191,13 +177,13 @@ describe("Column", () => {
   // --- Card count badge ---
 
   it("shows correct card count and singular label", () => {
-    const cards = [makeCard("c1", "One")];
+    const cards = [makeCard({ id: "c1", title: "One" })];
     renderColumn({ props: { cards } });
     expect(screen.getByLabelText("1 card")).toHaveTextContent("1");
   });
 
   it("shows correct card count and plural label", () => {
-    const cards = [makeCard("c1", "One"), makeCard("c2", "Two")];
+    const cards = [makeCard({ id: "c1", title: "One" }), makeCard({ id: "c2", title: "Two" })];
     renderColumn({ props: { cards } });
     expect(screen.getByLabelText("2 cards")).toHaveTextContent("2");
   });
@@ -228,7 +214,7 @@ describe("Column", () => {
   });
 
   it("shows confirmation dialog when cards exist and warning is enabled", async () => {
-    const cards = [makeCard("c1", "One"), makeCard("c2", "Two")];
+    const cards = [makeCard({ id: "c1", title: "One" }), makeCard({ id: "c2", title: "Two" })];
     renderColumn({
       props: { cards },
       theme: { deleteColumnWarningEnabled: true },
@@ -240,7 +226,7 @@ describe("Column", () => {
   });
 
   it("skips confirmation when warning is disabled even with cards", async () => {
-    const cards = [makeCard("c1", "One")];
+    const cards = [makeCard({ id: "c1", title: "One" })];
     const { boardCtx } = renderColumn({
       props: { cards },
       theme: { deleteColumnWarningEnabled: false },
@@ -254,7 +240,7 @@ describe("Column", () => {
   // --- Confirmation dialog ---
 
   it("calls removeColumn when confirm is clicked", async () => {
-    const cards = [makeCard("c1", "One")];
+    const cards = [makeCard({ id: "c1", title: "One" })];
     const { boardCtx } = renderColumn({ props: { cards } });
     await userEvent.click(
       screen.getByRole("button", { name: /Remove column/ }),
@@ -264,7 +250,7 @@ describe("Column", () => {
   });
 
   it("does not call removeColumn when cancel is clicked", async () => {
-    const cards = [makeCard("c1", "One")];
+    const cards = [makeCard({ id: "c1", title: "One" })];
     const { boardCtx } = renderColumn({ props: { cards } });
     await userEvent.click(
       screen.getByRole("button", { name: /Remove column/ }),
@@ -274,7 +260,7 @@ describe("Column", () => {
   });
 
   it("shows singular message for 1 card", async () => {
-    const cards = [makeCard("c1", "One")];
+    const cards = [makeCard({ id: "c1", title: "One" })];
     renderColumn({ props: { cards } });
     await userEvent.click(
       screen.getByRole("button", { name: /Remove column/ }),
