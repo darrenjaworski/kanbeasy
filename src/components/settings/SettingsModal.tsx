@@ -43,7 +43,7 @@ export function SettingsModal({ open, onClose }: Props) {
           rel="noopener noreferrer"
           className={`${tc.textHover} transition-colors`}
         >
-          kanbeasy v{__APP_VERSION__}
+          Kanbeasy v{__APP_VERSION__}
         </a>
         <p>
           Made with ❤️ by{" "}

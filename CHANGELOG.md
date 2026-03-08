@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.33.1]
+
 ### Changed
 
 - Unify `UndoRedoControls` and `KeyboardShortcutHint` into a single `BottomBar` component so the shortcut hint sits flush right on views without undo/redo
