@@ -48,4 +48,7 @@ export const STORAGE_KEYS = {
 
   /** Whether the user has seen the welcome modal */
   HAS_SEEN_WELCOME: "hasSeenWelcome",
+
+  /** Card layout configuration (JSON) */
+  CARD_LAYOUT: "kanbeasy:cardLayout",
 } as const;

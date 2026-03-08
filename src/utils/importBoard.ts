@@ -1,10 +1,15 @@
 import type { ArchivedCard, Column } from "../board/types";
 import type { CardDensity, ThemePreference, ViewMode } from "../theme/types";
 import type { CardType } from "../constants/cardTypes";
+import type { CardLayout } from "../constants/cardLayout";
 import { isArchivedCard, isColumn } from "../board/validation";
 import { themes } from "../theme/themes";
 import { migrateColumnsWithNumbering } from "../board/migration";
 import { DEFAULT_PRESET_ID, CARD_TYPE_PRESETS } from "../constants/cardTypes";
+import {
+  DEFAULT_CARD_LAYOUT,
+  isValidCardLayout,
+} from "../constants/cardLayout";
 
 interface ValidatedImport {
   columns: Column[];
@@ -22,6 +27,7 @@ interface ValidatedImport {
     cardTypes: CardType[];
     defaultCardTypeId: string | null;
     compactHeader: boolean;
+    cardLayout: CardLayout;
   };
 }
 
@@ -65,12 +71,13 @@ export function validateExportData(parsed: unknown): ImportResult {
     version !== 7 &&
     version !== 8 &&
     version !== 9 &&
-    version !== 10
+    version !== 10 &&
+    version !== 11
   ) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–10 are supported.`
+        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–11 are supported.`
         : "Missing export version.",
     };
   }
@@ -215,6 +222,41 @@ export function validateExportData(parsed: unknown): ImportResult {
           : false
       : false;
 
+  // Card layout (v11+). Fall back to default layout for older versions.
+  // For older exports, map cardDensity to title lines for continuity.
+  let cardLayout: CardLayout = DEFAULT_CARD_LAYOUT;
+  if (version >= 11) {
+    const rawLayout = s.cardLayout;
+    let parsed: unknown = null;
+    if (typeof rawLayout === "string" && rawLayout) {
+      try {
+        parsed = JSON.parse(rawLayout);
+      } catch {
+        // invalid JSON, use default
+      }
+    } else if (Array.isArray(rawLayout)) {
+      parsed = rawLayout;
+    }
+    if (isValidCardLayout(parsed)) {
+      cardLayout = parsed;
+    }
+  } else {
+    // Map density to title lines for older exports
+    const densityLines: Record<string, number> = {
+      small: 1,
+      medium: 2,
+      large: 3,
+    };
+    const titleLines = densityLines[cardDensity] ?? 1;
+    if (titleLines !== 1) {
+      cardLayout = DEFAULT_CARD_LAYOUT.map((f) =>
+        f.id === "title"
+          ? { ...f, options: { ...f.options, lines: titleLines } }
+          : f,
+      );
+    }
+  }
+
   return {
     ok: true,
     data: {
@@ -233,6 +275,7 @@ export function validateExportData(parsed: unknown): ImportResult {
         cardTypes,
         defaultCardTypeId,
         compactHeader,
+        cardLayout,
       },
     },
   };

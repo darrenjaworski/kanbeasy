@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Card layout editor: interactive field toggles, drag-to-reorder, line count dropdowns, max 5 visible fields, min 1 required, and reset to default
+- CardBody renders fields dynamically from layout config (badge, title, description, checklist, dueDate, createdAt, updatedAt)
+- Export/import supports cardLayout (v11); older imports map card density to title lines
+- Card density controls hidden when layout editor is enabled (title lines in editor replaces density)
+- Add "Card Type" field option showing full type label (e.g., "Feature") with color badge
+
 ## [1.39.0]
 
 ### Features

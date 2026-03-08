@@ -8,6 +8,11 @@ import {
   DensityLargeIcon,
 } from "../icons";
 import { ToggleSwitch } from "../shared/ToggleSwitch";
+import { featureFlags } from "../../constants/featureFlags";
+
+type Props = Readonly<{
+  onOpenCardLayout?: () => void;
+}>;
 
 const lightThemes = themes.filter((t) => t.mode === "light");
 const darkThemes = themes.filter((t) => t.mode === "dark");
@@ -22,7 +27,7 @@ const MODE_OPTIONS: { value: ThemePreference; label: string }[] = [
   { value: "dark", label: "Dark" },
 ];
 
-export function ThemeSection() {
+export function ThemeSection({ onOpenCardLayout }: Props) {
   const {
     themeId,
     setThemeId,
@@ -91,47 +96,50 @@ export function ThemeSection() {
           </button>
         ))}
       </div>
-      <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
-        <legend className="sr-only">Card density</legend>
-        <span aria-hidden>Card density</span>
-        <div className={`${tc.buttonGroup} rounded-full`}>
-          <button
-            type="button"
-            onClick={() => setCardDensity("small")}
-            aria-label="Compact"
-            aria-pressed={cardDensity === "small"}
-            className={`h-9 w-9 ${tc.iconButton} ${
-              cardDensity === "small" ? tc.pressed : ""
-            }`}
-          >
-            <DensitySmallIcon />
-          </button>
-          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
-          <button
-            type="button"
-            onClick={() => setCardDensity("medium")}
-            aria-label="Comfortable"
-            aria-pressed={cardDensity === "medium"}
-            className={`h-9 w-9 ${tc.iconButton} ${
-              cardDensity === "medium" ? tc.pressed : ""
-            }`}
-          >
-            <DensityMediumIcon />
-          </button>
-          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
-          <button
-            type="button"
-            onClick={() => setCardDensity("large")}
-            aria-label="Spacious"
-            aria-pressed={cardDensity === "large"}
-            className={`h-9 w-9 ${tc.iconButton} ${
-              cardDensity === "large" ? tc.pressed : ""
-            }`}
-          >
-            <DensityLargeIcon />
-          </button>
-        </div>
-      </fieldset>
+      {/* Card density controls — hidden when layout editor is available (title lines replaces density) */}
+      {!featureFlags.cardLayoutEditor && (
+        <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
+          <legend className="sr-only">Card density</legend>
+          <span aria-hidden>Card density</span>
+          <div className={`${tc.buttonGroup} rounded-full`}>
+            <button
+              type="button"
+              onClick={() => setCardDensity("small")}
+              aria-label="Compact"
+              aria-pressed={cardDensity === "small"}
+              className={`h-9 w-9 ${tc.iconButton} ${
+                cardDensity === "small" ? tc.pressed : ""
+              }`}
+            >
+              <DensitySmallIcon />
+            </button>
+            <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+            <button
+              type="button"
+              onClick={() => setCardDensity("medium")}
+              aria-label="Comfortable"
+              aria-pressed={cardDensity === "medium"}
+              className={`h-9 w-9 ${tc.iconButton} ${
+                cardDensity === "medium" ? tc.pressed : ""
+              }`}
+            >
+              <DensityMediumIcon />
+            </button>
+            <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+            <button
+              type="button"
+              onClick={() => setCardDensity("large")}
+              aria-label="Spacious"
+              aria-pressed={cardDensity === "large"}
+              className={`h-9 w-9 ${tc.iconButton} ${
+                cardDensity === "large" ? tc.pressed : ""
+              }`}
+            >
+              <DensityLargeIcon />
+            </button>
+          </div>
+        </fieldset>
+      )}
       <ToggleSwitch
         id="compact-header"
         label="Compact header"
@@ -139,6 +147,28 @@ export function ThemeSection() {
         checked={compactHeader}
         onChange={setCompactHeader}
       />
+      {featureFlags.cardLayoutEditor && onOpenCardLayout && (
+        <button
+          type="button"
+          onClick={onOpenCardLayout}
+          className={`w-full flex items-center justify-between rounded-lg border ${tc.border} ${tc.glass} px-3 py-2.5 text-sm font-medium ${tc.text} ${tc.borderHover} ${tc.focusRing} transition-colors`}
+        >
+          <span>Card Layout Editor</span>
+          <svg
+            className={`size-4 ${tc.textFaint}`}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      )}
     </fieldset>
   );
 }

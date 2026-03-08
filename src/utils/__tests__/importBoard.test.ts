@@ -565,6 +565,102 @@ describe("validateExportData", () => {
       { columnId: "col-1", enteredAt: 5000 },
     ]);
   });
+
+  it("accepts v11 export data", () => {
+    const result = validateExportData(makeExportData({ version: 11 }));
+    expect(result.ok).toBe(true);
+  });
+
+  it("v11 import preserves valid cardLayout", () => {
+    const layout = [
+      { id: "title", visible: true, options: { lines: 2 } },
+      { id: "badge", visible: true },
+      { id: "cardTypeName", visible: false },
+      { id: "description", visible: true, options: { lines: 3 } },
+      { id: "checklist", visible: false },
+      { id: "dueDate", visible: false },
+      { id: "createdAt", visible: false },
+      { id: "updatedAt", visible: false },
+    ];
+    const result = validateExportData(
+      makeExportData({
+        version: 11,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "small",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+          cardLayout: JSON.stringify(layout),
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.cardLayout).toEqual(layout);
+  });
+
+  it("v11 import with invalid cardLayout falls back to default", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 11,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "small",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+          cardLayout: "not-valid-json",
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.settings.cardLayout).toHaveLength(8);
+    expect(result.data.settings.cardLayout[0].id).toBe("badge");
+  });
+
+  it("v10 import maps medium density to title lines 2", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 10,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "medium",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    const titleField = result.data.settings.cardLayout.find(
+      (f) => f.id === "title",
+    );
+    expect(titleField?.options?.lines).toBe(2);
+  });
+
+  it("v10 import with small density uses default layout (title lines 1)", () => {
+    const result = validateExportData(
+      makeExportData({
+        version: 10,
+        settings: {
+          theme: "light-slate",
+          themePreference: "light",
+          cardDensity: "small",
+          columnResizingEnabled: "false",
+          deleteColumnWarning: "true",
+        },
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    const titleField = result.data.settings.cardLayout.find(
+      (f) => f.id === "title",
+    );
+    expect(titleField?.options?.lines).toBe(1);
+  });
 });
 
 describe("readImportFile", () => {

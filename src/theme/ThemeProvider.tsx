@@ -13,6 +13,11 @@ import { STORAGE_KEYS } from "../constants/storage";
 import { updateFavicon } from "./favicon";
 import type { CardType } from "../constants/cardTypes";
 import { DEFAULT_PRESET_ID, CARD_TYPE_PRESETS } from "../constants/cardTypes";
+import type { CardLayout } from "../constants/cardLayout";
+import {
+  DEFAULT_CARD_LAYOUT,
+  isValidCardLayout,
+} from "../constants/cardLayout";
 
 function getSystemTheme(): ThemeMode {
   if (
@@ -137,6 +142,10 @@ export function ThemeProvider({
     useState<boolean>(() =>
       kvGetBool(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED, false),
     );
+  const [cardLayout, setCardLayout] = useState<CardLayout>(() => {
+    const stored = kvGet<unknown>(STORAGE_KEYS.CARD_LAYOUT, null);
+    return isValidCardLayout(stored) ? stored : DEFAULT_CARD_LAYOUT;
+  });
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -240,6 +249,10 @@ export function ThemeProvider({
     );
   }, [keyboardShortcutsEnabled]);
 
+  useEffect(() => {
+    kvSet(STORAGE_KEYS.CARD_LAYOUT, cardLayout);
+  }, [cardLayout]);
+
   // Clear default card type if it no longer exists in the current types
   useEffect(() => {
     if (
@@ -264,6 +277,7 @@ export function ThemeProvider({
     kvRemove(STORAGE_KEYS.DEFAULT_CARD_TYPE);
     kvRemove(STORAGE_KEYS.COMPACT_HEADER);
     kvRemove(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
+    kvRemove(STORAGE_KEYS.CARD_LAYOUT);
     kvRemove(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
     // Reset state to defaults
@@ -280,6 +294,7 @@ export function ThemeProvider({
     setDefaultCardTypeId(null);
     setCompactHeader(false);
     setKeyboardShortcutsEnabled(false);
+    setCardLayout(DEFAULT_CARD_LAYOUT);
   }, []);
 
   const theme = getThemeById(themeId);
@@ -312,6 +327,8 @@ export function ThemeProvider({
       setCompactHeader,
       keyboardShortcutsEnabled,
       setKeyboardShortcutsEnabled,
+      cardLayout,
+      setCardLayout,
       resetSettings,
     }),
     [
@@ -329,6 +346,7 @@ export function ThemeProvider({
       defaultCardTypeId,
       compactHeader,
       keyboardShortcutsEnabled,
+      cardLayout,
       resetSettings,
     ],
   );

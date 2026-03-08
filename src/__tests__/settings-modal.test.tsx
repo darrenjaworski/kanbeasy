@@ -2,7 +2,12 @@ import { screen, within, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+// Disable card layout editor flag so density controls title rows (production behavior)
+vi.mock("../constants/featureFlags", () => ({
+  featureFlags: { analytics: true, undoRedo: true, cardLayoutEditor: false },
+}));
 
 describe("settings modal", () => {
   beforeEach(() => {
@@ -111,10 +116,13 @@ describe("settings modal", () => {
     const textareas = screen.getAllByRole("textbox", { name: /card content/i });
     expect(textareas[0]).toHaveAttribute("rows", "1");
 
-    // Re-open, expand Appearance, and set comfortable
+    // Re-open and set comfortable (Appearance section stays open from persistence)
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg2 = await screen.findByRole("dialog", { name: /settings/i });
-    await user.click(within(dlg2).getByRole("button", { name: /appearance/i }));
+    const appBtn2 = within(dlg2).getByRole("button", { name: /appearance/i });
+    if (appBtn2.getAttribute("aria-expanded") !== "true") {
+      await user.click(appBtn2);
+    }
     await user.click(
       within(dlg2).getByRole("button", { name: /comfortable/i }),
     );
@@ -126,10 +134,13 @@ describe("settings modal", () => {
     });
     expect(textareasAfterComfortable[0]).toHaveAttribute("rows", "2");
 
-    // Re-open, expand Appearance, and set spacious
+    // Re-open and set spacious
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg3 = await screen.findByRole("dialog", { name: /settings/i });
-    await user.click(within(dlg3).getByRole("button", { name: /appearance/i }));
+    const appBtn3 = within(dlg3).getByRole("button", { name: /appearance/i });
+    if (appBtn3.getAttribute("aria-expanded") !== "true") {
+      await user.click(appBtn3);
+    }
     await user.click(within(dlg3).getByRole("button", { name: /spacious/i }));
     await user.click(
       within(dlg3).getByRole("button", { name: /close settings/i }),
