@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.37.0]
+
+### Features
+
+- Enrich initial board with feature-rich starter cards — new users see card types (Feature, Chore), due dates, markdown checklists, descriptions, and realistic column history out of the box
+
+### Documentation
+
+- Add enriched initial board item to roadmap shipped section
+
 ## [1.36.1]
 
 ### Fixed

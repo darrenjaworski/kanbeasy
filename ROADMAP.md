@@ -84,6 +84,7 @@ an ultra simple task organizer
 - ✅ search card descriptions in addition to titles
 - ✅ card detail modal field reorder — Title and Description appear first, above Column/Type/Due date
 - ✅ tooltips on disabled view toggle buttons explaining why they are unavailable
+- ✅ enriched initial board — starter cards showcase card types, due dates, checklists, descriptions, and column history so first-time users immediately see what's possible
 - ✅ migrate to IndexedDB instead of localStorage — unified async storage backend with generous quota, enabling image attachments, multiple boards, and larger data without hitting the ~5 MB localStorage ceiling
 - ✅ storage usage and persistence status display in Settings > Data
 
