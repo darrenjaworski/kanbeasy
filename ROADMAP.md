@@ -133,6 +133,7 @@ Settings
   - drag-to-reorder field layout
   - display mode per field (e.g., badge vs inline text, icon-only vs label)
   - per-board or global preset support
+- sortable table columns — click a column header to sort ascending, click again for descending, click again to reset (list view, analytics tables, archive table)
 - card sorting UI (alphabetical, by date created, by last updated)
 - lock columns — toggle in settings to prevent drag-and-drop reordering of columns while still allowing card movement
 - column collapse/expand to save horizontal space
