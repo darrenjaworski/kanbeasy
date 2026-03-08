@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.2]
+
+### Fixed
+
+- Settings modal sections now always start collapsed when opened, instead of persisting open/closed state across sessions
+
+### Removed
+
+- Remove `SETTINGS_SECTIONS` storage key — section collapse state is no longer persisted to IndexedDB
+
 ## [1.38.1]
 
 ### Fixed
