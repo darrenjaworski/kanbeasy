@@ -84,21 +84,22 @@ export function CardBody({
     );
   }
 
-  // Dynamic rendering based on layout config
+  // Dynamic rendering based on layout config — each field gets its own row
   const visibleFields = cardLayout.filter((f) => f.visible);
 
   return (
     <>
-      {visibleFields.map((field, i) => {
+      {visibleFields.map((field) => {
         switch (field.id) {
           case "badge":
             return (
-              <CardTypeBadge
-                key={field.id}
-                number={number}
-                cardTypeId={cardTypeId}
-                cardTypeColor={cardTypeColor}
-              />
+              <div key={field.id}>
+                <CardTypeBadge
+                  number={number}
+                  cardTypeId={cardTypeId}
+                  cardTypeColor={cardTypeColor}
+                />
+              </div>
             );
           case "title": {
             const titleRows = field.options?.lines ?? rows;
@@ -111,7 +112,7 @@ export function CardBody({
                 defaultValue={title || "New card"}
                 readOnly={readOnly}
                 tabIndex={readOnly ? -1 : undefined}
-                className={`${tc.input} ${i > 0 ? "mt-1" : ""} w-full rounded-xs ${
+                className={`${tc.input} mt-1 w-full rounded-xs ${
                   readOnly
                     ? "resize-none cursor-default"
                     : "resize-none hover:resize-y focus:resize-y"
@@ -142,20 +143,25 @@ export function CardBody({
             );
           case "checklist":
             return (
-              <ChecklistProgress
-                key={field.id}
-                description={description ?? ""}
-                showCount={false}
-              />
+              <div key={field.id} className="mt-1">
+                <ChecklistProgress
+                  description={description ?? ""}
+                  showCount={false}
+                />
+              </div>
             );
           case "dueDate":
-            return <DueDateBadge key={field.id} dueDate={dueDate} />;
+            return (
+              <div key={field.id} className="mt-1">
+                <DueDateBadge dueDate={dueDate} />
+              </div>
+            );
           case "createdAt":
             if (createdAt === undefined) return null;
             return (
               <p
                 key={field.id}
-                className={`text-xs ${tc.textFaint}`}
+                className={`text-xs ${tc.textFaint} mt-1`}
                 data-testid="card-created-at"
               >
                 Created {formatDate(createdAt)}
@@ -166,7 +172,7 @@ export function CardBody({
             return (
               <p
                 key={field.id}
-                className={`text-xs ${tc.textFaint}`}
+                className={`text-xs ${tc.textFaint} mt-1`}
                 data-testid="card-updated-at"
               >
                 Updated {formatDate(updatedAt)}
