@@ -47,7 +47,7 @@ function getCardTypeLookup(): Map<string, CardType> {
   return cardTypeLookup;
 }
 
-/** Reset the cached lookup (used by tests after localStorage changes). */
+/** Reset the cached lookup (used by tests after storage changes). */
 export function resetCardTypeLookup(): void {
   cardTypeLookup = null;
 }

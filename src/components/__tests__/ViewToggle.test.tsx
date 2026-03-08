@@ -100,7 +100,7 @@ describe("ViewToggle", () => {
     );
   });
 
-  it("persists preference to localStorage", async () => {
+  it("persists preference to IndexedDB", async () => {
     seedBoard([makeColumnWithCard()]);
     const user = userEvent.setup();
     renderApp();
@@ -122,7 +122,7 @@ describe("ViewToggle", () => {
     );
   });
 
-  it("persists calendar preference to localStorage", async () => {
+  it("persists calendar preference to IndexedDB", async () => {
     seedBoard([makeColumnWithDueDate()]);
     const user = userEvent.setup();
     renderApp();

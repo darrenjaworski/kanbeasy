@@ -1,5 +1,5 @@
 /**
- * localStorage keys used throughout the application.
+ * IndexedDB key-value storage keys used throughout the application.
  * Centralized to ensure consistency and make changes easier.
  */
 

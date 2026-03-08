@@ -153,7 +153,7 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
     expect(kvGet(STORAGE_KEYS.THEME_PREFERENCE, "")).toBe("system");
 
-    // Simulate reload: re-render with same localStorage
+    // Simulate reload: re-render with same persisted state
     renderApp();
 
     // Theme should still be Twilight, not reset to default dark-slate

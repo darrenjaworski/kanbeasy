@@ -63,7 +63,7 @@ describe("settings modal", () => {
     await user.click(darkSwatch);
     expect(html.classList.contains("dark")).toBe(true);
 
-    // Close and unmount, then re-render to ensure persistence via localStorage
+    // Close and unmount, then re-render to ensure persistence via IndexedDB
     await user.click(
       within(dlg).getByRole("button", { name: /close settings/i }),
     );
