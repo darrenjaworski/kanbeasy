@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Search now matches card descriptions in addition to titles
+
+### Tests
+
+- Add unit test for description search matching
+- Add e2e test for description search via card detail modal
+
 ## [1.34.3]
 
 ### Changed

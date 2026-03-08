@@ -227,6 +227,72 @@ describe("search cards", () => {
     expect(screen.getByText("1 match")).toBeInTheDocument();
   });
 
+  it("searches card descriptions in addition to titles", async () => {
+    const user = userEvent.setup();
+
+    // Seed board with cards that have descriptions
+    const now = Date.now();
+    localStorage.setItem(
+      STORAGE_KEYS.BOARD,
+      JSON.stringify({
+        columns: [
+          {
+            id: "col-1",
+            title: "To Do",
+            createdAt: now,
+            updatedAt: now,
+            cards: [
+              {
+                id: "card-1",
+                number: 1,
+                title: "Fix login bug",
+                description: "Users cannot authenticate with OAuth provider",
+                cardTypeId: null,
+                dueDate: null,
+                createdAt: now,
+                updatedAt: now,
+                columnHistory: [{ columnId: "col-1", enteredAt: now }],
+              },
+              {
+                id: "card-2",
+                number: 2,
+                title: "Update homepage",
+                description: "Change the hero banner image",
+                cardTypeId: null,
+                dueDate: null,
+                createdAt: now,
+                updatedAt: now,
+                columnHistory: [{ columnId: "col-1", enteredAt: now }],
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    renderApp();
+
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search cards/i,
+    });
+
+    // Search for text only in a description, not in any title
+    await user.type(searchInput, "OAuth");
+
+    // First card should match (description contains "OAuth")
+    expect(screen.getByTestId("card-0")).toHaveAttribute(
+      "data-search-highlight",
+      "true",
+    );
+
+    // Second card should not match
+    expect(screen.getByTestId("card-1")).not.toHaveAttribute(
+      "data-search-highlight",
+    );
+
+    expect(screen.getByText("1 match")).toBeInTheDocument();
+  });
+
   it("searches across multiple columns", async () => {
     const user = userEvent.setup();
     renderApp();

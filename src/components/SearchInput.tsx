@@ -12,7 +12,7 @@ export function SearchInput() {
       <input
         id="search-cards"
         type="search"
-        placeholder="Search cards..."
+        placeholder="Search titles & descriptions..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         disabled={!hasCards}

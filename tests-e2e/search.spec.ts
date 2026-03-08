@@ -89,6 +89,51 @@ test("does not show match count for short queries", async ({ page }) => {
   await expect(page.getByText(/\d+ match/)).not.toBeVisible();
 });
 
+test("matches cards by description content", async ({ page }) => {
+  // Create a column with two cards
+  await page.getByTestId("add-column-button").click();
+  const column = page.getByTestId("column-0");
+  await column.getByTestId("add-card-button-0").click();
+  await column.getByTestId("add-card-button-0").click();
+
+  // Give cards titles that won't match the search term
+  const card0 = column.getByTestId("card-content-0");
+  await card0.click();
+  await card0.fill("Fix login bug");
+  await card0.press("Enter");
+
+  const card1 = column.getByTestId("card-content-1");
+  await card1.click();
+  await card1.fill("Update homepage");
+  await card1.press("Enter");
+
+  // Open first card's detail modal and add a description
+  const cardEl = column.getByTestId("card-0");
+  await cardEl.hover();
+  await column.getByTestId("card-detail-0").click();
+  await page.getByTestId("card-detail-description-placeholder").click();
+  const descInput = page.getByTestId("card-detail-description");
+  await descInput.fill("Users cannot authenticate with OAuth provider");
+  // Close modal by clicking close button
+  await page.getByRole("button", { name: /close #\d+ card details/i }).click();
+
+  // Search for text only in the description
+  const searchInput = page.getByTestId("search-input");
+  await searchInput.fill("OAuth");
+  await expect(page.getByText("1 match")).toBeVisible();
+
+  // First card should match via description
+  await expect(column.getByTestId("card-0")).toHaveAttribute(
+    "data-search-highlight",
+    "true",
+  );
+
+  // Second card should not match
+  await expect(column.getByTestId("card-1")).not.toHaveAttribute(
+    "data-search-highlight",
+  );
+});
+
 test("clears results when search is emptied", async ({ page }) => {
   // Create a column with a card
   await page.getByTestId("add-column-button").click();

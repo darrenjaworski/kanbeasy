@@ -13,7 +13,7 @@ export function useCardSearch(columns: Column[]) {
     const allCards = columns.flatMap((col) => col.cards);
 
     const fuse = new Fuse(allCards, {
-      keys: ["title"],
+      keys: ["title", "description"],
       threshold: 0.4,
       ignoreLocation: true,
     });

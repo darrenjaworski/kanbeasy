@@ -112,7 +112,7 @@ Settings
   - labels/tags with custom colors, filterable from search
 - search enhancements
   - search by card type (filter cards by their assigned type)
-  - search card descriptions in addition to titles
+  - ✅ search card descriptions in addition to titles
   - ✅ search highlighting on calendar view — highlight matching cards similar to board and list views
 - due dates with reminders
   - ✅ date picker in card detail modal
