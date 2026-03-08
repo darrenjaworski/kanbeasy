@@ -264,7 +264,6 @@ export function ThemeProvider({
     kvRemove(STORAGE_KEYS.DEFAULT_CARD_TYPE);
     kvRemove(STORAGE_KEYS.COMPACT_HEADER);
     kvRemove(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
-    kvRemove(STORAGE_KEYS.SETTINGS_SECTIONS);
     kvRemove(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
     // Reset state to defaults

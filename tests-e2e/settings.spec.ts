@@ -44,9 +44,10 @@ test("has a setting to adjust the size of the cards", async ({ page }) => {
     "1",
   );
 
-  // Set Comfortable (rows = 2) — Appearance section stays open from above
+  // Set Comfortable (rows = 2)
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg2 = page.getByRole("dialog", { name: /settings/i });
+  await dlg2.getByRole("button", { name: /appearance/i }).click();
   await dlg2.getByRole("button", { name: /comfortable/i }).click();
   await dlg2.getByRole("button", { name: /close settings/i }).click();
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(
@@ -54,9 +55,10 @@ test("has a setting to adjust the size of the cards", async ({ page }) => {
     "2",
   );
 
-  // Set Spacious (rows = 3) — Appearance section stays open
+  // Set Spacious (rows = 3)
   await page.getByRole("button", { name: /open settings/i }).click();
   const dlg3 = page.getByRole("dialog", { name: /settings/i });
+  await dlg3.getByRole("button", { name: /appearance/i }).click();
   await dlg3.getByRole("button", { name: /spacious/i }).click();
   await dlg3.getByRole("button", { name: /close settings/i }).click();
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(

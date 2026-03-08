@@ -43,9 +43,6 @@ export const STORAGE_KEYS = {
   /** Compact header buttons (icon-only, no text labels) */
   COMPACT_HEADER: "kanbeasy:compactHeader",
 
-  /** Settings modal section collapse state (JSON object) */
-  SETTINGS_SECTIONS: "kanbeasy:settingsSections",
-
   /** Keyboard shortcuts enabled */
   KEYBOARD_SHORTCUTS_ENABLED: "kanbeasy:keyboardShortcutsEnabled",
 

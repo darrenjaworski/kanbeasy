@@ -1,7 +1,5 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { tc } from "../../theme/classNames";
-import { STORAGE_KEYS } from "../../constants/storage";
-import { kvGet, kvSet } from "../../utils/db";
 
 type Props = Readonly<{
   title: string;
@@ -13,40 +11,13 @@ function getSectionKey(title: string): string {
   return title.toLowerCase().replace(/\s+/g, "-");
 }
 
-function readSavedState(key: string, fallback: boolean): boolean {
-  const sections = kvGet<Record<string, boolean>>(
-    STORAGE_KEYS.SETTINGS_SECTIONS,
-    {},
-  );
-  return typeof sections[key] === "boolean" ? sections[key] : fallback;
-}
-
-function writeSavedState(key: string, value: boolean): void {
-  const sections = kvGet<Record<string, boolean>>(
-    STORAGE_KEYS.SETTINGS_SECTIONS,
-    {},
-  );
-  sections[key] = value;
-  kvSet(STORAGE_KEYS.SETTINGS_SECTIONS, sections);
-}
-
 export function SettingsSection({
   title,
   defaultOpen = false,
   children,
 }: Props) {
   const sectionKey = getSectionKey(title);
-  const [open, setOpen] = useState(() =>
-    readSavedState(sectionKey, defaultOpen),
-  );
-
-  const toggle = useCallback(() => {
-    setOpen((prev) => {
-      const next = !prev;
-      writeSavedState(sectionKey, next);
-      return next;
-    });
-  }, [sectionKey]);
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <div
@@ -55,7 +26,7 @@ export function SettingsSection({
     >
       <button
         type="button"
-        onClick={toggle}
+        onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
         className={`w-full flex items-center justify-between py-3 text-base font-bold tracking-tight ${tc.text} ${tc.focusRing} transition-colors`}
       >
