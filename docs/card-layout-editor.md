@@ -2,15 +2,35 @@
 
 ## Context
 
-Users currently have limited control over what appears on board cards — the layout is hardcoded with card badge, title, checklist progress, and due date badge in a fixed order. Card density (small/medium/large) only controls title row count. The card layout editor gives users full control over which fields appear on board cards, their order, and per-field display options, with a live WYSIWYG preview.
+Users currently have limited control over what appears on board cards — the layout is hardcoded with card badge, title, checklist progress, and due date badge in a fixed order. Card density (small/medium/large) only controls title row count. The card layout editor gives users full control over which fields appear on board cards, their order, and display options, with a live WYSIWYG preview.
 
-## Design
+The editor is accessed via a "Card Layout Editor" button in Settings > Appearance, which swaps the modal content to a dedicated editor view with a "Back to Settings" navigation.
 
-### UX: Stacked preview + field list
+## Phased Approach
 
-The editor lives in a new **"Card Layout"** settings section. It has two parts:
+The feature is delivered in three phases, each building on the last. Each phase is independently useful and deployable behind the `cardLayoutEditor` feature flag (`import.meta.env.DEV` during development, tree-shaken in production).
 
-**1. Live preview card (top)** — A realistic card rendered with sample data, using the actual shared components (CardTypeBadge, ChecklistProgress, DueDateBadge). Updates instantly as the user toggles fields and reorders. Matches the current theme.
+### Phase 1 — Vertical stacking with toggle & reorder
+
+Fields are full-width, stacked vertically. Users can toggle visibility and drag to reorder. This covers ~90% of the value.
+
+### Phase 2 — Row grouping
+
+Users can place two fields side-by-side on the same row with a configurable split (e.g., 50/50, 75/25). Handles cases like checklist progress + due date on one line.
+
+### Phase 3 — Grid layout
+
+Full quarter-width (25%) grid system. Fields can span 1–4 columns within a row. Drag-to-grid placement with snap-to-quarter and resize controls. Only justified once custom card properties exist and users have 10+ fields to arrange.
+
+---
+
+## Phase 1 — Vertical Stacking (current)
+
+### UX
+
+The editor is a sub-view within the settings modal, matching the same modal frame and styling. It consists of two parts:
+
+**1. Live preview card (top)** — Rendered at the default card width (`w-80` / 320px) using the shared `CardBody` component with sample data. Updates instantly as the user toggles fields and reorders. Matches the current theme.
 
 ```
 Preview
@@ -21,10 +41,10 @@ Preview
 └───────────────────────────────┘
 ```
 
-**2. Field list (below)** — Each row has:
+**2. Field list (below preview)** — Each row has:
 
 - Drag handle (left) — reorder via @dnd-kit sortable
-- Checkbox (middle) — toggle visibility
+- Checkbox — toggle visibility
 - Field name label
 - Optional dropdown (right) — field-specific options (e.g., title line count)
 
@@ -41,13 +61,19 @@ Fields
 [Reset to default]
 ```
 
+### Constraints
+
+- **Max 5 visible rows** — users cannot enable more than 5 fields simultaneously. The toggle is disabled (with a tooltip) when the limit is reached.
+- **Board view only** — list view is a table (columns are fixed), calendar view is ultra-compact. The layout editor controls `CardBody` rendering within `SortableCardItem`.
+- Does not affect the card detail modal (that shows all fields always).
+
 ### Displayable fields
 
 | Field ID      | Default | Options        | Notes                                          |
 | ------------- | ------- | -------------- | ---------------------------------------------- |
 | `badge`       | visible | —              | Card number + type badge (feat-42 / #42)       |
 | `title`       | visible | lines: 1, 2, 3 | Editable textarea, line count replaces density |
-| `description` | hidden  | lines: 1, 2, 3 | New: plain-text preview of description         |
+| `description` | hidden  | lines: 1, 2, 3 | Plain-text preview of description              |
 | `checklist`   | visible | —              | Progress bar, only renders if checklist exists |
 | `dueDate`     | visible | —              | Date badge with urgency color                  |
 | `createdAt`   | hidden  | —              | Timestamp, e.g., "Mar 7, 2026"                 |
@@ -57,17 +83,12 @@ Fields with conditional data (checklist, dueDate) still only render when data ex
 
 ### Card density integration
 
-The layout editor **replaces** the card density setting. Title `lines` option serves the same purpose. Migration: current density maps to title lines (small=1, medium=2, large=3). The card density localStorage key and context value remain for backward compat but become derived from the layout.
+The layout editor **replaces** the card density setting. The title field's `lines` option serves the same purpose. Migration: current density maps to title lines (small=1, medium=2, large=3). The `cardDensity` context value remains for backward compat but becomes derived from the layout's title lines.
 
-### Scope
-
-- **Board view only** — List view is a table (columns are fixed), calendar view is ultra-compact. The layout editor controls `SortableCardItem` rendering.
-- Does not affect the card detail modal (that shows all fields always).
-
-## Data Model
+### Data model
 
 ```typescript
-// src/constants/cardLayout.ts
+// src/constants/cardLayout.ts (already implemented)
 
 type CardFieldId =
   | "badge"
@@ -85,135 +106,203 @@ type CardFieldConfig = Readonly<{
 }>;
 
 type CardLayout = readonly CardFieldConfig[];
-
-const CARD_FIELD_LABELS: Record<CardFieldId, string> = {
-  badge: "Card Number",
-  title: "Title",
-  description: "Description",
-  checklist: "Checklist Progress",
-  dueDate: "Due Date",
-  createdAt: "Created Date",
-  updatedAt: "Updated Date",
-};
-
-const DEFAULT_CARD_LAYOUT: CardLayout = [
-  { id: "badge", visible: true },
-  { id: "title", visible: true, options: { lines: 1 } },
-  { id: "checklist", visible: true },
-  { id: "dueDate", visible: true },
-  { id: "description", visible: false, options: { lines: 2 } },
-  { id: "createdAt", visible: false },
-  { id: "updatedAt", visible: false },
-];
 ```
 
-## Implementation Plan
+### What's already built
 
-### 1. Constants & types (`src/constants/cardLayout.ts`, `src/theme/types.ts`)
+- ✅ `CardFieldId`, `CardFieldConfig`, `CardLayout` types and `DEFAULT_CARD_LAYOUT` constant
+- ✅ `CARD_FIELD_LABELS` mapping and `isValidCardLayout()` validator
+- ✅ `CARD_LAYOUT` storage key in IndexedDB
+- ✅ `cardLayout` / `setCardLayout` state in ThemeProvider with persistence and reset
+- ✅ `cardLayoutEditor` feature flag (dev-only, tree-shaken in prod)
+- ✅ Settings modal view switching (settings ↔ card layout editor)
+- ✅ "Card Layout Editor" button in Appearance section (gated by feature flag)
+- ✅ "Back to Settings" navigation in editor view
+- ✅ `CardBody` component shared between `SortableCardItem` and the editor preview
+- ✅ Preview card rendered with `CardBody` using sample data
+- ✅ Static field list showing all 7 fields with visibility checkboxes (read-only)
+- ✅ Settings section open/close persistence to IndexedDB
+- ✅ Unit tests for `isValidCardLayout` (11 tests)
+- ✅ Unit tests for `SettingsSection` persistence (5 tests)
+- ✅ Integration tests for card layout editor navigation and rendering (5 tests)
 
-- Define `CardFieldId`, `CardFieldConfig`, `CardLayout` types
-- Define `DEFAULT_CARD_LAYOUT`, `CARD_FIELD_LABELS`
-- Define `FIELDS_WITH_LINE_OPTIONS: Set<CardFieldId>` for fields that support `lines`
-- Define `isValidCardLayout()` validation function
-- Add `cardLayout` / `setCardLayout` to `ThemeContextValue`
+### Remaining Phase 1 work
 
-### 2. Storage key (`src/constants/storage.ts`)
+#### 1. Wire up field visibility toggles
 
-- Add `CARD_LAYOUT: "kanbeasy:cardLayout"` key
+- Clicking a checkbox toggles the field's `visible` flag in `cardLayout` state
+- Enforce max 5 visible fields — disable unchecked checkboxes when limit is reached
+- Preview updates instantly to reflect changes
 
-### 3. ThemeProvider (`src/theme/ThemeProvider.tsx`)
+#### 2. Wire up drag-to-reorder
 
-- Add `cardLayout` state initialized from localStorage (JSON parsed, validated, falls back to default)
-- Persist with `useEffect` -> `saveToStorage`
-- Derive `cardDensity` from layout's title field `lines` option (backward compat)
-- Add to `resetSettings`, context value, and dependency arrays
+- Add @dnd-kit sortable context to the field list
+- Drag handles on each field row for vertical reordering
+- Reorder updates the `cardLayout` array order
+- Preview reflects the new field order in real-time
 
-### 4. Card layout settings UI (`src/components/settings/CardLayoutSection.tsx`)
+#### 3. Add line count dropdown for title and description
 
-- **Preview**: Render a mock card using the actual shared components with sample data
-  - Sample: `{ number: 42, title: "My example task", cardTypeId: "feat", description: "A description with\n- [ ] Todo item\n- [x] Done item", dueDate: tomorrow, createdAt: weekAgo, updatedAt: now }`
-  - Iterate over `cardLayout` in order, render each visible field using the real components
-  - Wrap in a container styled like a real card (`tc.glass`, `tc.border`, rounded, etc.)
-- **Field list**: @dnd-kit sortable list
-  - Each item: drag handle + checkbox + label + optional lines dropdown
-  - Reorder updates `cardLayout` array order
-  - Toggle updates `visible` flag
-  - Lines dropdown updates `options.lines`
-- **Reset button**: Restores `DEFAULT_CARD_LAYOUT`
-- Uses existing `tc` class helpers for consistent styling
+- Fields with `FIELDS_WITH_LINE_OPTIONS` (title, description) show a dropdown
+- Options: 1, 2, or 3 lines
+- Changing updates `field.options.lines`
+- Preview card and board cards reflect the new line count
 
-### 5. Update SortableCardItem (`src/components/board/SortableCardItem.tsx`)
+#### 4. Add reset button
 
-- Accept `cardLayout` prop (from `useTheme()` in parent)
-- Replace hardcoded field rendering with a loop over `cardLayout`:
-  ```tsx
-  {cardLayout.map((field) => {
-    if (!field.visible) return null;
-    switch (field.id) {
-      case "badge": return <CardTypeBadge ... />;
-      case "title": return <textarea rows={field.options?.lines ?? 1} ... />;
-      case "description": return card.description ? <p className="line-clamp-{lines}">...</p> : null;
-      case "checklist": return <ChecklistProgress ... />;
-      case "dueDate": return <DueDateBadge ... />;
-      case "createdAt": return <span>...</span>;
-      case "updatedAt": return <span>...</span>;
-    }
-  })}
-  ```
+- "Reset to default" button below the field list
+- Restores `DEFAULT_CARD_LAYOUT`
+
+#### 5. Update CardBody to render from layout config
+
+- `CardBody` accepts `cardLayout` and renders fields in the configured order
+- Only visible fields are rendered
+- Title uses `lines` from layout options instead of density
+- New field renderers for `description`, `createdAt`, `updatedAt`
 - CardControls remain fixed (always top-right, not part of layout)
-- Title remains the only editable-inline field
+- Title remains the only editable-inline field on the board
 
-### 6. SettingsModal integration (`src/components/settings/SettingsModal.tsx`)
+#### 6. Connect board cards to layout config
 
-- Add new `<SettingsSection title="Card Layout">` with `<CardLayoutSection />`
-- Remove card density from Appearance section (it's now part of layout editor)
-- Reorder sections: Appearance -> Card Layout -> Card Types -> Preferences -> Data
+- `SortableCardItem` passes `cardLayout` from `useTheme()` to `CardBody`
+- Board cards render according to the user's configured layout
+- Density setting is derived from layout's title lines for backward compat
 
-### 7. Export/import (`src/utils/exportBoard.ts`, `src/utils/importBoard.ts`)
+#### 7. Export/import support
 
-- Bump export version to 10
+- Bump export version
 - Add `cardLayout` to export settings (JSON stringified)
-- Import: parse and validate `cardLayout` from v10+ exports, fall back to default for older versions
-- Validate each field config has a known `id`, boolean `visible`, and valid `options`
-
-### 8. Backward compat
-
-- Existing `cardDensity` setting derived from layout's title lines
-- `setCardDensity` still works (updates layout's title lines)
+- Import: parse and validate `cardLayout`, fall back to default for older versions
 - Old exports without `cardLayout` get the default layout with title lines mapped from their `cardDensity`
 
-## Files to modify
+#### 8. Remove card density from Appearance section
 
-| File                                            | Change                                             |
-| ----------------------------------------------- | -------------------------------------------------- |
-| `src/constants/cardLayout.ts`                   | **New** — types, defaults, labels                  |
-| `src/constants/storage.ts`                      | Add `CARD_LAYOUT` key                              |
-| `src/theme/types.ts`                            | Add `cardLayout` / `setCardLayout` to context type |
-| `src/theme/ThemeProvider.tsx`                   | Add state, persistence, derive density             |
-| `src/components/settings/CardLayoutSection.tsx` | **New** — preview + field editor                   |
-| `src/components/settings/SettingsModal.tsx`     | Add Card Layout section, adjust density            |
-| `src/components/board/SortableCardItem.tsx`     | Render fields from layout config                   |
-| `src/components/board/CardList.tsx`             | Pass `cardLayout` through to SortableCardItem      |
-| `src/components/board/Column.tsx`               | Pass `cardLayout` through to CardList              |
-| `src/components/board/Board.tsx`                | Read `cardLayout` from theme context               |
-| `src/utils/exportBoard.ts`                      | Bump version, add cardLayout                       |
-| `src/utils/importBoard.ts`                      | Parse/validate cardLayout                          |
-| `src/components/settings/DataSection.tsx`       | Restore cardLayout on import                       |
-| `src/components/settings/ThemeSection.tsx`      | Remove card density controls                       |
-| Tests for all of the above                      |
+- Card density controls in ThemeSection are superseded by the layout editor's title line count
+- Remove the density fieldset from ThemeSection
+- Keep `cardDensity` context value as a derived property for backward compat
 
-## Verification
+#### 9. Tests
+
+- Unit tests for field toggle logic (including max 5 enforcement)
+- Unit tests for reorder logic
+- Unit tests for line count dropdown changes
+- Integration test for reset to default
+- E2e test: toggle fields and verify board cards update
+- E2e test: reorder fields and verify board cards reflect new order
+- Visual regression snapshot updates if needed
+
+### Files to modify (Phase 1)
+
+| File                                            | Change                                               |
+| ----------------------------------------------- | ---------------------------------------------------- |
+| `src/constants/cardLayout.ts`                   | Re-export `FIELDS_WITH_LINE_OPTIONS`                 |
+| `src/components/board/CardBody.tsx`             | Render from `cardLayout` config, add new field types |
+| `src/components/board/SortableCardItem.tsx`     | Pass `cardLayout` to `CardBody`                      |
+| `src/components/settings/CardLayoutSection.tsx` | Wire up toggles, reorder, dropdowns, reset           |
+| `src/components/settings/ThemeSection.tsx`      | Remove card density controls                         |
+| `src/theme/ThemeProvider.tsx`                   | Derive `cardDensity` from layout                     |
+| `src/utils/exportBoard.ts`                      | Bump version, add cardLayout                         |
+| `src/utils/importBoard.ts`                      | Parse/validate cardLayout                            |
+| `src/components/settings/DataSection.tsx`       | Restore cardLayout on import                         |
+| Tests for all of the above                      |                                                      |
+
+---
+
+## Phase 2 — Row Grouping
+
+### Concept
+
+Users can optionally pair two adjacent fields on the same row with a configurable width split. This is a lightweight extension of the vertical stacking model — the data model adds a `group` flag or `row` index to indicate which fields share a row.
+
+### Data model extension
+
+```typescript
+type CardFieldConfig = Readonly<{
+  id: CardFieldId;
+  visible: boolean;
+  options?: Readonly<{ lines?: number }>;
+  /** Row index — fields sharing the same row render side-by-side. */
+  row?: number;
+  /** Width as a fraction of the card (0.25, 0.5, 0.75, 1.0). Default: 1.0 */
+  width?: number;
+}>;
+```
+
+### UX additions
+
+- A "group" affordance in the field list (e.g., a link icon between adjacent fields)
+- Clicking it merges two fields onto the same row
+- A width control (e.g., slider or preset buttons: 50/50, 75/25, 25/75)
+- The preview card renders grouped fields using flexbox
+- Max 2 fields per row (keeps it simple, avoids cramped layouts on 320px cards)
+
+### Constraints
+
+- Min field width: 50% (160px at 320px card width) — ensures content remains readable
+- Only adjacent fields in the list can be grouped
+- Ungrouping splits them back to separate full-width rows
+
+---
+
+## Phase 3 — Grid Layout
+
+### Concept
+
+A full grid-based layout where the card is divided into rows × 4 columns (each 25% / ~80px). Fields can span 1–4 columns and be placed at specific grid positions. This becomes valuable once custom card properties add many user-defined fields.
+
+### Data model extension
+
+```typescript
+type CardFieldConfig = Readonly<{
+  id: CardFieldId;
+  visible: boolean;
+  options?: Readonly<{ lines?: number }>;
+  /** Grid row (1-based). */
+  gridRow: number;
+  /** Grid column start (1-4). */
+  gridCol: number;
+  /** Number of columns to span (1-4). */
+  gridSpan: number;
+}>;
+```
+
+### UX additions
+
+- The field list is replaced by a visual grid editor
+- The card preview shows a grid overlay with snap zones
+- Fields are dragged from a palette onto grid cells
+- Resize handles on fields to adjust column span
+- Row management: add/remove rows (max 5)
+- Grid cells show drop zone highlights during drag
+
+### Constraints
+
+- Max 5 rows
+- Max 4 columns (quarter-width blocks)
+- Fields cannot overlap — placing a field pushes others aside or prevents the drop
+- Card width in the editor matches the default column width (`w-80` / 320px)
+- Min field span: 1 column (~80px) for compact content (badges, icons), 2 columns (~160px) for text content (title, description)
+
+### Prerequisites
+
+- Custom card properties feature must be implemented first (otherwise only 7 fields, not enough to justify a grid)
+- Phase 2 row grouping provides intermediate value while the grid editor is developed
+
+---
+
+## Verification (all phases)
 
 1. `npm run type:check` — no type errors
 2. `npm run static-checks` — format, lint, knip, build all pass
 3. `npm run test:run` — all unit tests pass (including new ones)
 4. Manual testing in dev server:
-   - Open Settings -> Card Layout
-   - Verify preview card renders correctly
-   - Toggle fields on/off -> preview and board cards update
-   - Drag to reorder fields -> preview and board cards reflect new order
-   - Change title lines -> cards resize
+   - Open Settings > Appearance > Card Layout Editor
+   - Verify preview card renders correctly at default card width
+   - Toggle fields on/off → preview and board cards update
+   - Drag to reorder fields → preview and board cards reflect new order
+   - Change title lines → cards resize
    - Export/import preserves layout
    - Reset to default works
+   - Max 5 visible fields enforced
 5. `npm run e2e` — all e2e tests pass
 6. `npm run e2e:visual` — check for visual regression (may need snapshot updates)
