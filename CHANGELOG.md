@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Absorb ModalHeader and content wrapper into Modal component via `icon`/`title` props, simplifying all modal consumers with consistent padding
+
 ## [1.33.0]
 
 ### Features

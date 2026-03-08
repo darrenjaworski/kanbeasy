@@ -4,6 +4,7 @@ import { useBoard } from "../../board/useBoard";
 import { tc } from "../../theme/classNames";
 import type { CardType } from "../../constants/cardTypes";
 import { CARD_TYPE_PRESETS, CARD_TYPE_COLORS } from "../../constants/cardTypes";
+import { CloseIcon } from "../icons";
 
 export function CardTypeSection() {
   const {
@@ -257,11 +258,11 @@ export function CardTypeSection() {
                   <button
                     type="button"
                     onClick={() => handleRemoveType(index)}
-                    className={`${tc.iconButton} size-6 rounded-full text-xs shrink-0`}
+                    className={`${tc.iconButton} h-6 w-6 rounded-full`}
                     aria-label={`Remove ${type.label} type`}
                     data-testid={`card-type-remove-${index}`}
                   >
-                    &times;
+                    <CloseIcon className="size-4" />
                   </button>
                 </div>
 

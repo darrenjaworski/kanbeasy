@@ -3,7 +3,6 @@ import type { Card, CardUpdates, Column } from "../../board/types";
 import type { CardType } from "../../constants/cardTypes";
 import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { Modal } from "../shared/Modal";
-import { ModalHeader } from "../shared/ModalHeader";
 import { DescriptionField } from "./DescriptionField";
 import { ArchiveIcon, MoreIcon } from "../icons";
 import { ChecklistProgress } from "../shared/ChecklistProgress";
@@ -64,19 +63,11 @@ export function CardDetailModal({
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="card-detail-title"
+      icon={MoreIcon}
+      title={`${card.cardTypeId ? `${card.cardTypeId}-${card.number}` : `#${card.number}`} Card Details`}
       className="max-w-lg"
     >
-      <div className="p-4 pb-2 shrink-0">
-        <ModalHeader
-          icon={MoreIcon}
-          title={`${card.cardTypeId ? `${card.cardTypeId}-${card.number}` : `#${card.number}`} Card Details`}
-          titleId="card-detail-title"
-          onClose={onClose}
-        />
-      </div>
-
-      <div className="p-4 pt-3 space-y-4 overflow-y-auto">
+      <div className="space-y-4">
         {/* Column selector */}
         <div>
           <label
