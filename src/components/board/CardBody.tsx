@@ -64,7 +64,7 @@ export function CardBody({
           defaultValue={title || "New card"}
           readOnly={readOnly}
           tabIndex={readOnly ? -1 : undefined}
-          className={`${tc.input} mt-1 w-full rounded-xs ${
+          className={`${tc.input} mt-1 block w-full rounded-xs ${
             readOnly
               ? "resize-none cursor-default"
               : "resize-none hover:resize-y focus:resize-y"
@@ -145,7 +145,7 @@ export function CardBody({
                 defaultValue={title || "New card"}
                 readOnly={readOnly}
                 tabIndex={readOnly ? -1 : undefined}
-                className={`${tc.input} ${mt} w-full rounded-xs ${
+                className={`${tc.input} ${mt} block w-full rounded-xs ${
                   readOnly
                     ? "resize-none cursor-default"
                     : "resize-none hover:resize-y focus:resize-y"
