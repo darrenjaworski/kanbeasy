@@ -1,5 +1,6 @@
 import type { ThemeId, ThemeMode } from "./themes";
 import type { CardType } from "../constants/cardTypes";
+import type { CardLayout } from "../constants/cardLayout";
 
 export type CardDensity = "small" | "medium" | "large";
 
@@ -40,5 +41,7 @@ export type ThemeContextValue = Readonly<{
   setCompactHeader: (enabled: boolean) => void;
   keyboardShortcutsEnabled: boolean;
   setKeyboardShortcutsEnabled: (enabled: boolean) => void;
+  cardLayout: CardLayout;
+  setCardLayout: (layout: CardLayout) => void;
   resetSettings: () => void;
 }>;

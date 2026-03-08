@@ -10,4 +10,6 @@ export const featureFlags = {
   analytics: true,
   /** Undo/redo for board actions via Cmd+Z / Cmd+Shift+Z and floating controls. */
   undoRedo: true,
+  /** Card layout editor — customize which fields appear on board cards and their order. */
+  cardLayoutEditor: import.meta.env.DEV,
 } as const;
