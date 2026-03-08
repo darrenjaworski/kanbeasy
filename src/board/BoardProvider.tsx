@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState } from "./types";
-import { getFromStorage, saveToStorage } from "../utils/storage";
+import { kvGet, kvSet, getBoard, saveBoard } from "../utils/db";
 import { STORAGE_KEYS } from "../constants/storage";
 import { isArchivedCard, isColumn } from "./validation";
 import { migrateColumnsWithNumbering } from "./migration";
@@ -96,21 +96,12 @@ function createInitialBoard(): LoadResult {
 }
 
 function loadState(): LoadResult {
-  // When no board data has ever been saved, seed with example columns.
-  // After "Clear board data", the key exists with { columns: [] }, so we won't re-seed.
-  const raw =
-    typeof window !== "undefined"
-      ? window.localStorage.getItem(STORAGE_KEYS.BOARD)
-      : null;
+  // Read from db cache (populated by AppLoader's openDatabase() call)
+  const stored = getBoard();
 
-  if (raw === null) {
+  if (stored === null) {
     return createInitialBoard();
   }
-
-  const stored = getFromStorage<{ columns?: unknown; archive?: unknown }>(
-    STORAGE_KEYS.BOARD,
-    {},
-  );
 
   const cols = Array.isArray(stored.columns)
     ? (stored.columns as unknown[])
@@ -142,19 +133,12 @@ function loadState(): LoadResult {
   );
 
   // Reconcile with persisted counter (take the max)
-  const persistedCounter = getFromStorage<number>(
-    STORAGE_KEYS.NEXT_CARD_NUMBER,
-    0,
-  );
+  const persistedCounter = kvGet<number>(STORAGE_KEYS.NEXT_CARD_NUMBER, 0);
 
   return {
     state: { columns, archive },
     nextCardNumber: Math.max(nextCardNumber, persistedCounter),
   };
-}
-
-function saveState(state: BoardState) {
-  saveToStorage(STORAGE_KEYS.BOARD, state);
 }
 
 export function BoardProvider({
@@ -175,11 +159,11 @@ export function BoardProvider({
 
   const saveCounter = useCallback((n: number) => {
     nextCardNumberRef.current = n;
-    saveToStorage(STORAGE_KEYS.NEXT_CARD_NUMBER, n);
+    kvSet(STORAGE_KEYS.NEXT_CARD_NUMBER, n);
   }, []);
 
   useEffect(() => {
-    saveState(state);
+    saveBoard(state);
   }, [state]);
 
   const mutations = useBoardMutations(setState, nextCardNumberRef, saveCounter);

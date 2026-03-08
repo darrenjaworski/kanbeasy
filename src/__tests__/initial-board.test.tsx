@@ -1,13 +1,9 @@
 import { screen, within } from "@testing-library/react";
-import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 
 describe("initial board seeding", () => {
-  beforeEach(() => {
-    localStorage.removeItem(STORAGE_KEYS.BOARD);
-  });
-
   it("renders seeded columns with example cards on first load", () => {
     renderApp();
 
@@ -36,7 +32,7 @@ describe("initial board seeding", () => {
   });
 
   it("does not re-seed after board is cleared", () => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
 
     renderApp();
 

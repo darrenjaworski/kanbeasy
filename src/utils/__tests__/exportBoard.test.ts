@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { STORAGE_KEYS } from "../../constants/storage";
 import { exportBoard } from "../exportBoard";
+import { seedBoard, seedKv } from "../db";
 
 describe("exportBoard", () => {
   let clickSpy: ReturnType<typeof vi.fn>;
@@ -13,7 +14,6 @@ describe("exportBoard", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    localStorage.clear();
     capturedJson = "";
 
     clickSpy = vi.fn();
@@ -47,12 +47,20 @@ describe("exportBoard", () => {
   });
 
   it("exports JSON with correct top-level structure", () => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [{ id: "1", title: "Todo", cards: [] }] }),
-    );
-    localStorage.setItem(STORAGE_KEYS.THEME, "midnight");
-    localStorage.setItem(STORAGE_KEYS.CARD_DENSITY, "medium");
+    seedBoard({
+      columns: [
+        {
+          id: "1",
+          title: "Todo",
+          cards: [],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      ],
+      archive: [],
+    });
+    seedKv(STORAGE_KEYS.THEME, "midnight");
+    seedKv(STORAGE_KEYS.CARD_DENSITY, "medium");
 
     exportBoard();
 
@@ -66,19 +74,30 @@ describe("exportBoard", () => {
   });
 
   it("includes version, exportedAt, board, and settings in export data", () => {
-    const boardData = { columns: [{ id: "1", title: "Todo", cards: [] }] };
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify(boardData));
-    localStorage.setItem(STORAGE_KEYS.THEME, "midnight");
-    localStorage.setItem(STORAGE_KEYS.THEME_PREFERENCE, "dark");
-    localStorage.setItem(STORAGE_KEYS.CARD_DENSITY, "medium");
-    localStorage.setItem(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, "true");
-    localStorage.setItem(STORAGE_KEYS.DELETE_COLUMN_WARNING, "true");
+    const boardData = {
+      columns: [
+        {
+          id: "1",
+          title: "Todo",
+          cards: [],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      ],
+      archive: [],
+    };
+    seedBoard(boardData);
+    seedKv(STORAGE_KEYS.THEME, "midnight");
+    seedKv(STORAGE_KEYS.THEME_PREFERENCE, "dark");
+    seedKv(STORAGE_KEYS.CARD_DENSITY, "medium");
+    seedKv(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, "true");
+    seedKv(STORAGE_KEYS.DELETE_COLUMN_WARNING, "true");
 
     exportBoard();
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(9);
+    expect(data.version).toBe(10);
     expect(data.exportedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(data.board).toEqual(boardData);
     expect(data.settings).toEqual({
@@ -109,14 +128,14 @@ describe("exportBoard", () => {
 
     const data = JSON.parse(capturedJson);
 
-    expect(data.version).toBe(9);
+    expect(data.version).toBe(10);
     expect(data.board).toBeNull();
     expect(data.settings.theme).toBe("");
     expect(data.settings.cardDensity).toBe("");
   });
 
   it("includes defaultCardType in exported settings", () => {
-    localStorage.setItem(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
+    seedKv(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
 
     exportBoard();
 

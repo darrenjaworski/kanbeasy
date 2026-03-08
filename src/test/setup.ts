@@ -1,5 +1,7 @@
 import "@testing-library/jest-dom";
+import "fake-indexeddb/auto";
 import { beforeEach } from "vitest";
+import { resetDb } from "../utils/db";
 
 // Minimal ResizeObserver polyfill for jsdom tests
 class RO {
@@ -49,7 +51,8 @@ if (typeof window.matchMedia !== "function") {
     }) as MediaQueryList;
 }
 
-// Clear localStorage before each test to avoid state leakage
+// Clear db cache and localStorage before each test to avoid state leakage
 beforeEach(() => {
+  resetDb();
   localStorage.clear();
 });

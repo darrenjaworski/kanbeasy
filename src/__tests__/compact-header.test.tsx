@@ -3,41 +3,39 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard as seedBoardDb, seedKv, kvGet } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 
 function seedBoard() {
   const now = Date.now();
-  localStorage.setItem(
-    STORAGE_KEYS.BOARD,
-    JSON.stringify({
-      columns: [
-        {
-          id: "col-1",
-          title: "Todo",
-          createdAt: now,
-          updatedAt: now,
-          cards: [
-            {
-              id: "card-1",
-              number: 1,
-              title: "Task",
-              description: "",
-              cardTypeId: null,
-              dueDate: null,
-              createdAt: now,
-              updatedAt: now,
-              columnHistory: [{ columnId: "col-1", enteredAt: now }],
-            },
-          ],
-        },
-      ],
-    }),
-  );
+  seedBoardDb({
+    columns: [
+      {
+        id: "col-1",
+        title: "Todo",
+        createdAt: now,
+        updatedAt: now,
+        cards: [
+          {
+            id: "card-1",
+            number: 1,
+            title: "Task",
+            description: "",
+            cardTypeId: null,
+            dueDate: null,
+            createdAt: now,
+            updatedAt: now,
+            columnHistory: [{ columnId: "col-1", enteredAt: now }],
+          },
+        ],
+      },
+    ],
+    archive: [],
+  });
 }
 
 describe("Compact header", () => {
   beforeEach(() => {
-    localStorage.clear();
     seedBoard();
   });
 
@@ -49,7 +47,7 @@ describe("Compact header", () => {
   });
 
   it("hides text labels when compact header is enabled", () => {
-    localStorage.setItem(STORAGE_KEYS.COMPACT_HEADER, "true");
+    seedKv(STORAGE_KEYS.COMPACT_HEADER, "true");
     renderApp();
     expect(screen.queryByText("Board")).not.toBeInTheDocument();
     expect(screen.queryByText("List")).not.toBeInTheDocument();
@@ -59,7 +57,7 @@ describe("Compact header", () => {
   });
 
   it("still shows icon buttons with aria labels when compact", () => {
-    localStorage.setItem(STORAGE_KEYS.COMPACT_HEADER, "true");
+    seedKv(STORAGE_KEYS.COMPACT_HEADER, "true");
     renderApp();
     expect(
       screen.getByRole("radio", { name: /board view/i }),
@@ -85,7 +83,7 @@ describe("Compact header", () => {
     const toggle = screen.getByRole("switch", { name: /compact header/i });
     await user.click(toggle);
 
-    expect(localStorage.getItem(STORAGE_KEYS.COMPACT_HEADER)).toBe("true");
+    expect(kvGet(STORAGE_KEYS.COMPACT_HEADER, "false")).toBe("true");
   });
 
   it("defaults to false with labels visible", () => {

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Migrate persistence layer from localStorage to IndexedDB with sync in-memory cache
+- Add AppLoader wrapper for async database initialization on startup
+- Bump export format version to 10 (import supports all prior versions 1–10)
+
+### Added
+
+- `src/utils/db.ts` — IndexedDB-backed storage module with sync cache, write coalescing, and automatic localStorage migration
+- `src/components/AppLoader.tsx` — async init gate with 100ms skeleton threshold
+- `fake-indexeddb` dev dependency for test environment
+
+### Tests
+
+- Migrate all 831 unit tests from localStorage to db cache helpers (`seedBoard`, `seedKv`, `kvGet`, `getBoard`)
+
 ## [1.35.0]
 
 ### Features

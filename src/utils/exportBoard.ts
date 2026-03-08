@@ -1,7 +1,8 @@
 import { STORAGE_KEYS } from "../constants/storage";
+import { kvGet, getBoard } from "./db";
 
 interface ExportData {
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
   exportedAt: string;
   board: unknown;
   settings: {
@@ -19,37 +20,36 @@ interface ExportData {
   };
 }
 
-function readRaw(key: string): string {
-  return window.localStorage.getItem(key) ?? "";
+function readKv(key: string): string {
+  const val = kvGet<unknown>(key, "");
+  if (typeof val === "string") return val;
+  // For values stored as JSON objects (e.g. cardTypes), re-stringify
+  try {
+    return JSON.stringify(val);
+  } catch {
+    return "";
+  }
 }
 
 function buildExportData(): ExportData {
-  const boardRaw = window.localStorage.getItem(STORAGE_KEYS.BOARD);
-  let board: unknown = null;
-  if (boardRaw) {
-    try {
-      board = JSON.parse(boardRaw);
-    } catch {
-      board = boardRaw;
-    }
-  }
+  const board = getBoard();
 
   return {
-    version: 9,
+    version: 10,
     exportedAt: new Date().toISOString(),
     board,
     settings: {
-      theme: readRaw(STORAGE_KEYS.THEME),
-      themePreference: readRaw(STORAGE_KEYS.THEME_PREFERENCE),
-      cardDensity: readRaw(STORAGE_KEYS.CARD_DENSITY),
-      columnResizingEnabled: readRaw(STORAGE_KEYS.COLUMN_RESIZING_ENABLED),
-      deleteColumnWarning: readRaw(STORAGE_KEYS.DELETE_COLUMN_WARNING),
-      owlModeEnabled: readRaw(STORAGE_KEYS.OWL_MODE_ENABLED),
-      viewMode: readRaw(STORAGE_KEYS.VIEW_MODE),
-      cardTypePreset: readRaw(STORAGE_KEYS.CARD_TYPE_PRESET),
-      cardTypes: readRaw(STORAGE_KEYS.CARD_TYPES),
-      defaultCardType: readRaw(STORAGE_KEYS.DEFAULT_CARD_TYPE),
-      compactHeader: readRaw(STORAGE_KEYS.COMPACT_HEADER),
+      theme: readKv(STORAGE_KEYS.THEME),
+      themePreference: readKv(STORAGE_KEYS.THEME_PREFERENCE),
+      cardDensity: readKv(STORAGE_KEYS.CARD_DENSITY),
+      columnResizingEnabled: readKv(STORAGE_KEYS.COLUMN_RESIZING_ENABLED),
+      deleteColumnWarning: readKv(STORAGE_KEYS.DELETE_COLUMN_WARNING),
+      owlModeEnabled: readKv(STORAGE_KEYS.OWL_MODE_ENABLED),
+      viewMode: readKv(STORAGE_KEYS.VIEW_MODE),
+      cardTypePreset: readKv(STORAGE_KEYS.CARD_TYPE_PRESET),
+      cardTypes: readKv(STORAGE_KEYS.CARD_TYPES),
+      defaultCardType: readKv(STORAGE_KEYS.DEFAULT_CARD_TYPE),
+      compactHeader: readKv(STORAGE_KEYS.COMPACT_HEADER),
     },
   };
 }

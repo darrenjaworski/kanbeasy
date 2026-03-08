@@ -3,33 +3,35 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard, seedKv } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 
 describe("view toggle integration", () => {
   beforeEach(() => {
-    localStorage.clear();
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          {
-            id: "col-1",
-            title: "To Do",
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            cards: [
-              {
-                id: "card-1",
-                title: "My Task",
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-                columnHistory: [{ columnId: "col-1", enteredAt: Date.now() }],
-              },
-            ],
-          },
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        {
+          id: "col-1",
+          title: "To Do",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          cards: [
+            {
+              id: "card-1",
+              number: 1,
+              title: "My Task",
+              description: "",
+              cardTypeId: null,
+              dueDate: null,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              columnHistory: [{ columnId: "col-1", enteredAt: Date.now() }],
+            },
+          ],
+        },
+      ],
+      archive: [],
+    });
   });
 
   it("renders board view by default", () => {
@@ -63,7 +65,7 @@ describe("view toggle integration", () => {
   });
 
   it("persists list preference across renders", () => {
-    localStorage.setItem(STORAGE_KEYS.VIEW_MODE, "list");
+    seedKv(STORAGE_KEYS.VIEW_MODE, "list");
     renderApp();
     expect(screen.getByRole("table")).toBeInTheDocument();
   });

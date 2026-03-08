@@ -1,6 +1,6 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
@@ -12,7 +12,7 @@ import { exportBoard } from "../utils/exportBoard";
 
 describe("export board integration", () => {
   beforeEach(() => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
     vi.mocked(exportBoard).mockClear();
   });
 

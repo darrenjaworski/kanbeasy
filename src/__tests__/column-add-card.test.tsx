@@ -1,12 +1,12 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("column add card", () => {
   beforeEach(() => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
   });
 
   it("adds a card to a column using the column's Add card button", async () => {

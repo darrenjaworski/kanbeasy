@@ -1,6 +1,6 @@
 import { screen, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 
@@ -30,7 +30,7 @@ function makeExportJson(overrides: Record<string, unknown> = {}): string {
 
 describe("import board integration", () => {
   beforeEach(() => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
     vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 

@@ -3,19 +3,23 @@ import { Modal } from "./shared/Modal";
 import { BoardViewIcon } from "./icons";
 import { tc } from "../theme/classNames";
 import { STORAGE_KEYS } from "../constants/storage";
+import { kvGet, kvSet } from "../utils/db";
 
 export function WelcomeModal() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem(STORAGE_KEYS.HAS_SEEN_WELCOME);
+    const hasSeenWelcome = kvGet<string | null>(
+      STORAGE_KEYS.HAS_SEEN_WELCOME,
+      null,
+    );
     if (!hasSeenWelcome) {
       setIsVisible(true);
     }
   }, []);
 
   const handleClose = () => {
-    localStorage.setItem(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
+    kvSet(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
     setIsVisible(false);
   };
 

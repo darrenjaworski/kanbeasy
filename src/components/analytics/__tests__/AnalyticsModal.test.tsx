@@ -1,10 +1,10 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
-import { STORAGE_KEYS } from "../../../constants/storage";
 import { renderApp } from "../../../test/renderApp";
 import { makeCard, makeColumn, resetCardNumber } from "../../../test/builders";
 import type { ArchivedCard } from "../../../board/types";
+import { seedBoard } from "../../../utils/db";
 
 async function openAnalytics(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: /open analytics/i }));
@@ -13,15 +13,14 @@ async function openAnalytics(user: ReturnType<typeof userEvent.setup>) {
 
 describe("AnalyticsModal", () => {
   beforeEach(() => {
-    localStorage.clear();
     resetCardNumber();
   });
 
   it("disables analytics button when there are no cards", () => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns: [makeColumn({ id: "c1", title: "Todo" })] }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive: [],
+    });
     renderApp();
 
     expect(
@@ -30,24 +29,22 @@ describe("AnalyticsModal", () => {
   });
 
   it("opens and displays metric cards for a board with one card", async () => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          makeColumn({
-            id: "c1",
-            title: "Todo",
-            cards: [
-              makeCard({
-                id: "x",
-                title: "Placeholder",
-                columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
-              }),
-            ],
-          }),
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        makeColumn({
+          id: "c1",
+          title: "Todo",
+          cards: [
+            makeCard({
+              id: "x",
+              title: "Placeholder",
+              columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
+            }),
+          ],
+        }),
+      ],
+      archive: [],
+    });
 
     const user = userEvent.setup();
     renderApp();
@@ -91,7 +88,7 @@ describe("AnalyticsModal", () => {
         ],
       }),
     ];
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+    seedBoard({ columns, archive: [] });
 
     const user = userEvent.setup();
     renderApp();
@@ -134,7 +131,7 @@ describe("AnalyticsModal", () => {
       }),
       makeColumn({ id: "c3", title: "Done" }),
     ];
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+    seedBoard({ columns, archive: [] });
 
     const user = userEvent.setup();
     renderApp();
@@ -163,7 +160,7 @@ describe("AnalyticsModal", () => {
         ],
       }),
     ];
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+    seedBoard({ columns, archive: [] });
 
     const user = userEvent.setup();
     renderApp();
@@ -195,7 +192,7 @@ describe("AnalyticsModal", () => {
         ],
       }),
     ];
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+    seedBoard({ columns, archive: [] });
 
     const user = userEvent.setup();
     renderApp();
@@ -232,7 +229,7 @@ describe("AnalyticsModal", () => {
         ],
       }),
     ];
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+    seedBoard({ columns, archive: [] });
 
     const user = userEvent.setup();
     renderApp();
@@ -245,24 +242,22 @@ describe("AnalyticsModal", () => {
   });
 
   it("closes when close button is clicked", async () => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          makeColumn({
-            id: "c1",
-            title: "Todo",
-            cards: [
-              makeCard({
-                id: "x",
-                title: "Placeholder",
-                columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
-              }),
-            ],
-          }),
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        makeColumn({
+          id: "c1",
+          title: "Todo",
+          cards: [
+            makeCard({
+              id: "x",
+              title: "Placeholder",
+              columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
+            }),
+          ],
+        }),
+      ],
+      archive: [],
+    });
 
     const user = userEvent.setup();
     renderApp();
@@ -311,10 +306,7 @@ describe("AnalyticsModal", () => {
       },
     ];
 
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns, archive }),
-    );
+    seedBoard({ columns, archive });
 
     const user = userEvent.setup();
     renderApp();
@@ -365,10 +357,7 @@ describe("AnalyticsModal", () => {
       },
     ];
 
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns, archive }),
-    );
+    seedBoard({ columns, archive });
 
     const user = userEvent.setup();
     renderApp();
@@ -420,10 +409,7 @@ describe("AnalyticsModal", () => {
       },
     ];
 
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({ columns, archive }),
-    );
+    seedBoard({ columns, archive });
 
     const user = userEvent.setup();
     renderApp();
@@ -436,24 +422,22 @@ describe("AnalyticsModal", () => {
   });
 
   it("shows updated disclaimer text about archived cards", async () => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          makeColumn({
-            id: "c1",
-            title: "Todo",
-            cards: [
-              makeCard({
-                id: "x",
-                title: "Placeholder",
-                columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
-              }),
-            ],
-          }),
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        makeColumn({
+          id: "c1",
+          title: "Todo",
+          cards: [
+            makeCard({
+              id: "x",
+              title: "Placeholder",
+              columnHistory: [{ columnId: "c1", enteredAt: Date.now() }],
+            }),
+          ],
+        }),
+      ],
+      archive: [],
+    });
 
     const user = userEvent.setup();
     renderApp();
@@ -488,7 +472,7 @@ describe("AnalyticsModal", () => {
       makeColumn({ id: "c2", title: "In Progress" }),
       makeColumn({ id: "c3", title: "Done", cards }),
     ];
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+    seedBoard({ columns, archive: [] });
 
     const user = userEvent.setup();
     renderApp();
@@ -530,7 +514,7 @@ describe("AnalyticsModal", () => {
       makeColumn({ id: "c1", title: "Todo" }),
       makeColumn({ id: "c2", title: "Done", cards }),
     ];
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+    seedBoard({ columns, archive: [] });
 
     const user = userEvent.setup();
     renderApp();

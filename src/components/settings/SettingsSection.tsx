@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { tc } from "../../theme/classNames";
 import { STORAGE_KEYS } from "../../constants/storage";
+import { kvGet, kvSet } from "../../utils/db";
 
 type Props = Readonly<{
   title: string;
@@ -13,28 +14,20 @@ function getSectionKey(title: string): string {
 }
 
 function readSavedState(key: string, fallback: boolean): boolean {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS_SECTIONS);
-    if (!raw) return fallback;
-    const parsed = JSON.parse(raw) as Record<string, boolean>;
-    return typeof parsed[key] === "boolean" ? parsed[key] : fallback;
-  } catch {
-    return fallback;
-  }
+  const sections = kvGet<Record<string, boolean>>(
+    STORAGE_KEYS.SETTINGS_SECTIONS,
+    {},
+  );
+  return typeof sections[key] === "boolean" ? sections[key] : fallback;
 }
 
 function writeSavedState(key: string, value: boolean): void {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS_SECTIONS);
-    const existing = raw ? (JSON.parse(raw) as Record<string, boolean>) : {};
-    existing[key] = value;
-    localStorage.setItem(
-      STORAGE_KEYS.SETTINGS_SECTIONS,
-      JSON.stringify(existing),
-    );
-  } catch {
-    // Ignore storage failures
-  }
+  const sections = kvGet<Record<string, boolean>>(
+    STORAGE_KEYS.SETTINGS_SECTIONS,
+    {},
+  );
+  sections[key] = value;
+  kvSet(STORAGE_KEYS.SETTINGS_SECTIONS, sections);
 }
 
 export function SettingsSection({

@@ -4,42 +4,39 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../../constants/storage";
 import { renderApp } from "../../test/renderApp";
+import { seedBoard as seedBoardDb, seedKv } from "../../utils/db";
 
 function seedBoard(dueDate: string | null = null) {
   const now = Date.now();
-  localStorage.setItem(
-    STORAGE_KEYS.BOARD,
-    JSON.stringify({
-      columns: [
-        {
-          id: "col-1",
-          title: "Todo",
-          createdAt: now,
-          updatedAt: now,
-          cards: [
-            {
-              id: "card-1",
-              number: 1,
-              title: "Test Card",
-              description: "Some description",
-              cardTypeId: null,
-              dueDate,
-              createdAt: now,
-              updatedAt: now,
-              columnHistory: [{ columnId: "col-1", enteredAt: now }],
-            },
-          ],
-        },
-      ],
-    }),
-  );
-  localStorage.setItem(STORAGE_KEYS.VIEW_MODE, "list");
+  seedBoardDb({
+    columns: [
+      {
+        id: "col-1",
+        title: "Todo",
+        createdAt: now,
+        updatedAt: now,
+        cards: [
+          {
+            id: "card-1",
+            number: 1,
+            title: "Test Card",
+            description: "Some description",
+            cardTypeId: null,
+            dueDate,
+            createdAt: now,
+            updatedAt: now,
+            columnHistory: [{ columnId: "col-1", enteredAt: now }],
+          },
+        ],
+      },
+    ],
+    archive: [],
+  });
+  seedKv(STORAGE_KEYS.VIEW_MODE, "list");
 }
 
 describe("ListView due date column", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
+  beforeEach(() => {});
 
   it("shows Due Date column header instead of Description", () => {
     seedBoard();

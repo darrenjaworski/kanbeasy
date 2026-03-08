@@ -1,12 +1,13 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard, seedKv, getBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("column delete", () => {
   beforeEach(() => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
   });
 
   it("deletes an empty column immediately without confirmation", async () => {
@@ -102,11 +103,11 @@ describe("column delete", () => {
     ).not.toBeInTheDocument();
 
     // Verify cards were archived, not destroyed
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}");
-    expect(stored.archive).toHaveLength(1);
-    expect(stored.archive[0].title).toBe("New card");
-    expect(stored.archive[0].archivedAt).toBeGreaterThan(0);
-    expect(stored.archive[0].archivedFromColumnId).toBeDefined();
+    const stored = getBoard();
+    expect(stored!.archive).toHaveLength(1);
+    expect(stored!.archive[0].title).toBe("New card");
+    expect(stored!.archive[0].archivedAt).toBeGreaterThan(0);
+    expect(stored!.archive[0].archivedFromColumnId).toBeDefined();
   });
 
   it("pluralizes card count in confirmation message", async () => {
@@ -132,7 +133,7 @@ describe("column delete", () => {
   });
 
   it("deletes column with cards without confirmation when warning is disabled", async () => {
-    localStorage.setItem(STORAGE_KEYS.DELETE_COLUMN_WARNING, "false");
+    seedKv(STORAGE_KEYS.DELETE_COLUMN_WARNING, false);
     const user = userEvent.setup();
     renderApp();
 
@@ -155,7 +156,7 @@ describe("column delete", () => {
     ).not.toBeInTheDocument();
 
     // Cards should still be archived even without the warning dialog
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}");
-    expect(stored.archive).toHaveLength(1);
+    const stored = getBoard();
+    expect(stored!.archive).toHaveLength(1);
   });
 });

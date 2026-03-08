@@ -64,12 +64,13 @@ export function validateExportData(parsed: unknown): ImportResult {
     version !== 6 &&
     version !== 7 &&
     version !== 8 &&
-    version !== 9
+    version !== 9 &&
+    version !== 10
   ) {
     return {
       ok: false,
       error: version
-        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–9 are supported.`
+        ? `Unsupported export version: ${typeof version === "number" || typeof version === "string" ? String(version) : "unknown"}. Only versions 1–10 are supported.`
         : "Missing export version.",
     };
   }

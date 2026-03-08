@@ -4,8 +4,8 @@ import { CardTypeSection } from "../CardTypeSection";
 import { ThemeProvider } from "../../../theme/ThemeProvider";
 import { BoardProvider } from "../../../board/BoardProvider";
 import { CARD_TYPE_PRESETS } from "../../../constants/cardTypes";
-import { STORAGE_KEYS } from "../../../constants/storage";
 import { describe, beforeEach, it, expect, vi } from "vitest";
+import { seedBoard, getBoard } from "../../../utils/db";
 
 function renderSection() {
   return render(
@@ -25,9 +25,7 @@ const devPreset = CARD_TYPE_PRESETS.find((p) => p.id === "development")!;
 const personalPreset = CARD_TYPE_PRESETS.find((p) => p.id === "personal")!;
 
 describe("CardTypeSection", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
+  beforeEach(() => {});
 
   describe("rendering", () => {
     it("renders the preset selector with development as default", () => {
@@ -89,33 +87,30 @@ describe("CardTypeSection", () => {
     it("retains in-use types from previous preset when switching", () => {
       // Seed board with a card using the "feat" type from the development preset
       const now = Date.now();
-      localStorage.setItem(
-        STORAGE_KEYS.BOARD,
-        JSON.stringify({
-          columns: [
-            {
-              id: "col-1",
-              title: "To Do",
-              createdAt: now,
-              updatedAt: now,
-              cards: [
-                {
-                  id: "card-1",
-                  number: 1,
-                  title: "A feature",
-                  description: "",
-                  cardTypeId: "feat",
-                  dueDate: null,
-                  createdAt: now,
-                  updatedAt: now,
-                  columnHistory: [{ columnId: "col-1", enteredAt: now }],
-                },
-              ],
-            },
-          ],
-          archive: [],
-        }),
-      );
+      seedBoard({
+        columns: [
+          {
+            id: "col-1",
+            title: "To Do",
+            createdAt: now,
+            updatedAt: now,
+            cards: [
+              {
+                id: "card-1",
+                number: 1,
+                title: "A feature",
+                description: "",
+                cardTypeId: "feat",
+                dueDate: null,
+                createdAt: now,
+                updatedAt: now,
+                columnHistory: [{ columnId: "col-1", enteredAt: now }],
+              },
+            ],
+          },
+        ],
+        archive: [],
+      });
 
       renderSection();
       expandEditor();
@@ -177,35 +172,32 @@ describe("CardTypeSection", () => {
     });
 
     it("does not call renameCardType on every keystroke — only on blur", async () => {
-      // Seed board with a card using "feat" so we can check localStorage
+      // Seed board with a card using "feat" so we can check the board state
       const now = Date.now();
-      localStorage.setItem(
-        STORAGE_KEYS.BOARD,
-        JSON.stringify({
-          columns: [
-            {
-              id: "col-1",
-              title: "To Do",
-              createdAt: now,
-              updatedAt: now,
-              cards: [
-                {
-                  id: "card-1",
-                  number: 1,
-                  title: "A feature",
-                  description: "",
-                  cardTypeId: "feat",
-                  dueDate: null,
-                  createdAt: now,
-                  updatedAt: now,
-                  columnHistory: [{ columnId: "col-1", enteredAt: now }],
-                },
-              ],
-            },
-          ],
-          archive: [],
-        }),
-      );
+      seedBoard({
+        columns: [
+          {
+            id: "col-1",
+            title: "To Do",
+            createdAt: now,
+            updatedAt: now,
+            cards: [
+              {
+                id: "card-1",
+                number: 1,
+                title: "A feature",
+                description: "",
+                cardTypeId: "feat",
+                dueDate: null,
+                createdAt: now,
+                updatedAt: now,
+                columnHistory: [{ columnId: "col-1", enteredAt: now }],
+              },
+            ],
+          },
+        ],
+        archive: [],
+      });
 
       const user = userEvent.setup();
       renderSection();
@@ -215,11 +207,9 @@ describe("CardTypeSection", () => {
       await user.clear(idInput);
       await user.type(idInput, "story");
 
-      // While typing, the card should still have cardTypeId "feat" in localStorage
+      // While typing, the card should still have cardTypeId "feat" in board state
       // because renameCardType hasn't been called yet
-      const boardDuringTyping = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
-      );
+      const boardDuringTyping = getBoard()!;
       expect(boardDuringTyping.columns[0].cards[0].cardTypeId).toBe("feat");
 
       // Now blur to trigger the rename
@@ -228,9 +218,7 @@ describe("CardTypeSection", () => {
       // After blur, the card should be renamed to "story"
       // Wait for state to settle
       await vi.waitFor(() => {
-        const boardAfterBlur = JSON.parse(
-          localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
-        );
+        const boardAfterBlur = getBoard()!;
         expect(boardAfterBlur.columns[0].cards[0].cardTypeId).toBe("story");
       });
     });
@@ -287,33 +275,30 @@ describe("CardTypeSection", () => {
     it("does not clear card cardTypeId when removing a type definition", () => {
       // Seed board with a card using the "feat" type
       const now = Date.now();
-      localStorage.setItem(
-        STORAGE_KEYS.BOARD,
-        JSON.stringify({
-          columns: [
-            {
-              id: "col-1",
-              title: "To Do",
-              createdAt: now,
-              updatedAt: now,
-              cards: [
-                {
-                  id: "card-1",
-                  number: 1,
-                  title: "A feature",
-                  description: "",
-                  cardTypeId: "feat",
-                  dueDate: null,
-                  createdAt: now,
-                  updatedAt: now,
-                  columnHistory: [{ columnId: "col-1", enteredAt: now }],
-                },
-              ],
-            },
-          ],
-          archive: [],
-        }),
-      );
+      seedBoard({
+        columns: [
+          {
+            id: "col-1",
+            title: "To Do",
+            createdAt: now,
+            updatedAt: now,
+            cards: [
+              {
+                id: "card-1",
+                number: 1,
+                title: "A feature",
+                description: "",
+                cardTypeId: "feat",
+                dueDate: null,
+                createdAt: now,
+                updatedAt: now,
+                columnHistory: [{ columnId: "col-1", enteredAt: now }],
+              },
+            ],
+          },
+        ],
+        archive: [],
+      });
 
       renderSection();
       expandEditor();
@@ -323,9 +308,7 @@ describe("CardTypeSection", () => {
 
       // Card should still have cardTypeId "feat" — type definition
       // removal should not wipe card data
-      const board = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.BOARD) ?? "{}",
-      );
+      const board = getBoard()!;
       expect(board.columns[0].cards[0].cardTypeId).toBe("feat");
     });
   });

@@ -6,9 +6,10 @@ import { STORAGE_KEYS } from "../../constants/storage";
 import type { Column } from "../../board/types";
 import { renderApp } from "../../test/renderApp";
 import { makeCard, makeColumn, resetCardNumber } from "../../test/builders";
+import { seedBoard as seedBoardDb, kvGet } from "../../utils/db";
 
 function seedBoard(columns: Column[]) {
-  localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
+  seedBoardDb({ columns, archive: [] });
 }
 
 function makeColumnWithCard(): Column {
@@ -54,7 +55,6 @@ function makeColumnWithDueDate(): Column {
 
 describe("ViewToggle", () => {
   beforeEach(() => {
-    localStorage.clear();
     resetCardNumber();
   });
 
@@ -105,7 +105,7 @@ describe("ViewToggle", () => {
     const user = userEvent.setup();
     renderApp();
     await user.click(screen.getByRole("radio", { name: /list view/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.VIEW_MODE)).toBe("list");
+    expect(kvGet(STORAGE_KEYS.VIEW_MODE, "")).toBe("list");
   });
 
   it("toggles to calendar view on click", async () => {
@@ -127,7 +127,7 @@ describe("ViewToggle", () => {
     const user = userEvent.setup();
     renderApp();
     await user.click(screen.getByRole("radio", { name: /calendar view/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.VIEW_MODE)).toBe("calendar");
+    expect(kvGet(STORAGE_KEYS.VIEW_MODE, "")).toBe("calendar");
   });
 
   it("disables list and calendar views when there are no cards", () => {

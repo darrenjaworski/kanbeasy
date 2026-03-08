@@ -1,12 +1,12 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("column card count badge", () => {
   beforeEach(() => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
   });
 
   it("shows 0 for an empty column", async () => {

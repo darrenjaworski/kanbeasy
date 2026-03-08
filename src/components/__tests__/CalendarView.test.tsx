@@ -6,15 +6,15 @@ import { STORAGE_KEYS } from "../../constants/storage";
 import type { Column } from "../../board/types";
 import { renderApp } from "../../test/renderApp";
 import { makeCard, makeColumn } from "../../test/builders";
+import { seedBoard as seedBoardDb, seedKv } from "../../utils/db";
 
 function seedBoard(columns: Column[]) {
-  localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns }));
-  localStorage.setItem(STORAGE_KEYS.VIEW_MODE, "calendar");
+  seedBoardDb({ columns, archive: [] });
+  seedKv(STORAGE_KEYS.VIEW_MODE, "calendar");
 }
 
 describe("CalendarView", () => {
   beforeEach(() => {
-    localStorage.clear();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     vi.setSystemTime(new Date(2025, 5, 15)); // June 15, 2025
   });

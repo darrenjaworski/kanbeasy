@@ -6,12 +6,13 @@ import {
   migrateColumnsWithNumbering,
   resetCardTypeLookup,
 } from "../migration";
+import { seedKv } from "../../utils/db";
+import { STORAGE_KEYS } from "../../constants/storage";
 
 describe("migration", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2025-06-15T12:00:00Z"));
-    localStorage.clear();
     resetCardTypeLookup();
   });
 
@@ -183,12 +184,9 @@ describe("migration", () => {
     });
 
     it("backfills snapshot fields from user's saved card types", () => {
-      localStorage.setItem(
-        "kanbeasy:ticketTypes",
-        JSON.stringify([
-          { id: "custom", label: "Custom Type", color: "#ff00ff" },
-        ]),
-      );
+      seedKv(STORAGE_KEYS.CARD_TYPES, [
+        { id: "custom", label: "Custom Type", color: "#ff00ff" },
+      ]);
       const raw = {
         id: "card-1",
         title: "Task 1",

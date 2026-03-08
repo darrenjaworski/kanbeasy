@@ -1,13 +1,13 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
-import { STORAGE_KEYS } from "../../../constants/storage";
 import { renderApp } from "../../../test/renderApp";
 import {
   makeColumn,
   makeArchivedCard,
   resetCardNumber,
 } from "../../../test/builders";
+import { seedBoard } from "../../../utils/db";
 
 async function openArchive(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByTestId("archive-button"));
@@ -16,18 +16,14 @@ async function openArchive(user: ReturnType<typeof userEvent.setup>) {
 
 describe("ArchiveModal", () => {
   beforeEach(() => {
-    localStorage.clear();
     resetCardNumber();
   });
 
   it("disables archive button when archive is empty", () => {
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive: [],
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive: [],
+    });
     renderApp();
 
     expect(screen.getByTestId("archive-button")).toBeDisabled();
@@ -46,13 +42,10 @@ describe("ArchiveModal", () => {
         archivedFromColumnId: "c1",
       }),
     ];
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive,
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive,
+    });
     const user = userEvent.setup();
     renderApp();
 
@@ -74,13 +67,10 @@ describe("ArchiveModal", () => {
         archivedFromColumnId: "c1",
       }),
     ];
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive,
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive,
+    });
     const user = userEvent.setup();
     renderApp();
 
@@ -112,13 +102,10 @@ describe("ArchiveModal", () => {
         archivedFromColumnId: "c1",
       }),
     ];
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive,
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive,
+    });
     const user = userEvent.setup();
     renderApp();
 
@@ -142,13 +129,10 @@ describe("ArchiveModal", () => {
         archivedFromColumnId: "c1",
       }),
     ];
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive,
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive,
+    });
     const user = userEvent.setup();
     renderApp();
 
@@ -178,13 +162,10 @@ describe("ArchiveModal", () => {
         archivedFromColumnId: "c1",
       }),
     ];
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive,
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive,
+    });
     const user = userEvent.setup();
     renderApp();
 
@@ -216,13 +197,10 @@ describe("ArchiveModal", () => {
         archivedFromColumnId: "c1",
       }),
     ];
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive,
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive,
+    });
     const user = userEvent.setup();
     renderApp();
 
@@ -239,13 +217,10 @@ describe("ArchiveModal", () => {
         archivedFromColumnId: "c1",
       }),
     ];
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [makeColumn({ id: "c1", title: "Todo" })],
-        archive,
-      }),
-    );
+    seedBoard({
+      columns: [makeColumn({ id: "c1", title: "Todo" })],
+      archive,
+    });
     const user = userEvent.setup();
     renderApp();
 

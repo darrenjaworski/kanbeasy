@@ -2,42 +2,39 @@ import { renderHook, act } from "@testing-library/react";
 import { ThemeProvider } from "../ThemeProvider";
 import { useTheme } from "../useTheme";
 import { STORAGE_KEYS } from "../../constants/storage";
-import { describe, beforeEach, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import type { ReactNode } from "react";
+import { seedKv, kvGet } from "../../utils/db";
 
 function wrapper({ children }: { children: ReactNode }) {
   return <ThemeProvider>{children}</ThemeProvider>;
 }
 
 describe("defaultCardTypeId", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
   it("defaults to null when no stored value", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
     expect(result.current.defaultCardTypeId).toBeNull();
   });
 
-  it("persists to localStorage when set", () => {
+  it("persists to db when set", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
     act(() => result.current.setDefaultCardTypeId("feat"));
 
-    expect(localStorage.getItem(STORAGE_KEYS.DEFAULT_CARD_TYPE)).toBe("feat");
+    expect(kvGet(STORAGE_KEYS.DEFAULT_CARD_TYPE, null)).toBe("feat");
   });
 
-  it("removes from localStorage when set to null", () => {
-    localStorage.setItem(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
+  it("removes from db when set to null", () => {
+    seedKv(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
     const { result } = renderHook(() => useTheme(), { wrapper });
 
     act(() => result.current.setDefaultCardTypeId(null));
 
-    expect(localStorage.getItem(STORAGE_KEYS.DEFAULT_CARD_TYPE)).toBeNull();
+    expect(kvGet(STORAGE_KEYS.DEFAULT_CARD_TYPE, null)).toBeNull();
   });
 
-  it("loads initial value from localStorage", () => {
-    localStorage.setItem(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
+  it("loads initial value from db", () => {
+    seedKv(STORAGE_KEYS.DEFAULT_CARD_TYPE, "feat");
     const { result } = renderHook(() => useTheme(), { wrapper });
 
     expect(result.current.defaultCardTypeId).toBe("feat");

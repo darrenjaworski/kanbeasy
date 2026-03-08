@@ -1,12 +1,12 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("search cards", () => {
   beforeEach(() => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
   });
 
   it("disables search input when there are no cards", () => {
@@ -232,43 +232,41 @@ describe("search cards", () => {
 
     // Seed board with cards that have descriptions
     const now = Date.now();
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          {
-            id: "col-1",
-            title: "To Do",
-            createdAt: now,
-            updatedAt: now,
-            cards: [
-              {
-                id: "card-1",
-                number: 1,
-                title: "Fix login bug",
-                description: "Users cannot authenticate with OAuth provider",
-                cardTypeId: null,
-                dueDate: null,
-                createdAt: now,
-                updatedAt: now,
-                columnHistory: [{ columnId: "col-1", enteredAt: now }],
-              },
-              {
-                id: "card-2",
-                number: 2,
-                title: "Update homepage",
-                description: "Change the hero banner image",
-                cardTypeId: null,
-                dueDate: null,
-                createdAt: now,
-                updatedAt: now,
-                columnHistory: [{ columnId: "col-1", enteredAt: now }],
-              },
-            ],
-          },
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        {
+          id: "col-1",
+          title: "To Do",
+          createdAt: now,
+          updatedAt: now,
+          cards: [
+            {
+              id: "card-1",
+              number: 1,
+              title: "Fix login bug",
+              description: "Users cannot authenticate with OAuth provider",
+              cardTypeId: null,
+              dueDate: null,
+              createdAt: now,
+              updatedAt: now,
+              columnHistory: [{ columnId: "col-1", enteredAt: now }],
+            },
+            {
+              id: "card-2",
+              number: 2,
+              title: "Update homepage",
+              description: "Change the hero banner image",
+              cardTypeId: null,
+              dueDate: null,
+              createdAt: now,
+              updatedAt: now,
+              columnHistory: [{ columnId: "col-1", enteredAt: now }],
+            },
+          ],
+        },
+      ],
+      archive: [],
+    });
 
     renderApp();
 

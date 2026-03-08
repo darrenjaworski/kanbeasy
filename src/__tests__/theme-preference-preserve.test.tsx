@@ -1,6 +1,7 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard, kvGet } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
@@ -29,8 +30,7 @@ async function openSettings(user: ReturnType<typeof userEvent.setup>) {
 
 describe("theme preference preserves theme choice when mode unchanged", () => {
   beforeEach(() => {
-    localStorage.clear();
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
   });
 
   it("preserves theme when switching from system to matching explicit mode (OS=dark)", async () => {
@@ -48,11 +48,11 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     await user.click(
       within(dlg).getByRole("button", { name: /twilight theme/i }),
     );
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
 
     // Switch to explicit "dark" — same mode, theme should be preserved
     await user.click(within(dlg).getByRole("button", { name: /^dark$/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
   });
 
   it("preserves theme when switching from explicit mode to system when OS matches (dark)", async () => {
@@ -70,11 +70,11 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     await user.click(
       within(dlg).getByRole("button", { name: /twilight theme/i }),
     );
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
 
     // Switch to system (OS is dark) — same mode, theme should be preserved
     await user.click(within(dlg).getByRole("button", { name: /system/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
   });
 
   it("preserves theme when switching from system to matching explicit mode (OS=light)", async () => {
@@ -90,11 +90,11 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
 
     // Pick Stone theme (light-stone)
     await user.click(within(dlg).getByRole("button", { name: /stone theme/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("light-stone");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("light-stone");
 
     // Switch to explicit "light" — same mode, theme should be preserved
     await user.click(within(dlg).getByRole("button", { name: /^light$/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("light-stone");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("light-stone");
   });
 
   it("resets theme when switching between different modes", async () => {
@@ -108,11 +108,11 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     // Start in light mode, pick Stone theme
     await user.click(within(dlg).getByRole("button", { name: /^light$/i }));
     await user.click(within(dlg).getByRole("button", { name: /stone theme/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("light-stone");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("light-stone");
 
     // Switch to dark — different mode, should reset to default dark theme
     await user.click(within(dlg).getByRole("button", { name: /^dark$/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-slate");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-slate");
   });
 
   it("resets theme when switching from system (OS=dark) to light", async () => {
@@ -128,11 +128,11 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     await user.click(
       within(dlg).getByRole("button", { name: /twilight theme/i }),
     );
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
 
     // Switch to light — different mode, should reset to default light theme
     await user.click(within(dlg).getByRole("button", { name: /^light$/i }));
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("light-slate");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("light-slate");
   });
 
   it("preserves non-default theme on reload when preference is system", async () => {
@@ -150,13 +150,13 @@ describe("theme preference preserves theme choice when mode unchanged", () => {
     await user.click(
       within(dlg).getByRole("button", { name: /twilight theme/i }),
     );
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
-    expect(localStorage.getItem(STORAGE_KEYS.THEME_PREFERENCE)).toBe("system");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
+    expect(kvGet(STORAGE_KEYS.THEME_PREFERENCE, "")).toBe("system");
 
     // Simulate reload: re-render with same localStorage
     renderApp();
 
     // Theme should still be Twilight, not reset to default dark-slate
-    expect(localStorage.getItem(STORAGE_KEYS.THEME)).toBe("dark-purple");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-purple");
   });
 });

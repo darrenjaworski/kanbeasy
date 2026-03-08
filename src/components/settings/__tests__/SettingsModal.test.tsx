@@ -4,6 +4,8 @@ import { SettingsModal } from "../SettingsModal";
 import { ThemeProvider } from "../../../theme/ThemeProvider";
 import { BoardProvider } from "../../../board/BoardProvider";
 import { vi, describe, it, expect } from "vitest";
+import { STORAGE_KEYS } from "../../../constants/storage";
+import { seedKv, kvGet, getBoard } from "../../../utils/db";
 
 function expandDataSection() {
   fireEvent.click(screen.getByRole("button", { name: "Data" }));
@@ -31,8 +33,8 @@ describe("SettingsModal", () => {
   });
 
   it("clears board data but preserves settings when 'Clear board data' is clicked", () => {
-    window.localStorage.setItem("kanbeasy:theme", "dark-slate");
-    window.localStorage.setItem("kanbeasy:cardDensity", "large");
+    seedKv(STORAGE_KEYS.THEME, "dark-slate");
+    seedKv(STORAGE_KEYS.CARD_DENSITY, "large");
     render(
       <BoardProvider>
         <ThemeProvider>
@@ -43,12 +45,12 @@ describe("SettingsModal", () => {
     expandDataSection();
     fireEvent.click(screen.getByRole("button", { name: "Clear board data" }));
     // Settings should be preserved
-    expect(window.localStorage.getItem("kanbeasy:theme")).toBe("dark-slate");
-    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("large");
+    expect(kvGet(STORAGE_KEYS.THEME, "")).toBe("dark-slate");
+    expect(kvGet(STORAGE_KEYS.CARD_DENSITY, "")).toBe("large");
   });
 
   it("clears settings but preserves board when 'Clear settings' is clicked", () => {
-    window.localStorage.setItem("kanbeasy:cardDensity", "large");
+    seedKv(STORAGE_KEYS.CARD_DENSITY, "large");
     render(
       <BoardProvider>
         <ThemeProvider>
@@ -59,13 +61,13 @@ describe("SettingsModal", () => {
     expandDataSection();
     fireEvent.click(screen.getByRole("button", { name: "Clear settings" }));
     // Board data should still exist
-    expect(window.localStorage.getItem("kanbeasy:board")).not.toBeNull();
+    expect(getBoard()).not.toBeNull();
     // Card density should be reset to default "small" (compact)
-    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("small");
+    expect(kvGet(STORAGE_KEYS.CARD_DENSITY, "")).toBe("small");
   });
 
   it("clears all data when 'Clear all data' is clicked", () => {
-    window.localStorage.setItem("kanbeasy:cardDensity", "large");
+    seedKv(STORAGE_KEYS.CARD_DENSITY, "large");
     render(
       <BoardProvider>
         <ThemeProvider>
@@ -76,7 +78,7 @@ describe("SettingsModal", () => {
     expandDataSection();
     fireEvent.click(screen.getByRole("button", { name: "Clear all data" }));
     // Card density should be reset to default "small" (compact)
-    expect(window.localStorage.getItem("kanbeasy:cardDensity")).toBe("small");
+    expect(kvGet(STORAGE_KEYS.CARD_DENSITY, "")).toBe("small");
   });
 
   it("renders the modal when open", () => {

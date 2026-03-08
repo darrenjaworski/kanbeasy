@@ -2,18 +2,15 @@ import { renderHook, act } from "@testing-library/react";
 import { ThemeProvider } from "../ThemeProvider";
 import { useTheme } from "../useTheme";
 import { STORAGE_KEYS } from "../../constants/storage";
-import { describe, beforeEach, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import type { ReactNode } from "react";
+import { seedKv, kvGet } from "../../utils/db";
 
 function wrapper({ children }: { children: ReactNode }) {
   return <ThemeProvider>{children}</ThemeProvider>;
 }
 
 describe("resetSettings", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
   it("resets theme preference to system and theme to default for system mode", () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
 
@@ -98,11 +95,11 @@ describe("resetSettings", () => {
     expect(result.current.defaultCardTypeId).toBeNull();
   });
 
-  it("removes hasSeenWelcome from localStorage", () => {
-    localStorage.setItem(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
+  it("removes hasSeenWelcome from db", () => {
+    seedKv(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
     const { result } = renderHook(() => useTheme(), { wrapper });
 
     act(() => result.current.resetSettings());
-    expect(localStorage.getItem(STORAGE_KEYS.HAS_SEEN_WELCOME)).toBeNull();
+    expect(kvGet(STORAGE_KEYS.HAS_SEEN_WELCOME, null)).toBeNull();
   });
 });

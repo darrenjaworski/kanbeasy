@@ -1,10 +1,12 @@
 import type { ArchivedCard, Card, Column, ColumnHistoryEntry } from "./types";
 import type { CardType } from "../constants/cardTypes";
 import { CARD_TYPE_PRESETS } from "../constants/cardTypes";
+import { kvGet } from "../utils/db";
+import { STORAGE_KEYS } from "../constants/storage";
 
 /**
  * Builds a lookup map of card type ID → CardType from the user's saved
- * types (localStorage) and all built-in presets as fallback.
+ * types (db cache) and all built-in presets as fallback.
  */
 function buildCardTypeLookup(): Map<string, CardType> {
   const map = new Map<string, CardType>();
@@ -17,26 +19,19 @@ function buildCardTypeLookup(): Map<string, CardType> {
   }
 
   // Override with user's saved types (higher priority)
-  try {
-    const raw = window.localStorage.getItem("kanbeasy:ticketTypes");
-    if (raw) {
-      const parsed = JSON.parse(raw) as unknown;
-      if (Array.isArray(parsed)) {
-        for (const t of parsed) {
-          if (
-            t &&
-            typeof t === "object" &&
-            typeof (t as CardType).id === "string" &&
-            typeof (t as CardType).label === "string" &&
-            typeof (t as CardType).color === "string"
-          ) {
-            map.set((t as CardType).id, t as CardType);
-          }
-        }
+  const saved = kvGet<CardType[] | null>(STORAGE_KEYS.CARD_TYPES, null);
+  if (Array.isArray(saved)) {
+    for (const t of saved) {
+      if (
+        t &&
+        typeof t === "object" &&
+        typeof t.id === "string" &&
+        typeof t.label === "string" &&
+        typeof t.color === "string"
+      ) {
+        map.set(t.id, t);
       }
     }
-  } catch {
-    // Ignore parse errors — fall back to presets only
   }
 
   return map;

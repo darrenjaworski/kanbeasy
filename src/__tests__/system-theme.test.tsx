@@ -1,6 +1,6 @@
 import { screen, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { STORAGE_KEYS } from "../constants/storage";
+import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
@@ -39,8 +39,7 @@ function mockMatchMedia(prefersDark: boolean) {
 
 describe("system theme preference", () => {
   beforeEach(() => {
-    localStorage.clear();
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
   });
 
   it("applies dark theme when preference is system and OS is dark", async () => {

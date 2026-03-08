@@ -5,7 +5,7 @@ import { useBoard } from "../useBoard";
 import { ClipboardProvider } from "../ClipboardProvider";
 import { BoardProvider } from "../BoardProvider";
 import type { CardClipboard } from "../types";
-import { STORAGE_KEYS } from "../../constants/storage";
+import { seedBoard } from "../../utils/db";
 
 function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -41,7 +41,7 @@ describe("useClipboard", () => {
   });
 
   it("returns null when pasting with no copied card", () => {
-    localStorage.setItem(STORAGE_KEYS.BOARD, JSON.stringify({ columns: [] }));
+    seedBoard({ columns: [], archive: [] });
 
     const { result } = renderHook(() => useClipboard(), { wrapper });
 
@@ -55,20 +55,18 @@ describe("useClipboard", () => {
 
   it("pastes a card into a column after copying", () => {
     const now = Date.now();
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          {
-            id: "col-1",
-            title: "Todo",
-            cards: [],
-            createdAt: now,
-            updatedAt: now,
-          },
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        {
+          id: "col-1",
+          title: "Todo",
+          cards: [],
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      archive: [],
+    });
 
     const { result } = renderHook(() => useClipboard(), { wrapper });
 
@@ -90,20 +88,18 @@ describe("useClipboard", () => {
 
   it("preserves cardTypeId when copying and pasting a card", () => {
     const now = Date.now();
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          {
-            id: "col-1",
-            title: "Todo",
-            cards: [],
-            createdAt: now,
-            updatedAt: now,
-          },
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        {
+          id: "col-1",
+          title: "Todo",
+          cards: [],
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      archive: [],
+    });
 
     const { result } = renderHook(
       () => ({ clipboard: useClipboard(), board: useBoard() }),
@@ -131,20 +127,18 @@ describe("useClipboard", () => {
 
   it("preserves copied card after pasting (allows multiple pastes)", () => {
     const now = Date.now();
-    localStorage.setItem(
-      STORAGE_KEYS.BOARD,
-      JSON.stringify({
-        columns: [
-          {
-            id: "col-1",
-            title: "Todo",
-            cards: [],
-            createdAt: now,
-            updatedAt: now,
-          },
-        ],
-      }),
-    );
+    seedBoard({
+      columns: [
+        {
+          id: "col-1",
+          title: "Todo",
+          cards: [],
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      archive: [],
+    });
 
     const { result } = renderHook(() => useClipboard(), { wrapper });
 
