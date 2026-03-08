@@ -16,7 +16,7 @@ export function SearchInput() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         disabled={!hasCards}
-        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-3 ${showMatchCount ? "pr-18" : ""} py-1.5 text-sm ${tc.placeholder} focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-40`}
+        className={`w-full rounded-md border ${tc.border} ${tc.glass} px-2.5 ${showMatchCount ? "pr-18" : ""} py-1.5 text-xs ${tc.placeholder} focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-40`}
         aria-label="Search cards"
         data-testid="search-input"
       />

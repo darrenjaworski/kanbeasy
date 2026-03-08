@@ -37,38 +37,38 @@ export function Header() {
         <div className="ml-auto flex items-center gap-2">
           <button
             type="button"
-            className={`${tc.button} rounded-md p-2 inline-flex items-center gap-2 justify-center disabled:opacity-40 disabled:pointer-events-none`}
+            className={`${tc.button} rounded-md p-1.5 px-2.5 inline-flex items-center gap-1.5 justify-center disabled:opacity-40 disabled:pointer-events-none`}
             aria-label="Open analytics"
             onClick={() => setAnalyticsOpen(true)}
             disabled={!hasCards}
           >
-            <AnalyticsIcon className="size-5" />
+            <AnalyticsIcon className="size-4" />
             {!compactHeader && (
-              <span className="text-sm font-medium">Analytics</span>
+              <span className="text-xs font-medium">Analytics</span>
             )}
           </button>
           <button
             type="button"
-            className={`${tc.button} rounded-md p-2 inline-flex items-center gap-2 justify-center disabled:opacity-40 disabled:pointer-events-none`}
+            className={`${tc.button} rounded-md p-1.5 px-2.5 inline-flex items-center gap-1.5 justify-center disabled:opacity-40 disabled:pointer-events-none`}
             aria-label="Open archive"
             onClick={() => setArchiveOpen(true)}
             data-testid="archive-button"
             disabled={!hasArchive}
           >
-            <ArchiveIcon className="size-5" />
+            <ArchiveIcon className="size-4" />
             {!compactHeader && (
-              <span className="text-sm font-medium">Archive</span>
+              <span className="text-xs font-medium">Archive</span>
             )}
           </button>
           <button
             type="button"
-            className={`${tc.button} rounded-md p-2 inline-flex items-center gap-2 justify-center`}
+            className={`${tc.button} rounded-md p-1.5 px-2.5 inline-flex items-center gap-1.5 justify-center`}
             aria-label="Open settings"
             onClick={() => setSettingsOpen(true)}
           >
-            <SettingsGearIcon className="size-5" />
+            <SettingsGearIcon className="size-4" />
             {!compactHeader && (
-              <span className="text-sm font-medium">Settings</span>
+              <span className="text-xs font-medium">Settings</span>
             )}
           </button>
         </div>
