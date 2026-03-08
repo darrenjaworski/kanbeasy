@@ -17,11 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `src/utils/db.ts` — IndexedDB-backed storage module with sync cache, write coalescing, and automatic localStorage migration
 - `src/components/AppLoader.tsx` — async init gate with 100ms skeleton threshold
+- Storage usage and persistence status display in Settings > Data
 - `fake-indexeddb` dev dependency for test environment
+
+### Removed
+
+- `src/utils/storage.ts` — old localStorage wrapper (replaced by `db.ts`)
 
 ### Tests
 
-- Migrate all 831 unit tests from localStorage to db cache helpers (`seedBoard`, `seedKv`, `kvGet`, `getBoard`)
+- Migrate all unit tests from localStorage to db cache helpers (`seedBoard`, `seedKv`, `kvGet`, `getBoard`)
 
 ## [1.35.0]
 

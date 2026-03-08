@@ -1,9 +1,35 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../theme/useTheme";
 import { useBoard } from "../../board/useBoard";
 import { tc } from "../../theme/classNames";
 import { exportBoard } from "../../utils/exportBoard";
 import { readImportFile } from "../../utils/importBoard";
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function useStorageInfo() {
+  const [usage, setUsage] = useState<string | null>(null);
+  const [persisted, setPersisted] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (navigator.storage?.estimate) {
+      void navigator.storage.estimate().then((est) => {
+        if (est.usage !== undefined) {
+          setUsage(formatBytes(est.usage));
+        }
+      });
+    }
+    if (navigator.storage?.persisted) {
+      void navigator.storage.persisted().then(setPersisted);
+    }
+  }, []);
+
+  return { usage, persisted };
+}
 
 export function DataSection() {
   const {
@@ -85,8 +111,25 @@ export function DataSection() {
     setTimeout(() => setImportStatus("idle"), 600);
   };
 
+  const { usage, persisted } = useStorageInfo();
+
   return (
     <div className="space-y-2">
+      {(usage !== null || persisted !== null) && (
+        <div className={`rounded-md px-3 py-2 text-xs ${tc.glass}`}>
+          {usage !== null && (
+            <p>
+              <span className={tc.textFaint}>Storage used:</span> {usage}
+            </p>
+          )}
+          {persisted !== null && (
+            <p>
+              <span className={tc.textFaint}>Persistent storage:</span>{" "}
+              {persisted ? "Granted" : "Not granted"}
+            </p>
+          )}
+        </div>
+      )}
       <button
         type="button"
         onClick={exportBoard}
