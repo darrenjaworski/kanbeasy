@@ -108,7 +108,7 @@ type CardFieldConfig = Readonly<{
 type CardLayout = readonly CardFieldConfig[];
 ```
 
-### What's already built
+### What's built
 
 - ✅ `CardFieldId`, `CardFieldConfig`, `CardLayout` types and `DEFAULT_CARD_LAYOUT` constant
 - ✅ `CARD_FIELD_LABELS` mapping and `isValidCardLayout()` validator
@@ -120,73 +120,26 @@ type CardLayout = readonly CardFieldConfig[];
 - ✅ "Back to Settings" navigation in editor view
 - ✅ `CardBody` component shared between `SortableCardItem` and the editor preview
 - ✅ Preview card rendered with `CardBody` using sample data
-- ✅ Static field list showing all 7 fields with visibility checkboxes (read-only)
 - ✅ Settings section open/close persistence to IndexedDB
+- ✅ Field visibility toggles with max 5 enforcement and tooltip
+- ✅ Drag-to-reorder with @dnd-kit sortable (vertical axis, keyboard support)
+- ✅ Line count dropdowns for title and description fields
+- ✅ Visible count indicator ("4/5 visible")
+- ✅ Reset to default button
+- ✅ `CardBody` renders fields dynamically from `cardLayout` config
+- ✅ New field renderers: description (clamped preview), createdAt, updatedAt
+- ✅ `SortableCardItem` passes `cardLayout` to `CardBody` (gated by feature flag)
+- ✅ Export/import support (v11) with density-to-lines migration for older exports
+- ✅ Card density controls hidden when layout editor flag is on
 - ✅ Unit tests for `isValidCardLayout` (11 tests)
 - ✅ Unit tests for `SettingsSection` persistence (5 tests)
-- ✅ Integration tests for card layout editor navigation and rendering (5 tests)
+- ✅ Integration tests for card layout editor (12 tests)
+- ✅ Import tests for cardLayout (5 tests)
 
 ### Remaining Phase 1 work
 
-#### 1. Wire up field visibility toggles
+#### 1. E2e tests
 
-- Clicking a checkbox toggles the field's `visible` flag in `cardLayout` state
-- Enforce max 5 visible fields — disable unchecked checkboxes when limit is reached
-- Preview updates instantly to reflect changes
-
-#### 2. Wire up drag-to-reorder
-
-- Add @dnd-kit sortable context to the field list
-- Drag handles on each field row for vertical reordering
-- Reorder updates the `cardLayout` array order
-- Preview reflects the new field order in real-time
-
-#### 3. Add line count dropdown for title and description
-
-- Fields with `FIELDS_WITH_LINE_OPTIONS` (title, description) show a dropdown
-- Options: 1, 2, or 3 lines
-- Changing updates `field.options.lines`
-- Preview card and board cards reflect the new line count
-
-#### 4. Add reset button
-
-- "Reset to default" button below the field list
-- Restores `DEFAULT_CARD_LAYOUT`
-
-#### 5. Update CardBody to render from layout config
-
-- `CardBody` accepts `cardLayout` and renders fields in the configured order
-- Only visible fields are rendered
-- Title uses `lines` from layout options instead of density
-- New field renderers for `description`, `createdAt`, `updatedAt`
-- CardControls remain fixed (always top-right, not part of layout)
-- Title remains the only editable-inline field on the board
-
-#### 6. Connect board cards to layout config
-
-- `SortableCardItem` passes `cardLayout` from `useTheme()` to `CardBody`
-- Board cards render according to the user's configured layout
-- Density setting is derived from layout's title lines for backward compat
-
-#### 7. Export/import support
-
-- Bump export version
-- Add `cardLayout` to export settings (JSON stringified)
-- Import: parse and validate `cardLayout`, fall back to default for older versions
-- Old exports without `cardLayout` get the default layout with title lines mapped from their `cardDensity`
-
-#### 8. Remove card density from Appearance section
-
-- Card density controls in ThemeSection are superseded by the layout editor's title line count
-- Remove the density fieldset from ThemeSection
-- Keep `cardDensity` context value as a derived property for backward compat
-
-#### 9. Tests
-
-- Unit tests for field toggle logic (including max 5 enforcement)
-- Unit tests for reorder logic
-- Unit tests for line count dropdown changes
-- Integration test for reset to default
 - E2e test: toggle fields and verify board cards update
 - E2e test: reorder fields and verify board cards reflect new order
 - Visual regression snapshot updates if needed
