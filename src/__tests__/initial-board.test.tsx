@@ -10,10 +10,10 @@ describe("initial board seeding", () => {
     const todoColumn = screen.getByRole("region", { name: /to do/i });
     expect(todoColumn).toBeInTheDocument();
     expect(
-      within(todoColumn as HTMLElement).getByText("My first task"),
+      within(todoColumn as HTMLElement).getByText("Plan the project"),
     ).toBeInTheDocument();
     expect(
-      within(todoColumn as HTMLElement).getByText("Another task"),
+      within(todoColumn as HTMLElement).getByText("Write documentation"),
     ).toBeInTheDocument();
 
     const inProgressColumn = screen.getByRole("region", {
@@ -21,13 +21,13 @@ describe("initial board seeding", () => {
     });
     expect(inProgressColumn).toBeInTheDocument();
     expect(
-      within(inProgressColumn as HTMLElement).getByText("A task in progress"),
+      within(inProgressColumn as HTMLElement).getByText("Build the dashboard"),
     ).toBeInTheDocument();
 
     const doneColumn = screen.getByRole("region", { name: /done/i });
     expect(doneColumn).toBeInTheDocument();
     expect(
-      within(doneColumn as HTMLElement).getByText("A completed task"),
+      within(doneColumn as HTMLElement).getByText("Set up the repo"),
     ).toBeInTheDocument();
   });
 

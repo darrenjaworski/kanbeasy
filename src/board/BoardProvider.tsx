@@ -11,6 +11,13 @@ import { useCardSearch } from "./useCardSearch";
 
 type LoadResult = { state: BoardState; nextCardNumber: number };
 
+/** Return an ISO date string N days from now. */
+function daysFromNow(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 function createInitialBoard(): LoadResult {
   const now = Date.now();
   const todoId = crypto.randomUUID();
@@ -30,10 +37,13 @@ function createInitialBoard(): LoadResult {
             {
               id: crypto.randomUUID(),
               number: 1,
-              title: "My first task",
-              description: "",
-              cardTypeId: null,
-              dueDate: null,
+              title: "Plan the project",
+              description:
+                "Break the work into small tasks:\n\n- [ ] Define goals\n- [ ] Identify milestones\n- [ ] Estimate effort",
+              cardTypeId: "feat",
+              cardTypeLabel: "Feature",
+              cardTypeColor: "#22c55e",
+              dueDate: daysFromNow(7),
               createdAt: now,
               updatedAt: now,
               columnHistory: [{ columnId: todoId, enteredAt: now }],
@@ -41,9 +51,12 @@ function createInitialBoard(): LoadResult {
             {
               id: crypto.randomUUID(),
               number: 2,
-              title: "Another task",
-              description: "",
-              cardTypeId: null,
+              title: "Write documentation",
+              description:
+                "Add a README with setup instructions and usage examples.",
+              cardTypeId: "chore",
+              cardTypeLabel: "Chore",
+              cardTypeColor: "#64748b",
               dueDate: null,
               createdAt: now,
               updatedAt: now,
@@ -60,13 +73,19 @@ function createInitialBoard(): LoadResult {
             {
               id: crypto.randomUUID(),
               number: 3,
-              title: "A task in progress",
-              description: "",
-              cardTypeId: null,
-              dueDate: null,
-              createdAt: now,
+              title: "Build the dashboard",
+              description:
+                "Progress so far:\n\n- [x] Layout scaffolding\n- [x] Header component\n- [ ] Data fetching\n- [ ] Charts",
+              cardTypeId: "feat",
+              cardTypeLabel: "Feature",
+              cardTypeColor: "#22c55e",
+              dueDate: daysFromNow(3),
+              createdAt: now - 2 * 86_400_000,
               updatedAt: now,
-              columnHistory: [{ columnId: inProgressId, enteredAt: now }],
+              columnHistory: [
+                { columnId: todoId, enteredAt: now - 2 * 86_400_000 },
+                { columnId: inProgressId, enteredAt: now - 86_400_000 },
+              ],
             },
           ],
         },
@@ -79,13 +98,19 @@ function createInitialBoard(): LoadResult {
             {
               id: crypto.randomUUID(),
               number: 4,
-              title: "A completed task",
+              title: "Set up the repo",
               description: "",
-              cardTypeId: null,
+              cardTypeId: "chore",
+              cardTypeLabel: "Chore",
+              cardTypeColor: "#64748b",
               dueDate: null,
-              createdAt: now,
-              updatedAt: now,
-              columnHistory: [{ columnId: doneId, enteredAt: now }],
+              createdAt: now - 3 * 86_400_000,
+              updatedAt: now - 86_400_000,
+              columnHistory: [
+                { columnId: todoId, enteredAt: now - 3 * 86_400_000 },
+                { columnId: inProgressId, enteredAt: now - 2 * 86_400_000 },
+                { columnId: doneId, enteredAt: now - 86_400_000 },
+              ],
             },
           ],
         },
