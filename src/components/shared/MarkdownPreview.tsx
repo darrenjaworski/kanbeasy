@@ -31,8 +31,13 @@ function createRenderer(interactive: boolean): RendererObject {
     list(token) {
       const items = token.items.map((item) => this.listitem(item)).join("");
       const tag = token.ordered ? "ol" : "ul";
-      const cls = token.ordered ? "list-decimal" : "list-disc";
-      return `<${tag} class="${cls} pl-4 mb-2">${items}</${tag}>`;
+      const isTaskList = token.items.some((item) => item.task);
+      const cls = isTaskList
+        ? "list-none pl-1"
+        : token.ordered
+          ? "list-decimal pl-4"
+          : "list-disc pl-4";
+      return `<${tag} class="${cls} mb-2">${items}</${tag}>`;
     },
     listitem(item) {
       return `<li class="mb-0.5">${this.parser.parse(item.tokens)}</li>`;
