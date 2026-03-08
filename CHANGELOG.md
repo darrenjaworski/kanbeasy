@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.39.0]
+
+### Features
+
+- Expand Personal card type preset with 5 new types: Habit, Event, Reminder, Shopping, and Reading — all with unique colors from the 12-color palette
+
 ## [1.38.2]
 
 ### Fixed
