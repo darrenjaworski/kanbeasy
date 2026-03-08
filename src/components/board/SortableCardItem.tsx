@@ -135,6 +135,7 @@ export function SortableCardItem({
         number={card.number}
         cardTypeId={card.cardTypeId}
         cardTypeColor={card.cardTypeColor}
+        cardTypeLabel={card.cardTypeLabel}
         title={card.title}
         description={card.description}
         dueDate={card.dueDate}

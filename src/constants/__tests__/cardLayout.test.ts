@@ -10,6 +10,7 @@ describe("isValidCardLayout", () => {
     const reordered = [
       { id: "title", visible: true, options: { lines: 2 } },
       { id: "badge", visible: false },
+      { id: "cardTypeName", visible: false },
       { id: "description", visible: true, options: { lines: 1 } },
       { id: "checklist", visible: true },
       { id: "dueDate", visible: false },

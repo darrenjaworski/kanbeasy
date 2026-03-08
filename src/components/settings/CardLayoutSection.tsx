@@ -34,6 +34,7 @@ const SAMPLE = {
   number: 42,
   cardTypeId: "feat",
   cardTypeColor: "#22c55e",
+  cardTypeLabel: "Feature",
   title: "My example task",
   description:
     "A description with some details\n- [ ] Todo item\n- [x] Done item\n- [ ] Another todo",
@@ -220,6 +221,7 @@ export function CardLayoutSection() {
               number={SAMPLE.number}
               cardTypeId={SAMPLE.cardTypeId}
               cardTypeColor={SAMPLE.cardTypeColor}
+              cardTypeLabel={SAMPLE.cardTypeLabel}
               title={SAMPLE.title}
               description={SAMPLE.description}
               dueDate={SAMPLE.dueDate}

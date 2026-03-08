@@ -10,6 +10,7 @@ type CardBodyProps = Readonly<{
   number: number;
   cardTypeId: string | null;
   cardTypeColor?: string;
+  cardTypeLabel?: string;
   title: string;
   description: string | null;
   dueDate: string | null;
@@ -32,6 +33,7 @@ export function CardBody({
   number,
   cardTypeId,
   cardTypeColor,
+  cardTypeLabel,
   title,
   description,
   dueDate,
@@ -84,8 +86,18 @@ export function CardBody({
     );
   }
 
-  // Dynamic rendering based on layout config — each field gets its own row
+  // Dynamic rendering based on layout config — each field gets its own row.
+  // The first rendered field has no top margin; subsequent fields get mt-1.
   const visibleFields = cardLayout.filter((f) => f.visible);
+  let isFirst = true;
+
+  function gap() {
+    if (isFirst) {
+      isFirst = false;
+      return "";
+    }
+    return "mt-1";
+  }
 
   return (
     <>
@@ -93,7 +105,7 @@ export function CardBody({
         switch (field.id) {
           case "badge":
             return (
-              <div key={field.id}>
+              <div key={field.id} className={gap()}>
                 <CardTypeBadge
                   number={number}
                   cardTypeId={cardTypeId}
@@ -101,8 +113,29 @@ export function CardBody({
                 />
               </div>
             );
+          case "cardTypeName":
+            if (!cardTypeLabel) return null;
+            return (
+              <div key={field.id} className={gap()}>
+                <span
+                  className="inline-block text-xs font-medium rounded-sm px-1 select-none"
+                  style={
+                    cardTypeColor
+                      ? {
+                          backgroundColor: `${cardTypeColor}20`,
+                          color: cardTypeColor,
+                        }
+                      : undefined
+                  }
+                  data-testid="card-type-name"
+                >
+                  {cardTypeLabel}
+                </span>
+              </div>
+            );
           case "title": {
             const titleRows = field.options?.lines ?? rows;
+            const mt = gap();
             return (
               <textarea
                 key={field.id}
@@ -112,7 +145,7 @@ export function CardBody({
                 defaultValue={title || "New card"}
                 readOnly={readOnly}
                 tabIndex={readOnly ? -1 : undefined}
-                className={`${tc.input} mt-1 w-full rounded-xs ${
+                className={`${tc.input} ${mt} w-full rounded-xs ${
                   readOnly
                     ? "resize-none cursor-default"
                     : "resize-none hover:resize-y focus:resize-y"
@@ -129,7 +162,7 @@ export function CardBody({
             return (
               <p
                 key={field.id}
-                className={`text-xs ${tc.textFaint} mt-1 whitespace-pre-line`}
+                className={`text-xs ${tc.textFaint} ${gap()} whitespace-pre-line`}
                 style={{
                   display: "-webkit-box",
                   WebkitLineClamp: field.options?.lines ?? 2,
@@ -143,7 +176,7 @@ export function CardBody({
             );
           case "checklist":
             return (
-              <div key={field.id} className="mt-1">
+              <div key={field.id} className={gap()}>
                 <ChecklistProgress
                   description={description ?? ""}
                   showCount={false}
@@ -152,7 +185,7 @@ export function CardBody({
             );
           case "dueDate":
             return (
-              <div key={field.id} className="mt-1">
+              <div key={field.id} className={gap()}>
                 <DueDateBadge dueDate={dueDate} />
               </div>
             );
@@ -161,7 +194,7 @@ export function CardBody({
             return (
               <p
                 key={field.id}
-                className={`text-xs ${tc.textFaint} mt-1`}
+                className={`text-xs ${tc.textFaint} ${gap()}`}
                 data-testid="card-created-at"
               >
                 Created {formatDate(createdAt)}
@@ -172,7 +205,7 @@ export function CardBody({
             return (
               <p
                 key={field.id}
-                className={`text-xs ${tc.textFaint} mt-1`}
+                className={`text-xs ${tc.textFaint} ${gap()}`}
                 data-testid="card-updated-at"
               >
                 Updated {formatDate(updatedAt)}

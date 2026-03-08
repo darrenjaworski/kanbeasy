@@ -575,6 +575,7 @@ describe("validateExportData", () => {
     const layout = [
       { id: "title", visible: true, options: { lines: 2 } },
       { id: "badge", visible: true },
+      { id: "cardTypeName", visible: false },
       { id: "description", visible: true, options: { lines: 3 } },
       { id: "checklist", visible: false },
       { id: "dueDate", visible: false },
@@ -615,7 +616,7 @@ describe("validateExportData", () => {
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.settings.cardLayout).toHaveLength(7);
+    expect(result.data.settings.cardLayout).toHaveLength(8);
     expect(result.data.settings.cardLayout[0].id).toBe("badge");
   });
 

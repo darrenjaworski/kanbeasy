@@ -81,8 +81,9 @@ describe("CardLayoutSection", () => {
       screen.getByRole("button", { name: /card layout editor/i }),
     );
 
-    // All 7 fields should be listed
+    // All 8 fields should be listed
     expect(screen.getByTestId("layout-field-badge")).toBeInTheDocument();
+    expect(screen.getByTestId("layout-field-cardTypeName")).toBeInTheDocument();
     expect(screen.getByTestId("layout-field-title")).toBeInTheDocument();
     expect(screen.getByTestId("layout-field-description")).toBeInTheDocument();
     expect(screen.getByTestId("layout-field-checklist")).toBeInTheDocument();

@@ -1,5 +1,6 @@
 type CardFieldId =
   | "badge"
+  | "cardTypeName"
   | "title"
   | "description"
   | "checklist"
@@ -17,6 +18,7 @@ export type CardLayout = readonly CardFieldConfig[];
 
 export const CARD_FIELD_LABELS: Record<CardFieldId, string> = {
   badge: "Card Number",
+  cardTypeName: "Card Type",
   title: "Title",
   description: "Description",
   checklist: "Checklist Progress",
@@ -36,6 +38,7 @@ export const MAX_VISIBLE_FIELDS = 5;
 
 export const DEFAULT_CARD_LAYOUT: CardLayout = [
   { id: "badge", visible: true },
+  { id: "cardTypeName", visible: false },
   { id: "title", visible: true, options: { lines: 1 } },
   { id: "checklist", visible: true },
   { id: "dueDate", visible: true },
