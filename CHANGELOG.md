@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.1]
+
+### Fixed
+
+- Fix card type presets leaking types between each other — presets are now immutable and always load their exact types fresh; selecting "Custom" starts with an empty list
+
+### Tests
+
+- Add e2e regression tests for preset isolation (no type leakage across presets) and custom preset clearing all types
+- Replace "retains in-use types" unit test with preset isolation assertions
+
 ## [1.38.0]
 
 ### Features
