@@ -151,6 +151,7 @@ Settings
 - swimlanes (horizontal grouping across columns by project or person)
 - activity log (timeline of card movements, edits, deletions)
 - localStorage usage warning — alert the user when approaching the browser's storage limit
+- request persistent storage button — allow users to request `navigator.storage.persist()` from Settings > Data to prevent the browser from evicting IndexedDB data under storage pressure
 - offline PWA (service worker + manifest for standalone install)
 - print/PDF view (clean print stylesheet for standups and sharing)
 - responsive design for tablets and mobile devices
