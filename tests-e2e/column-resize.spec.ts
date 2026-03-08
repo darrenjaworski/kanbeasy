@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect, idbKvGet } from "./fixtures";
 
 test("settings toggle enables column resize and persists", async ({ page }) => {
   // create a column
@@ -23,11 +23,10 @@ test("settings toggle enables column resize and persists", async ({ page }) => {
   // handle should now be present
   await expect(page.locator('[data-testid="resize-handle-0"]')).toBeVisible();
 
-  // localStorage should reflect the setting
-  const stored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:columnResizingEnabled"),
-  );
-  expect(stored).toBe("true");
+  // IndexedDB should reflect the setting
+  await expect
+    .poll(() => idbKvGet(page, "kanbeasy:columnResizingEnabled"))
+    .toBe("true");
 });
 
 test("can resize a column with the mouse and clamps to min/max", async ({

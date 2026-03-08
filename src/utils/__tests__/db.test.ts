@@ -4,6 +4,8 @@ import {
   openDatabase,
   kvGet,
   kvSet,
+  kvGetBool,
+  kvSetBool,
   kvRemove,
   kvGetAll,
   getBoard,
@@ -238,6 +240,90 @@ describe("db", () => {
 
       expect(kvGet("key", "gone")).toBe("gone");
       expect(getBoard()).toBeNull();
+    });
+  });
+
+  describe("kvGetBool / kvSetBool", () => {
+    it("returns fallback when key does not exist", () => {
+      expect(kvGetBool("nonexistent", true)).toBe(true);
+      expect(kvGetBool("nonexistent", false)).toBe(false);
+    });
+
+    it("returns true when stored value is 'true'", () => {
+      kvSet("flag", "true");
+      expect(kvGetBool("flag", false)).toBe(true);
+    });
+
+    it("returns false when stored value is 'false'", () => {
+      kvSet("flag", "false");
+      expect(kvGetBool("flag", true)).toBe(false);
+    });
+
+    it("stores 'true'/'false' strings", () => {
+      kvSetBool("enabled", true);
+      expect(kvGet("enabled", null)).toBe("true");
+
+      kvSetBool("enabled", false);
+      expect(kvGet("enabled", null)).toBe("false");
+    });
+
+    it("works with kvSetBool round-trip", () => {
+      kvSetBool("a", true);
+      kvSetBool("b", false);
+
+      expect(kvGetBool("a", false)).toBe(true);
+      expect(kvGetBool("b", true)).toBe(false);
+    });
+  });
+
+  describe("IDB persistence round-trip", () => {
+    it("kv data survives cache reset + re-open", async () => {
+      await openDatabase();
+      kvSet("persist-key", "persist-value");
+
+      // Reset in-memory caches and re-open — IDB should repopulate
+      resetDb();
+      await openDatabase();
+
+      expect(kvGet("persist-key", "gone")).toBe("persist-value");
+    });
+
+    it("board data survives cache reset + re-open", async () => {
+      await openDatabase();
+      const board = makeBoardWithColumn("Persistent");
+      saveBoard(board);
+      flushPendingWrites();
+
+      // Reset in-memory caches and re-open — IDB should repopulate
+      resetDb();
+      await openDatabase();
+
+      expect(getBoard()).toEqual(board);
+    });
+  });
+
+  describe("migration of corrupt localStorage data", () => {
+    it("skips corrupt board data gracefully", async () => {
+      localStorage.setItem("kanbeasy:board", "{not valid json!!!");
+
+      await openDatabase();
+
+      // Board should not have been migrated
+      expect(getBoard()).toBeNull();
+    });
+
+    it("migrates valid kv even when board data is corrupt", async () => {
+      localStorage.setItem("kanbeasy:board", "{not valid json!!!");
+      localStorage.setItem("kanbeasy:theme", "dark-slate");
+      localStorage.setItem("kanbeasy:cardDensity", "large");
+
+      await openDatabase();
+
+      // Board should not have been migrated
+      expect(getBoard()).toBeNull();
+      // KV settings should still have been migrated
+      expect(kvGet("kanbeasy:theme", "")).toBe("dark-slate");
+      expect(kvGet("kanbeasy:cardDensity", "")).toBe("large");
     });
   });
 

@@ -8,7 +8,7 @@ import type {
 } from "./types";
 import type { ThemeId, ThemeMode } from "./themes";
 import { getDefaultThemeForMode, getThemeById } from "./themes";
-import { kvGet, kvSet, kvRemove } from "../utils/db";
+import { kvGet, kvGetBool, kvSet, kvSetBool, kvRemove } from "../utils/db";
 import { STORAGE_KEYS } from "../constants/storage";
 import { updateFavicon } from "./favicon";
 import type { CardType } from "../constants/cardTypes";
@@ -111,16 +111,14 @@ export function ThemeProvider({
   const [cardDensity, setCardDensity] =
     useState<CardDensity>(getInitialDensity);
   const [columnResizingEnabled, setColumnResizingEnabled] = useState<boolean>(
-    () =>
-      kvGet<string>(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, "false") === "true",
+    () => kvGetBool(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, false),
   );
   const [deleteColumnWarningEnabled, setDeleteColumnWarningEnabled] =
-    useState<boolean>(
-      () =>
-        kvGet<string>(STORAGE_KEYS.DELETE_COLUMN_WARNING, "true") === "true",
+    useState<boolean>(() =>
+      kvGetBool(STORAGE_KEYS.DELETE_COLUMN_WARNING, true),
     );
-  const [owlModeEnabled, setOwlModeEnabled] = useState<boolean>(
-    () => kvGet<string>(STORAGE_KEYS.OWL_MODE_ENABLED, "false") === "true",
+  const [owlModeEnabled, setOwlModeEnabled] = useState<boolean>(() =>
+    kvGetBool(STORAGE_KEYS.OWL_MODE_ENABLED, false),
   );
   const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
   const [cardTypePresetId, setCardTypePresetId] = useState<string>(
@@ -132,14 +130,12 @@ export function ThemeProvider({
   const [defaultCardTypeId, setDefaultCardTypeId] = useState<string | null>(
     () => kvGet<string>(STORAGE_KEYS.DEFAULT_CARD_TYPE, "") || null,
   );
-  const [compactHeader, setCompactHeader] = useState<boolean>(
-    () => kvGet<string>(STORAGE_KEYS.COMPACT_HEADER, "false") === "true",
+  const [compactHeader, setCompactHeader] = useState<boolean>(() =>
+    kvGetBool(STORAGE_KEYS.COMPACT_HEADER, false),
   );
   const [keyboardShortcutsEnabled, setKeyboardShortcutsEnabled] =
-    useState<boolean>(
-      () =>
-        kvGet<string>(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED, "false") ===
-        "true",
+    useState<boolean>(() =>
+      kvGetBool(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED, false),
     );
 
   const setThemePreference = useCallback(
@@ -202,18 +198,15 @@ export function ThemeProvider({
   }, [cardDensity]);
 
   useEffect(() => {
-    kvSet(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, String(columnResizingEnabled));
+    kvSetBool(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, columnResizingEnabled);
   }, [columnResizingEnabled]);
 
   useEffect(() => {
-    kvSet(
-      STORAGE_KEYS.DELETE_COLUMN_WARNING,
-      String(deleteColumnWarningEnabled),
-    );
+    kvSetBool(STORAGE_KEYS.DELETE_COLUMN_WARNING, deleteColumnWarningEnabled);
   }, [deleteColumnWarningEnabled]);
 
   useEffect(() => {
-    kvSet(STORAGE_KEYS.OWL_MODE_ENABLED, String(owlModeEnabled));
+    kvSetBool(STORAGE_KEYS.OWL_MODE_ENABLED, owlModeEnabled);
   }, [owlModeEnabled]);
 
   useEffect(() => {
@@ -237,13 +230,13 @@ export function ThemeProvider({
   }, [defaultCardTypeId]);
 
   useEffect(() => {
-    kvSet(STORAGE_KEYS.COMPACT_HEADER, String(compactHeader));
+    kvSetBool(STORAGE_KEYS.COMPACT_HEADER, compactHeader);
   }, [compactHeader]);
 
   useEffect(() => {
-    kvSet(
+    kvSetBool(
       STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED,
-      String(keyboardShortcutsEnabled),
+      keyboardShortcutsEnabled,
     );
   }, [keyboardShortcutsEnabled]);
 

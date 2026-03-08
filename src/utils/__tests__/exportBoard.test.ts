@@ -143,6 +143,21 @@ describe("exportBoard", () => {
     expect(data.settings.defaultCardType).toBe("feat");
   });
 
+  it("JSON-stringifies non-string kv values (readKv coercion)", () => {
+    const cardTypes = [
+      { label: "Bug", color: "#ff0000" },
+      { label: "Feature", color: "#00ff00" },
+    ];
+    seedKv(STORAGE_KEYS.CARD_TYPES, cardTypes);
+
+    exportBoard();
+
+    const data = JSON.parse(capturedJson);
+    expect(data.settings.cardTypes).toBe(JSON.stringify(cardTypes));
+    // Verify round-trip: parsing the stringified value recovers the original
+    expect(JSON.parse(data.settings.cardTypes)).toEqual(cardTypes);
+  });
+
   it("cleans up object URL after download", () => {
     exportBoard();
     vi.advanceTimersByTime(100);

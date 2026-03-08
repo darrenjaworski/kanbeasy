@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { makeE2eCard } from "./fixtures";
+import { makeE2eCard, idbKvGet } from "./fixtures";
 
 const now = Date.now();
 
@@ -119,10 +119,9 @@ test.describe("Calendar view", () => {
   });
 
   test("persists calendar view preference", async ({ page }) => {
-    const viewMode = await page.evaluate(() =>
-      localStorage.getItem("kanbeasy:viewMode"),
-    );
-    expect(viewMode).toBe("calendar");
+    await expect
+      .poll(() => idbKvGet(page, "kanbeasy:viewMode"))
+      .toBe("calendar");
   });
 });
 

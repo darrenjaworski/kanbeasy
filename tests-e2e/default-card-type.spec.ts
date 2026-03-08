@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect, idbKvGet } from "./fixtures";
 import type { Page } from "@playwright/test";
 
 /** Open settings, expand Ticket Types section, return the dialog locator. */
@@ -52,17 +52,16 @@ test("new cards have no type when default is None", async ({ page }) => {
   await expect(card.locator("text=#1")).toBeVisible();
 });
 
-test("default type persists to localStorage", async ({ page }) => {
+test("default type persists to storage", async ({ page }) => {
   // Set default card type
   const dlg = await openCardTypeSettings(page);
   await dlg.getByTestId("default-card-type").selectOption("fix");
   await dlg.getByRole("button", { name: /close settings/i }).click();
 
-  // Verify it was written to localStorage
-  const stored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:defaultTicketType"),
-  );
-  expect(stored).toBe("fix");
+  // Verify it was written to IndexedDB
+  await expect
+    .poll(() => idbKvGet(page, "kanbeasy:defaultTicketType"))
+    .toBe("fix");
 });
 
 test("default type clears when switching to a preset without that type", async ({

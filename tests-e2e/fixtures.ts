@@ -1,4 +1,5 @@
 import { test as base, expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 export { expect };
 
@@ -20,6 +21,52 @@ export const test = base.extend<{ boardPage: never }>({
     { auto: true },
   ],
 });
+
+/** Read a value from the kanbeasy IndexedDB kv store. Returns null if missing. */
+export async function idbKvGet(page: Page, key: string): Promise<unknown> {
+  return page.evaluate((k: string) => {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open("kanbeasy", 1);
+      req.onsuccess = () => {
+        const db = req.result;
+        const tx = db.transaction("kv", "readonly");
+        const getReq = tx.objectStore("kv").get(k);
+        getReq.onsuccess = () => {
+          db.close();
+          resolve(getReq.result?.value ?? null);
+        };
+        getReq.onerror = () => {
+          db.close();
+          reject(getReq.error);
+        };
+      };
+      req.onerror = () => reject(req.error);
+    });
+  }, key);
+}
+
+/** Read the default board state from IndexedDB. Returns null if missing. */
+export async function idbGetBoard(page: Page): Promise<unknown> {
+  return page.evaluate(() => {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open("kanbeasy", 1);
+      req.onsuccess = () => {
+        const db = req.result;
+        const tx = db.transaction("board", "readonly");
+        const getReq = tx.objectStore("board").get("default");
+        getReq.onsuccess = () => {
+          db.close();
+          resolve(getReq.result?.state ?? null);
+        };
+        getReq.onerror = () => {
+          db.close();
+          reject(getReq.error);
+        };
+      };
+      req.onerror = () => reject(req.error);
+    });
+  });
+}
 
 /** Create a card object for seeding localStorage. */
 export function makeE2eCard(

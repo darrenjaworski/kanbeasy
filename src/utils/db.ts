@@ -127,6 +127,20 @@ async function writeMigrationToIdb(
   });
 }
 
+// --- Internal helpers ---
+
+function applyMigrationToCache(
+  kv: Map<string, unknown>,
+  board: BoardState | null,
+): void {
+  for (const [key, value] of kv) {
+    kvCache.set(key, value);
+  }
+  if (board) {
+    boardCache[DEFAULT_BOARD_ID] = board;
+  }
+}
+
 // --- Public API ---
 
 export async function openDatabase(): Promise<void> {
@@ -135,14 +149,8 @@ export async function openDatabase(): Promise<void> {
     if (import.meta.env.DEV) {
       console.warn("[db] IndexedDB is not available. Using in-memory only.");
     }
-    // Still try to read from localStorage as fallback
     const { kv, board } = migrateFromLocalStorage();
-    for (const [key, value] of kv) {
-      kvCache.set(key, value);
-    }
-    if (board) {
-      boardCache[DEFAULT_BOARD_ID] = board;
-    }
+    applyMigrationToCache(kv, board);
     return;
   }
 
@@ -173,26 +181,17 @@ export async function openDatabase(): Promise<void> {
     if (!migrated && typeof window !== "undefined" && window.localStorage) {
       const boardRaw = window.localStorage.getItem(STORAGE_KEYS.BOARD);
       if (boardRaw !== null) {
-        // Phase 1: Migrate localStorage data to IndexedDB
         const { kv, board } = migrateFromLocalStorage();
         await writeMigrationToIdb(db, kv, board);
-
-        // Update caches with migrated data
-        for (const [key, value] of kv) {
-          kvCache.set(key, value);
-        }
-        if (board) {
-          boardCache[DEFAULT_BOARD_ID] = board;
-        }
+        applyMigrationToCache(kv, board);
         kvCache.set("_migrated_from_localstorage", true);
       }
     }
 
-    // Phase 2: If migration was done on a previous load, clear localStorage
+    // If migration was done on a previous load, clear localStorage
     if (migrated && typeof window !== "undefined" && window.localStorage) {
       const boardRaw = window.localStorage.getItem(STORAGE_KEYS.BOARD);
       if (boardRaw !== null) {
-        // Clear all kanbeasy keys from localStorage
         for (const key of Object.values(STORAGE_KEYS)) {
           window.localStorage.removeItem(key);
         }
@@ -210,14 +209,8 @@ export async function openDatabase(): Promise<void> {
     if (import.meta.env.DEV) {
       console.warn("[db] Failed to open IndexedDB. Using in-memory only:", e);
     }
-    // Fallback: try to read from localStorage
     const { kv, board } = migrateFromLocalStorage();
-    for (const [key, value] of kv) {
-      kvCache.set(key, value);
-    }
-    if (board) {
-      boardCache[DEFAULT_BOARD_ID] = board;
-    }
+    applyMigrationToCache(kv, board);
   }
 }
 
@@ -262,11 +255,19 @@ export function kvGet<T>(key: string, fallback: T): T {
   return kvCache.get(key) as T;
 }
 
+export function kvGetBool(key: string, fallback: boolean): boolean {
+  return kvGet<string>(key, String(fallback)) === "true";
+}
+
 export function kvSet<T>(key: string, value: T): void {
   kvCache.set(key, value);
   if (available) {
     idbPut(KV_STORE, { key, value });
   }
+}
+
+export function kvSetBool(key: string, value: boolean): void {
+  kvSet(key, String(value));
 }
 
 export function kvRemove(key: string): void {

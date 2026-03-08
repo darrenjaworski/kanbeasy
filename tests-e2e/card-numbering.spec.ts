@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect, idbKvGet, idbGetBoard } from "./fixtures";
 
 test("new cards display ascending card numbers on board", async ({ page }) => {
   await page.getByTestId("add-column-button").click();
@@ -59,7 +59,7 @@ test("card numbers display in list view", async ({ page }) => {
   await expect(secondRowNumber).toHaveText("#1");
 });
 
-test("card numbers persist to localStorage", async ({ page }) => {
+test("card numbers persist to storage", async ({ page }) => {
   await page.getByTestId("add-column-button").click();
   const column = page.getByTestId("column-0");
   await column.getByTestId("add-card-button-0").click();
@@ -69,19 +69,18 @@ test("card numbers persist to localStorage", async ({ page }) => {
   await expect(column.getByTestId("card-0")).toContainText("#2");
   await expect(column.getByTestId("card-1")).toContainText("#1");
 
-  // Verify numbers are persisted in localStorage
-  const stored = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("kanbeasy:board") || "{}"),
-  );
-  const cards = stored.columns[0].cards;
-  expect(cards[0].number).toBe(2);
-  expect(cards[1].number).toBe(1);
+  // Verify numbers are persisted in IndexedDB
+  await expect
+    .poll(async () => {
+      const board = (await idbGetBoard(page)) as {
+        columns: { cards: { number: number }[] }[];
+      };
+      return board?.columns?.[0]?.cards?.map((c) => c.number);
+    })
+    .toEqual([2, 1]);
 
   // Verify the counter is also persisted
-  const counter = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("kanbeasy:nextCardNumber") || "0"),
-  );
-  expect(counter).toBe(3);
+  await expect.poll(() => idbKvGet(page, "kanbeasy:nextCardNumber")).toBe(3);
 });
 
 test("duplicated card gets a fresh number", async ({ page }) => {
@@ -118,10 +117,7 @@ test("counter increments past deleted cards (no number reuse)", async ({
   await expect(column.locator('[data-testid^="card-content-"]')).toHaveCount(0);
 
   // Counter should still be at 2, not reset to 1
-  const counter = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("kanbeasy:nextCardNumber") || "0"),
-  );
-  expect(counter).toBe(2);
+  await expect.poll(() => idbKvGet(page, "kanbeasy:nextCardNumber")).toBe(2);
 
   // Add another card — should be #2, not #1 reused
   await column.getByTestId("add-card-button-0").click();

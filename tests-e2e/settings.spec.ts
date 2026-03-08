@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect, idbKvGet } from "./fixtures";
 
 test("can select a dark theme", async ({ page }) => {
   await page.getByRole("button", { name: /open settings/i }).click();
@@ -91,11 +91,10 @@ test("compact header hides text labels", async ({ page }) => {
   await expect(page.getByRole("radio", { name: /board view/i })).toBeVisible();
   await expect(page.getByLabel("Open settings")).toBeVisible();
 
-  // Setting is persisted to localStorage
-  const stored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:compactHeader"),
-  );
-  expect(stored).toBe("true");
+  // Setting is persisted to IndexedDB
+  await expect
+    .poll(() => idbKvGet(page, "kanbeasy:compactHeader"))
+    .toBe("true");
 });
 
 test("can wipe the board data", async ({ page }) => {
@@ -106,11 +105,7 @@ test("can wipe the board data", async ({ page }) => {
   await expect(col0).toBeVisible();
   await col0.getByTestId("add-card-button-0").click();
 
-  // Seed some theme/density keys to ensure they are cleared
-  await page.evaluate(() => {
-    localStorage.setItem("kanbeasy:theme", "dark-slate");
-    localStorage.setItem("kanbeasy:cardDensity", "large");
-  });
+  // Theme and density keys are already set by ThemeProvider on load
 
   // Open settings and clear
   await page.getByRole("button", { name: /open settings/i }).click();
@@ -122,13 +117,7 @@ test("can wipe the board data", async ({ page }) => {
   // Board should be empty
   await expect(page.locator('[data-testid^="column-"]')).toHaveCount(0);
 
-  // LocalStorage keys should be cleared
-  const themeStored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:theme"),
-  );
-  const densityStored = await page.evaluate(() =>
-    localStorage.getItem("kanbeasy:cardDensity"),
-  );
-  expect(themeStored).toBeNull();
-  expect(densityStored).toBeNull();
+  // IndexedDB settings should be cleared
+  await expect.poll(() => idbKvGet(page, "kanbeasy:theme")).toBeNull();
+  await expect.poll(() => idbKvGet(page, "kanbeasy:cardDensity")).toBeNull();
 });
