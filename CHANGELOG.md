@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.40.0]
+
 ### Features
 
 - Settings modal sections remember their open/closed state across sessions via IndexedDB
