@@ -114,19 +114,19 @@ Settings
   - search by card type (filter cards by their assigned type)
   - search card descriptions in addition to titles
   - ✅ search highlighting on calendar view — highlight matching cards similar to board and list views
-  - due dates with reminders
-    - ✅ date picker in card detail modal
-    - ✅ visual overdue indicator (red badge/border) on board cards
-    - ✅ upcoming due date badge (e.g., "due tomorrow") on board cards
-    - optional browser notification reminders
-  - priority levels (none/low/medium/high)
-    - colored border or badge indicator on board cards
-    - priority selector in card detail modal
-    - sortable/filterable by priority
-  - image attachments (base64 or IndexedDB for larger storage)
-  - pinned cards — stick important cards to the top of a column
-  - compact vs expanded toggle — per-card override of global density setting
-  - aging indicator — visual fade or badge showing how long a card has sat idle
+- due dates with reminders
+  - ✅ date picker in card detail modal
+  - ✅ visual overdue indicator (red badge/border) on board cards
+  - ✅ upcoming due date badge (e.g., "due tomorrow") on board cards
+  - optional browser notification reminders
+- priority levels (none/low/medium/high)
+  - colored border or badge indicator on board cards
+  - priority selector in card detail modal
+  - sortable/filterable by priority
+- image attachments (base64 or IndexedDB for larger storage)
+- pinned cards — stick important cards to the top of a column
+- compact vs expanded toggle — per-card override of global density setting
+- aging indicator — visual fade or badge showing how long a card has sat idle
 - due date analytics — add due date metrics to the analytics modal (e.g., overdue count, on-time completion rate, average days until due)
 - card view editor — customize which fields are displayed on board cards, their order, and how they render
   - field picker (toggle visibility of title, description preview, card type, due date, checklist progress, card number, timestamps, etc.)
