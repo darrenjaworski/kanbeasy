@@ -15,7 +15,7 @@ export function CardTypeSection() {
     defaultCardTypeId,
     setDefaultCardTypeId,
   } = useTheme();
-  const { columns, renameCardType } = useBoard();
+  const { renameCardType } = useBoard();
   const [editingColorIdx, setEditingColorIdx] = useState<number | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
 
@@ -27,24 +27,13 @@ export function CardTypeSection() {
 
   const handlePresetChange = (presetId: string) => {
     setCardTypePresetId(presetId);
-    if (presetId === "custom") return;
+    if (presetId === "custom") {
+      setCardTypes([]);
+      return;
+    }
     const preset = CARD_TYPE_PRESETS.find((p) => p.id === presetId);
     if (preset) {
-      // Collect card type IDs currently used by cards on the board
-      const usedTypeIds = new Set<string>();
-      for (const col of columns) {
-        for (const card of col.cards) {
-          if (card.cardTypeId) usedTypeIds.add(card.cardTypeId);
-        }
-      }
-
-      // Keep any in-use type definitions that the new preset doesn't cover
-      const newPresetIds = new Set(preset.types.map((t) => t.id));
-      const retainedTypes = cardTypes.filter(
-        (t) => usedTypeIds.has(t.id) && !newPresetIds.has(t.id),
-      );
-
-      setCardTypes([...preset.types, ...retainedTypes]);
+      setCardTypes([...preset.types]);
     }
   };
 

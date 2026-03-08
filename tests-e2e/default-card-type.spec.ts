@@ -95,6 +95,51 @@ test("default type clears when the selected type is removed", async ({
   await expect(dlg.getByTestId("default-card-type")).toHaveValue("");
 });
 
+test("presets are isolated — switching does not leak types between presets", async ({
+  page,
+}) => {
+  const dlg = await openCardTypeSettings(page);
+  await dlg.getByTestId("card-type-editor-toggle").click();
+
+  // Add a custom type while on the development preset
+  await dlg.getByTestId("card-type-add").click();
+  // Preset should switch to custom
+  await expect(dlg.getByTestId("card-type-preset")).toHaveValue("custom");
+
+  // Switch to personal — should get exactly the personal preset types, no extras
+  await dlg.getByTestId("card-type-preset").selectOption("personal");
+  // The "new" type we added should NOT appear
+  const personalInputs = await dlg.getByTestId(/^card-type-id-/).all();
+  for (const input of personalInputs) {
+    await expect(input).not.toHaveValue("new");
+  }
+
+  // Switch back to development — should get exactly the development preset types
+  await dlg.getByTestId("card-type-preset").selectOption("development");
+  const devInputs = await dlg.getByTestId(/^card-type-id-/).all();
+  for (const input of devInputs) {
+    await expect(input).not.toHaveValue("new");
+  }
+});
+
+test("switching to custom clears all types", async ({ page }) => {
+  const dlg = await openCardTypeSettings(page);
+  await dlg.getByTestId("card-type-editor-toggle").click();
+
+  // Verify development types are present
+  const devInputs = await dlg.getByTestId(/^card-type-id-/).all();
+  expect(devInputs.length).toBeGreaterThan(0);
+
+  // Switch to custom
+  await dlg.getByTestId("card-type-preset").selectOption("custom");
+
+  // Should have zero types
+  await expect(dlg.getByTestId(/^card-type-id-/)).toHaveCount(0);
+
+  // Default card type dropdown should be hidden (no types available)
+  await expect(dlg.getByTestId("default-card-type")).toHaveCount(0);
+});
+
 test("card detail modal shows the default card type on new card", async ({
   page,
 }) => {

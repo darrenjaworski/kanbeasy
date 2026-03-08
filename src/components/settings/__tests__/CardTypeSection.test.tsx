@@ -84,34 +84,7 @@ describe("CardTypeSection", () => {
       }
     });
 
-    it("retains in-use types from previous preset when switching", () => {
-      // Seed board with a card using the "feat" type from the development preset
-      const now = Date.now();
-      seedBoard({
-        columns: [
-          {
-            id: "col-1",
-            title: "To Do",
-            createdAt: now,
-            updatedAt: now,
-            cards: [
-              {
-                id: "card-1",
-                number: 1,
-                title: "A feature",
-                description: "",
-                cardTypeId: "feat",
-                dueDate: null,
-                createdAt: now,
-                updatedAt: now,
-                columnHistory: [{ columnId: "col-1", enteredAt: now }],
-              },
-            ],
-          },
-        ],
-        archive: [],
-      });
-
+    it("does not retain previous preset types when switching presets", () => {
       renderSection();
       expandEditor();
 
@@ -125,11 +98,15 @@ describe("CardTypeSection", () => {
         expect(screen.getByDisplayValue(type.id)).toBeInTheDocument();
       }
 
-      // "feat" type should be retained because a card uses it
-      expect(screen.getByDisplayValue("feat")).toBeInTheDocument();
+      // Development types should NOT be present
+      for (const type of devPreset.types) {
+        if (!personalPreset.types.some((p) => p.id === type.id)) {
+          expect(screen.queryByDisplayValue(type.id)).not.toBeInTheDocument();
+        }
+      }
     });
 
-    it("switches to custom without changing types", () => {
+    it("switching to custom clears all types", () => {
       renderSection();
       expandEditor();
       fireEvent.change(screen.getByTestId("card-type-preset"), {
@@ -137,7 +114,26 @@ describe("CardTypeSection", () => {
       });
 
       expect(screen.getByTestId("card-type-preset")).toHaveValue("custom");
-      // Types should remain as development defaults
+      // No type rows should remain
+      expect(screen.queryAllByTestId(/^card-type-id-/)).toHaveLength(0);
+    });
+
+    it("selecting a preset after custom loads the preset types fresh", () => {
+      renderSection();
+      expandEditor();
+
+      // Go to custom (clears types)
+      fireEvent.change(screen.getByTestId("card-type-preset"), {
+        target: { value: "custom" },
+      });
+      expect(screen.queryAllByTestId(/^card-type-id-/)).toHaveLength(0);
+
+      // Switch back to development
+      fireEvent.change(screen.getByTestId("card-type-preset"), {
+        target: { value: "development" },
+      });
+
+      // All development types should be present
       for (const type of devPreset.types) {
         expect(screen.getByDisplayValue(type.id)).toBeInTheDocument();
       }
