@@ -69,7 +69,7 @@ function SortableFieldRow({
   } = useSortable({ id: field.id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 10 : undefined,
     opacity: isDragging ? 0.5 : undefined,
@@ -94,7 +94,7 @@ function SortableFieldRow({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-2 rounded-md px-2 py-1.5 ${tc.glass} ${tc.border} border`}
+      className={`flex items-center gap-2 rounded-md px-2 py-1.5 mb-1.5 last:mb-0 ${tc.glass} ${tc.border} border`}
       data-testid={`layout-field-${field.id}`}
     >
       {/* Drag handle */}
@@ -253,7 +253,7 @@ export function CardLayoutSection() {
             items={cardLayout.map((f) => f.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="flex flex-col gap-1.5">
+            <div>
               {cardLayout.map((field) => (
                 <SortableFieldRow
                   key={field.id}
