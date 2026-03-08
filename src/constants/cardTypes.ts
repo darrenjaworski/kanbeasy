@@ -52,6 +52,11 @@ export const CARD_TYPE_PRESETS: CardTypePreset[] = [
       { id: "idea", label: "Idea", color: "#f59e0b" },
       { id: "errand", label: "Errand", color: "#22c55e" },
       { id: "goal", label: "Goal", color: "#8b5cf6" },
+      { id: "habit", label: "Habit", color: "#14b8a6" },
+      { id: "event", label: "Event", color: "#ef4444" },
+      { id: "reminder", label: "Reminder", color: "#f97316" },
+      { id: "shopping", label: "Shopping", color: "#ec4899" },
+      { id: "reading", label: "Reading", color: "#06b6d4" },
     ],
   },
 ];
