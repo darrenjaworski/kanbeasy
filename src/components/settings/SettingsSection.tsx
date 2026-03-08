@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { tc } from "../../theme/classNames";
+import { kvGetBool, kvSetBool } from "../../utils/db";
 
 type Props = Readonly<{
   title: string;
   defaultOpen?: boolean;
   children: React.ReactNode;
 }>;
+
+function getStorageKey(title: string): string {
+  const slug = title.toLowerCase().replace(/\s+/g, "-");
+  return `kanbeasy:section:${slug}`;
+}
 
 function getSectionKey(title: string): string {
   return title.toLowerCase().replace(/\s+/g, "-");
@@ -17,7 +23,12 @@ export function SettingsSection({
   children,
 }: Props) {
   const sectionKey = getSectionKey(title);
-  const [open, setOpen] = useState(defaultOpen);
+  const storageKey = getStorageKey(title);
+  const [open, setOpen] = useState(() => kvGetBool(storageKey, defaultOpen));
+
+  useEffect(() => {
+    kvSetBool(storageKey, open);
+  }, [storageKey, open]);
 
   return (
     <div

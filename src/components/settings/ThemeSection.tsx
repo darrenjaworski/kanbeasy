@@ -8,6 +8,11 @@ import {
   DensityLargeIcon,
 } from "../icons";
 import { ToggleSwitch } from "../shared/ToggleSwitch";
+import { featureFlags } from "../../constants/featureFlags";
+
+type Props = Readonly<{
+  onOpenCardLayout?: () => void;
+}>;
 
 const lightThemes = themes.filter((t) => t.mode === "light");
 const darkThemes = themes.filter((t) => t.mode === "dark");
@@ -22,7 +27,7 @@ const MODE_OPTIONS: { value: ThemePreference; label: string }[] = [
   { value: "dark", label: "Dark" },
 ];
 
-export function ThemeSection() {
+export function ThemeSection({ onOpenCardLayout }: Props) {
   const {
     themeId,
     setThemeId,
@@ -139,6 +144,28 @@ export function ThemeSection() {
         checked={compactHeader}
         onChange={setCompactHeader}
       />
+      {featureFlags.cardLayoutEditor && onOpenCardLayout && (
+        <button
+          type="button"
+          onClick={onOpenCardLayout}
+          className={`w-full flex items-center justify-between rounded-lg border ${tc.border} ${tc.glass} px-3 py-2.5 text-sm font-medium ${tc.text} ${tc.borderHover} ${tc.focusRing} transition-colors`}
+        >
+          <span>Card Layout</span>
+          <svg
+            className={`size-4 ${tc.textFaint}`}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      )}
     </fieldset>
   );
 }

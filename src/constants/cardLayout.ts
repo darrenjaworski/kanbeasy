@@ -15,7 +15,7 @@ export type CardFieldConfig = Readonly<{
 
 export type CardLayout = readonly CardFieldConfig[];
 
-const CARD_FIELD_LABELS: Record<CardFieldId, string> = {
+export const CARD_FIELD_LABELS: Record<CardFieldId, string> = {
   badge: "Card Number",
   title: "Title",
   description: "Description",
