@@ -125,8 +125,13 @@ Settings
 - compact vs expanded toggle — per-card override of global density setting
 - aging indicator — visual fade or badge showing how long a card has sat idle
 - due date analytics — add due date metrics to the analytics modal (e.g., overdue count, on-time completion rate, average days until due)
+- custom card properties — user-defined fields that extend the built-in card data model
+  - property editor in settings (name, data type: text, number, date, single-select, checkbox, URL)
+  - properties stored per-board and available on all cards
+  - values editable in the card detail modal
+  - integrates with the card view editor for display on board cards
 - card view editor — customize which fields are displayed on board cards, their order, and how they render
-  - field picker (toggle visibility of title, description preview, card type, due date, checklist progress, card number, timestamps, etc.)
+  - field picker (toggle visibility of built-in and custom properties: title, description preview, card type, due date, checklist progress, card number, timestamps, user-defined fields, etc.)
   - drag-to-reorder field layout
   - display mode per field (e.g., badge vs inline text, icon-only vs label)
   - per-board or global preset support
