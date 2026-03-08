@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Search now matches card descriptions in addition to titles
 
+### Changed
+
+- Reorder card detail modal fields: Title and Description now appear above Column, Type, and Due date
+- Add tooltip to disabled view toggle buttons explaining why they are unavailable
+
 ### Tests
 
 - Add unit test for description search matching

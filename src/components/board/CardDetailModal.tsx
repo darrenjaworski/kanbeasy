@@ -68,6 +68,40 @@ export function CardDetailModal({
       className="max-w-lg"
     >
       <div className="space-y-4">
+        {/* Title */}
+        <div>
+          <label
+            htmlFor="card-detail-title-input"
+            className={`block text-xs font-medium ${tc.textMuted} mb-1`}
+          >
+            Title
+          </label>
+          <textarea
+            ref={titleRef}
+            id="card-detail-title-input"
+            className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
+            rows={ROWS_FOR_DENSITY[density]}
+            value={tempTitle}
+            onChange={(e) => setTempTitle(e.target.value)}
+            onKeyDown={titleKeyDown}
+            onBlur={titleBlur}
+            onFocus={(e) => e.target.select()}
+            data-testid="card-detail-title"
+          />
+        </div>
+
+        {/* Description */}
+        <div>
+          <span className={`block text-xs font-medium ${tc.textMuted} mb-1`}>
+            Description
+          </span>
+          <DescriptionField
+            description={card.description}
+            onSave={handleDescriptionSave}
+          />
+          <ChecklistProgress description={card.description} className="mt-2" />
+        </div>
+
         {/* Column selector */}
         <div>
           <label
@@ -171,40 +205,6 @@ export function CardDetailModal({
             className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing}`}
             data-testid="card-detail-due-date"
           />
-        </div>
-
-        {/* Title */}
-        <div>
-          <label
-            htmlFor="card-detail-title-input"
-            className={`block text-xs font-medium ${tc.textMuted} mb-1`}
-          >
-            Title
-          </label>
-          <textarea
-            ref={titleRef}
-            id="card-detail-title-input"
-            className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
-            rows={ROWS_FOR_DENSITY[density]}
-            value={tempTitle}
-            onChange={(e) => setTempTitle(e.target.value)}
-            onKeyDown={titleKeyDown}
-            onBlur={titleBlur}
-            onFocus={(e) => e.target.select()}
-            data-testid="card-detail-title"
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <span className={`block text-xs font-medium ${tc.textMuted} mb-1`}>
-            Description
-          </span>
-          <DescriptionField
-            description={card.description}
-            onSave={handleDescriptionSave}
-          />
-          <ChecklistProgress description={card.description} className="mt-2" />
         </div>
 
         {/* Archive button */}
