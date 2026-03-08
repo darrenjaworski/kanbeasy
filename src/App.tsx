@@ -1,10 +1,9 @@
 import { useCallback, useState } from "react";
 import { Board } from "./components/board/Board";
+import { BottomBar } from "./components/BottomBar";
 import { CommandPalette } from "./components/CommandPalette";
-import { KeyboardShortcutHint } from "./components/KeyboardShortcutHint";
 import { Header } from "./components/Header";
 import { WelcomeModal } from "./components/WelcomeModal";
-import { UndoRedoControls } from "./components/UndoRedoControls";
 import { OwlBuddy } from "./components/OwlBuddy";
 import { ListView } from "./components/ListView";
 import { CalendarView } from "./components/CalendarView";
@@ -29,9 +28,8 @@ function App() {
       {viewMode === "board" && <Board />}
       {viewMode === "list" && <ListView />}
       {viewMode === "calendar" && <CalendarView />}
-      {viewMode === "board" && <UndoRedoControls />}
+      <BottomBar />
       <OwlBuddy />
-      {keyboardShortcutsEnabled && <KeyboardShortcutHint />}
       <CommandPalette
         open={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}

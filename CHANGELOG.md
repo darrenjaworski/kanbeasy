@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Unify `UndoRedoControls` and `KeyboardShortcutHint` into a single `BottomBar` component so the shortcut hint sits flush right on views without undo/redo
 - Absorb ModalHeader and content wrapper into Modal component via `icon`/`title` props, simplifying all modal consumers with consistent padding
 
 ## [1.33.0]
