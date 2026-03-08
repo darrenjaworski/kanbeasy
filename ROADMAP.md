@@ -84,6 +84,8 @@ an ultra simple task organizer
 - ✅ search card descriptions in addition to titles
 - ✅ card detail modal field reorder — Title and Description appear first, above Column/Type/Due date
 - ✅ tooltips on disabled view toggle buttons explaining why they are unavailable
+- ✅ migrate to IndexedDB instead of localStorage — unified async storage backend with generous quota, enabling image attachments, multiple boards, and larger data without hitting the ~5 MB localStorage ceiling
+- ✅ storage usage and persistence status display in Settings > Data
 
 Settings
 
@@ -148,8 +150,7 @@ Settings
 - saved filters/views (presets beyond search, e.g., "older than 7 days")
 - swimlanes (horizontal grouping across columns by project or person)
 - activity log (timeline of card movements, edits, deletions)
-- migrate to IndexedDB instead of localStorage — unified async storage backend with generous quota, enabling image attachments, multiple boards, and larger data without hitting the ~5 MB localStorage ceiling
-- localStorage usage warning — alert the user when approaching the browser's localStorage limit (~5 MB)
+- localStorage usage warning — alert the user when approaching the browser's storage limit
 - offline PWA (service worker + manifest for standalone install)
 - print/PDF view (clean print stylesheet for standups and sharing)
 - responsive design for tablets and mobile devices

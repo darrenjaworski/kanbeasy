@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.36.0]
+
+### Features
+
+- Migrate persistence layer from localStorage to IndexedDB — unified async storage backend with generous quota, automatic migration of existing data, and sync in-memory cache for zero-latency reads
+- Add storage usage and persistence status display in Settings > Data
+
 ### Changed
 
 - Refactor ThemeProvider to use `kvGetBool`/`kvSetBool` for boolean settings
 - Extract `applyMigrationToCache()` helper to consolidate repeated cache population logic
-- Migrate persistence layer from localStorage to IndexedDB with sync in-memory cache
 - Add AppLoader wrapper for async database initialization on startup
 - Bump export format version to 10 (import supports all prior versions 1–10)
 
@@ -20,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `kvGetBool`/`kvSetBool` helpers in `db.ts` for boolean kv settings
 - `src/utils/db.ts` — IndexedDB-backed storage module with sync cache, write coalescing, and automatic localStorage migration
 - `src/components/AppLoader.tsx` — async init gate with 100ms skeleton threshold
-- Storage usage and persistence status display in Settings > Data
 - `fake-indexeddb` dev dependency for test environment
 
 ### Removed
