@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { tc } from "../../theme/classNames";
+import { kvGet, kvSet } from "../../utils/db";
+import { STORAGE_KEYS } from "../../constants/storage";
 
 type Props = Readonly<{
   title: string;
@@ -11,13 +13,29 @@ function getSectionKey(title: string): string {
   return title.toLowerCase().replace(/\s+/g, "-");
 }
 
+function getSectionStates(): Record<string, boolean> {
+  return kvGet<Record<string, boolean>>(STORAGE_KEYS.SETTINGS_SECTIONS, {});
+}
+
 export function SettingsSection({
   title,
   defaultOpen = false,
   children,
 }: Props) {
   const sectionKey = getSectionKey(title);
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(() => {
+    const states = getSectionStates();
+    return sectionKey in states ? states[sectionKey] : defaultOpen;
+  });
+
+  const toggle = useCallback(() => {
+    setOpen((prev) => {
+      const next = !prev;
+      const states = getSectionStates();
+      kvSet(STORAGE_KEYS.SETTINGS_SECTIONS, { ...states, [sectionKey]: next });
+      return next;
+    });
+  }, [sectionKey]);
 
   return (
     <div
@@ -26,7 +44,7 @@ export function SettingsSection({
     >
       <button
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={toggle}
         aria-expanded={open}
         className={`w-full flex items-center justify-between py-3 text-base font-bold tracking-tight ${tc.text} ${tc.focusRing} transition-colors`}
       >

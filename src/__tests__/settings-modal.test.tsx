@@ -111,10 +111,9 @@ describe("settings modal", () => {
     const textareas = screen.getAllByRole("textbox", { name: /card content/i });
     expect(textareas[0]).toHaveAttribute("rows", "1");
 
-    // Re-open, expand Appearance, and set comfortable
+    // Re-open and set comfortable (Appearance already persisted as open)
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg2 = await screen.findByRole("dialog", { name: /settings/i });
-    await user.click(within(dlg2).getByRole("button", { name: /appearance/i }));
     await user.click(
       within(dlg2).getByRole("button", { name: /comfortable/i }),
     );
@@ -126,10 +125,9 @@ describe("settings modal", () => {
     });
     expect(textareasAfterComfortable[0]).toHaveAttribute("rows", "2");
 
-    // Re-open, expand Appearance, and set spacious
+    // Re-open and set spacious (Appearance still persisted as open)
     await user.click(screen.getByRole("button", { name: /open settings/i }));
     const dlg3 = await screen.findByRole("dialog", { name: /settings/i });
-    await user.click(within(dlg3).getByRole("button", { name: /appearance/i }));
     await user.click(within(dlg3).getByRole("button", { name: /spacious/i }));
     await user.click(
       within(dlg3).getByRole("button", { name: /close settings/i }),

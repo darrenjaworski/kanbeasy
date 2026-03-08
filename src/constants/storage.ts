@@ -48,4 +48,7 @@ export const STORAGE_KEYS = {
 
   /** Whether the user has seen the welcome modal */
   HAS_SEEN_WELCOME: "hasSeenWelcome",
+
+  /** Settings section open/closed states (JSON object) */
+  SETTINGS_SECTIONS: "kanbeasy:settingsSections",
 } as const;
