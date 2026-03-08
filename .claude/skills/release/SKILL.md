@@ -105,6 +105,41 @@ gh run view <run-id> --log-failed
 
 Report the final status of all workflows. If any fail, diagnose the issue and report it to the user.
 
-## 10. Confirm
+## 10. Executive summary
 
-Confirm the release is complete: push succeeded, all workflows passed, and the GitHub Release was created.
+Present a final release report to the user with the following format:
+
+```
+# Release vX.Y.Z
+
+**Deployed:** <date and time in the user's local timezone>
+**Tag:** vX.Y.Z
+**Bump:** patch | minor | major
+
+## Highlights
+
+- <1-3 bullet points summarizing the most important changes for this release, written in plain language>
+
+## Commits
+
+- <list each commit included in this release (hash + message)>
+
+## CI/CD
+
+| Workflow | Status | Duration |
+|---|---|---|
+| static checks | <pass/fail> | <duration> |
+| gh page deploy | <pass/fail> | <duration> |
+| release | <pass/fail> | <duration> |
+| pages build and deployment | <pass/fail> | <duration> |
+| lighthouse audit | <pass/fail> | <duration> |
+| e2e tests | <pass/fail> | <duration> |
+
+## Test results
+
+- **Unit tests:** <count> passed
+- **E2E tests:** <count> passed (across chromium, firefox, webkit)
+- **Lighthouse:** passed
+```
+
+Fill in all values from the data collected during earlier steps. If any workflow failed, note it prominently at the top of the summary.
