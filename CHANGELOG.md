@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.34.1]
+
+### Changed
+
+- Migrate WelcomeModal to use the shared Modal component for consistent styling
+
 ## [1.34.0]
 
 ### Features
