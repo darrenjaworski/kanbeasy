@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.35.0]
+
 ### Features
 
 - Search now matches card descriptions in addition to titles
@@ -20,6 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add unit test for description search matching
 - Add e2e test for description search via card detail modal
+
+### Documentation
+
+- Add image attachments design document
+- Add IndexedDB migration design document
+- Add sortable table columns to roadmap
 
 ## [1.34.3]
 

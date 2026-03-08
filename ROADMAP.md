@@ -81,6 +81,9 @@ an ultra simple task organizer
 - ✅ search highlighting on calendar view — highlight matching cards and show match count badge on busy days
 - ✅ command palette (`Cmd+K` / `Ctrl+K`) with quick actions for adding cards, columns, switching views, and opening modals
 - ✅ keyboard shortcuts toggle in Settings > Preferences (defaults to off)
+- ✅ search card descriptions in addition to titles
+- ✅ card detail modal field reorder — Title and Description appear first, above Column/Type/Due date
+- ✅ tooltips on disabled view toggle buttons explaining why they are unavailable
 
 Settings
 
