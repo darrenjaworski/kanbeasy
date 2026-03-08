@@ -166,6 +166,11 @@ Settings
   - ✅ enable type-aware ESLint rules (`parserOptions.project`) to catch unsafe promises, optional chaining, and type-unsafe comparisons
   - ✅ consistent use of `tc` class helper — replace inline Tailwind class strings with centralized theme tokens (e.g., `CardList.tsx`)
 - enrich initial board — update the default starter cards to showcase newer features (card types, due dates, checklist items, descriptions) so first-time users immediately see what's possible
+- recurring cards — automatically create cards on a configurable schedule
+  - schedule options (daily, weekly, monthly, custom cron)
+  - template-based creation with pre-filled title, description, type, and target column
+  - option to auto-archive the previous instance when a new one is created
+  - visual indicator on board cards showing recurrence pattern
 - fun & easter eggs
   - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
   - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)
