@@ -2,7 +2,7 @@ import { STORAGE_KEYS } from "../constants/storage";
 import { kvGet, getBoard } from "./db";
 
 interface ExportData {
-  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
   exportedAt: string;
   board: unknown;
   settings: {
@@ -17,6 +17,7 @@ interface ExportData {
     cardTypes: string;
     defaultCardType: string;
     compactHeader: string;
+    cardLayout: string;
   };
 }
 
@@ -35,7 +36,7 @@ function buildExportData(): ExportData {
   const board = getBoard();
 
   return {
-    version: 10,
+    version: 11,
     exportedAt: new Date().toISOString(),
     board,
     settings: {
@@ -50,6 +51,7 @@ function buildExportData(): ExportData {
       cardTypes: readKv(STORAGE_KEYS.CARD_TYPES),
       defaultCardType: readKv(STORAGE_KEYS.DEFAULT_CARD_TYPE),
       compactHeader: readKv(STORAGE_KEYS.COMPACT_HEADER),
+      cardLayout: readKv(STORAGE_KEYS.CARD_LAYOUT),
     },
   };
 }

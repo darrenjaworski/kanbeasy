@@ -44,6 +44,7 @@ export function DataSection() {
     setCardTypes,
     setDefaultCardTypeId,
     setCompactHeader,
+    setCardLayout,
     resetSettings,
   } = useTheme();
   const { setColumns, resetBoard, setNextCardNumber } = useBoard();
@@ -106,6 +107,7 @@ export function DataSection() {
     setCardTypes(settings.cardTypes);
     setDefaultCardTypeId(settings.defaultCardTypeId);
     setCompactHeader(settings.compactHeader);
+    setCardLayout(settings.cardLayout);
 
     setImportStatus("complete");
     setTimeout(() => setImportStatus("idle"), 600);
