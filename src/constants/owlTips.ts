@@ -98,6 +98,7 @@ export const owlTips: readonly string[] = [
   "Hoo! Export your board from Settings > Data to back it up or share it. Import it anywhere!",
   "Hoot! Use the search bar to fuzzy-find cards by title. Matching cards get highlighted on the board.",
   "Hoo hoo! Cards you archive still count in your analytics history. Your past work isn't forgotten!",
+  "Hoot! Press ⌘K to open the command palette — jump to any action without touching the mouse. Owl-efficient!",
 ];
 
 export const nightOwlTips: readonly string[] = [

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.34.0]
+
+### Features
+
+- Add owl tip about the command palette keyboard shortcut (⌘K)
+
 ## [1.33.1]
 
 ### Changed
