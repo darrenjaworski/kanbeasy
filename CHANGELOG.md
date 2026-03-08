@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.0]
+
+### Features
+
+- Expand Development card type preset to all 11 conventional commit types — adds build, ci, docs, perf, revert, and style alongside the existing feat, fix, refactor, chore, and test
+- Expand card type color palette from 8 to 12 distinct colors (adds orange, teal, purple, lime) so every Development preset type gets a unique swatch
+
+### Changed
+
+- Add GitHub Actions monitoring step to release skill (poll workflow status after push, investigate failures)
+
 ## [1.37.0]
 
 ### Features
