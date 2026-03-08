@@ -150,7 +150,7 @@ export function ThemeSection({ onOpenCardLayout }: Props) {
           onClick={onOpenCardLayout}
           className={`w-full flex items-center justify-between rounded-lg border ${tc.border} ${tc.glass} px-3 py-2.5 text-sm font-medium ${tc.text} ${tc.borderHover} ${tc.focusRing} transition-colors`}
         >
-          <span>Card Layout</span>
+          <span>Card Layout Editor</span>
           <svg
             className={`size-4 ${tc.textFaint}`}
             xmlns="http://www.w3.org/2000/svg"

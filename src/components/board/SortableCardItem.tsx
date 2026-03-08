@@ -12,9 +12,7 @@ import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
-import { ChecklistProgress } from "../shared/ChecklistProgress";
-import { DueDateBadge } from "../shared/DueDateBadge";
-import { CardTypeBadge } from "../shared/CardTypeBadge";
+import { CardBody } from "./CardBody";
 
 type SortableCardItemProps = Readonly<{
   card: Card;
@@ -116,12 +114,6 @@ export function SortableCardItem({
       data-testid={`card-${index}`}
       data-search-highlight={isSearchMatch || undefined}
     >
-      <CardTypeBadge
-        number={card.number}
-        cardTypeId={card.cardTypeId}
-        cardTypeColor={card.cardTypeColor}
-      />
-
       {!isDragging && (
         <CardControls
           index={index}
@@ -136,25 +128,20 @@ export function SortableCardItem({
         />
       )}
 
-      <textarea
-        ref={textareaRef}
-        id={`${columnId}-${card.id}-content`}
-        aria-label="Card content"
-        defaultValue={cardValue}
-        className={`${tc.input} mt-1 w-full resize-none hover:resize-y focus:resize-y rounded-xs`}
+      <CardBody
+        number={card.number}
+        cardTypeId={card.cardTypeId}
+        cardTypeColor={card.cardTypeColor}
+        title={card.title}
+        description={card.description}
+        dueDate={card.dueDate}
         rows={rowsForDensity}
+        textareaRef={textareaRef}
+        textareaId={`${columnId}-${card.id}-content`}
+        testId={`card-content-${index}`}
         onKeyDown={cardKeyDown}
         onBlur={cardBlur}
-        data-testid={`card-content-${index}`}
       />
-      <div className="flex items-center gap-2 empty:hidden">
-        <ChecklistProgress
-          description={card.description}
-          className="flex-1"
-          showCount={false}
-        />
-        <DueDateBadge dueDate={card.dueDate} />
-      </div>
     </div>
   );
 }

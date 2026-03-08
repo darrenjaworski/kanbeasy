@@ -25,7 +25,7 @@ describe("CardLayoutSection", () => {
 
     // Card Layout button should be visible (feature flag is on in test/dev)
     expect(
-      screen.getByRole("button", { name: /card layout/i }),
+      screen.getByRole("button", { name: /card layout editor/i }),
     ).toBeInTheDocument();
   });
 
@@ -35,7 +35,9 @@ describe("CardLayoutSection", () => {
 
     // Expand Appearance and click Card Layout
     await user.click(screen.getByRole("button", { name: /appearance/i }));
-    await user.click(screen.getByRole("button", { name: /card layout/i }));
+    await user.click(
+      screen.getByRole("button", { name: /card layout editor/i }),
+    );
 
     // Modal title should change to Card Layout Editor
     expect(
@@ -75,7 +77,9 @@ describe("CardLayoutSection", () => {
     renderModal();
 
     await user.click(screen.getByRole("button", { name: /appearance/i }));
-    await user.click(screen.getByRole("button", { name: /card layout/i }));
+    await user.click(
+      screen.getByRole("button", { name: /card layout editor/i }),
+    );
 
     // All 7 fields should be listed
     expect(screen.getByTestId("layout-field-badge")).toBeInTheDocument();
@@ -92,7 +96,9 @@ describe("CardLayoutSection", () => {
     renderModal();
 
     await user.click(screen.getByRole("button", { name: /appearance/i }));
-    await user.click(screen.getByRole("button", { name: /card layout/i }));
+    await user.click(
+      screen.getByRole("button", { name: /card layout editor/i }),
+    );
 
     const preview = screen.getByTestId("card-layout-preview");
 
@@ -120,7 +126,9 @@ describe("CardLayoutSection", () => {
 
     // Navigate to card layout
     await user.click(screen.getByRole("button", { name: /appearance/i }));
-    await user.click(screen.getByRole("button", { name: /card layout/i }));
+    await user.click(
+      screen.getByRole("button", { name: /card layout editor/i }),
+    );
     expect(screen.getByTestId("card-layout-editor")).toBeInTheDocument();
 
     // Close modal via Escape (triggers onClose)
