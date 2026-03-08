@@ -253,7 +253,7 @@ export function CardLayoutSection() {
             items={cardLayout.map((f) => f.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               {cardLayout.map((field) => (
                 <SortableFieldRow
                   key={field.id}
