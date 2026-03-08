@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Card layout editor: interactive field toggles, drag-to-reorder, line count dropdowns, max 5 visible fields, and reset to default
+
 ## [1.39.0]
 
 ### Features

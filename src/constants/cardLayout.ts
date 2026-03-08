@@ -25,6 +25,15 @@ export const CARD_FIELD_LABELS: Record<CardFieldId, string> = {
   updatedAt: "Updated Date",
 };
 
+/** Fields that support a configurable line count. */
+export const FIELDS_WITH_LINE_OPTIONS = new Set<string>([
+  "title",
+  "description",
+]);
+
+/** Maximum number of visible fields on a card. */
+export const MAX_VISIBLE_FIELDS = 5;
+
 export const DEFAULT_CARD_LAYOUT: CardLayout = [
   { id: "badge", visible: true },
   { id: "title", visible: true, options: { lines: 1 } },
