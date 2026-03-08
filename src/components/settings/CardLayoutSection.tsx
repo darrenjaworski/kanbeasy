@@ -76,6 +76,7 @@ function SortableFieldRow({
   };
 
   const atLimit = visibleCount >= MAX_VISIBLE_FIELDS && !field.visible;
+  const isLastVisible = visibleCount <= 1 && field.visible;
   const label = CARD_FIELD_LABELS[field.id] ?? field.id;
   const hasLines = FIELDS_WITH_LINE_OPTIONS.has(field.id);
 
@@ -83,7 +84,7 @@ function SortableFieldRow({
     <input
       type="checkbox"
       checked={field.visible}
-      disabled={atLimit}
+      disabled={atLimit || isLastVisible}
       onChange={() => onToggle(field.id)}
       aria-label={`Show ${label}`}
       className="accent-accent"
@@ -94,7 +95,7 @@ function SortableFieldRow({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-2 rounded-md px-2 py-1.5 mb-1.5 last:mb-0 ${tc.glass} ${tc.border} border`}
+      className={`flex items-center gap-2 rounded-md px-2 h-9 mb-1.5 last:mb-0 ${tc.glass} ${tc.border} border`}
       data-testid={`layout-field-${field.id}`}
     >
       {/* Drag handle */}
@@ -120,10 +121,14 @@ function SortableFieldRow({
       {/* Checkbox with tooltip when disabled */}
       {atLimit ? (
         <Tooltip content={`Max ${MAX_VISIBLE_FIELDS} fields`}>
-          <span>{checkbox}</span>
+          <span className="flex">{checkbox}</span>
+        </Tooltip>
+      ) : isLastVisible ? (
+        <Tooltip content="At least 1 field required">
+          <span className="flex">{checkbox}</span>
         </Tooltip>
       ) : (
-        checkbox
+        <span className="flex">{checkbox}</span>
       )}
 
       {/* Label */}
@@ -172,6 +177,7 @@ export function CardLayoutSection() {
       const field = cardLayout.find((f) => f.id === id);
       if (!field) return;
       if (!field.visible && visibleCount >= MAX_VISIBLE_FIELDS) return;
+      if (field.visible && visibleCount <= 1) return;
       updateField(id, { visible: !field.visible });
     },
     [cardLayout, visibleCount, updateField],

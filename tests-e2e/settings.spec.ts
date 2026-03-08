@@ -21,46 +21,38 @@ test("can select a dark theme", async ({ page }) => {
   await dlg.getByRole("button", { name: /close settings/i }).click();
 });
 
-test("has a setting to adjust the size of the cards", async ({ page }) => {
-  // Prepare a column with a couple of cards
+test("has a setting to adjust the size of the cards via card layout editor", async ({
+  page,
+}) => {
+  // Prepare a column with a card
   await page.getByTestId("add-column-button").click();
   const column = page.getByTestId("column-0");
   await expect(column).toBeVisible();
   await column.getByTestId("add-card-button-0").click();
-  await column.getByTestId("add-card-button-0").click();
 
-  // Open settings and verify default selection (Compact/small)
-  await page.getByRole("button", { name: /open settings/i }).click();
-  const dlg = page.getByRole("dialog", { name: /settings/i });
-  await expect(dlg).toBeVisible();
-  await dlg.getByRole("button", { name: /appearance/i }).click();
-  const compactBtn = dlg.getByRole("button", { name: /compact/i });
-  await expect(compactBtn).toHaveAttribute("aria-pressed", "true");
-  await dlg.getByRole("button", { name: /close settings/i }).click();
-
-  // rows should be 1 for small (compact)
+  // Default title lines = 1
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(
     "rows",
     "1",
   );
 
-  // Set Comfortable (rows = 2)
+  // Open settings → Appearance → Card Layout Editor
   await page.getByRole("button", { name: /open settings/i }).click();
-  const dlg2 = page.getByRole("dialog", { name: /settings/i });
-  await dlg2.getByRole("button", { name: /appearance/i }).click();
-  await dlg2.getByRole("button", { name: /comfortable/i }).click();
-  await dlg2.getByRole("button", { name: /close settings/i }).click();
-  await expect(column.getByTestId("card-content-0")).toHaveAttribute(
-    "rows",
-    "2",
-  );
+  const dlg = page.getByRole("dialog");
+  await expect(dlg).toBeVisible();
+  await dlg.getByRole("button", { name: /appearance/i }).click();
+  await dlg.getByRole("button", { name: /card layout editor/i }).click();
 
-  // Set Spacious (rows = 3)
-  await page.getByRole("button", { name: /open settings/i }).click();
-  const dlg3 = page.getByRole("dialog", { name: /settings/i });
-  await dlg3.getByRole("button", { name: /appearance/i }).click();
-  await dlg3.getByRole("button", { name: /spacious/i }).click();
-  await dlg3.getByRole("button", { name: /close settings/i }).click();
+  // Change title line count to 3
+  const titleSelect = dlg.getByRole("combobox", { name: /title line count/i });
+  await expect(titleSelect).toHaveValue("1");
+  await titleSelect.selectOption("3");
+  await expect(titleSelect).toHaveValue("3");
+
+  // Close modal
+  await page.keyboard.press("Escape");
+
+  // Card textarea should now have rows=3
   await expect(column.getByTestId("card-content-0")).toHaveAttribute(
     "rows",
     "3",
