@@ -12,6 +12,8 @@ import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit } from "../../hooks";
+import { useTheme } from "../../theme/useTheme";
+import { featureFlags } from "../../constants/featureFlags";
 import { CardBody } from "./CardBody";
 
 type SortableCardItemProps = Readonly<{
@@ -96,6 +98,7 @@ export function SortableCardItem({
     }
   }, [autoFocus, onAutoFocused]);
 
+  const { cardLayout } = useTheme();
   const rowsForDensity = ROWS_FOR_DENSITY[density];
 
   return (
@@ -135,7 +138,10 @@ export function SortableCardItem({
         title={card.title}
         description={card.description}
         dueDate={card.dueDate}
+        createdAt={card.createdAt}
+        updatedAt={card.updatedAt}
         rows={rowsForDensity}
+        cardLayout={featureFlags.cardLayoutEditor ? cardLayout : undefined}
         textareaRef={textareaRef}
         textareaId={`${columnId}-${card.id}-content`}
         testId={`card-content-${index}`}

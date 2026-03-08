@@ -246,6 +246,29 @@ describe("CardLayoutSection", () => {
     ).toBeInTheDocument();
   });
 
+  it("preview updates when toggling createdAt visibility", async () => {
+    const user = userEvent.setup();
+    renderModal();
+
+    await user.click(screen.getByRole("button", { name: /appearance/i }));
+    await user.click(
+      screen.getByRole("button", { name: /card layout editor/i }),
+    );
+
+    const preview = screen.getByTestId("card-layout-preview");
+
+    // createdAt is hidden by default
+    expect(preview).not.toHaveTextContent("Created");
+
+    // Enable createdAt — first need to make room (default has 4 visible, max 5)
+    await user.click(
+      screen.getByRole("checkbox", { name: /show created date/i }),
+    );
+
+    // Preview should now show the Created date
+    expect(preview).toHaveTextContent("Created");
+  });
+
   it("resets view to settings when modal is closed and reopened", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

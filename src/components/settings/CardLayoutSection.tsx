@@ -42,6 +42,8 @@ const SAMPLE = {
     d.setDate(d.getDate() + 2);
     return d.toISOString().slice(0, 10);
   })(),
+  createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000, // 1 week ago
+  updatedAt: Date.now() - 2 * 60 * 60 * 1000, // 2 hours ago
 } as const;
 
 function SortableFieldRow({
@@ -221,7 +223,10 @@ export function CardLayoutSection() {
               title={SAMPLE.title}
               description={SAMPLE.description}
               dueDate={SAMPLE.dueDate}
+              createdAt={SAMPLE.createdAt}
+              updatedAt={SAMPLE.updatedAt}
               rows={rows}
+              cardLayout={cardLayout}
               readOnly
             />
           </div>

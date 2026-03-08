@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+import { ThemeProvider } from "../../../theme/ThemeProvider";
 import { SortableCardItem } from "../SortableCardItem";
 import { makeCard } from "../../../test/builders";
 
@@ -42,7 +43,11 @@ const baseProps = {
 describe("SortableCardItem", () => {
   it("renders card controls when not dragging", () => {
     mockUseSortable.mockReturnValue(sortableDefaults({ isDragging: false }));
-    render(<SortableCardItem {...baseProps} />);
+    render(
+      <ThemeProvider>
+        <SortableCardItem {...baseProps} />
+      </ThemeProvider>,
+    );
     expect(screen.getByTestId("card-drag-0")).toBeInTheDocument();
     expect(screen.getByTestId("card-copy-0")).toBeInTheDocument();
     expect(screen.getByTestId("card-archive-0")).toBeInTheDocument();
@@ -51,7 +56,11 @@ describe("SortableCardItem", () => {
 
   it("hides card controls when dragging to prevent tooltip flash", () => {
     mockUseSortable.mockReturnValue(sortableDefaults({ isDragging: true }));
-    render(<SortableCardItem {...baseProps} />);
+    render(
+      <ThemeProvider>
+        <SortableCardItem {...baseProps} />
+      </ThemeProvider>,
+    );
     expect(screen.queryByTestId("card-drag-0")).not.toBeInTheDocument();
     expect(screen.queryByTestId("card-copy-0")).not.toBeInTheDocument();
     expect(screen.queryByTestId("card-archive-0")).not.toBeInTheDocument();

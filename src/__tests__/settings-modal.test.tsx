@@ -2,7 +2,12 @@ import { screen, within, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { seedBoard } from "../utils/db";
 import { renderApp } from "../test/renderApp";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+// Disable card layout editor flag so density controls title rows (production behavior)
+vi.mock("../constants/featureFlags", () => ({
+  featureFlags: { analytics: true, undoRedo: true, cardLayoutEditor: false },
+}));
 
 describe("settings modal", () => {
   beforeEach(() => {
