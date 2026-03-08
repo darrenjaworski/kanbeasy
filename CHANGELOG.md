@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.36.1]
+
+### Fixed
+
+- Eliminate redundant IndexedDB writes on page refresh that caused storage usage to grow monotonically — board state and all settings are now only written when actually changed by user action
+
+### Documentation
+
+- Add file and image attachments design document (`docs/file-attachments.md`)
+- Add persistent storage request button to roadmap
+
 ## [1.36.0]
 
 ### Features

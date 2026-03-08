@@ -100,7 +100,11 @@ function loadState(): LoadResult {
   const stored = getBoard();
 
   if (stored === null) {
-    return createInitialBoard();
+    const result = createInitialBoard();
+    // Write the initial board to the cache so getBoard() returns it,
+    // and to IDB so it persists across reloads.
+    saveBoard(result.state);
+    return result;
   }
 
   const cols = Array.isArray(stored.columns)
@@ -162,7 +166,12 @@ export function BoardProvider({
     kvSet(STORAGE_KEYS.NEXT_CARD_NUMBER, n);
   }, []);
 
+  const initialStateRef = useRef(state);
   useEffect(() => {
+    // Skip when state is still the initial reference — the data was just read
+    // from IDB (or freshly created and cached by loadState), no need to write
+    // it back. Only persist when the user actually changes state.
+    if (state === initialStateRef.current) return;
     saveBoard(state);
   }, [state]);
 

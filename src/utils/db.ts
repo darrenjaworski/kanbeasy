@@ -260,6 +260,18 @@ export function kvGetBool(key: string, fallback: boolean): boolean {
 }
 
 export function kvSet<T>(key: string, value: T): void {
+  const existing = kvCache.get(key);
+  // Skip write if the value is unchanged
+  if (existing === value) return;
+  // For non-primitive values (arrays, objects), compare by JSON serialization
+  if (
+    existing !== undefined &&
+    typeof value === "object" &&
+    value !== null &&
+    JSON.stringify(existing) === JSON.stringify(value)
+  ) {
+    return;
+  }
   kvCache.set(key, value);
   if (available) {
     idbPut(KV_STORE, { key, value });
@@ -267,7 +279,9 @@ export function kvSet<T>(key: string, value: T): void {
 }
 
 export function kvSetBool(key: string, value: boolean): void {
-  kvSet(key, String(value));
+  const strValue = String(value);
+  // kvSet checks identity, so this avoids redundant IDB writes for booleans
+  kvSet(key, strValue);
 }
 
 export function kvRemove(key: string): void {
@@ -295,6 +309,8 @@ export function saveBoard(
   state: BoardState,
   id: string = DEFAULT_BOARD_ID,
 ): void {
+  // Skip write if the state reference is unchanged
+  if (boardCache[id] === state) return;
   boardCache[id] = state;
   if (available) {
     scheduleBoardWrite(id);
