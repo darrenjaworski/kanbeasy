@@ -96,47 +96,50 @@ export function ThemeSection({ onOpenCardLayout }: Props) {
           </button>
         ))}
       </div>
-      <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
-        <legend className="sr-only">Card density</legend>
-        <span aria-hidden>Card density</span>
-        <div className={`${tc.buttonGroup} rounded-full`}>
-          <button
-            type="button"
-            onClick={() => setCardDensity("small")}
-            aria-label="Compact"
-            aria-pressed={cardDensity === "small"}
-            className={`h-9 w-9 ${tc.iconButton} ${
-              cardDensity === "small" ? tc.pressed : ""
-            }`}
-          >
-            <DensitySmallIcon />
-          </button>
-          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
-          <button
-            type="button"
-            onClick={() => setCardDensity("medium")}
-            aria-label="Comfortable"
-            aria-pressed={cardDensity === "medium"}
-            className={`h-9 w-9 ${tc.iconButton} ${
-              cardDensity === "medium" ? tc.pressed : ""
-            }`}
-          >
-            <DensityMediumIcon />
-          </button>
-          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
-          <button
-            type="button"
-            onClick={() => setCardDensity("large")}
-            aria-label="Spacious"
-            aria-pressed={cardDensity === "large"}
-            className={`h-9 w-9 ${tc.iconButton} ${
-              cardDensity === "large" ? tc.pressed : ""
-            }`}
-          >
-            <DensityLargeIcon />
-          </button>
-        </div>
-      </fieldset>
+      {/* Card density controls — hidden when layout editor is available (title lines replaces density) */}
+      {!featureFlags.cardLayoutEditor && (
+        <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
+          <legend className="sr-only">Card density</legend>
+          <span aria-hidden>Card density</span>
+          <div className={`${tc.buttonGroup} rounded-full`}>
+            <button
+              type="button"
+              onClick={() => setCardDensity("small")}
+              aria-label="Compact"
+              aria-pressed={cardDensity === "small"}
+              className={`h-9 w-9 ${tc.iconButton} ${
+                cardDensity === "small" ? tc.pressed : ""
+              }`}
+            >
+              <DensitySmallIcon />
+            </button>
+            <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+            <button
+              type="button"
+              onClick={() => setCardDensity("medium")}
+              aria-label="Comfortable"
+              aria-pressed={cardDensity === "medium"}
+              className={`h-9 w-9 ${tc.iconButton} ${
+                cardDensity === "medium" ? tc.pressed : ""
+              }`}
+            >
+              <DensityMediumIcon />
+            </button>
+            <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+            <button
+              type="button"
+              onClick={() => setCardDensity("large")}
+              aria-label="Spacious"
+              aria-pressed={cardDensity === "large"}
+              className={`h-9 w-9 ${tc.iconButton} ${
+                cardDensity === "large" ? tc.pressed : ""
+              }`}
+            >
+              <DensityLargeIcon />
+            </button>
+          </div>
+        </fieldset>
+      )}
       <ToggleSwitch
         id="compact-header"
         label="Compact header"
