@@ -73,6 +73,38 @@ Once approved, push the commits and the new version tag:
 git push origin main && git push origin vX.Y.Z
 ```
 
-## 9. Confirm
+## 9. Monitor GitHub Actions
 
-Confirm the push was successful.
+After pushing, monitor all triggered workflows to verify they succeed. The expected workflow chain is:
+
+- **static checks** — triggered by push to main
+- **gh page deploy** — triggered by tag push (runs static checks, then deploys to GitHub Pages)
+- **release** — triggered by tag push (creates GitHub Release from CHANGELOG.md)
+- **e2e tests** — triggered after gh-pages deploy completes (runs Playwright against deployed site)
+- **lighthouse audit** — triggered after gh-pages deploy completes
+
+Poll workflow status using:
+
+```bash
+gh run list --limit 10
+```
+
+Check every 30 seconds until all workflows complete. The `e2e tests` and `lighthouse audit` workflows are chained off `gh page deploy`, so they will not appear until the deploy finishes.
+
+For any workflow that is still running, you can watch it with:
+
+```bash
+gh run watch <run-id>
+```
+
+If any workflow fails, investigate with:
+
+```bash
+gh run view <run-id> --log-failed
+```
+
+Report the final status of all workflows. If any fail, diagnose the issue and report it to the user.
+
+## 10. Confirm
+
+Confirm the release is complete: push succeeded, all workflows passed, and the GitHub Release was created.
