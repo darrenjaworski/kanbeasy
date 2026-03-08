@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Extract repeated `maxDiffPixelRatio` magic number into shared `DIFF_PIXEL_RATIO` constant in visual regression tests
+
 ## [1.34.2]
 
 ### Fixed
