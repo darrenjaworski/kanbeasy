@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add `CLAUDE.md` that references `agents.md` as the single source of truth for AI agent instructions
+
 ## [1.40.0]
 
 ### Features
