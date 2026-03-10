@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Scale search input right padding based on match count digit width to prevent overlap
+- Fine-tune match count padding values for single match and various digit widths
 
 ### Changed
 

@@ -31,7 +31,8 @@ export function SearchInput() {
   function getMatchCountPadding() {
     if (!showMatchCount) return "";
     if (matchingCardIds.size >= 100) return "pr-25";
-    if (matchingCardIds.size >= 10) return "pr-24";
+    if (matchingCardIds.size >= 10) return "pr-23";
+    if (matchingCardIds.size === 1) return "pr-18";
     return "pr-22";
   }
   const matchCountPadding = getMatchCountPadding();
@@ -82,7 +83,7 @@ export function SearchInput() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         disabled={!hasCards}
-        className={`w-full rounded-md border ${tc.border} ${tc.glass} pl-2.5 pr-9.5 ${matchCountPadding} py-1.5 text-xs ${tc.placeholder} focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-40`}
+        className={`w-full rounded-md border ${tc.border} ${tc.glass} pl-2.5 pr-6 ${matchCountPadding} py-1.5 text-xs ${tc.placeholder} focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-40`}
         aria-label="Search cards"
         data-testid="search-input"
       />
