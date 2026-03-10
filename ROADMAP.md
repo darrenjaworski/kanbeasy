@@ -88,6 +88,7 @@ an ultra simple task organizer
 - ✅ migrate to IndexedDB instead of localStorage — unified async storage backend with generous quota, enabling image attachments, multiple boards, and larger data without hitting the ~5 MB localStorage ceiling
 - ✅ storage usage and persistence status display in Settings > Data
 - ✅ expanded Development card type preset — all 11 conventional commit types (feat, fix, refactor, chore, test, docs, style, ci, build, perf, revert) with a 12-color palette so every type gets a unique swatch
+- ✅ search by card type — filter dropdown in the search bar with checkbox selection, OR logic within types, AND logic with text search
 
 Settings
 
@@ -112,7 +113,6 @@ Settings
 - card enhancements
   - reorder checklist items within a card
 - search enhancements
-  - search by card type (filter cards by their assigned type)
 - due dates with reminders
   - optional browser notification reminders
 - image attachments (base64 or IndexedDB for larger storage)
