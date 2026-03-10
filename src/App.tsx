@@ -28,7 +28,7 @@ function App() {
       {viewMode === "board" && <Board />}
       {viewMode === "list" && <ListView />}
       {viewMode === "calendar" && <CalendarView />}
-      <BottomBar />
+      <BottomBar onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
       <OwlBuddy />
       <CommandPalette
         open={commandPaletteOpen}

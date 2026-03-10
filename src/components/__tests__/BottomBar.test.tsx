@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { BottomBar } from "../BottomBar";
 
@@ -30,7 +30,7 @@ describe("BottomBar", () => {
   it("renders keyboard shortcut hint when enabled", () => {
     mockKeyboardShortcutsEnabled = true;
     mockViewMode = "board";
-    render(<BottomBar />);
+    render(<BottomBar onOpenCommandPalette={vi.fn()} />);
     const hint = screen.getByTestId("keyboard-shortcut-hint");
     expect(hint).toBeInTheDocument();
     expect(hint).toHaveTextContent("⌘k");
@@ -40,7 +40,7 @@ describe("BottomBar", () => {
   it("renders the shortcut in a kbd element", () => {
     mockKeyboardShortcutsEnabled = true;
     mockViewMode = "board";
-    render(<BottomBar />);
+    render(<BottomBar onOpenCommandPalette={vi.fn()} />);
     const kbd = screen
       .getByTestId("keyboard-shortcut-hint")
       .querySelector("kbd");
@@ -50,7 +50,7 @@ describe("BottomBar", () => {
   it("hides keyboard shortcut hint when disabled", () => {
     mockKeyboardShortcutsEnabled = false;
     mockViewMode = "board";
-    render(<BottomBar />);
+    render(<BottomBar onOpenCommandPalette={vi.fn()} />);
     expect(
       screen.queryByTestId("keyboard-shortcut-hint"),
     ).not.toBeInTheDocument();
@@ -58,22 +58,31 @@ describe("BottomBar", () => {
 
   it("shows undo/redo buttons on board view", () => {
     mockViewMode = "board";
-    render(<BottomBar />);
+    render(<BottomBar onOpenCommandPalette={vi.fn()} />);
     expect(screen.getByLabelText("Undo")).toBeInTheDocument();
     expect(screen.getByLabelText("Redo")).toBeInTheDocument();
   });
 
   it("hides undo/redo buttons on list view", () => {
     mockViewMode = "list";
-    render(<BottomBar />);
+    render(<BottomBar onOpenCommandPalette={vi.fn()} />);
     expect(screen.queryByLabelText("Undo")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Redo")).not.toBeInTheDocument();
   });
 
   it("hides undo/redo buttons on calendar view", () => {
     mockViewMode = "calendar";
-    render(<BottomBar />);
+    render(<BottomBar onOpenCommandPalette={vi.fn()} />);
     expect(screen.queryByLabelText("Undo")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Redo")).not.toBeInTheDocument();
+  });
+
+  it("calls onOpenCommandPalette when shortcut hint is clicked", () => {
+    mockKeyboardShortcutsEnabled = true;
+    mockViewMode = "board";
+    const onOpen = vi.fn();
+    render(<BottomBar onOpenCommandPalette={onOpen} />);
+    fireEvent.click(screen.getByTestId("keyboard-shortcut-hint"));
+    expect(onOpen).toHaveBeenCalledOnce();
   });
 });

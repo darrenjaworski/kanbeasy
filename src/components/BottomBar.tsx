@@ -7,7 +7,11 @@ import { Tooltip } from "./shared/Tooltip";
 
 const pillClass = `inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 backdrop-blur text-xs ${tc.border} ${tc.glass}`;
 
-export function BottomBar() {
+interface BottomBarProps {
+  onOpenCommandPalette: () => void;
+}
+
+export function BottomBar({ onOpenCommandPalette }: BottomBarProps) {
   const { canUndo, canRedo, undo, redo } = useBoard();
   const { viewMode, keyboardShortcutsEnabled } = useTheme();
 
@@ -18,13 +22,15 @@ export function BottomBar() {
   return (
     <div className="fixed bottom-4 right-4 z-10 flex gap-1">
       {keyboardShortcutsEnabled && (
-        <div
-          className={`${pillClass} ${tc.textFaint}`}
+        <button
+          type="button"
+          onClick={onOpenCommandPalette}
+          className={`${pillClass} ${tc.textFaint} ${tc.bgHover} ${tc.textHover} cursor-pointer transition-colors`}
           data-testid="keyboard-shortcut-hint"
         >
           <kbd className="font-mono font-medium">⌘k</kbd>
           <span>Shortcuts</span>
-        </div>
+        </button>
       )}
       {showUndoRedo && (
         <>
