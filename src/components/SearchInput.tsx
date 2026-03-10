@@ -28,6 +28,14 @@ export function SearchInput() {
     (searchQuery || isFilterActive) && matchingCardIds.size > 0;
   const filterDisabled = cardTypes.length === 0 || !hasCards;
 
+  function getMatchCountPadding() {
+    if (!showMatchCount) return "";
+    if (matchingCardIds.size >= 100) return "pr-25";
+    if (matchingCardIds.size >= 10) return "pr-24";
+    return "pr-22";
+  }
+  const matchCountPadding = getMatchCountPadding();
+
   // Position the portal popover below the filter button
   useEffect(() => {
     if (!filterOpen || !buttonRef.current) return;
@@ -74,14 +82,14 @@ export function SearchInput() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         disabled={!hasCards}
-        className={`w-full rounded-md border ${tc.border} ${tc.glass} pl-2.5 pr-9.5 ${showMatchCount ? "pr-24" : ""} py-1.5 text-xs ${tc.placeholder} focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-40`}
+        className={`w-full rounded-md border ${tc.border} ${tc.glass} pl-2.5 pr-9.5 ${matchCountPadding} py-1.5 text-xs ${tc.placeholder} focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-40`}
         aria-label="Search cards"
         data-testid="search-input"
       />
 
       {showMatchCount && (
         <div
-          className={`pointer-events-none absolute right-8.5 top-1/2 -translate-y-1/2 text-xs ${tc.textFaint}`}
+          className={`pointer-events-none absolute right-7 top-1/2 -translate-y-1/2 text-xs ${tc.textFaint}`}
         >
           {matchingCardIds.size}{" "}
           {matchingCardIds.size === 1 ? "match" : "matches"}

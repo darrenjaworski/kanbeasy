@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add card type filter dropdown integrated into the search bar — filter cards by type with checkbox selection, OR logic within types, AND logic with text search
 
+### Fixed
+
+- Scale search input right padding based on match count digit width to prevent overlap
+
 ### Changed
 
 - Add `CLAUDE.md` that references `agents.md` as the single source of truth for AI agent instructions
