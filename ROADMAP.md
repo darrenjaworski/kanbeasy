@@ -80,6 +80,7 @@ an ultra simple task organizer
 - ✅ due date badge on board cards — color-coded urgency indicator (red for overdue, amber for due soon, muted for further out)
 - ✅ search highlighting on calendar view — highlight matching cards and show match count badge on busy days
 - ✅ command palette (`Cmd+K` / `Ctrl+K`) with quick actions for adding cards, columns, switching views, and opening modals
+  - ✅ clickable keyboard shortcut hint in bottom bar opens the command palette
 - ✅ keyboard shortcuts toggle in Settings > Preferences (defaults to off)
 - ✅ search card descriptions in addition to titles
 - ✅ card detail modal field reorder — Title and Description appear first, above Column/Type/Due date

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.42.0]
+
 ### Features
 
 - Make keyboard shortcut hint in bottom bar clickable to open the command palette
