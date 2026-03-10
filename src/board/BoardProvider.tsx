@@ -201,9 +201,15 @@ export function BoardProvider({
   }, [state]);
 
   const mutations = useBoardMutations(setState, nextCardNumberRef, saveCounter);
-  const { searchQuery, setSearchQuery, matchingCardIds } = useCardSearch(
-    state.columns,
-  );
+  const {
+    searchQuery,
+    setSearchQuery,
+    matchingCardIds,
+    selectedTypeIds,
+    setSelectedTypeIds,
+    clearTypeFilter,
+    isFilterActive,
+  } = useCardSearch(state.columns);
 
   const value = useMemo<BoardContextValue>(
     () => ({
@@ -214,6 +220,10 @@ export function BoardProvider({
       searchQuery,
       setSearchQuery,
       matchingCardIds,
+      selectedTypeIds,
+      setSelectedTypeIds,
+      clearTypeFilter,
+      isFilterActive,
       canUndo,
       canRedo,
       undo,
@@ -227,6 +237,10 @@ export function BoardProvider({
       searchQuery,
       setSearchQuery,
       matchingCardIds,
+      selectedTypeIds,
+      setSelectedTypeIds,
+      clearTypeFilter,
+      isFilterActive,
       canUndo,
       canRedo,
       undo,

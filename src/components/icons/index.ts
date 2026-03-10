@@ -9,6 +9,7 @@ export { DensityLargeIcon } from "./DensityLargeIcon";
 export { DensityMediumIcon } from "./DensityMediumIcon";
 export { DensitySmallIcon } from "./DensitySmallIcon";
 export { DragIndicatorIcon } from "./DragIndicatorIcon";
+export { FilterIcon } from "./FilterIcon";
 export { ListViewIcon } from "./ListViewIcon";
 export { MoreIcon } from "./MoreIcon";
 export { OwlIcon, SleepyOwlIcon } from "./OwlIcon";

@@ -85,6 +85,10 @@ export type BoardContextValue = Readonly<{
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   matchingCardIds: Set<string>;
+  selectedTypeIds: Set<string>;
+  setSelectedTypeIds: (ids: Set<string>) => void;
+  clearTypeFilter: () => void;
+  isFilterActive: boolean;
   canUndo: boolean;
   canRedo: boolean;
   undo: () => void;
