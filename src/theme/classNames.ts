@@ -16,7 +16,8 @@ const textMuted = "text-black/70 dark:text-white/70";
 const textFaint = "text-black/60 dark:text-white/60";
 const textHover = "hover:text-black dark:hover:text-white";
 const glass = "bg-white/60 dark:bg-black/20";
-const bgHover = "hover:bg-black/10 dark:hover:bg-white/10";
+const bgHover =
+  "hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15";
 const focusRing =
   "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent";
 const separator = "bg-black/10 dark:bg-white/10";

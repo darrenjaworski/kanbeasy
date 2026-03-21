@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Mobile: `AddColumn` button uses `w-full max-w-80` instead of `w-80` so it no longer overflows the viewport on small screens (≤320px)
+- Mobile: add `active:` press states to `tc.bgHover` (`active:bg-black/15 dark:active:bg-white/15`) so all buttons give visual feedback on touch; desktop hover behaviour unchanged
+
 ## [1.46.0]
 
 ### Features
