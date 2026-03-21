@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add 6 new themes: Sage, Sky, and Sand (light) and Obsidian, Ocean, and Crimson (dark)
 
+### Changed
+
+- Bump flatted from 3.3.3 to 3.4.2 to fix high severity prototype pollution and DoS vulnerabilities
+
 ## [1.42.0]
 
 ### Features
