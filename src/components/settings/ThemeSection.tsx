@@ -45,7 +45,9 @@ export function ThemeSection() {
   return (
     <fieldset className="border-0 p-0 m-0 space-y-3 text-sm font-medium">
       <legend className="sr-only">Theme</legend>
-      <div className={`${tc.buttonGroup} rounded-full w-full mt-1`}>
+      <div
+        className={`flex w-full rounded-full mt-1 overflow-hidden border ${tc.border} ${tc.glass}`}
+      >
         {MODE_OPTIONS.map((opt, i) => (
           <span key={opt.value} className="contents">
             {i > 0 && (
@@ -66,7 +68,7 @@ export function ThemeSection() {
           </span>
         ))}
       </div>
-      <div className="flex gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {visibleThemes.map((t) => (
           <button
             key={t.id}
