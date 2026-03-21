@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.45.1]
+
 ### Fixed
 
 - Prevent iOS Safari from zooming on input focus — global `@media (max-width: 639px)` rule forces `font-size: 16px` on all `input`, `textarea`, and `select` elements; Safari only zooms when the computed size is below 16px
