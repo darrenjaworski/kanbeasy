@@ -137,6 +137,9 @@ export function ThemeProvider({
     useState<boolean>(() =>
       kvGetBool(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED, false),
     );
+  const [columnOrderLocked, setColumnOrderLocked] = useState<boolean>(() =>
+    kvGetBool(STORAGE_KEYS.COLUMN_ORDER_LOCKED, false),
+  );
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -240,6 +243,10 @@ export function ThemeProvider({
     );
   }, [keyboardShortcutsEnabled]);
 
+  useEffect(() => {
+    kvSetBool(STORAGE_KEYS.COLUMN_ORDER_LOCKED, columnOrderLocked);
+  }, [columnOrderLocked]);
+
   // Clear default card type if it no longer exists in the current types
   useEffect(() => {
     if (
@@ -264,6 +271,7 @@ export function ThemeProvider({
     kvRemove(STORAGE_KEYS.DEFAULT_CARD_TYPE);
     kvRemove(STORAGE_KEYS.COMPACT_HEADER);
     kvRemove(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
+    kvRemove(STORAGE_KEYS.COLUMN_ORDER_LOCKED);
     kvRemove(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
     // Reset state to defaults
@@ -280,6 +288,7 @@ export function ThemeProvider({
     setDefaultCardTypeId(null);
     setCompactHeader(false);
     setKeyboardShortcutsEnabled(false);
+    setColumnOrderLocked(false);
   }, []);
 
   const theme = getThemeById(themeId);
@@ -312,6 +321,8 @@ export function ThemeProvider({
       setCompactHeader,
       keyboardShortcutsEnabled,
       setKeyboardShortcutsEnabled,
+      columnOrderLocked,
+      setColumnOrderLocked,
       resetSettings,
     }),
     [
@@ -329,6 +340,7 @@ export function ThemeProvider({
       defaultCardTypeId,
       compactHeader,
       keyboardShortcutsEnabled,
+      columnOrderLocked,
       resetSettings,
     ],
   );

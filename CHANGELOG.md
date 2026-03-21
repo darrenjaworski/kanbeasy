@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Add lock column order toggle in Settings > Preferences — when enabled, column drag handles are hidden and columns cannot be reordered
+
 ## [1.43.0]
 
 ### Features

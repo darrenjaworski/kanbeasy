@@ -46,6 +46,9 @@ export const STORAGE_KEYS = {
   /** Keyboard shortcuts enabled */
   KEYBOARD_SHORTCUTS_ENABLED: "kanbeasy:keyboardShortcutsEnabled",
 
+  /** Lock column order — prevents drag-to-reorder of columns */
+  COLUMN_ORDER_LOCKED: "kanbeasy:columnOrderLocked",
+
   /** Whether the user has seen the welcome modal */
   HAS_SEEN_WELCOME: "hasSeenWelcome",
 

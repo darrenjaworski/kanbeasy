@@ -25,7 +25,7 @@ import { SortableColumnItem } from "./SortableColumnItem";
 export function Board() {
   const { columns, addColumn, setColumns, updateCard, moveCard, archiveCard } =
     useBoard();
-  const { cardDensity, cardTypes } = useTheme();
+  const { cardDensity, cardTypes, columnOrderLocked } = useTheme();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -144,7 +144,8 @@ export function Board() {
                       id={c.id}
                       title={c.title}
                       cards={c.cards}
-                      canDrag={columns.length > 1}
+                      canDrag={columns.length > 1 && !columnOrderLocked}
+                      disabled={columnOrderLocked}
                       columnCount={columns.length}
                       onOpenDetail={handleOpenDetail}
                     />

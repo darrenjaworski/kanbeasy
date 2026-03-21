@@ -82,4 +82,45 @@ describe("BoardSettingsSection", () => {
     await user.click(toggle);
     expect(toggle).not.toBeChecked();
   });
+
+  it("renders lock column order toggle with description", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await openSettings(user);
+
+    await user.click(screen.getByText("Preferences"));
+
+    expect(screen.getByText("Lock column order")).toBeInTheDocument();
+    expect(
+      screen.getByText("Prevent columns from being reordered by drag and drop"),
+    ).toBeInTheDocument();
+  });
+
+  it("defaults lock column order to off", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await openSettings(user);
+
+    await user.click(screen.getByText("Preferences"));
+
+    const toggle = screen.getByRole("switch", { name: /lock column order/i });
+    expect(toggle).not.toBeChecked();
+  });
+
+  it("toggles lock column order on and off", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await openSettings(user);
+
+    await user.click(screen.getByText("Preferences"));
+
+    const toggle = screen.getByRole("switch", { name: /lock column order/i });
+    expect(toggle).not.toBeChecked();
+
+    await user.click(toggle);
+    expect(toggle).toBeChecked();
+
+    await user.click(toggle);
+    expect(toggle).not.toBeChecked();
+  });
 });

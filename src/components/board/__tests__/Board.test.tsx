@@ -28,10 +28,13 @@ vi.mock("../../../board/useBoard", () => ({
   }),
 }));
 
+const mockColumnOrderLocked = vi.fn(() => false);
+
 vi.mock("../../../theme/useTheme", () => ({
   useTheme: () => ({
     cardDensity: "medium",
     cardTypes: [],
+    columnOrderLocked: mockColumnOrderLocked(),
   }),
 }));
 
@@ -76,6 +79,7 @@ vi.mock("../SortableColumnItem", () => ({
     title: string;
     cards: Card[];
     canDrag: boolean;
+    disabled?: boolean;
     onOpenDetail?: (cardId: string) => void;
   }) => {
     capturedOnOpenDetail = props.onOpenDetail;
@@ -83,6 +87,7 @@ vi.mock("../SortableColumnItem", () => ({
       <div
         data-testid={`stub-col-${props.id}`}
         data-can-drag={String(props.canDrag)}
+        data-disabled={String(props.disabled ?? false)}
         data-title={props.title}
       >
         {props.title}
@@ -136,6 +141,7 @@ describe("Board", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockColumns.mockReturnValue([]);
+    mockColumnOrderLocked.mockReturnValue(false);
     capturedOnOpenDetail = undefined;
   });
 
@@ -180,6 +186,42 @@ describe("Board", () => {
     expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
       "data-can-drag",
       "true",
+    );
+  });
+
+  // --- columnOrderLocked ---
+
+  it("sets canDrag=false and disabled=true when columnOrderLocked is true", () => {
+    mockColumnOrderLocked.mockReturnValue(true);
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "A" }),
+      makeColumn({ id: "c2", title: "B" }),
+    ]);
+    render(<Board />);
+    expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
+      "data-can-drag",
+      "false",
+    );
+    expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
+      "data-disabled",
+      "true",
+    );
+  });
+
+  it("sets canDrag=true and disabled=false when columnOrderLocked is false", () => {
+    mockColumnOrderLocked.mockReturnValue(false);
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "A" }),
+      makeColumn({ id: "c2", title: "B" }),
+    ]);
+    render(<Board />);
+    expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
+      "data-can-drag",
+      "true",
+    );
+    expect(screen.getByTestId("stub-col-c1")).toHaveAttribute(
+      "data-disabled",
+      "false",
     );
   });
 

@@ -95,6 +95,16 @@ describe("resetSettings", () => {
     expect(result.current.defaultCardTypeId).toBeNull();
   });
 
+  it("resets column order locked to unlocked", () => {
+    const { result } = renderHook(() => useTheme(), { wrapper });
+
+    act(() => result.current.setColumnOrderLocked(true));
+    expect(result.current.columnOrderLocked).toBe(true);
+
+    act(() => result.current.resetSettings());
+    expect(result.current.columnOrderLocked).toBe(false);
+  });
+
   it("removes hasSeenWelcome from db", () => {
     seedKv(STORAGE_KEYS.HAS_SEEN_WELCOME, "true");
     const { result } = renderHook(() => useTheme(), { wrapper });

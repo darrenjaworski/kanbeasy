@@ -11,6 +11,8 @@ export function BoardSettingsSection() {
     setOwlModeEnabled,
     keyboardShortcutsEnabled,
     setKeyboardShortcutsEnabled,
+    columnOrderLocked,
+    setColumnOrderLocked,
   } = useTheme();
 
   return (
@@ -20,6 +22,13 @@ export function BoardSettingsSection() {
         label="Column resizing"
         checked={columnResizingEnabled}
         onChange={setColumnResizingEnabled}
+      />
+      <ToggleSwitch
+        id="column-order-locked"
+        label="Lock column order"
+        description="Prevent columns from being reordered by drag and drop"
+        checked={columnOrderLocked}
+        onChange={setColumnOrderLocked}
       />
       <ToggleSwitch
         id="delete-column-warning"

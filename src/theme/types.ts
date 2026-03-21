@@ -40,5 +40,7 @@ export type ThemeContextValue = Readonly<{
   setCompactHeader: (enabled: boolean) => void;
   keyboardShortcutsEnabled: boolean;
   setKeyboardShortcutsEnabled: (enabled: boolean) => void;
+  columnOrderLocked: boolean;
+  setColumnOrderLocked: (locked: boolean) => void;
   resetSettings: () => void;
 }>;

@@ -9,6 +9,7 @@ export function SortableColumnItem({
   title,
   cards,
   canDrag,
+  disabled,
   style,
   index,
   columnCount,
@@ -18,6 +19,7 @@ export function SortableColumnItem({
   title: string;
   cards: Card[];
   canDrag: boolean;
+  disabled?: boolean;
   style?: React.CSSProperties;
   index?: number;
   columnCount?: number;
@@ -31,7 +33,7 @@ export function SortableColumnItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id, data: { type: "column" } });
+  } = useSortable({ id, data: { type: "column" }, disabled });
 
   const combinedStyle: CSSProperties = useMemo(
     () => ({
