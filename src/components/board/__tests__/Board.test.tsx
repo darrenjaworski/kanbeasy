@@ -10,6 +10,7 @@ let mockIsMobile = false;
 
 vi.mock("../../../hooks", () => ({
   useIsMobile: () => mockIsMobile,
+  useSwipeNavigation: () => ({ onTouchStart: vi.fn(), onTouchEnd: vi.fn() }),
 }));
 
 // ---------------------------------------------------------------------------

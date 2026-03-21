@@ -7,7 +7,7 @@ import { Column } from "./Column";
 import { useBoard } from "../../board/useBoard";
 import { useTheme } from "../../theme/useTheme";
 import { useBoardDragAndDrop } from "../../board/useBoardDragAndDrop";
-import { useIsMobile } from "../../hooks";
+import { useIsMobile, useSwipeNavigation } from "../../hooks";
 import { AddColumn } from "./AddColumn";
 import {
   DndContext,
@@ -139,6 +139,20 @@ export function Board() {
   const activeColumn =
     isMobile && columns.length > 0 ? columns[activeColumnIndex] : null;
 
+  const handleSwipeLeft = useCallback(() => {
+    setActiveColumnIndex((i) => Math.min(i + 1, columns.length - 1));
+  }, [columns.length]);
+
+  const handleSwipeRight = useCallback(() => {
+    setActiveColumnIndex((i) => Math.max(i - 1, 0));
+  }, []);
+
+  const { onTouchStart, onTouchEnd } = useSwipeNavigation({
+    onSwipeLeft: handleSwipeLeft,
+    onSwipeRight: handleSwipeRight,
+    enabled: isMobile && !activeType,
+  });
+
   return (
     <>
       {isMobile && columns.length > 0 && (
@@ -167,7 +181,11 @@ export function Board() {
                   items={activeColumn.cards.map((c) => c.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  <div className="w-full">
+                  <div
+                    className="w-full"
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
+                  >
                     <Column
                       id={activeColumn.id}
                       title={activeColumn.title}
