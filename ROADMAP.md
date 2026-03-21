@@ -98,6 +98,7 @@ an ultra simple task organizer
 - ✅ mobile `AddColumn` button width fix — constrained to `w-full max-w-80` so it never overflows narrow viewports
 - ✅ mobile active press states — `active:` pseudo-class added to shared button tokens (`tc.bgHover`, `tc.dangerButton`) so all buttons give tactile feedback on touch
 - ✅ mobile modal header padding — modal header matches nav header vertical padding on mobile (`px-4 py-3`) via responsive overrides
+- ✅ mobile `ListView` — card-based stacked layout on mobile replacing the HTML table; shows title, type, column, due date, created date; tapping opens `CardDetailModal`
 
 Settings
 

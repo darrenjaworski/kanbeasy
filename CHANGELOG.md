@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.47.0]
+
 ### Features
 
 - Mobile: `ListView` renders a stacked card list on mobile instead of an HTML table — each card shows title, type (if set), column, due date (if set), and created date; tapping opens `CardDetailModal`
