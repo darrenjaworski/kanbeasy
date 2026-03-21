@@ -91,6 +91,7 @@ an ultra simple task organizer
 - ✅ expanded Development card type preset — all 11 conventional commit types (feat, fix, refactor, chore, test, docs, style, ci, build, perf, revert) with a 12-color palette so every type gets a unique swatch
 - ✅ search by card type — filter dropdown in the search bar with checkbox selection, OR logic within types, AND logic with text search
 - ✅ lock columns — toggle in Settings > Preferences to prevent drag-and-drop reordering of columns while still allowing card movement
+- ✅ responsive design for tablets and mobile devices — touch-friendly drag and drop, mobile-optimized column layout (full-width single column with horizontally scrollable pill tab bar), appropriately sized tap targets, hamburger navigation overlay, full-screen modal sheets, and mobile-specific settings hiding
 
 Settings
 
@@ -146,10 +147,6 @@ Settings
 - request persistent storage button — allow users to request `navigator.storage.persist()` from Settings > Data to prevent the browser from evicting IndexedDB data under storage pressure
 - offline PWA (service worker + manifest for standalone install)
 - print/PDF view (clean print stylesheet for standups and sharing)
-- responsive design for tablets and mobile devices
-  - touch-friendly drag and drop
-  - mobile-optimized column layout (stacked or swipeable)
-  - appropriately sized tap targets and spacing
 - recurring cards — automatically create cards on a configurable schedule
   - schedule options (daily, weekly, monthly, custom cron)
   - template-based creation with pre-filled title, description, type, and target column

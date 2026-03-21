@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.45.0]
+
 ### Features
 
+- Mobile responsive design phases 1 & 2: `useIsMobile` hook, full-screen modal sheets (`h-dvh`), touch-friendly `PointerSensor` with delay-based drag activation, hamburger navigation overlay with frosted glass blur, mobile `ViewToggle` grid tiles, `SearchInput` full-width mode, `CommandPalette` mobile sizing, and keyboard shortcut controls hidden on touch devices
 - Mobile responsive design phase 3: full-width column board layout with horizontally scrollable pill tab bar (`BoardColumnTabs`) above the board, single active column fills available width, vertical card drag-and-drop, column/card action buttons always visible on mobile, card drag handle hidden on mobile, tooltips suppressed on mobile to prevent right-edge overflow, reduced board padding (`p-4`) on mobile
 
 ### Fixed
@@ -16,17 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hide board scroll gradients on mobile — `BoardScrollGradients` returns null when `useIsMobile` is true; desktop behaviour unchanged
 - Hide column resizing and lock column order settings on mobile — both toggles in `BoardSettingsSection` are wrapped with `!isMobile`; desktop settings unchanged
 - Hide compact header setting on mobile — toggle in `ThemeSection` wrapped with `!isMobile`; desktop unchanged
-
-- Mobile responsive design phases 1 & 2: `useIsMobile` hook, full-screen modal sheets (`h-dvh`), touch-friendly `PointerSensor` with delay-based drag activation, hamburger navigation overlay with frosted glass blur, mobile `ViewToggle` grid tiles, `SearchInput` full-width mode, `CommandPalette` mobile sizing, and keyboard shortcut controls hidden on touch devices
-
-### Fixed
-
 - Theme settings panel overflow on small screens: mode toggle (`Light/System/Dark`) now fills container width with `flex` instead of `inline-flex`, and theme swatches display in a 3-column grid (2 rows of 3) instead of a single overflowing row
 
 ### Changed
 
-- Responsive design doc: add dedicated Responsive Tables section (priority item for Phase 4) covering `ListView` and `ArchiveModal` table-to-card-list strategy, tablet column-hiding fallback, and pagination touch targets; fix duplicate section 10 numbering
-- Responsive design doc: update phase 3 plan — full-width single-column layout with horizontally scrollable tab bar above the board, "+" add column button pinned to the far right of the tab bar, remove desktop scroll gradients (`BoardScrollGradients`), and preserve owl assistant placement unchanged on mobile
 - Consolidate modal header rendering: `icon` is now optional in `ModalHeader`; `Modal` gates header on `title` alone (not `icon && title`); `ConfirmDialog` uses `Modal`'s standard header flow (gains a consistent close button, removes hand-rolled `<h2>` and hardcoded `aria-labelledby`); remove stale `"Settings"` `aria-label` fallback from `Modal`
 
 ## [1.44.0]
