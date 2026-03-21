@@ -7,15 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- Mobile: `+ Add Column` button in column tab bar uses `rounded-full` to match the pill-shaped tab buttons
+## [1.46.0]
 
 ### Features
 
 - Mobile: tapping a card body opens the card detail modal instead of focusing an inline textarea — `SortableCardItem` renders a `<button>` on mobile in place of the `<textarea>`; desktop behavior unchanged
 - Mobile: drag overlay constrained to 80% width (`w-4/5`) so the drop target remains visible behind the ghost card while dragging
 - Mobile: swipe left/right on the column body navigates between columns — new `useSwipeNavigation` hook with 50px threshold and axis-dominance guard; disabled while a drag is active
+
+### Changed
+
+- Mobile: `+ Add Column` button in column tab bar uses `rounded-full` to match the pill-shaped tab buttons
 
 ## [1.45.1]
 

@@ -92,6 +92,9 @@ an ultra simple task organizer
 - ✅ search by card type — filter dropdown in the search bar with checkbox selection, OR logic within types, AND logic with text search
 - ✅ lock columns — toggle in Settings > Preferences to prevent drag-and-drop reordering of columns while still allowing card movement
 - ✅ responsive design for tablets and mobile devices — touch-friendly drag and drop, mobile-optimized column layout (full-width single column with horizontally scrollable pill tab bar), appropriately sized tap targets, hamburger navigation overlay, full-screen modal sheets, and mobile-specific settings hiding
+- ✅ mobile column swipe navigation — swipe left/right on the column body to navigate between columns; `useSwipeNavigation` hook with 50px threshold and axis-dominance guard; disabled while a drag is active
+- ✅ mobile card tap → detail modal — tapping a card on mobile opens `CardDetailModal` instead of activating inline textarea editing
+- ✅ mobile drag overlay width constraint — ghost card constrained to 80% width on mobile so the drop target remains visible behind it during drag
 
 Settings
 
