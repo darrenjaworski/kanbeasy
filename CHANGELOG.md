@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Copying a card now preserves its due date — `dueDate` added to `CardClipboard` type and propagated through `duplicateCard`
+
+### Tests
+
+- Two unit tests for `duplicateCard` verifying due date is copied (with and without a date set)
+
 ### Features
 
 - Mobile: `CalendarView` renders a day-list on mobile instead of the 7-column grid — only days with cards in the current month are shown, sorted chronologically; today is accent-highlighted; tapping a card opens `CardDetailModal`

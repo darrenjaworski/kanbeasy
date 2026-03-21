@@ -27,7 +27,12 @@ export type ArchivedCard = Card &
 
 export type CardClipboard = Pick<
   Card,
-  "title" | "description" | "cardTypeId" | "cardTypeLabel" | "cardTypeColor"
+  | "title"
+  | "description"
+  | "cardTypeId"
+  | "cardTypeLabel"
+  | "cardTypeColor"
+  | "dueDate"
 >;
 
 export type CardUpdates = Partial<

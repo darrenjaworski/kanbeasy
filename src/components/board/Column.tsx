@@ -262,6 +262,7 @@ export function Column({
               cardTypeId: card.cardTypeId,
               cardTypeLabel: card.cardTypeLabel,
               cardTypeColor: card.cardTypeColor,
+              dueDate: card.dueDate,
             });
         }}
         onArchive={(cardId) => archiveCard(id, cardId)}

@@ -205,7 +205,7 @@ export function useBoardMutations(
         ...(source.cardTypeColor !== undefined && {
           cardTypeColor: source.cardTypeColor,
         }),
-        dueDate: null,
+        dueDate: source.dueDate ?? null,
         createdAt: now,
         updatedAt: now,
         columnHistory: [{ columnId, enteredAt: now }],

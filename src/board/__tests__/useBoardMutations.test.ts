@@ -532,6 +532,40 @@ describe("useBoardMutations", () => {
 
       expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-/);
     });
+
+    it("copies the due date from the source card", () => {
+      const { result, applyLatest } = setup();
+      const col = makeColumn({ id: "col-1", cards: [] });
+
+      act(() => {
+        result.current.duplicateCard("col-1", {
+          title: "Due Soon",
+          description: "",
+          cardTypeId: null,
+          dueDate: "2025-12-31",
+        });
+      });
+
+      const next = applyLatest({ columns: [col], archive: [] });
+      expect(next.columns[0].cards[0].dueDate).toBe("2025-12-31");
+    });
+
+    it("copies null due date when source has no due date", () => {
+      const { result, applyLatest } = setup();
+      const col = makeColumn({ id: "col-1", cards: [] });
+
+      act(() => {
+        result.current.duplicateCard("col-1", {
+          title: "No Due",
+          description: "",
+          cardTypeId: null,
+          dueDate: null,
+        });
+      });
+
+      const next = applyLatest({ columns: [col], archive: [] });
+      expect(next.columns[0].cards[0].dueDate).toBeNull();
+    });
   });
 
   /* -------------------- moveCard -------------------- */
