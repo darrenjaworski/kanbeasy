@@ -1,3 +1,5 @@
+import { useIsMobile } from "../../hooks";
+
 interface BoardScrollGradientsProps {
   readonly canScrollLeft: boolean;
   readonly canScrollRight: boolean;
@@ -7,6 +9,8 @@ export function BoardScrollGradients({
   canScrollLeft,
   canScrollRight,
 }: BoardScrollGradientsProps) {
+  const isMobile = useIsMobile();
+  if (isMobile) return null;
   return (
     <>
       {canScrollLeft && (
