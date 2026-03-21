@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Mobile: `CalendarView` renders a day-list on mobile instead of the 7-column grid — only days with cards in the current month are shown, sorted chronologically; today is accent-highlighted; tapping a card opens `CardDetailModal`
+
+### Tests
+
+- Mobile: 10 unit tests for `CalendarView` mobile day list covering grid absence, day labels, today highlight, month filtering, chronological order, empty-month state, modal open on tap, and search highlighting
+
 ## [1.47.0]
 
 ### Features
