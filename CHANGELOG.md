@@ -7,13 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Mobile responsive design phase 3: full-width column board layout with horizontally scrollable pill tab bar (`BoardColumnTabs`) above the board, single active column fills available width, vertical card drag-and-drop, column/card action buttons always visible on mobile, card drag handle hidden on mobile, tooltips suppressed on mobile to prevent right-edge overflow, reduced board padding (`p-4`) on mobile
+
 ### Fixed
 
 - Hide board scroll gradients on mobile — `BoardScrollGradients` returns null when `useIsMobile` is true; desktop behaviour unchanged
 - Hide column resizing and lock column order settings on mobile — both toggles in `BoardSettingsSection` are wrapped with `!isMobile`; desktop settings unchanged
 - Hide compact header setting on mobile — toggle in `ThemeSection` wrapped with `!isMobile`; desktop unchanged
-
-### Features
 
 - Mobile responsive design phases 1 & 2: `useIsMobile` hook, full-screen modal sheets (`h-dvh`), touch-friendly `PointerSensor` with delay-based drag activation, hamburger navigation overlay with frosted glass blur, mobile `ViewToggle` grid tiles, `SearchInput` full-width mode, `CommandPalette` mobile sizing, and keyboard shortcut controls hidden on touch devices
 

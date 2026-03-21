@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { tc } from "../../theme/classNames";
+import { useIsMobile } from "../../hooks";
 
 type Props = Readonly<{
   content: string;
@@ -19,10 +20,11 @@ export function Tooltip({
   disabled = false,
   children,
 }: Props) {
+  const isMobile = useIsMobile();
   return (
     <span className="group/tooltip relative inline-flex">
       {children}
-      {!disabled && (
+      {!disabled && !isMobile && (
         <span
           role="tooltip"
           aria-hidden

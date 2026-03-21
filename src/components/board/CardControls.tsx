@@ -2,6 +2,7 @@ import type { HTMLAttributes } from "react";
 import { ArchiveIcon, CardDragIcon, CopyIcon, MoreIcon } from "../icons";
 import { Tooltip } from "../shared/Tooltip";
 import { tc } from "../../theme/classNames";
+import { useIsMobile } from "../../hooks";
 
 interface CardControlsProps {
   readonly canDrag: boolean;
@@ -26,11 +27,12 @@ export function CardControls({
   listeners,
   index,
 }: CardControlsProps) {
+  const isMobile = useIsMobile();
   return (
     <div
-      className={`absolute right-2 top-2 z-1 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover/card:opacity-100 group-focus-within/card:opacity-100`}
+      className={`absolute right-2 top-2 z-1 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full transition-opacity ${isMobile ? "opacity-100" : "opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100"}`}
     >
-      {canDrag && (
+      {canDrag && !isMobile && (
         <Tooltip content="Drag to reorder">
           <button
             type="button"
@@ -45,13 +47,15 @@ export function CardControls({
           </button>
         </Tooltip>
       )}
-      {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
+      {canDrag && !isMobile && (
+        <span aria-hidden className={`${tc.separator} h-6 w-px`} />
+      )}
       <Tooltip content="Copy card">
         <button
           type="button"
           onClick={onCopy}
           aria-label={`Copy card ${cardTitle || "Untitled"}`}
-          className={`${tc.iconButton} h-6 w-6${canDrag ? "" : " rounded-l-full"}`}
+          className={`${tc.iconButton} h-6 w-6${canDrag && !isMobile ? "" : " rounded-l-full"}`}
           data-testid={`card-copy-${index}`}
         >
           <CopyIcon className="size-4" />

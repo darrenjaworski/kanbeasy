@@ -14,7 +14,7 @@ import { CardList } from "./CardList";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
 import { Tooltip } from "../shared/Tooltip";
 import { tc } from "../../theme/classNames";
-import { useInlineEdit } from "../../hooks";
+import { useInlineEdit, useIsMobile } from "../../hooks";
 import { getBadgeHeat } from "./badgeHeat";
 
 type Props = Readonly<{
@@ -29,6 +29,8 @@ type Props = Readonly<{
   index?: number;
   columnCount?: number;
   onOpenDetail?: (cardId: string) => void;
+  /** Mobile: expand to full available width instead of fixed w-80 */
+  fullWidth?: boolean;
 }>;
 
 export function Column({
@@ -43,6 +45,7 @@ export function Column({
   index,
   columnCount,
   onOpenDetail,
+  fullWidth = false,
 }: Props) {
   // Column resizing state
   const [width, setWidth] = useState<number>(DEFAULT_COLUMN_WIDTH);
@@ -59,6 +62,7 @@ export function Column({
     defaultCardTypeId,
     cardTypes,
   } = useTheme();
+  const isMobile = useIsMobile();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [autoFocusCardId, setAutoFocusCardId] = useState<string | null>(null);
   const [tempTitle, setTempTitle] = useState(title);
@@ -129,15 +133,15 @@ export function Column({
       aria-label={title || "column"}
       className={
         `group relative rounded-lg border ${tc.border} p-3` +
-        (columnResizingEnabled ? "" : " w-80") +
+        (fullWidth ? " w-full" : columnResizingEnabled ? "" : " w-80") +
         (overlayMode ? ` ${tc.glass} backdrop-blur-md` : " bg-surface")
       }
-      style={columnResizingEnabled ? { width } : undefined}
+      style={!fullWidth && columnResizingEnabled ? { width } : undefined}
       data-testid={`column-${index}`}
     >
       {/* Combined drag + delete control */}
       <div
-        className={`absolute right-2 top-2 z-2 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100`}
+        className={`absolute right-2 top-2 z-2 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full transition-opacity ${isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"}`}
       >
         {canDrag && (
           <Tooltip
@@ -178,7 +182,7 @@ export function Column({
         const heat = getBadgeHeat(cards.length, index, columnCount);
         return (
           <span
-            className={`absolute right-2 top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : tc.glassSubtle} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}
+            className={`absolute top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : tc.glassSubtle} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} ${isMobile ? (canDrag ? "right-20" : "right-12") : `right-2 transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}`}
             style={
               heat
                 ? {
@@ -281,7 +285,7 @@ export function Column({
       />
       {/* Resize handle (feature-flagged) */}
       {/* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- separator with tabIndex is an interactive resize widget */}
-      {columnResizingEnabled && (
+      {columnResizingEnabled && !fullWidth && (
         <div
           className="absolute top-0 pt-[8px] pb-[8px] right-0 h-full w-2 cursor-col-resize z-10 group/resizer"
           style={{
