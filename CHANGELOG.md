@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hide board scroll gradients on mobile — `BoardScrollGradients` returns null when `useIsMobile` is true; desktop behaviour unchanged
 - Hide column resizing and lock column order settings on mobile — both toggles in `BoardSettingsSection` are wrapped with `!isMobile`; desktop settings unchanged
+- Hide compact header setting on mobile — toggle in `ThemeSection` wrapped with `!isMobile`; desktop unchanged
 
 ### Features
 

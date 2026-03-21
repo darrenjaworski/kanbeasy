@@ -8,6 +8,7 @@ import {
   DensityLargeIcon,
 } from "../icons";
 import { ToggleSwitch } from "../shared/ToggleSwitch";
+import { useIsMobile } from "../../hooks";
 
 const lightThemes = themes.filter((t) => t.mode === "light");
 const darkThemes = themes.filter((t) => t.mode === "dark");
@@ -23,6 +24,7 @@ const MODE_OPTIONS: { value: ThemePreference; label: string }[] = [
 ];
 
 export function ThemeSection() {
+  const isMobile = useIsMobile();
   const {
     themeId,
     setThemeId,
@@ -134,13 +136,15 @@ export function ThemeSection() {
           </button>
         </div>
       </fieldset>
-      <ToggleSwitch
-        id="compact-header"
-        label="Compact header"
-        description="Hide text labels on header buttons"
-        checked={compactHeader}
-        onChange={setCompactHeader}
-      />
+      {!isMobile && (
+        <ToggleSwitch
+          id="compact-header"
+          label="Compact header"
+          description="Hide text labels on header buttons"
+          checked={compactHeader}
+          onChange={setCompactHeader}
+        />
+      )}
     </fieldset>
   );
 }
