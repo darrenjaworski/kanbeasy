@@ -6,6 +6,12 @@ import { Board } from "../Board";
 import type { Column, Card } from "../../../board/types";
 import { makeCard, makeColumn } from "../../../test/builders";
 
+let mockIsMobile = false;
+
+vi.mock("../../../hooks", () => ({
+  useIsMobile: () => mockIsMobile,
+}));
+
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
@@ -64,6 +70,7 @@ vi.mock("@dnd-kit/sortable", () => ({
   ),
   sortableKeyboardCoordinates: vi.fn(),
   horizontalListSortingStrategy: {},
+  verticalListSortingStrategy: {},
 }));
 
 vi.mock("@dnd-kit/modifiers", () => ({
@@ -101,6 +108,48 @@ vi.mock("../AddColumn", () => ({
     <button data-testid="stub-add-column" onClick={handleOnClick}>
       Add Column
     </button>
+  ),
+}));
+
+let capturedOnAddColumn: (() => void) | undefined;
+let capturedOnTabClick: ((index: number) => void) | undefined;
+
+vi.mock("../BoardColumnTabs", () => ({
+  BoardColumnTabs: (props: {
+    columns: Column[];
+    activeIndex: number;
+    onTabClick: (index: number) => void;
+    onAddColumn: () => void;
+  }) => {
+    capturedOnTabClick = props.onTabClick;
+    capturedOnAddColumn = props.onAddColumn;
+    return (
+      <div data-testid="stub-tab-bar" data-active-index={props.activeIndex}>
+        {props.columns.map((col, i) => (
+          <button
+            key={col.id}
+            data-testid={`stub-tab-${col.id}`}
+            onClick={() => props.onTabClick(i)}
+          >
+            {col.title}
+          </button>
+        ))}
+        <button data-testid="stub-tab-add-column" onClick={props.onAddColumn}>
+          + Add Column
+        </button>
+      </div>
+    );
+  },
+}));
+
+vi.mock("../Column", () => ({
+  Column: (props: { id: string; title: string; fullWidth?: boolean }) => (
+    <div
+      data-testid={`stub-column-${props.id}`}
+      data-full-width={String(props.fullWidth ?? false)}
+    >
+      {props.title}
+    </div>
   ),
 }));
 
@@ -142,7 +191,10 @@ describe("Board", () => {
     vi.clearAllMocks();
     mockColumns.mockReturnValue([]);
     mockColumnOrderLocked.mockReturnValue(false);
+    mockIsMobile = false;
     capturedOnOpenDetail = undefined;
+    capturedOnTabClick = undefined;
+    capturedOnAddColumn = undefined;
   });
 
   // --- Empty state ---
@@ -281,5 +333,77 @@ describe("Board", () => {
     await userEvent.click(screen.getByTestId("modal-archive"));
     expect(mockArchiveCard).toHaveBeenCalledWith("c1", "card-1");
     expect(screen.queryByTestId("stub-detail-modal")).not.toBeInTheDocument();
+  });
+
+  // --- Mobile layout ---
+
+  it("renders tab bar on mobile when columns exist", () => {
+    mockIsMobile = true;
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "To Do" }),
+      makeColumn({ id: "c2", title: "Done" }),
+    ]);
+    render(<Board />);
+    expect(screen.getByTestId("stub-tab-bar")).toBeInTheDocument();
+  });
+
+  it("does not render tab bar on mobile when board is empty", () => {
+    mockIsMobile = true;
+    mockColumns.mockReturnValue([]);
+    render(<Board />);
+    expect(screen.queryByTestId("stub-tab-bar")).not.toBeInTheDocument();
+    expect(screen.getByTestId("stub-add-column")).toBeInTheDocument();
+  });
+
+  it("renders the first column as full-width on mobile", () => {
+    mockIsMobile = true;
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "To Do" }),
+      makeColumn({ id: "c2", title: "Done" }),
+    ]);
+    render(<Board />);
+    const col = screen.getByTestId("stub-column-c1");
+    expect(col).toBeInTheDocument();
+    expect(col).toHaveAttribute("data-full-width", "true");
+  });
+
+  it("does not render SortableColumnItems on mobile", () => {
+    mockIsMobile = true;
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "To Do" })]);
+    render(<Board />);
+    expect(screen.queryByTestId("stub-col-c1")).not.toBeInTheDocument();
+  });
+
+  it("switching tabs shows the selected column on mobile", async () => {
+    mockIsMobile = true;
+    mockColumns.mockReturnValue([
+      makeColumn({ id: "c1", title: "To Do" }),
+      makeColumn({ id: "c2", title: "Done" }),
+    ]);
+    render(<Board />);
+    expect(screen.getByTestId("stub-column-c1")).toBeInTheDocument();
+    act(() => {
+      capturedOnTabClick?.(1);
+    });
+    expect(screen.getByTestId("stub-column-c2")).toBeInTheDocument();
+    expect(screen.queryByTestId("stub-column-c1")).not.toBeInTheDocument();
+  });
+
+  it("calls addColumn when tab bar add column is clicked on mobile", async () => {
+    mockIsMobile = true;
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "To Do" })]);
+    render(<Board />);
+    act(() => {
+      capturedOnAddColumn?.();
+    });
+    expect(mockAddColumn).toHaveBeenCalledWith("New Column");
+  });
+
+  it("does not render tab bar on desktop", () => {
+    mockIsMobile = false;
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "To Do" })]);
+    render(<Board />);
+    expect(screen.queryByTestId("stub-tab-bar")).not.toBeInTheDocument();
+    expect(screen.getByTestId("stub-col-c1")).toBeInTheDocument();
   });
 });

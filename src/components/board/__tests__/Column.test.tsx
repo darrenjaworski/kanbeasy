@@ -335,6 +335,31 @@ describe("Column", () => {
     expect(screen.getByLabelText("Resize column")).toBeInTheDocument();
   });
 
+  // --- fullWidth ---
+
+  it("applies w-full class when fullWidth is true", () => {
+    renderColumn({ props: { fullWidth: true } });
+    const section = screen.getByRole("region");
+    expect(section.className).toContain("w-full");
+  });
+
+  it("applies w-80 class when fullWidth is false and resizing is disabled", () => {
+    renderColumn({
+      props: { fullWidth: false },
+      theme: { columnResizingEnabled: false },
+    });
+    const section = screen.getByRole("region");
+    expect(section.className).toContain("w-80");
+  });
+
+  it("hides resize handle when fullWidth is true even if resizing is enabled", () => {
+    renderColumn({
+      props: { fullWidth: true },
+      theme: { columnResizingEnabled: true },
+    });
+    expect(screen.queryByLabelText("Resize column")).not.toBeInTheDocument();
+  });
+
   // --- Overlay mode ---
 
   it("applies backdrop-blur styling in overlay mode", () => {
