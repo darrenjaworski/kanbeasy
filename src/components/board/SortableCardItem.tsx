@@ -11,7 +11,7 @@ import type { Card, CardUpdates } from "../../board/types";
 import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
-import { useInlineEdit } from "../../hooks";
+import { useInlineEdit, useIsMobile } from "../../hooks";
 import { ChecklistProgress } from "../shared/ChecklistProgress";
 import { DueDateBadge } from "../shared/DueDateBadge";
 import { CardTypeBadge } from "../shared/CardTypeBadge";
@@ -98,6 +98,7 @@ export function SortableCardItem({
     }
   }, [autoFocus, onAutoFocused]);
 
+  const isMobile = useIsMobile();
   const rowsForDensity = ROWS_FOR_DENSITY[density];
 
   return (
@@ -136,17 +137,28 @@ export function SortableCardItem({
         />
       )}
 
-      <textarea
-        ref={textareaRef}
-        id={`${columnId}-${card.id}-content`}
-        aria-label="Card content"
-        defaultValue={cardValue}
-        className={`${tc.input} mt-1 w-full resize-none hover:resize-y focus:resize-y rounded-xs`}
-        rows={rowsForDensity}
-        onKeyDown={cardKeyDown}
-        onBlur={cardBlur}
-        data-testid={`card-content-${index}`}
-      />
+      {isMobile ? (
+        <button
+          type="button"
+          onClick={onOpenDetail}
+          className={`mt-1 w-full text-left text-sm ${tc.text} leading-snug`}
+          data-testid={`card-content-${index}`}
+        >
+          {cardValue}
+        </button>
+      ) : (
+        <textarea
+          ref={textareaRef}
+          id={`${columnId}-${card.id}-content`}
+          aria-label="Card content"
+          defaultValue={cardValue}
+          className={`${tc.input} mt-1 w-full resize-none hover:resize-y focus:resize-y rounded-xs`}
+          rows={rowsForDensity}
+          onKeyDown={cardKeyDown}
+          onBlur={cardBlur}
+          data-testid={`card-content-${index}`}
+        />
+      )}
       <div className="flex items-center gap-2 empty:hidden">
         <ChecklistProgress
           description={card.description}

@@ -461,14 +461,14 @@ On mobile, only one column is rendered at a time, which is inherently performant
 1. Implement mobile-friendly `CalendarView` (day list instead of grid; use `md:` breakpoint — 768px — for calendar specifically).
 2. Implement card-based `ListView` for mobile (instead of table).
 3. Implement card-based `ArchiveModal` content for mobile (instead of table).
+4. Write Playwright mobile viewport tests (`tests-e2e/mobile.spec.ts`).
+5. Add visual regression snapshots at mobile breakpoints.
 
 ### Phase 5: Testing and Polish (1-2 days)
 
-1. Write Playwright mobile viewport tests.
-2. Add visual regression snapshots at mobile breakpoints.
-3. Test on real devices (iOS Safari, Android Chrome).
-4. Add `@media (prefers-reduced-motion: reduce)` to disable backdrop-blur and non-essential transitions in `src/index.css`.
-5. Fine-tune spacing, animations, and edge cases.
+1. Test on real devices (iOS Safari, Android Chrome).
+2. Add `@media (prefers-reduced-motion: reduce)` to disable backdrop-blur and non-essential transitions in `src/index.css`.
+3. Fine-tune spacing, animations, and edge cases.
 
 ---
 

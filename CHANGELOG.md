@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Mobile: tapping a card body opens the card detail modal instead of focusing an inline textarea — `SortableCardItem` renders a `<button>` on mobile in place of the `<textarea>`; desktop behavior unchanged
+- Mobile: drag overlay constrained to 80% width (`w-4/5`) so the drop target remains visible behind the ghost card while dragging
+
 ## [1.45.1]
 
 ### Fixed

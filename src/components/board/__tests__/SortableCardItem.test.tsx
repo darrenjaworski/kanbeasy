@@ -1,8 +1,16 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import userEvent from "@testing-library/user-event";
 import { SortableCardItem } from "../SortableCardItem";
 import { makeCard } from "../../../test/builders";
+
+let mockIsMobile = false;
+
+vi.mock("../../../hooks", () => ({
+  useIsMobile: () => mockIsMobile,
+  useInlineEdit: () => ({ onKeyDown: vi.fn(), onBlur: vi.fn() }),
+}));
 
 const mockUseSortable = vi.fn();
 
@@ -40,6 +48,10 @@ const baseProps = {
 };
 
 describe("SortableCardItem", () => {
+  beforeEach(() => {
+    mockIsMobile = false;
+  });
+
   it("renders card controls when not dragging", () => {
     mockUseSortable.mockReturnValue(sortableDefaults({ isDragging: false }));
     render(<SortableCardItem {...baseProps} />);
@@ -56,5 +68,32 @@ describe("SortableCardItem", () => {
     expect(screen.queryByTestId("card-copy-0")).not.toBeInTheDocument();
     expect(screen.queryByTestId("card-archive-0")).not.toBeInTheDocument();
     expect(screen.queryByTestId("card-detail-0")).not.toBeInTheDocument();
+  });
+
+  it("renders textarea on desktop", () => {
+    mockUseSortable.mockReturnValue(sortableDefaults());
+    render(<SortableCardItem {...baseProps} />);
+    expect(
+      screen.getByRole("textbox", { name: /card content/i }),
+    ).toBeInTheDocument();
+    // card-content is a textarea, not a button, on desktop
+    expect(screen.getByTestId("card-content-0").tagName).toBe("TEXTAREA");
+  });
+
+  it("renders a tappable button instead of textarea on mobile", () => {
+    mockIsMobile = true;
+    mockUseSortable.mockReturnValue(sortableDefaults());
+    render(<SortableCardItem {...baseProps} />);
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.getByTestId("card-content-0")).toBeInTheDocument();
+  });
+
+  it("calls onOpenDetail when card body is tapped on mobile", async () => {
+    mockIsMobile = true;
+    mockUseSortable.mockReturnValue(sortableDefaults());
+    const onOpenDetail = vi.fn();
+    render(<SortableCardItem {...baseProps} onOpenDetail={onOpenDetail} />);
+    await userEvent.click(screen.getByTestId("card-content-0"));
+    expect(onOpenDetail).toHaveBeenCalledTimes(1);
   });
 });
