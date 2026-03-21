@@ -57,7 +57,8 @@ The `md:` breakpoint (768px) is available for fine-tuning if needed (e.g., calen
 
 ### Desktop (1024px+)
 
-- **No changes** to current behavior. Everything stays as-is.
+- **Board scroll gradients removed** — the left/right edge fade-gradients (`BoardScrollGradients`) that indicate overflowed content are removed. The horizontal scrollbar itself is sufficient affordance for overflow on desktop.
+- Everything else stays as-is.
 
 ---
 
@@ -67,20 +68,40 @@ The `md:` breakpoint (768px) is available for fine-tuning if needed (e.g., calen
 
 **Current state:** Horizontal `flex gap-4` with `overflow-x-auto`. Each column is `w-80` (320px) or resizable.
 
-**Mobile plan — Column carousel with tab navigation:**
+**Mobile plan — Full-width column with tab bar navigation:**
 
 - Add a `useIsMobile` hook (pure JS, `window.matchMedia('(max-width: 639px)')`) to detect mobile.
-- On mobile, render a column selector strip (horizontal scrollable tabs showing column titles + card counts) at the top of the board area.
-- Show only the selected column, filling the full viewport width with padding.
+- On mobile, render a **column selector tab bar** above the board area (horizontally scrollable, one tab per column showing title + card count).
+- The **"+ Column" button is pinned to the far right** of the tab bar, always visible regardless of how many tabs exist.
+- Show only the selected column **filling the full available width** (no fixed `w-80`, no horizontal scroll).
 - Swipe gestures on the column body advance to next/previous column (use touch start/end delta detection — no library needed, ~30 lines of code).
 - The `DndContext` still wraps everything. Cards can be dragged within the visible column. To move cards between columns on mobile, users tap the card to open `CardDetailModal` and use the column selector dropdown (already exists).
 
+**Layout:**
+
+```
++---------------------------------------------------------------+
+| [To Do ×2] [In Progress ×1] [Done ×1]             [+ Column] |  ← tab bar
++---------------------------------------------------------------+
+|                                                               |
+|  [card]                                                       |
+|  [card]                                                       |
+|  + Add card                                                   |
+|                                                               |
++---------------------------------------------------------------+
+```
+
 **Key changes:**
 
-- Desktop renders all columns in a flex row; mobile renders a single column with tab navigation.
-- `SortableContext` on mobile only includes the active column's cards.
+- Desktop renders all columns in a horizontal flex row (unchanged).
+- Mobile renders a tab bar above + single full-width column below.
+- `SortableContext` on mobile only includes the active column's cards (vertical strategy).
 - Column drag-and-drop (reordering columns) is disabled on mobile.
-- The `AddColumn` button appears as a "+" tab in the column selector strip.
+- The `AddColumn` tile is removed from the board area on mobile; replaced by the "+" button in the tab bar.
+
+**Desktop change — remove scroll gradients:**
+
+- Delete the `<BoardScrollGradients>` component and all the `canScrollLeft`/`canScrollRight` scroll-tracking state and listeners from `Board.tsx`. The native horizontal scrollbar is sufficient overflow affordance on desktop and the gradients add visual noise.
 
 **Tablet plan:**
 
@@ -178,11 +199,7 @@ This change in `Modal.tsx` automatically propagates to SettingsModal, AnalyticsM
 
 ### 12. OwlAssistant (`src/components/OwlAssistant.tsx`)
 
-**Mobile plan:**
-
-- The floating owl button lives in a fixed corner. On mobile, it may overlap the bottom bar or intercept swipe gestures used for column navigation.
-- Reposition to the opposite corner from the bottom bar buttons, or anchor it above the bottom bar using a fixed offset (e.g., `bottom-16` when on mobile).
-- Reduce the owl button size slightly on mobile to minimize accidental taps during swipes.
+**No changes.** The owl's current fixed-corner placement is intentional and should not be moved on mobile. Leave it as-is.
 
 ### 13. BottomBar (`src/components/BottomBar.tsx`)
 
@@ -428,15 +445,16 @@ On mobile, only one column is rendered at a time, which is inherently performant
 
 ### Phase 3: Board Layout (2-3 days)
 
-1. Implement column carousel with tab navigation in `Board.tsx`.
-2. Implement swipe-to-navigate between columns.
-3. Adapt `Column.tsx` for full-width mobile layout.
-4. Disable column resizing on mobile.
-5. Implement mobile `CardControls` strategy (action sheet).
-6. Make card tap open `CardDetailModal` on mobile; add `scrollIntoView` on title focus.
-7. Update `AddColumn.tsx` for mobile.
-8. Constrain `DragOverlay` to 80% width on mobile.
-9. Reposition `OwlAssistant` above the bottom bar on mobile.
+1. Create `BoardColumnTabs.tsx` — horizontally scrollable tab bar with one tab per column (title + card count badge) and a "**+ Column**" button pinned to the far right via `ml-auto`.
+2. Add `activeColumnIndex` state to `Board.tsx`. Clamp on column deletion.
+3. On mobile, render `BoardColumnTabs` above the board and a single `Column` below it (full width, no `SortableColumnItem` wrapper).
+4. Remove the `AddColumn` tile from the board body on mobile (replaced by "+" in the tab bar).
+5. Wrap the mobile single-column in a `DndContext` + `SortableContext` using `verticalListSortingStrategy` for card-level drag-and-drop.
+6. Implement swipe-to-navigate: detect `touchstart`/`touchend` delta on the column body; navigate prev/next if delta > 50px.
+7. Adapt `Column.tsx` for full-width layout on mobile (`w-full`, disable resizing).
+8. Implement mobile `CardControls` strategy (action sheet).
+9. Make card tap open `CardDetailModal` on mobile; add `scrollIntoView` on title focus.
+10. Constrain `DragOverlay` to 80% width on mobile.
 
 ### Phase 4: Alternative Views (1-2 days)
 
