@@ -49,6 +49,39 @@ export const themes: readonly ThemeDefinition[] = [
       accent: "#e11d48",
     },
   },
+  {
+    id: "light-sage",
+    name: "Sage",
+    mode: "light",
+    colors: {
+      bg: "#f0f4f0",
+      surface: "#ffffff",
+      text: "#1a2e1a",
+      accent: "#16a34a",
+    },
+  },
+  {
+    id: "light-sky",
+    name: "Sky",
+    mode: "light",
+    colors: {
+      bg: "#f0f7ff",
+      surface: "#ffffff",
+      text: "#0c1a2e",
+      accent: "#0284c7",
+    },
+  },
+  {
+    id: "light-sand",
+    name: "Sand",
+    mode: "light",
+    colors: {
+      bg: "#fdf4e7",
+      surface: "#fffbf4",
+      text: "#292524",
+      accent: "#c2410c",
+    },
+  },
   // ── Dark themes ────────────────────────────────────────
   {
     id: "dark-slate",
@@ -81,6 +114,39 @@ export const themes: readonly ThemeDefinition[] = [
       surface: "#2d1b4e",
       text: "#e9d5ff",
       accent: "#c084fc",
+    },
+  },
+  {
+    id: "dark-obsidian",
+    name: "Obsidian",
+    mode: "dark",
+    colors: {
+      bg: "#0d0d0d",
+      surface: "#1a1a1a",
+      text: "#e5e5e5",
+      accent: "#f59e0b",
+    },
+  },
+  {
+    id: "dark-ocean",
+    name: "Ocean",
+    mode: "dark",
+    colors: {
+      bg: "#051b2c",
+      surface: "#0a2d42",
+      text: "#cce8f4",
+      accent: "#38bdf8",
+    },
+  },
+  {
+    id: "dark-crimson",
+    name: "Crimson",
+    mode: "dark",
+    colors: {
+      bg: "#1a0808",
+      surface: "#2d0f0f",
+      text: "#ffd6d6",
+      accent: "#f87171",
     },
   },
 ] as const;
