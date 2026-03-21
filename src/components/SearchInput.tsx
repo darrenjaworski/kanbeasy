@@ -5,7 +5,7 @@ import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 import { FilterIcon } from "./icons";
 
-export function SearchInput() {
+export function SearchInput({ fullWidth = false }: { fullWidth?: boolean }) {
   const {
     columns,
     searchQuery,
@@ -75,7 +75,10 @@ export function SearchInput() {
   }
 
   return (
-    <div ref={containerRef} className="relative flex-1 max-w-xs">
+    <div
+      ref={containerRef}
+      className={`relative flex-1 ${fullWidth ? "w-full" : "max-w-xs"}`}
+    >
       <input
         id="search-cards"
         type="search"

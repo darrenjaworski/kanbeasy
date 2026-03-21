@@ -11,6 +11,7 @@ export { DensitySmallIcon } from "./DensitySmallIcon";
 export { DragIndicatorIcon } from "./DragIndicatorIcon";
 export { FilterIcon } from "./FilterIcon";
 export { ListViewIcon } from "./ListViewIcon";
+export { MenuIcon } from "./MenuIcon";
 export { MoreIcon } from "./MoreIcon";
 export { OwlIcon, SleepyOwlIcon } from "./OwlIcon";
 export { RedoIcon } from "./RedoIcon";

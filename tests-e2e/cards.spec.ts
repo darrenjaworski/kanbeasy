@@ -81,6 +81,7 @@ test("can reorder cards within a column", async ({ page }) => {
 
   await page.mouse.move(startX, startY);
   await page.mouse.down();
+  await page.waitForTimeout(250); // wait for PointerSensor 200ms delay
   // small jitter to initiate drag (dnd-kit activation distance)
   await page.mouse.move(startX + 10, startY + 10);
   await page.mouse.move(targetX, targetY, { steps: 10 });
@@ -177,6 +178,7 @@ test("can drag and drop a card from one column to another", async ({
 
   await page.mouse.move(startX, startY);
   await page.mouse.down();
+  await page.waitForTimeout(250); // wait for PointerSensor 200ms delay
   // small jitter to initiate drag (dnd-kit activation distance)
   await page.mouse.move(startX + 10, startY + 10);
   await page.mouse.move(targetX, targetY, { steps: 12 });

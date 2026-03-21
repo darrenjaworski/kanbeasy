@@ -24,6 +24,7 @@ vi.mock("../../theme/useTheme", () => ({
 
 vi.mock("../../hooks", () => ({
   useUndoRedoKeyboard: vi.fn(),
+  useIsMobile: () => false, // simulate desktop in all BottomBar tests
 }));
 
 describe("BottomBar", () => {

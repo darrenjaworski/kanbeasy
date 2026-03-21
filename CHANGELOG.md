@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Features
+
+- Mobile responsive design phases 1 & 2: `useIsMobile` hook, full-screen modal sheets (`h-dvh`), touch-friendly `PointerSensor` with delay-based drag activation, hamburger navigation overlay with frosted glass blur, mobile `ViewToggle` grid tiles, `SearchInput` full-width mode, `CommandPalette` mobile sizing, and keyboard shortcut controls hidden on touch devices
+
 ## [1.44.0]
 
 ### Features

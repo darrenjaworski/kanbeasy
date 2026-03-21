@@ -142,7 +142,15 @@ This change in `Modal.tsx` automatically propagates to SettingsModal, AnalyticsM
 - List items increase to `py-3` on mobile for 44px+ tap targets.
 - Can be triggered from the hamburger menu or a mobile-specific button.
 
-### 8. CalendarView (`src/components/CalendarView.tsx`)
+### 8. SearchInput type filter (`src/components/SearchInput.tsx`)
+
+**Mobile plan:**
+
+- The type filter is a multi-select dropdown anchored to the search bar. On mobile, a small anchored dropdown is awkward to interact with precisely.
+- On mobile, open the type filter as a bottom sheet (similar to `CardActionMenu`) instead of an inline dropdown.
+- The bottom sheet lists all card types with checkbox toggles and a "Clear" / "Apply" button row at the bottom.
+
+### 9. CalendarView (`src/components/CalendarView.tsx`)
 
 **Mobile plan:**
 
@@ -150,14 +158,29 @@ This change in `Modal.tsx` automatically propagates to SettingsModal, AnalyticsM
 - On tablet (`sm:`+), keep the 7-column grid but reduce cell height to `h-24`.
 - On desktop (`lg:`+), current layout unchanged.
 
-### 9. ListView (`src/components/ListView.tsx`)
+### 10. ListView (`src/components/ListView.tsx`)
 
 **Mobile plan:**
 
 - On mobile, replace the table with a card-based list: each row becomes a tappable card showing card number/type badge, title, column name, and due date. Created timestamp is hidden.
 - Use a responsive conditional: `<table>` on `sm:`, card list on mobile.
 
-### 10. BottomBar (`src/components/BottomBar.tsx`)
+### 10. ArchiveModal (`src/components/ArchiveModal.tsx`)
+
+**Mobile plan:**
+
+- The archive modal contains a data table (similar to `ListView`) with columns for card number, title, type, column, and archived date. On mobile, replace the table with a card-based list matching the `ListView` mobile treatment.
+- Full-screen modal behavior is inherited from the `Modal.tsx` change.
+
+### 11. OwlAssistant (`src/components/OwlAssistant.tsx`)
+
+**Mobile plan:**
+
+- The floating owl button lives in a fixed corner. On mobile, it may overlap the bottom bar or intercept swipe gestures used for column navigation.
+- Reposition to the opposite corner from the bottom bar buttons, or anchor it above the bottom bar using a fixed offset (e.g., `bottom-16` when on mobile).
+- Reduce the owl button size slightly on mobile to minimize accidental taps during swipes.
+
+### 12. BottomBar (`src/components/BottomBar.tsx`)
 
 **Mobile plan:**
 
@@ -203,6 +226,48 @@ Per Apple Human Interface Guidelines, all interactive elements must be at least 
 | Calendar day card buttons | ~20px tall                  | Increase padding for 44px height on mobile               |
 | View toggle buttons       | `p-1.5 px-2.5` (~28px tall) | Increase to `p-2.5 px-3` on mobile                       |
 | Undo/redo buttons         | `px-3 py-1.5` (~30px tall)  | Increase to `py-2.5` on mobile                           |
+
+### iOS Safari Dynamic Viewport Height (`dvh`)
+
+On iOS Safari, `100vh` is computed against the full page height including the retractable URL bar, causing elements sized with `h-screen` or `h-full` to be clipped when the bar is visible. Use `h-dvh` (dynamic viewport height) instead:
+
+```css
+/* Instead of h-screen or h-full on the board and full-screen modals */
+h-dvh          /* maps to height: 100dvh */
+min-h-dvh      /* safe minimum for the main board container */
+```
+
+Apply this to:
+
+- The main board container in `Board.tsx`
+- The full-screen modal wrapper in `Modal.tsx` (`h-dvh` instead of `h-full`)
+
+Tailwind CSS v4 supports `dvh` natively — no config change needed.
+
+### Virtual Keyboard / Input Focus
+
+When a soft keyboard opens on mobile, the visible area shrinks, potentially hiding focused inputs. Ensure focused elements scroll into view:
+
+- In `SortableCardItem.tsx`: after focusing the inline title textarea, call `textarea.scrollIntoView({ block: 'nearest', behavior: 'smooth' })`.
+- In `CardDetailModal.tsx`: the modal uses `overflow-y-auto`; inputs inside will naturally scroll within the modal, but the modal itself must not be clipped by the keyboard. Use `env(safe-area-inset-bottom)` padding at the modal bottom if needed.
+- In the hamburger menu search input: ensure the menu panel itself scrolls or resizes when the keyboard opens rather than being pushed off-screen.
+
+### Drag Overlay Width on Mobile
+
+During a card drag, `DragOverlay` renders a floating clone at the card's natural size. On mobile, cards are full-width — the overlay will be 100% viewport width, completely obscuring the drop target below it. Constrain the overlay on mobile:
+
+```tsx
+// In Board.tsx DragOverlay usage:
+<DragOverlay>
+  {activeCard && (
+    <div className="w-4/5 mx-auto opacity-90"> {/* mobile: 80% width */}
+      <Card ... />
+    </div>
+  )}
+</DragOverlay>
+```
+
+Use `useIsMobile` to apply the constrained width only on mobile, keeping the full-width overlay on desktop.
 
 ### Gesture Design
 
@@ -262,7 +327,7 @@ On mobile, only one column is rendered at a time, which is inherently performant
 
 - All existing animations use CSS transitions, which are GPU-accelerated.
 - @dnd-kit's drag overlay uses `transform: translate3d(...)`, which is GPU-accelerated.
-- The `backdrop-blur` used on modals and glass effects can be expensive on low-end devices. Consider adding a `prefers-reduced-motion` media query to disable blur effects.
+- The `backdrop-blur` used on modals and glass effects can be expensive on low-end devices. Add a `prefers-reduced-motion` media query to disable backdrop-blur and non-essential transitions (this is a concrete Phase 5 task — see Testing and Polish below).
 
 ### Touch Event Handling
 
@@ -276,16 +341,17 @@ On mobile, only one column is rendered at a time, which is inherently performant
 ### Phase 1: Foundation (2-3 days)
 
 1. Create `useIsMobile` hook.
-2. Update `Modal.tsx` for full-screen on mobile.
-3. Update `BottomBar.tsx` for mobile sizing.
-4. Update tap target sizes across the board.
-5. Change `PointerSensor` activation constraint to `{ delay: 200, tolerance: 5 }`.
+2. Update `Modal.tsx` for full-screen on mobile — use `h-dvh` instead of `h-full`.
+3. Update main board container in `Board.tsx` to use `min-h-dvh` (iOS Safari safe area).
+4. Update `BottomBar.tsx` for mobile sizing.
+5. Update tap target sizes across the board.
+6. Change `PointerSensor` activation constraint to `{ delay: 200, tolerance: 5 }`.
 
 ### Phase 2: Header and Navigation (1-2 days)
 
 1. Implement hamburger menu in `Header.tsx`.
 2. Move search, view toggle, and action buttons into the mobile menu.
-3. Adjust `SearchInput.tsx` for full-width in the mobile menu.
+3. Adjust `SearchInput.tsx` for full-width in the mobile menu; implement bottom-sheet type filter for mobile.
 4. Update `CommandPalette.tsx` for mobile positioning and sizing.
 
 ### Phase 3: Board Layout (2-3 days)
@@ -295,20 +361,24 @@ On mobile, only one column is rendered at a time, which is inherently performant
 3. Adapt `Column.tsx` for full-width mobile layout.
 4. Disable column resizing on mobile.
 5. Implement mobile `CardControls` strategy (action sheet).
-6. Make card tap open `CardDetailModal` on mobile.
+6. Make card tap open `CardDetailModal` on mobile; add `scrollIntoView` on title focus.
 7. Update `AddColumn.tsx` for mobile.
+8. Constrain `DragOverlay` to 80% width on mobile.
+9. Reposition `OwlAssistant` above the bottom bar on mobile.
 
 ### Phase 4: Alternative Views (1-2 days)
 
-1. Implement mobile-friendly `CalendarView` (day list instead of grid).
+1. Implement mobile-friendly `CalendarView` (day list instead of grid; use `md:` breakpoint — 768px — for calendar specifically).
 2. Implement card-based `ListView` for mobile (instead of table).
+3. Implement card-based `ArchiveModal` content for mobile (instead of table).
 
 ### Phase 5: Testing and Polish (1-2 days)
 
 1. Write Playwright mobile viewport tests.
 2. Add visual regression snapshots at mobile breakpoints.
 3. Test on real devices (iOS Safari, Android Chrome).
-4. Fine-tune spacing, animations, and edge cases.
+4. Add `@media (prefers-reduced-motion: reduce)` to disable backdrop-blur and non-essential transitions in `src/index.css`.
+5. Fine-tune spacing, animations, and edge cases.
 
 ---
 
@@ -377,6 +447,6 @@ Before release, manually test on:
 
 5. **Hover-dependent interactions:** Several components use `group-hover` for visibility. **Recommendation**: use `@media (hover: hover)` in CSS for hover-visibility, and `useIsMobile` for layout changes. This way, desktop touch devices (Surface) still get hover behavior via mouse.
 
-6. **Calendar view mobile threshold:** Should the compact calendar kick in at 640px or 768px? The 7-column grid is cramped between 640-768px. May need the `md:` breakpoint for the calendar specifically.
+6. **Calendar view mobile threshold:** ~~Should the compact calendar kick in at 640px or 768px?~~ **Resolved:** Use `md:` (768px) as the calendar-specific breakpoint. The 7-column grid is too cramped below 768px and the `sm:` (640px) tier will use the day-list layout.
 
-7. **Column count in tab strip:** With many columns (10+), the column selector tabs on mobile will overflow horizontally. The tab strip should be horizontally scrollable with edge fade gradients (reuse `BoardScrollGradients` pattern).
+7. **Column count in tab strip:** With many columns (10+), the column selector tabs on mobile will overflow horizontally. The tab strip should be horizontally scrollable with edge fade gradients — `BoardScrollGradients` already exists; confirm it's reusable before building new edge-fade logic.

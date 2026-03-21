@@ -69,6 +69,9 @@ test("reorder columns by dragging", async ({ page }) => {
 
   await page.mouse.move(startX, startY);
   await page.mouse.down();
+  // Wait for the PointerSensor delay (200ms) to expire before moving,
+  // otherwise the 10px jitter exceeds the 5px tolerance and cancels the drag.
+  await page.waitForTimeout(250);
   // small jitter to initiate drag
   await page.mouse.move(startX + 10, startY + 10);
   // move to the center of the second column

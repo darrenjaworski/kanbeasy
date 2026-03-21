@@ -71,7 +71,7 @@ export function Modal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-label={titleId ? undefined : "Settings"}
-        className={`relative z-10 w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden rounded-lg border ${tc.border} bg-surface text-text p-0 shadow-xl ${className}`}
+        className={`relative z-10 w-full h-dvh flex flex-col overflow-hidden border sm:max-w-md sm:h-auto sm:max-h-[85vh] sm:rounded-lg ${tc.border} bg-surface text-text p-0 shadow-xl ${className}`}
       >
         {icon && title && (
           <div className="p-4 pb-2 shrink-0">

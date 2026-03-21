@@ -26,7 +26,7 @@ const modes: readonly {
   },
 ];
 
-export function ViewToggle() {
+export function ViewToggle({ mobile = false }: { mobile?: boolean }) {
   const { viewMode, setViewMode, compactHeader } = useTheme();
   const { columns } = useBoard();
   const hasCards = columns.some((c) => c.cards.length > 0);
@@ -37,6 +37,38 @@ export function ViewToggle() {
       return "Add a due date to a card to enable calendar view";
     if (mode !== "board" && !hasCards) return "Add cards to enable this view";
     return null;
+  }
+
+  if (mobile) {
+    return (
+      <div
+        className={`grid grid-cols-3 w-full overflow-hidden rounded-lg border ${tc.border} ${tc.glass}`}
+        role="radiogroup"
+        aria-label="View mode"
+      >
+        {modes.map(({ mode, label, shortLabel, Icon }) => {
+          const active = viewMode === mode;
+          const disabledReason = getDisabledReason(mode);
+          // On mobile: skip Tooltip wrapper — the inline-flex span breaks grid
+          // cell stretching, and tooltips aren't useful on touch anyway.
+          return (
+            <button
+              key={mode}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              aria-label={`${label}${disabledReason ? ` — ${disabledReason}` : ""}`}
+              disabled={!!disabledReason}
+              className={`py-2.5 flex flex-col items-center gap-1 transition-colors ${tc.focusRing} ${tc.text} ${tc.textHover} ${active ? tc.pressed : tc.bgHover} disabled:opacity-40 disabled:pointer-events-none border-r last:border-r-0 ${tc.border}`}
+              onClick={() => setViewMode(mode)}
+            >
+              <Icon className="size-5" />
+              <span className="text-xs font-medium">{shortLabel}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
   }
 
   return (

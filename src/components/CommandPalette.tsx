@@ -177,7 +177,7 @@ export function CommandPalette({ open, onClose }: Props) {
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] sm:pt-[20vh]">
       <button
         type="button"
         className="absolute inset-0 bg-black/40 backdrop-blur-xs"
@@ -188,7 +188,7 @@ export function CommandPalette({ open, onClose }: Props) {
       />
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- composite widget with internal keyboard handling */}
       <div
-        className={`relative z-10 w-full max-w-lg rounded-lg border ${tc.border} bg-surface shadow-2xl overflow-hidden`}
+        className={`relative z-10 w-full max-w-[calc(100%-2rem)] sm:max-w-lg rounded-lg border ${tc.border} bg-surface shadow-2xl overflow-hidden`}
         onKeyDown={handleKeyDown}
         data-testid="command-palette"
       >
@@ -218,7 +218,7 @@ export function CommandPalette({ open, onClose }: Props) {
                 key={action.id}
                 role="option"
                 aria-selected={i === selectedIndex}
-                className={`flex items-center justify-between px-4 py-2 text-sm cursor-pointer transition-colors ${
+                className={`flex items-center justify-between px-4 py-3 sm:py-2 text-sm cursor-pointer transition-colors ${
                   i === selectedIndex
                     ? "bg-accent/10 text-accent"
                     : `${tc.text} ${tc.bgHover}`

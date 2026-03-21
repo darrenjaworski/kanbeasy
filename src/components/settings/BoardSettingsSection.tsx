@@ -1,7 +1,9 @@
 import { useTheme } from "../../theme/useTheme";
+import { useIsMobile } from "../../hooks";
 import { ToggleSwitch } from "../shared/ToggleSwitch";
 
 export function BoardSettingsSection() {
+  const isMobile = useIsMobile();
   const {
     columnResizingEnabled,
     setColumnResizingEnabled,
@@ -36,13 +38,15 @@ export function BoardSettingsSection() {
         checked={deleteColumnWarningEnabled}
         onChange={setDeleteColumnWarningEnabled}
       />
-      <ToggleSwitch
-        id="keyboard-shortcuts"
-        label="Keyboard shortcuts"
-        description="Use Cmd+K to open the command palette"
-        checked={keyboardShortcutsEnabled}
-        onChange={setKeyboardShortcutsEnabled}
-      />
+      {!isMobile && (
+        <ToggleSwitch
+          id="keyboard-shortcuts"
+          label="Keyboard shortcuts"
+          description="Use Cmd+K to open the command palette"
+          checked={keyboardShortcutsEnabled}
+          onChange={setKeyboardShortcutsEnabled}
+        />
+      )}
       <ToggleSwitch
         id="owl-mode"
         label="Owl assistant"
