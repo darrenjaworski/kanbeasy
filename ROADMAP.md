@@ -95,6 +95,9 @@ an ultra simple task organizer
 - ✅ mobile column swipe navigation — swipe left/right on the column body to navigate between columns; `useSwipeNavigation` hook with 50px threshold and axis-dominance guard; disabled while a drag is active
 - ✅ mobile card tap → detail modal — tapping a card on mobile opens `CardDetailModal` instead of activating inline textarea editing
 - ✅ mobile drag overlay width constraint — ghost card constrained to 80% width on mobile so the drop target remains visible behind it during drag
+- ✅ mobile `AddColumn` button width fix — constrained to `w-full max-w-80` so it never overflows narrow viewports
+- ✅ mobile active press states — `active:` pseudo-class added to shared button tokens (`tc.bgHover`, `tc.dangerButton`) so all buttons give tactile feedback on touch
+- ✅ mobile modal header padding — modal header matches nav header vertical padding on mobile (`px-4 py-3`) via responsive overrides
 
 Settings
 

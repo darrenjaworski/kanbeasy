@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.46.1]
+
+### Changed
+
+- Docs: moved mobile `CardControls` action sheet item from Phase 3 to Phase 4 in responsive design plan
+
 ### Fixed
 
 - Mobile: `AddColumn` button uses `w-full max-w-80` instead of `w-80` so it no longer overflows the viewport on small screens (≤320px)
