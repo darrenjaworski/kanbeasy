@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Mobile: `AddColumn` button uses `w-full max-w-80` instead of `w-80` so it no longer overflows the viewport on small screens (≤320px)
+- Mobile: modal header padding changed to `px-4 py-3` to match the navigation header; desktop keeps original `pt-4 pb-2` spacing via `sm:` overrides
 - Mobile: `tc.dangerButton` gains `active:bg-red-200 dark:active:bg-red-800` press state so destructive action buttons give touch feedback
 - Mobile: add `active:` press states to `tc.bgHover` (`active:bg-black/15 dark:active:bg-white/15`) so all buttons give visual feedback on touch; desktop hover behaviour unchanged
 

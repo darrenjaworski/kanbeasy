@@ -71,7 +71,7 @@ export function Modal({
         className={`relative z-10 w-full h-dvh flex flex-col overflow-hidden border sm:max-w-md sm:h-auto sm:max-h-[85vh] sm:rounded-lg ${tc.border} bg-surface text-text p-0 shadow-xl ${className}`}
       >
         {title && (
-          <div className="p-4 pb-2 shrink-0">
+          <div className="px-4 py-3 sm:pt-4 sm:pb-2 shrink-0">
             <ModalHeader
               icon={icon}
               title={title}
@@ -81,7 +81,9 @@ export function Modal({
           </div>
         )}
         {title ? (
-          <div className="px-4 pb-4 pt-2 overflow-y-auto">{children}</div>
+          <div className="px-4 pb-4 pt-0 sm:pt-2 overflow-y-auto">
+            {children}
+          </div>
         ) : (
           children
         )}
