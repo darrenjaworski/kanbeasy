@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- SEO: add meta description to `index.html` to resolve Lighthouse audit warning
+
 ## [1.48.0]
 
 ### Features
