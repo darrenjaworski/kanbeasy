@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.48.1]
+
 ### Fixed
 
 - SEO: add meta description to `index.html` to resolve Lighthouse audit warning
+
+### Changed
+
+- Add `start` script (`vite preview` after build) and update `preview` script to run build then preview
 
 ## [1.48.0]
 
