@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.49.0]
+
+### Features
+
+- Mobile: `ArchiveModal` renders a stacked card list on mobile instead of an HTML table — each card shows a `CardTypeBadge`, title, and archived date with a per-card checkbox; a "Select all / Deselect all" button in the action bar replaces the table-header checkbox
+
+### Tests
+
+- Mobile: 10 unit tests for `ArchiveModal` mobile card list covering no-table rendering, title/date display, card count, select-all button location and label toggling, indeterminate label state, individual selection, bulk-select, and restore
+
 ## [1.48.1]
 
 ### Fixed
