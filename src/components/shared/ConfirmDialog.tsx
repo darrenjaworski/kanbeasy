@@ -21,34 +21,24 @@ export function ConfirmDialog({
   cancelLabel = "Cancel",
 }: Props) {
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="confirm-title">
-      <div className="p-4">
-        <h2
-          id="confirm-title"
-          className="text-base font-semibold tracking-tight mb-2"
+    <Modal open={open} onClose={onClose} title={title}>
+      <p className={`text-sm ${tc.textMuted} mb-4`}>{message}</p>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={onClose}
+          className={`${tc.button} flex-1 rounded-md px-3 py-1.5`}
         >
-          {title}
-        </h2>
-        <p id="confirm-description" className={`text-sm ${tc.textMuted} mb-4`}>
-          {message}
-        </p>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className={`${tc.button} flex-1 rounded-md px-3 py-1.5`}
-          >
-            {cancelLabel}
-          </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            className={`${tc.dangerButton} flex-1 rounded-md px-3 py-1.5`}
-            data-testid="confirm-delete-button"
-          >
-            {confirmLabel}
-          </button>
-        </div>
+          {cancelLabel}
+        </button>
+        <button
+          type="button"
+          onClick={onConfirm}
+          className={`${tc.dangerButton} flex-1 rounded-md px-3 py-1.5`}
+          data-testid="confirm-delete-button"
+        >
+          {confirmLabel}
+        </button>
       </div>
     </Modal>
   );

@@ -59,7 +59,7 @@ describe("ConfirmDialog", () => {
         message="This will remove 3 cards."
       />,
     );
-    await user.click(screen.getByRole("button", { name: /delete/i }));
+    await user.click(screen.getByTestId("confirm-delete-button"));
     expect(onConfirm).toHaveBeenCalledOnce();
   });
 

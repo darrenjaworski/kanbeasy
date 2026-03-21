@@ -9,7 +9,6 @@ type ModalProps = Readonly<{
   onClose: () => void;
   icon?: React.ComponentType<{ className?: string }>;
   title?: string;
-  "aria-labelledby"?: string;
   children: ReactNode;
   className?: string;
 }>;
@@ -17,8 +16,8 @@ type ModalProps = Readonly<{
 /**
  * Accessible modal dialog. Handles Escape key, backdrop click, and focus trap.
  *
- * When `icon` and `title` are provided, renders a standard ModalHeader
- * automatically and derives `aria-labelledby` from the title.
+ * When `title` is provided, renders a standard ModalHeader automatically
+ * (with optional `icon`) and derives `aria-labelledby` from the title.
  *
  * @example
  * <Modal open={open} onClose={closeFn} icon={SettingsGearIcon} title="Settings">
@@ -31,12 +30,11 @@ export function Modal({
   icon,
   title,
   children,
-  "aria-labelledby": ariaLabelledby,
   className = "",
 }: ModalProps) {
-  const titleId =
-    ariaLabelledby ??
-    (title ? `${title.toLowerCase().replace(/\s+/g, "-")}-title` : undefined);
+  const titleId = title
+    ? `${title.toLowerCase().replace(/\s+/g, "-")}-title`
+    : undefined;
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -70,10 +68,9 @@ export function Modal({
         open
         aria-modal="true"
         aria-labelledby={titleId}
-        aria-label={titleId ? undefined : "Settings"}
         className={`relative z-10 w-full h-dvh flex flex-col overflow-hidden border sm:max-w-md sm:h-auto sm:max-h-[85vh] sm:rounded-lg ${tc.border} bg-surface text-text p-0 shadow-xl ${className}`}
       >
-        {icon && title && (
+        {title && (
           <div className="p-4 pb-2 shrink-0">
             <ModalHeader
               icon={icon}
@@ -83,7 +80,7 @@ export function Modal({
             />
           </div>
         )}
-        {icon && title ? (
+        {title ? (
           <div className="px-4 pb-4 pt-2 overflow-y-auto">{children}</div>
         ) : (
           children

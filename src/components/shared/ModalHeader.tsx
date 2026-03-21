@@ -3,7 +3,7 @@ import { Tooltip } from "./Tooltip";
 import { tc } from "../../theme/classNames";
 
 type Props = Readonly<{
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: React.ComponentType<{ className?: string }>;
   title: string;
   titleId: string;
   onClose: () => void;
@@ -19,7 +19,7 @@ export function ModalHeader({
 }: Props) {
   return (
     <div className="flex items-center gap-3">
-      <Icon className={`size-5 ${tc.textMuted}`} />
+      {Icon && <Icon className={`size-5 ${tc.textMuted}`} />}
       <h2 id={titleId} className="text-base font-semibold tracking-tight">
         {title}
       </h2>

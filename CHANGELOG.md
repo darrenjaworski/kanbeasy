@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Responsive design doc: add dedicated Responsive Tables section (priority item for Phase 4) covering `ListView` and `ArchiveModal` table-to-card-list strategy, tablet column-hiding fallback, and pagination touch targets; fix duplicate section 10 numbering
+- Consolidate modal header rendering: `icon` is now optional in `ModalHeader`; `Modal` gates header on `title` alone (not `icon && title`); `ConfirmDialog` uses `Modal`'s standard header flow (gains a consistent close button, removes hand-rolled `<h2>` and hardcoded `aria-labelledby`); remove stale `"Settings"` `aria-label` fallback from `Modal`
 
 ## [1.44.0]
 
