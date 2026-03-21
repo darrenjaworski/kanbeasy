@@ -46,7 +46,7 @@ export function BoardColumnTabs({
         type="button"
         onClick={onAddColumn}
         aria-label="Add column"
-        className={`ml-auto shrink-0 rounded-md border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
+        className={`ml-auto shrink-0 rounded-full border border-dashed ${tc.border} px-3 py-1.5 text-sm ${tc.textFaint} ${tc.textHover} ${tc.bgHover} transition-colors ${tc.focusRing}`}
       >
         + Add Column
       </button>
