@@ -160,19 +160,23 @@ This change in `Modal.tsx` automatically propagates to SettingsModal, AnalyticsM
 
 ### 10. ListView (`src/components/ListView.tsx`)
 
+> ⚠️ **Table responsiveness required** — this component renders an HTML `<table>` that overflows on narrow screens. See [Responsive Tables](#responsive-tables) section.
+
 **Mobile plan:**
 
 - On mobile, replace the table with a card-based list: each row becomes a tappable card showing card number/type badge, title, column name, and due date. Created timestamp is hidden.
 - Use a responsive conditional: `<table>` on `sm:`, card list on mobile.
 
-### 10. ArchiveModal (`src/components/ArchiveModal.tsx`)
+### 11. ArchiveModal (`src/components/ArchiveModal.tsx`)
+
+> ⚠️ **Table responsiveness required** — this component renders an HTML `<table>` that overflows on narrow screens. See [Responsive Tables](#responsive-tables) section.
 
 **Mobile plan:**
 
 - The archive modal contains a data table (similar to `ListView`) with columns for card number, title, type, column, and archived date. On mobile, replace the table with a card-based list matching the `ListView` mobile treatment.
 - Full-screen modal behavior is inherited from the `Modal.tsx` change.
 
-### 11. OwlAssistant (`src/components/OwlAssistant.tsx`)
+### 12. OwlAssistant (`src/components/OwlAssistant.tsx`)
 
 **Mobile plan:**
 
@@ -180,13 +184,81 @@ This change in `Modal.tsx` automatically propagates to SettingsModal, AnalyticsM
 - Reposition to the opposite corner from the bottom bar buttons, or anchor it above the bottom bar using a fixed offset (e.g., `bottom-16` when on mobile).
 - Reduce the owl button size slightly on mobile to minimize accidental taps during swipes.
 
-### 12. BottomBar (`src/components/BottomBar.tsx`)
+### 13. BottomBar (`src/components/BottomBar.tsx`)
 
 **Mobile plan:**
 
 - Hide the keyboard shortcut hint on mobile.
 - Undo/redo buttons: reduce label to icon-only on mobile.
 - Increase padding for 44px tap target minimum.
+
+---
+
+## Responsive Tables
+
+> ⚠️ **Priority item for Phase 4.** HTML `<table>` elements do not reflow on small screens — they overflow horizontally or crush columns to illegibility. Two components in Kanbeasy currently render tables and need a responsive treatment before mobile support can be considered complete.
+
+### Affected Components
+
+| Component      | Table columns                             | Location                          |
+| -------------- | ----------------------------------------- | --------------------------------- |
+| `ListView`     | #, Type, Title, Column, Due Date, Created | `src/components/ListView.tsx`     |
+| `ArchiveModal` | #, Type, Title, Column, Archived Date     | `src/components/ArchiveModal.tsx` |
+
+### Strategy: Swap Table for Card List on Mobile
+
+Rather than attempting to make the tables horizontally scroll (poor UX) or hiding columns (lossy), replace the `<table>` with a card-based vertical list on mobile viewports. Each table row becomes a stacked card.
+
+**Card layout per row:**
+
+```
+┌──────────────────────────────────────┐
+│ [#42] [Bug]   Card title here        │
+│              Column: In Progress     │
+│              Due: Mar 21             │
+└──────────────────────────────────────┘
+```
+
+- Card number and type badge on the same line as the title.
+- Column name and due date stacked below.
+- Created/Archived date omitted on mobile (available in detail modal).
+- Tapping a card opens `CardDetailModal` (ListView) or shows archive detail.
+
+**Implementation pattern:**
+
+```tsx
+{
+  isMobile ? (
+    <ul className="flex flex-col gap-2 p-3">
+      {cards.map((card) => (
+        <li
+          key={card.id}
+          className={`rounded-lg border p-3 ${tc.border} ${tc.surface}`}
+        >
+          {/* stacked card content */}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <table className="w-full text-sm">{/* existing table markup */}</table>
+  );
+}
+```
+
+Use the `useIsMobile` hook (already available in `src/hooks/index.ts`) for the conditional.
+
+### Column Hiding as a Tablet Fallback
+
+On tablet (`sm:` 640-1023px), the full table is shown but lower-priority columns are hidden:
+
+- `ListView`: hide "Created" column (`hidden sm:table-cell` / `sm:hidden` pattern)
+- `ArchiveModal`: hide "Archived Date" column on tablet, show on desktop
+
+Use Tailwind's responsive `table-cell` / `hidden` utilities on `<th>` and `<td>` to control per-column visibility without JS.
+
+### Pagination on Mobile
+
+Both components paginate results. The existing pagination controls (prev/next, page count) need 44px touch targets on mobile — verify button heights meet the minimum after implementing the card layout.
 
 ---
 

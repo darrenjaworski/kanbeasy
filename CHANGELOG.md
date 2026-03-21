@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Theme settings panel overflow on small screens: mode toggle (`Light/System/Dark`) now fills container width with `flex` instead of `inline-flex`, and theme swatches display in a 3-column grid (2 rows of 3) instead of a single overflowing row
 
+### Changed
+
+- Responsive design doc: add dedicated Responsive Tables section (priority item for Phase 4) covering `ListView` and `ArchiveModal` table-to-card-list strategy, tablet column-hiding fallback, and pagination touch targets; fix duplicate section 10 numbering
+
 ## [1.44.0]
 
 ### Features
