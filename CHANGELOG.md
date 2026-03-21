@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.43.0]
+
 ### Features
 
 - Add 6 new themes: Sage, Sky, and Sand (light) and Obsidian, Ocean, and Crimson (dark)

@@ -9,7 +9,7 @@ an ultra simple task organizer
 - ✅ all data saved locally on device
 - ✅ light/dark mode
 - ✅ theme color options
-  - ✅ 6 predefined themes (3 light, 3 dark)
+  - ✅ 12 predefined themes (6 light, 6 dark)
   - ✅ centralized theme configuration
   - ✅ accent color support
 - ✅ customizable columns
