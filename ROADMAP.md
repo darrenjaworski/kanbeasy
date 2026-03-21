@@ -90,6 +90,7 @@ an ultra simple task organizer
 - ✅ storage usage and persistence status display in Settings > Data
 - ✅ expanded Development card type preset — all 11 conventional commit types (feat, fix, refactor, chore, test, docs, style, ci, build, perf, revert) with a 12-color palette so every type gets a unique swatch
 - ✅ search by card type — filter dropdown in the search bar with checkbox selection, OR logic within types, AND logic with text search
+- ✅ lock columns — toggle in Settings > Preferences to prevent drag-and-drop reordering of columns while still allowing card movement
 
 Settings
 
@@ -133,7 +134,6 @@ Settings
   - per-board or global preset support
 - sortable table columns — click a column header to sort ascending, click again for descending, click again to reset (list view, analytics tables, archive table)
 - card sorting UI (alphabetical, by date created, by last updated)
-- lock columns — toggle in settings to prevent drag-and-drop reordering of columns while still allowing card movement
 - column collapse/expand to save horizontal space
 - column WIP limits with visual warning when exceeded
 - drag to trash drop zone for card deletion
