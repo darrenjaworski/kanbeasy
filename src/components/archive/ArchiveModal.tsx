@@ -5,6 +5,49 @@ import { ConfirmDialog } from "../shared/ConfirmDialog";
 import { ArchiveIcon } from "../icons";
 import { ArchiveTableRow } from "./ArchiveTableRow";
 import { tc } from "../../theme/classNames";
+import { useIsMobile } from "../../hooks";
+import { CardTypeBadge } from "../shared/CardTypeBadge";
+import { formatDate } from "../../utils/formatDate";
+import type { ArchivedCard } from "../../board/types";
+
+type MobileCardProps = {
+  card: ArchivedCard;
+  selected: boolean;
+  onToggle: (id: string) => void;
+};
+
+function ArchiveMobileCard({ card, selected, onToggle }: MobileCardProps) {
+  return (
+    <li
+      className={`flex items-start gap-3 rounded-lg border p-3 ${tc.border} bg-surface`}
+      data-testid="archive-card-row"
+    >
+      <input
+        type="checkbox"
+        checked={selected}
+        onChange={() => onToggle(card.id)}
+        aria-label={`Select card #${card.number}`}
+        className="mt-1 accent-[var(--color-accent)]"
+        data-testid={`archive-select-${card.id}`}
+      />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <CardTypeBadge
+            number={card.number}
+            cardTypeId={card.cardTypeId}
+            cardTypeColor={card.cardTypeColor}
+          />
+        </div>
+        <p className={`text-sm font-medium ${tc.text} truncate`}>
+          {card.title || "Untitled"}
+        </p>
+        <p className={`text-xs ${tc.textFaint} mt-0.5`}>
+          Archived: {formatDate(card.archivedAt)}
+        </p>
+      </div>
+    </li>
+  );
+}
 
 type Props = Readonly<{
   open: boolean;
@@ -16,6 +59,7 @@ export function ArchiveModal({ open, onClose }: Props) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const selectAllRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   // Sort newest-archived first
   const sorted = [...archive].sort((a, b) => b.archivedAt - a.archivedAt);
@@ -86,6 +130,22 @@ export function ArchiveModal({ open, onClose }: Props) {
             className="flex items-center gap-2 mb-3"
             data-testid="archive-action-bar"
           >
+            {isMobile && (
+              <label
+                className={`${tc.button} rounded-md px-3 py-1.5 text-sm cursor-pointer inline-flex items-center gap-2`}
+                data-testid="archive-select-all"
+              >
+                <input
+                  ref={selectAllRef}
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleAll}
+                  aria-label="Select all archived cards"
+                  className="accent-[var(--color-accent)]"
+                />
+                {allSelected ? "Deselect all" : "Select all"}
+              </label>
+            )}
             <button
               type="button"
               onClick={handleBulkRestore}
@@ -106,58 +166,71 @@ export function ArchiveModal({ open, onClose }: Props) {
             </button>
           </div>
 
-          {/* Archive table */}
-          <div
-            className={`rounded-lg border ${tc.border} overflow-hidden`}
-            data-testid="archive-list"
-          >
-            <table className="w-full text-sm table-fixed">
-              <thead>
-                <tr className={`${tc.glass} border-b ${tc.border}`}>
-                  <th className="px-3 py-2 w-8" scope="col">
-                    <input
-                      ref={selectAllRef}
-                      type="checkbox"
-                      checked={allSelected}
-                      onChange={toggleAll}
-                      aria-label="Select all archived cards"
-                      className="accent-[var(--color-accent)]"
-                      data-testid="archive-select-all"
+          {/* Archive list — card-based on mobile, table on desktop */}
+          {isMobile ? (
+            <ul className="flex flex-col gap-2" data-testid="archive-list">
+              {sorted.map((card) => (
+                <ArchiveMobileCard
+                  key={card.id}
+                  card={card}
+                  selected={selectedIds.has(card.id)}
+                  onToggle={toggleCard}
+                />
+              ))}
+            </ul>
+          ) : (
+            <div
+              className={`rounded-lg border ${tc.border} overflow-hidden`}
+              data-testid="archive-list"
+            >
+              <table className="w-full text-sm table-fixed">
+                <thead>
+                  <tr className={`${tc.glass} border-b ${tc.border}`}>
+                    <th className="px-3 py-2 w-8" scope="col">
+                      <input
+                        ref={selectAllRef}
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleAll}
+                        aria-label="Select all archived cards"
+                        className="accent-[var(--color-accent)]"
+                        data-testid="archive-select-all"
+                      />
+                    </th>
+                    <th
+                      className={`text-right px-3 py-2 font-medium ${tc.textMuted} w-12`}
+                      scope="col"
+                    >
+                      #
+                    </th>
+                    <th
+                      className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
+                      scope="col"
+                    >
+                      Title
+                    </th>
+                    <th
+                      className={`text-right px-3 py-2 font-medium ${tc.textMuted} w-48`}
+                      scope="col"
+                    >
+                      Archived
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sorted.map((card, i) => (
+                    <ArchiveTableRow
+                      key={card.id}
+                      card={card}
+                      selected={selectedIds.has(card.id)}
+                      onToggle={toggleCard}
+                      isLast={i === sorted.length - 1}
                     />
-                  </th>
-                  <th
-                    className={`text-right px-3 py-2 font-medium ${tc.textMuted} w-12`}
-                    scope="col"
-                  >
-                    #
-                  </th>
-                  <th
-                    className={`text-left px-3 py-2 font-medium ${tc.textMuted}`}
-                    scope="col"
-                  >
-                    Title
-                  </th>
-                  <th
-                    className={`text-right px-3 py-2 font-medium ${tc.textMuted} w-48`}
-                    scope="col"
-                  >
-                    Archived
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {sorted.map((card, i) => (
-                  <ArchiveTableRow
-                    key={card.id}
-                    card={card}
-                    selected={selectedIds.has(card.id)}
-                    onToggle={toggleCard}
-                    isLast={i === sorted.length - 1}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           <ConfirmDialog
             open={showDeleteConfirm}
