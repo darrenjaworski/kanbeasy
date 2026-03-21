@@ -7,21 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.48.0]
+
+### Features
+
+- Mobile: `CalendarView` renders a day-list on mobile instead of the 7-column grid — only days with cards in the current month are shown, sorted chronologically; today is accent-highlighted; tapping a card opens `CardDetailModal`
+
 ### Fixed
 
 - Copying a card now preserves its due date — `dueDate` added to `CardClipboard` type and propagated through `duplicateCard`
 
 ### Tests
 
-- Two unit tests for `duplicateCard` verifying due date is copied (with and without a date set)
-
-### Features
-
-- Mobile: `CalendarView` renders a day-list on mobile instead of the 7-column grid — only days with cards in the current month are shown, sorted chronologically; today is accent-highlighted; tapping a card opens `CardDetailModal`
-
-### Tests
-
 - Mobile: 10 unit tests for `CalendarView` mobile day list covering grid absence, day labels, today highlight, month filtering, chronological order, empty-month state, modal open on tap, and search highlighting
+- Two unit tests for `duplicateCard` verifying due date is copied (with and without a date set)
 
 ## [1.47.0]
 

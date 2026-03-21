@@ -99,6 +99,8 @@ an ultra simple task organizer
 - ✅ mobile active press states — `active:` pseudo-class added to shared button tokens (`tc.bgHover`, `tc.dangerButton`) so all buttons give tactile feedback on touch
 - ✅ mobile modal header padding — modal header matches nav header vertical padding on mobile (`px-4 py-3`) via responsive overrides
 - ✅ mobile `ListView` — card-based stacked layout on mobile replacing the HTML table; shows title, type, column, due date, created date; tapping opens `CardDetailModal`
+- ✅ mobile `CalendarView` — day-list layout on mobile replacing the 7-column grid; only days with cards shown, sorted chronologically; today accent-highlighted; tapping opens `CardDetailModal`
+- ✅ fix: copying a card now preserves its due date
 
 Settings
 
