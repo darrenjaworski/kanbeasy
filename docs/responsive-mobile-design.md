@@ -461,9 +461,10 @@ On mobile, only one column is rendered at a time, which is inherently performant
 1. Implement mobile-friendly `CalendarView` (day list instead of grid; use `md:` breakpoint — 768px — for calendar specifically).
 2. Implement card-based `ListView` for mobile (instead of table).
 3. Implement card-based `ArchiveModal` content for mobile (instead of table).
-4. Add swipe discoverability to `BoardColumnTabs` — e.g. left/right chevron buttons flanking the tab pills that are visible when adjacent columns exist, giving users a visible tap target and a clear signal that the column body is swipeable.
-5. Write Playwright mobile viewport tests (`tests-e2e/mobile.spec.ts`).
-6. Add visual regression snapshots at mobile breakpoints.
+4. Implement mobile `CardControls` action sheet — bottom-sheet that slides up with copy, archive, and detail actions as full-width tappable rows (larger tap targets, easier thumb reach).
+5. Add swipe discoverability to `BoardColumnTabs` — e.g. left/right chevron buttons flanking the tab pills that are visible when adjacent columns exist, giving users a visible tap target and a clear signal that the column body is swipeable.
+6. Write Playwright mobile viewport tests (`tests-e2e/mobile.spec.ts`).
+7. Add visual regression snapshots at mobile breakpoints.
 
 ### Phase 5: Testing and Polish (1-2 days)
 
