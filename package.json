@@ -4,6 +4,7 @@
   "version": "1.48.0",
   "type": "module",
   "scripts": {
+    "start": "npm run dev",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:analyze": "ANALYZE=true vite build",
@@ -11,7 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "npm run build && vite preview",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
