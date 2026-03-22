@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Prevent settings, analytics, and archive modals from stacking open simultaneously — replaced three independent `useState` booleans in `Header` with a single `activeModal` discriminated union so only one modal can be active at a time
+- `resetSettings` (clear all data) now removes all settings keys from IndexedDB — previously, settings managed by `useStoredBool`/`useStoredString` were missing their `kvRemove` calls so they persisted stale values after a reset
 - E2E: resolve `@typescript-eslint/consistent-type-imports` lint error in `drag-regression.spec.ts` — replace inline `import("@playwright/test").Page` with a top-level `import type { Page }`
 
 ### Tests

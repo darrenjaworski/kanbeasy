@@ -228,8 +228,17 @@ export function ThemeProvider({
   const resetSettings = useCallback(() => {
     kvRemove(STORAGE_KEYS.THEME);
     kvRemove(STORAGE_KEYS.THEME_PREFERENCE);
+    kvRemove(STORAGE_KEYS.CARD_DENSITY);
+    kvRemove(STORAGE_KEYS.VIEW_MODE);
+    kvRemove(STORAGE_KEYS.CARD_TYPE_PRESET);
     kvRemove(STORAGE_KEYS.CARD_TYPES);
     kvRemove(STORAGE_KEYS.DEFAULT_CARD_TYPE);
+    kvRemove(STORAGE_KEYS.COLUMN_RESIZING_ENABLED);
+    kvRemove(STORAGE_KEYS.DELETE_COLUMN_WARNING);
+    kvRemove(STORAGE_KEYS.OWL_MODE_ENABLED);
+    kvRemove(STORAGE_KEYS.COMPACT_HEADER);
+    kvRemove(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
+    kvRemove(STORAGE_KEYS.COLUMN_ORDER_LOCKED);
     kvRemove(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
     setThemePreferenceState("system");
