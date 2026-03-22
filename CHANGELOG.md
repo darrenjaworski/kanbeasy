@@ -29,7 +29,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Prevent settings, analytics, and archive modals from stacking open simultaneously — replaced three independent `useState` booleans in `Header` with a single `activeModal` discriminated union so only one modal can be active at a time
 - E2E: resolve `@typescript-eslint/consistent-type-imports` lint error in `drag-regression.spec.ts` — replace inline `import("@playwright/test").Page` with a top-level `import type { Page }`
+
+### Tests
+
+- Unit: add `modal-exclusivity.test.tsx` (6 tests) verifying all pairwise combinations of settings/analytics/archive modals enforce mutual exclusion
 
 ## [1.49.1]
 

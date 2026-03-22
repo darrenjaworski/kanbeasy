@@ -16,12 +16,12 @@ import { useBoard } from "../board/useBoard";
 import { useTheme } from "../theme/useTheme";
 import { tc } from "../theme/classNames";
 
+type ActiveModal = "settings" | "analytics" | "archive" | null;
+
 export function Header() {
   const { columns, archive } = useBoard();
   const { compactHeader } = useTheme();
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [analyticsOpen, setAnalyticsOpen] = useState(false);
-  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const hasCards = columns.some((c) => c.cards.length > 0);
@@ -60,7 +60,7 @@ export function Header() {
                 type="button"
                 className={`${tc.button} rounded-md p-1.5 px-2.5 inline-flex items-center gap-1.5 justify-center disabled:opacity-40 disabled:pointer-events-none`}
                 aria-label="Open analytics"
-                onClick={() => setAnalyticsOpen(true)}
+                onClick={() => setActiveModal("analytics")}
                 disabled={!hasCards}
               >
                 <AnalyticsIcon className="size-4" />
@@ -72,7 +72,7 @@ export function Header() {
                 type="button"
                 className={`${tc.button} rounded-md p-1.5 px-2.5 inline-flex items-center gap-1.5 justify-center disabled:opacity-40 disabled:pointer-events-none`}
                 aria-label="Open archive"
-                onClick={() => setArchiveOpen(true)}
+                onClick={() => setActiveModal("archive")}
                 data-testid="archive-button"
                 disabled={!hasArchive}
               >
@@ -85,7 +85,7 @@ export function Header() {
                 type="button"
                 className={`${tc.button} rounded-md p-1.5 px-2.5 inline-flex items-center gap-1.5 justify-center`}
                 aria-label="Open settings"
-                onClick={() => setSettingsOpen(true)}
+                onClick={() => setActiveModal("settings")}
               >
                 <SettingsGearIcon className="size-4" />
                 {!compactHeader && (
@@ -134,7 +134,7 @@ export function Header() {
                   className={`${tc.button} rounded-lg py-2.5 flex flex-col items-center gap-1 disabled:opacity-40 disabled:pointer-events-none`}
                   aria-label="Open analytics"
                   onClick={() => {
-                    setAnalyticsOpen(true);
+                    setActiveModal("analytics");
                     setMenuOpen(false);
                   }}
                   disabled={!hasCards}
@@ -147,7 +147,7 @@ export function Header() {
                   className={`${tc.button} rounded-lg py-2.5 flex flex-col items-center gap-1 disabled:opacity-40 disabled:pointer-events-none`}
                   aria-label="Open archive"
                   onClick={() => {
-                    setArchiveOpen(true);
+                    setActiveModal("archive");
                     setMenuOpen(false);
                   }}
                   data-testid="archive-button"
@@ -161,7 +161,7 @@ export function Header() {
                   className={`${tc.button} rounded-lg py-2.5 flex flex-col items-center gap-1`}
                   aria-label="Open settings"
                   onClick={() => {
-                    setSettingsOpen(true);
+                    setActiveModal("settings");
                     setMenuOpen(false);
                   }}
                 >
@@ -184,13 +184,16 @@ export function Header() {
       )}
 
       <AnalyticsModal
-        open={analyticsOpen}
-        onClose={() => setAnalyticsOpen(false)}
+        open={activeModal === "analytics"}
+        onClose={() => setActiveModal(null)}
       />
-      <ArchiveModal open={archiveOpen} onClose={() => setArchiveOpen(false)} />
+      <ArchiveModal
+        open={activeModal === "archive"}
+        onClose={() => setActiveModal(null)}
+      />
       <SettingsModal
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
+        open={activeModal === "settings"}
+        onClose={() => setActiveModal(null)}
       />
     </>
   );

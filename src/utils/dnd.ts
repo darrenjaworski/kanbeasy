@@ -10,7 +10,7 @@ import type { HTMLAttributes } from "react";
  * compatible at runtime; this utility centralizes the type boundary crossing.
  */
 export function asDOMAttributes<T extends HTMLElement>(
-  ...maps: (Record<string, unknown> | undefined)[]
+  ...maps: (object | undefined)[]
 ): HTMLAttributes<T> {
-  return Object.assign({}, ...maps) as React.HTMLAttributes<T>;
+  return Object.assign({}, ...maps) as HTMLAttributes<T>;
 }
