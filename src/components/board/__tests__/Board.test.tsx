@@ -2,9 +2,15 @@ import "@testing-library/jest-dom";
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { MouseSensor, TouchSensor } from "@dnd-kit/core";
 import { Board } from "../Board";
 import type { Column, Card } from "../../../board/types";
 import { makeCard, makeColumn } from "../../../test/builders";
+
+// vi.hoisted runs before vi.mock so mockUseSensor is available inside the factory
+const { mockUseSensor } = vi.hoisted(() => ({
+  mockUseSensor: vi.fn(() => ({})),
+}));
 
 let mockIsMobile = false;
 
@@ -62,7 +68,7 @@ vi.mock("@dnd-kit/core", () => ({
   MouseSensor: class {},
   TouchSensor: class {},
   closestCorners: vi.fn(),
-  useSensor: () => ({}),
+  useSensor: mockUseSensor,
   useSensors: () => [],
 }));
 
@@ -197,6 +203,28 @@ describe("Board", () => {
     capturedOnOpenDetail = undefined;
     capturedOnTabClick = undefined;
     capturedOnAddColumn = undefined;
+  });
+
+  // --- Sensor configuration (regression for v1.49.1 PointerSensor bug) ---
+
+  it("registers MouseSensor with distance: 5 (no delay) for desktop drag", () => {
+    render(<Board />);
+    const mouseCall = mockUseSensor.mock.calls.find(
+      ([cls]) => cls === MouseSensor,
+    );
+    expect(mouseCall).toBeDefined();
+    expect(mouseCall![1]).toEqual({ activationConstraint: { distance: 5 } });
+  });
+
+  it("registers TouchSensor with delay: 200 and tolerance: 5 for mobile drag", () => {
+    render(<Board />);
+    const touchCall = mockUseSensor.mock.calls.find(
+      ([cls]) => cls === TouchSensor,
+    );
+    expect(touchCall).toBeDefined();
+    expect(touchCall![1]).toEqual({
+      activationConstraint: { delay: 200, tolerance: 5 },
+    });
   });
 
   // --- Empty state ---
