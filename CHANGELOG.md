@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tests
 
+- Unit: add `header-mobile.test.tsx` (13 tests) covering the mobile hamburger menu open/close, aria attributes, backdrop click-away, Settings/Archive/Analytics buttons, and ViewToggle mobile radiogroup
+- Unit: add `SearchInput.test.tsx` (10 tests) covering the card type filter button disabled states, popover open/close, type toggle/clear, and mousedown click-away; fix seeding to use `seedKv` instead of `localStorage.setItem` so ThemeProvider reads from `kvCache`
+- Unit: add `DataSection.test.tsx` (7 tests) covering `navigator.storage` estimate/persisted APIs via `Object.defineProperty` mocking, `formatBytes` KB/MB display, and import button wiring
+
 - E2E: add visual regression snapshots for the 6 themes missing coverage — Sage, Sky, Sand (light) and Obsidian, Ocean, Crimson (dark) — bringing all 12 themes to full screenshot parity
 
 - E2E: add `drag-regression.spec.ts` with two tests verifying consecutive card and column drags both succeed without artificial delay — directly covers the sensor bug fixed in v1.49.1; update existing drag tests in `cards.spec.ts` and `columns.spec.ts` to remove the now-removed PointerSensor workaround (`waitForTimeout(250)`)
