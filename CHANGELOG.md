@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.50.0]
+
 ### Features
 
 - Accent gradient background — optional radial gradient using the accent color; desktop originates from top-left corner, mobile from top-center; toggle in Settings > Appearance
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump GitHub Actions to latest major versions: `actions/checkout` v5→v6, `actions/setup-node` v5→v6, `actions/upload-artifact` v4→v7
+- Remove redundant visual regression test
 
 ## [1.49.2]
 

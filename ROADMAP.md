@@ -101,6 +101,7 @@ an ultra simple task organizer
 - ✅ mobile `ListView` — card-based stacked layout on mobile replacing the HTML table; shows title, type, column, due date, created date; tapping opens `CardDetailModal`
 - ✅ mobile `CalendarView` — day-list layout on mobile replacing the 7-column grid; only days with cards shown, sorted chronologically; today accent-highlighted; tapping opens `CardDetailModal`
 - ✅ fix: copying a card now preserves its due date
+- ✅ accent gradient background — optional radial gradient using the accent color (top-left on desktop, top-center on mobile); toggle in Settings > Appearance
 
 Settings
 
@@ -161,7 +162,6 @@ Settings
   - template-based creation with pre-filled title, description, type, and target column
   - option to auto-archive the previous instance when a new one is created
   - visual indicator on board cards showing recurrence pattern
-- accent gradient background — subtle radial gradient originating from the bottom-left corner using the accent color, fading gradually across the page for an elegant depth effect
 - fun & easter eggs
   - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
   - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)
