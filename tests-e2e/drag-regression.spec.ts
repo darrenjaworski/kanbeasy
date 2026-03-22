@@ -13,6 +13,7 @@
  * These tests deliberately perform two or more consecutive drags without any artificial
  * delay between them, which is the exact scenario the bug prevented.
  */
+import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
 
 /**
@@ -21,7 +22,7 @@ import { test, expect } from "./fixtures";
  * No waitForTimeout is needed — MouseSensor has no delay.
  */
 async function dragFromTo(
-  page: import("@playwright/test").Page,
+  page: Page,
   from: { x: number; y: number; width: number; height: number },
   to: { x: number; y: number; width: number; height: number },
 ) {

@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - E2E: add `drag-regression.spec.ts` with two tests verifying consecutive card and column drags both succeed without artificial delay — directly covers the sensor bug fixed in v1.49.1; update existing drag tests in `cards.spec.ts` and `columns.spec.ts` to remove the now-removed PointerSensor workaround (`waitForTimeout(250)`)
 - Unit: add two sensor-configuration tests to `Board.test.tsx` asserting `MouseSensor` is registered with `{ distance: 5 }` and `TouchSensor` with `{ delay: 200, tolerance: 5 }` — a unit-level regression guard so the wrong sensor can't be silently reintroduced
 
+### Fixed
+
+- E2E: resolve `@typescript-eslint/consistent-type-imports` lint error in `drag-regression.spec.ts` — replace inline `import("@playwright/test").Page` with a top-level `import type { Page }`
+
 ## [1.49.1]
 
 ### Fixed
