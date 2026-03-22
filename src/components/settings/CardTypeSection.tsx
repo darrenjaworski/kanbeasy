@@ -110,7 +110,7 @@ export function CardTypeSection() {
           id="card-type-preset"
           value={cardTypePresetId}
           onChange={(e) => handlePresetChange(e.target.value)}
-          className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
+          className={tc.select}
           data-testid="card-type-preset"
         >
           {CARD_TYPE_PRESETS.map((p) => (
@@ -136,7 +136,7 @@ export function CardTypeSection() {
             id="default-card-type"
             value={defaultCardTypeId ?? ""}
             onChange={(e) => setDefaultCardTypeId(e.target.value || null)}
-            className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
+            className={tc.select}
             data-testid="default-card-type"
           >
             <option value="">None</option>

@@ -33,6 +33,7 @@ const searchHighlight = "ring-2 ring-accent/60 bg-accent/5 dark:bg-accent/10";
 // ── Composites ───────────────────────────────────────────
 
 const button = `border ${border} ${glass} text-sm ${bgHover} transition-colors ${text} ${textHover}`;
+const select = `${glass} w-full rounded-md border ${border} px-3 py-2 text-sm ${text} ${focusRing} appearance-none pr-8 cursor-pointer`;
 const dangerButton = `border border-red-400 ${glass} text-sm hover:bg-red-100 dark:hover:bg-red-900 active:bg-red-200 dark:active:bg-red-800 transition-colors text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100`;
 const iconButton = `inline-flex items-center justify-center ${bgHover} ${focusRing} ${text} ${textHover}`;
 const buttonGroup = `inline-flex items-center overflow-hidden border ${border} ${glass}`;
@@ -64,6 +65,7 @@ export const tc = {
 
   // Composites
   button,
+  select,
   dangerButton,
   iconButton,
   buttonGroup,

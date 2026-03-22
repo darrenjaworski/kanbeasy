@@ -116,7 +116,7 @@ export function CardDetailModal({
               id="card-detail-column"
               value={columnId}
               onChange={(e) => onMoveCard(e.target.value)}
-              className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
+              className={tc.select}
               data-testid="card-detail-column"
             >
               {columns.map((col) => (
@@ -152,7 +152,7 @@ export function CardDetailModal({
                   cardTypeColor: selectedType?.color,
                 });
               }}
-              className={`${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm ${tc.text} ${tc.focusRing} appearance-none pr-8 cursor-pointer`}
+              className={tc.select}
               data-testid="card-detail-type"
             >
               <option value="">None</option>

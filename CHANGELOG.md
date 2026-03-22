@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactor: add `tc.select` composite token to `classNames.ts` and replace 4 duplicate select element class strings in `CardDetailModal` and `CardTypeSection`
 - Refactor: extract `useColumnResize` hook from `Column.tsx` — moves 45 lines of resize state, mouse handlers, and cleanup effect into `src/components/board/useColumnResize.ts`; exposes `stepWidth(delta)` for keyboard accessibility
 - Refactor: add `findCardWithColumn` to `dragUtils.ts` and replace identical IIFEs in `Board`, `ListView`, and `CalendarView` that each manually searched columns for a card by ID
 - Refactor: centralize `@dnd-kit` attribute casting in `src/utils/dnd.ts` (`asDOMAttributes`) — removes 4 `as unknown as` casts across `CardControls`, `SortableColumnItem`, and `Column`
