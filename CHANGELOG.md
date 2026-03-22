@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Refactor `ThemeProvider`: extract `useStoredBool` and `useStoredString` hooks (`src/theme/useStoredSetting.ts`) to eliminate 10 useState+useEffect boilerplate pairs — simple settings now declare state and persistence in a single line each
+
 ### Tests
 
 - Unit: add `header-mobile.test.tsx` (13 tests) covering the mobile hamburger menu open/close, aria attributes, backdrop click-away, Settings/Archive/Analytics buttons, and ViewToggle mobile radiogroup

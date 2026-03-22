@@ -8,11 +8,12 @@ import type {
 } from "./types";
 import type { ThemeId, ThemeMode } from "./themes";
 import { getDefaultThemeForMode, getThemeById } from "./themes";
-import { kvGet, kvGetBool, kvSet, kvSetBool, kvRemove } from "../utils/db";
+import { kvGet, kvSet, kvRemove } from "../utils/db";
 import { STORAGE_KEYS } from "../constants/storage";
 import { updateFavicon } from "./favicon";
 import type { CardType } from "../constants/cardTypes";
 import { DEFAULT_PRESET_ID, CARD_TYPE_PRESETS } from "../constants/cardTypes";
+import { useStoredBool, useStoredString } from "./useStoredSetting";
 
 function getSystemTheme(): ThemeMode {
   if (
@@ -102,44 +103,62 @@ function getInitialCardTypes(presetId: string): CardType[] {
 export function ThemeProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [themePreference, setThemePreferenceState] = useState<ThemePreference>(
+  // ── Theme (complex: CSS vars, favicon, system listener) ──────────────────
+  const [themePreference, setThemePreferenceState] = useStoredString(
+    STORAGE_KEYS.THEME_PREFERENCE,
     getInitialThemePreference,
   );
   const [themeId, setThemeId] = useState<ThemeId>(() =>
     getInitialThemeId(themePreference),
   );
-  const [cardDensity, setCardDensity] =
-    useState<CardDensity>(getInitialDensity);
-  const [columnResizingEnabled, setColumnResizingEnabled] = useState<boolean>(
-    () => kvGetBool(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, false),
+
+  // ── Simple string settings ────────────────────────────────────────────────
+  const [cardDensity, setCardDensity] = useStoredString(
+    STORAGE_KEYS.CARD_DENSITY,
+    getInitialDensity,
   );
-  const [deleteColumnWarningEnabled, setDeleteColumnWarningEnabled] =
-    useState<boolean>(() =>
-      kvGetBool(STORAGE_KEYS.DELETE_COLUMN_WARNING, true),
-    );
-  const [owlModeEnabled, setOwlModeEnabled] = useState<boolean>(() =>
-    kvGetBool(STORAGE_KEYS.OWL_MODE_ENABLED, false),
+  const [viewMode, setViewMode] = useStoredString(
+    STORAGE_KEYS.VIEW_MODE,
+    getInitialViewMode,
   );
-  const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
-  const [cardTypePresetId, setCardTypePresetId] = useState<string>(
+  const [cardTypePresetId, setCardTypePresetId] = useStoredString(
+    STORAGE_KEYS.CARD_TYPE_PRESET,
     getInitialCardTypePresetId,
   );
+
+  // ── Simple boolean settings ───────────────────────────────────────────────
+  const [columnResizingEnabled, setColumnResizingEnabled] = useStoredBool(
+    STORAGE_KEYS.COLUMN_RESIZING_ENABLED,
+    false,
+  );
+  const [deleteColumnWarningEnabled, setDeleteColumnWarningEnabled] =
+    useStoredBool(STORAGE_KEYS.DELETE_COLUMN_WARNING, true);
+  const [owlModeEnabled, setOwlModeEnabled] = useStoredBool(
+    STORAGE_KEYS.OWL_MODE_ENABLED,
+    false,
+  );
+  const [compactHeader, setCompactHeader] = useStoredBool(
+    STORAGE_KEYS.COMPACT_HEADER,
+    false,
+  );
+  const [keyboardShortcutsEnabled, setKeyboardShortcutsEnabled] = useStoredBool(
+    STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED,
+    false,
+  );
+  const [columnOrderLocked, setColumnOrderLocked] = useStoredBool(
+    STORAGE_KEYS.COLUMN_ORDER_LOCKED,
+    false,
+  );
+
+  // ── Card types (complex: preset lookup, conditional remove) ───────────────
   const [cardTypes, setCardTypes] = useState<CardType[]>(() =>
     getInitialCardTypes(cardTypePresetId),
   );
   const [defaultCardTypeId, setDefaultCardTypeId] = useState<string | null>(
     () => kvGet<string>(STORAGE_KEYS.DEFAULT_CARD_TYPE, "") || null,
   );
-  const [compactHeader, setCompactHeader] = useState<boolean>(() =>
-    kvGetBool(STORAGE_KEYS.COMPACT_HEADER, false),
-  );
-  const [keyboardShortcutsEnabled, setKeyboardShortcutsEnabled] =
-    useState<boolean>(() =>
-      kvGetBool(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED, false),
-    );
-  const [columnOrderLocked, setColumnOrderLocked] = useState<boolean>(() =>
-    kvGetBool(STORAGE_KEYS.COLUMN_ORDER_LOCKED, false),
-  );
+
+  // ── Theme side-effects ────────────────────────────────────────────────────
 
   const setThemePreference = useCallback(
     (pref: ThemePreference) => {
@@ -150,7 +169,7 @@ export function ThemeProvider({
         setThemeId(getDefaultThemeForMode(newMode).id);
       }
     },
-    [themeId],
+    [themeId, setThemePreferenceState],
   );
 
   // Listen for OS color-scheme changes when preference is "system"
@@ -166,64 +185,28 @@ export function ThemeProvider({
     return () => mql.removeEventListener("change", handler);
   }, [themePreference]);
 
-  // Persist theme preference
-  useEffect(() => {
-    kvSet(STORAGE_KEYS.THEME_PREFERENCE, themePreference);
-  }, [themePreference]);
-
+  // Apply CSS custom properties, dark class, color-scheme, favicon, and persist
   useEffect(() => {
     const theme = getThemeById(themeId);
     if (!theme) return;
 
     const root = document.documentElement;
-
-    // Apply CSS custom properties
     root.style.setProperty("--color-bg", theme.colors.bg);
     root.style.setProperty("--color-surface", theme.colors.surface);
     root.style.setProperty("--color-text", theme.colors.text);
     root.style.setProperty("--color-accent", theme.colors.accent);
-
-    // Toggle dark class for opacity-based patterns
     root.classList.toggle("dark", theme.mode === "dark");
-
-    // Set color-scheme for native browser UI
     root.style.colorScheme = theme.mode;
-
-    // Update favicon to match theme
     updateFavicon(theme.colors.surface, theme.colors.accent);
-
-    // Persist
     kvSet(STORAGE_KEYS.THEME, themeId);
   }, [themeId]);
 
-  useEffect(() => {
-    kvSet(STORAGE_KEYS.CARD_DENSITY, cardDensity);
-  }, [cardDensity]);
-
-  useEffect(() => {
-    kvSetBool(STORAGE_KEYS.COLUMN_RESIZING_ENABLED, columnResizingEnabled);
-  }, [columnResizingEnabled]);
-
-  useEffect(() => {
-    kvSetBool(STORAGE_KEYS.DELETE_COLUMN_WARNING, deleteColumnWarningEnabled);
-  }, [deleteColumnWarningEnabled]);
-
-  useEffect(() => {
-    kvSetBool(STORAGE_KEYS.OWL_MODE_ENABLED, owlModeEnabled);
-  }, [owlModeEnabled]);
-
-  useEffect(() => {
-    kvSet(STORAGE_KEYS.VIEW_MODE, viewMode);
-  }, [viewMode]);
-
-  useEffect(() => {
-    kvSet(STORAGE_KEYS.CARD_TYPE_PRESET, cardTypePresetId);
-  }, [cardTypePresetId]);
-
+  // Persist card types
   useEffect(() => {
     kvSet(STORAGE_KEYS.CARD_TYPES, cardTypes);
   }, [cardTypes]);
 
+  // Persist default card type (remove when null)
   useEffect(() => {
     if (defaultCardTypeId) {
       kvSet(STORAGE_KEYS.DEFAULT_CARD_TYPE, defaultCardTypeId);
@@ -231,21 +214,6 @@ export function ThemeProvider({
       kvRemove(STORAGE_KEYS.DEFAULT_CARD_TYPE);
     }
   }, [defaultCardTypeId]);
-
-  useEffect(() => {
-    kvSetBool(STORAGE_KEYS.COMPACT_HEADER, compactHeader);
-  }, [compactHeader]);
-
-  useEffect(() => {
-    kvSetBool(
-      STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED,
-      keyboardShortcutsEnabled,
-    );
-  }, [keyboardShortcutsEnabled]);
-
-  useEffect(() => {
-    kvSetBool(STORAGE_KEYS.COLUMN_ORDER_LOCKED, columnOrderLocked);
-  }, [columnOrderLocked]);
 
   // Clear default card type if it no longer exists in the current types
   useEffect(() => {
@@ -258,23 +226,12 @@ export function ThemeProvider({
   }, [cardTypes, defaultCardTypeId]);
 
   const resetSettings = useCallback(() => {
-    // Clear all settings from db
     kvRemove(STORAGE_KEYS.THEME);
     kvRemove(STORAGE_KEYS.THEME_PREFERENCE);
-    kvRemove(STORAGE_KEYS.CARD_DENSITY);
-    kvRemove(STORAGE_KEYS.COLUMN_RESIZING_ENABLED);
-    kvRemove(STORAGE_KEYS.DELETE_COLUMN_WARNING);
-    kvRemove(STORAGE_KEYS.OWL_MODE_ENABLED);
-    kvRemove(STORAGE_KEYS.VIEW_MODE);
-    kvRemove(STORAGE_KEYS.CARD_TYPE_PRESET);
     kvRemove(STORAGE_KEYS.CARD_TYPES);
     kvRemove(STORAGE_KEYS.DEFAULT_CARD_TYPE);
-    kvRemove(STORAGE_KEYS.COMPACT_HEADER);
-    kvRemove(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
-    kvRemove(STORAGE_KEYS.COLUMN_ORDER_LOCKED);
     kvRemove(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
-    // Reset state to defaults
     setThemePreferenceState("system");
     setThemeId(getDefaultThemeForMode(getSystemTheme()).id);
     setCardDensity("small");
@@ -289,7 +246,18 @@ export function ThemeProvider({
     setCompactHeader(false);
     setKeyboardShortcutsEnabled(false);
     setColumnOrderLocked(false);
-  }, []);
+  }, [
+    setCardDensity,
+    setCardTypePresetId,
+    setColumnOrderLocked,
+    setColumnResizingEnabled,
+    setCompactHeader,
+    setDeleteColumnWarningEnabled,
+    setKeyboardShortcutsEnabled,
+    setOwlModeEnabled,
+    setThemePreferenceState,
+    setViewMode,
+  ]);
 
   const theme = getThemeById(themeId);
 
@@ -331,16 +299,25 @@ export function ThemeProvider({
       themePreference,
       setThemePreference,
       cardDensity,
+      setCardDensity,
       columnResizingEnabled,
+      setColumnResizingEnabled,
       deleteColumnWarningEnabled,
+      setDeleteColumnWarningEnabled,
       owlModeEnabled,
+      setOwlModeEnabled,
       viewMode,
+      setViewMode,
       cardTypes,
       cardTypePresetId,
+      setCardTypePresetId,
       defaultCardTypeId,
       compactHeader,
+      setCompactHeader,
       keyboardShortcutsEnabled,
+      setKeyboardShortcutsEnabled,
       columnOrderLocked,
+      setColumnOrderLocked,
       resetSettings,
     ],
   );
