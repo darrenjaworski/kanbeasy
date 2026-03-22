@@ -22,7 +22,7 @@
     "knip": "knip",
     "lighthouse": "npx @lhci/cli autorun --collect.startServerCommand='npx vite preview' --collect.startServerReadyPattern='Local' --collect.url='http://localhost:4173' --config=lighthouserc.json",
     "lighthouse:report": "open .lighthouseci/lhr-*.html",
-    "kitchen-sink": "npm run static-checks && npm run lighthouse && npm run e2e",
+    "kitchen-sink": "npm run static-checks && npm run lighthouse && npm run e2e && npm run e2e:visual",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report",
