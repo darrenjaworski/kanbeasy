@@ -210,6 +210,72 @@ test.describe("Visual regression", () => {
     });
   });
 
+  test("board view — sage theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "light-sage");
+      localStorage.setItem("kanbeasy:themePreference", "light");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-sage.png", {
+      maxDiffPixelRatio: DIFF_PIXEL_RATIO,
+    });
+  });
+
+  test("board view — sky theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "light-sky");
+      localStorage.setItem("kanbeasy:themePreference", "light");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-sky.png", {
+      maxDiffPixelRatio: DIFF_PIXEL_RATIO,
+    });
+  });
+
+  test("board view — sand theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "light-sand");
+      localStorage.setItem("kanbeasy:themePreference", "light");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-sand.png", {
+      maxDiffPixelRatio: DIFF_PIXEL_RATIO,
+    });
+  });
+
+  test("board view — obsidian theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "dark-obsidian");
+      localStorage.setItem("kanbeasy:themePreference", "dark");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-obsidian.png", {
+      maxDiffPixelRatio: DIFF_PIXEL_RATIO,
+    });
+  });
+
+  test("board view — ocean theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "dark-ocean");
+      localStorage.setItem("kanbeasy:themePreference", "dark");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-ocean.png", {
+      maxDiffPixelRatio: DIFF_PIXEL_RATIO,
+    });
+  });
+
+  test("board view — crimson theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("kanbeasy:theme", "dark-crimson");
+      localStorage.setItem("kanbeasy:themePreference", "dark");
+    });
+    await seedAndNavigate(page);
+    await expect(page).toHaveScreenshot("board-crimson.png", {
+      maxDiffPixelRatio: DIFF_PIXEL_RATIO,
+    });
+  });
+
   test("welcome modal", async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
