@@ -152,7 +152,7 @@ export function Column({
               type="button"
               ref={dragHandleRef}
               aria-label={`Drag column ${title || "column"}`}
-              {...(dragHandleProps as unknown as React.HTMLAttributes<HTMLButtonElement>)}
+              {...dragHandleProps}
               className={`${tc.iconButton} h-8 w-8 rounded-l-full hover:cursor-grab active:cursor-grabbing`}
               data-testid={`drag-column-button-${index}`}
             >

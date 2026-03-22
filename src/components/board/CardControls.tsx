@@ -1,5 +1,6 @@
-import type { HTMLAttributes } from "react";
 import { ArchiveIcon, CardDragIcon, CopyIcon, MoreIcon } from "../icons";
+import type { HTMLAttributes } from "react";
+import { asDOMAttributes } from "../../utils/dnd";
 import { Tooltip } from "../shared/Tooltip";
 import { tc } from "../../theme/classNames";
 import { useIsMobile } from "../../hooks";
@@ -37,8 +38,7 @@ export function CardControls({
           <button
             type="button"
             ref={setActivatorNodeRef}
-            {...(attributes as unknown as HTMLAttributes<HTMLButtonElement>)}
-            {...(listeners as unknown as HTMLAttributes<HTMLButtonElement>)}
+            {...asDOMAttributes<HTMLButtonElement>(attributes, listeners)}
             aria-label={`Drag card ${cardTitle || "Untitled"}`}
             className={`${tc.iconButton} h-6 w-6 rounded-l-full hover:cursor-grab active:cursor-grabbing`}
             data-testid={`card-drag-${index}`}

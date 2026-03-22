@@ -1,4 +1,5 @@
-import { useMemo, type CSSProperties, type ButtonHTMLAttributes } from "react";
+import { useMemo, type CSSProperties } from "react";
+import { asDOMAttributes } from "../../utils/dnd";
 import type { Card } from "../../board/types";
 import { Column } from "./Column";
 import { useSortable } from "@dnd-kit/sortable";
@@ -57,10 +58,10 @@ export function SortableColumnItem({
         onOpenDetail={onOpenDetail}
         isDragging={isDragging}
         dragHandleRef={setActivatorNodeRef}
-        dragHandleProps={{
-          ...(attributes as unknown as ButtonHTMLAttributes<HTMLButtonElement>),
-          ...(listeners as unknown as ButtonHTMLAttributes<HTMLButtonElement>),
-        }}
+        dragHandleProps={asDOMAttributes<HTMLButtonElement>(
+          attributes,
+          listeners,
+        )}
       />
     </div>
   );
