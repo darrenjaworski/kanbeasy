@@ -35,6 +35,8 @@ export function ThemeSection() {
     setCardDensity,
     compactHeader,
     setCompactHeader,
+    accentGradientEnabled,
+    setAccentGradientEnabled,
   } = useTheme();
 
   const handleModeSwitch = (pref: ThemePreference) => {
@@ -136,6 +138,13 @@ export function ThemeSection() {
           </button>
         </div>
       </fieldset>
+      <ToggleSwitch
+        id="accent-gradient"
+        label="Accent gradient"
+        description="Subtle background glow using the accent color"
+        checked={accentGradientEnabled}
+        onChange={setAccentGradientEnabled}
+      />
       {!isMobile && (
         <ToggleSwitch
           id="compact-header"

@@ -22,7 +22,7 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-bg text-text transition-colors">
+    <div className="min-h-screen text-text transition-colors">
       <WelcomeModal />
       <Header />
       {viewMode === "board" && <Board />}

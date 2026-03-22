@@ -161,6 +161,7 @@ Settings
   - template-based creation with pre-filled title, description, type, and target column
   - option to auto-archive the previous instance when a new one is created
   - visual indicator on board cards showing recurrence pattern
+- accent gradient background — subtle radial gradient originating from the bottom-left corner using the accent color, fading gradually across the page for an elegant depth effect
 - fun & easter eggs
   - secret card titles — typing specific card titles triggers effects (e.g., "party" makes confetti, "coffee" shows a floating coffee cup)
   - card milestone celebrations — toast/animation when hitting card count milestones (e.g., 100th card)

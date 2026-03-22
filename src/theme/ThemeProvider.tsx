@@ -149,6 +149,15 @@ export function ThemeProvider({
     STORAGE_KEYS.COLUMN_ORDER_LOCKED,
     false,
   );
+  const [accentGradientEnabled, setAccentGradientEnabled] = useStoredBool(
+    STORAGE_KEYS.ACCENT_GRADIENT_ENABLED,
+    false,
+  );
+
+  // ── Accent gradient class on body ────────────────────────────────────────
+  useEffect(() => {
+    document.body.classList.toggle("accent-gradient", accentGradientEnabled);
+  }, [accentGradientEnabled]);
 
   // ── Card types (complex: preset lookup, conditional remove) ───────────────
   const [cardTypes, setCardTypes] = useState<CardType[]>(() =>
@@ -239,6 +248,7 @@ export function ThemeProvider({
     kvRemove(STORAGE_KEYS.COMPACT_HEADER);
     kvRemove(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
     kvRemove(STORAGE_KEYS.COLUMN_ORDER_LOCKED);
+    kvRemove(STORAGE_KEYS.ACCENT_GRADIENT_ENABLED);
     kvRemove(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
     setThemePreferenceState("system");
@@ -255,9 +265,11 @@ export function ThemeProvider({
     setCompactHeader(false);
     setKeyboardShortcutsEnabled(false);
     setColumnOrderLocked(false);
+    setAccentGradientEnabled(false);
   }, [
     setCardDensity,
     setCardTypePresetId,
+    setAccentGradientEnabled,
     setColumnOrderLocked,
     setColumnResizingEnabled,
     setCompactHeader,
@@ -300,6 +312,8 @@ export function ThemeProvider({
       setKeyboardShortcutsEnabled,
       columnOrderLocked,
       setColumnOrderLocked,
+      accentGradientEnabled,
+      setAccentGradientEnabled,
       resetSettings,
     }),
     [
@@ -327,6 +341,8 @@ export function ThemeProvider({
       setKeyboardShortcutsEnabled,
       columnOrderLocked,
       setColumnOrderLocked,
+      accentGradientEnabled,
+      setAccentGradientEnabled,
       resetSettings,
     ],
   );

@@ -23,6 +23,7 @@ export function BoardSettingsSection() {
         <ToggleSwitch
           id="column-resizing"
           label="Column resizing"
+          description="Drag column edges to adjust their width"
           checked={columnResizingEnabled}
           onChange={setColumnResizingEnabled}
         />
@@ -39,6 +40,7 @@ export function BoardSettingsSection() {
       <ToggleSwitch
         id="delete-column-warning"
         label="Warn before removing columns with cards"
+        description="Show a confirmation dialog when deleting columns that contain cards"
         checked={deleteColumnWarningEnabled}
         onChange={setDeleteColumnWarningEnabled}
       />

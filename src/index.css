@@ -24,6 +24,25 @@ body,
 
 body {
   @apply bg-bg text-text antialiased;
+  background-attachment: fixed;
+}
+
+body.accent-gradient {
+  background-image: radial-gradient(
+    circle farthest-corner at 0% 0%,
+    color-mix(in srgb, var(--color-accent) 15%, transparent) 0%,
+    transparent 100%
+  );
+}
+
+@media (max-width: 639px) {
+  body.accent-gradient {
+    background-image: radial-gradient(
+      circle farthest-side at 50% 0%,
+      color-mix(in srgb, var(--color-accent) 15%, transparent) 0%,
+      transparent 100%
+    );
+  }
 }
 
 /* Reduce tap highlight on mobile */

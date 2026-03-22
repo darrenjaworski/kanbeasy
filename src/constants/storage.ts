@@ -49,6 +49,9 @@ export const STORAGE_KEYS = {
   /** Lock column order — prevents drag-to-reorder of columns */
   COLUMN_ORDER_LOCKED: "kanbeasy:columnOrderLocked",
 
+  /** Accent gradient background enabled */
+  ACCENT_GRADIENT_ENABLED: "kanbeasy:accentGradientEnabled",
+
   /** Whether the user has seen the welcome modal */
   HAS_SEEN_WELCOME: "hasSeenWelcome",
 
