@@ -59,7 +59,8 @@ vi.mock("../../../board/useBoardDragAndDrop", () => ({
 vi.mock("@dnd-kit/core", () => ({
   DndContext: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   KeyboardSensor: class {},
-  PointerSensor: class {},
+  MouseSensor: class {},
+  TouchSensor: class {},
   closestCorners: vi.fn(),
   useSensor: () => ({}),
   useSensors: () => [],
