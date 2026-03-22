@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Card } from "../../board/types";
 import { useTheme } from "../../theme/useTheme";
-import {
-  DEFAULT_COLUMN_WIDTH,
-  MIN_COLUMN_WIDTH,
-  MAX_COLUMN_WIDTH,
-} from "../../constants/column";
+import { useColumnResize } from "./useColumnResize";
 
 import { useBoard } from "../../board/useBoard";
 import { useClipboard } from "../../board/useClipboard";
@@ -47,11 +43,7 @@ export function Column({
   onOpenDetail,
   fullWidth = false,
 }: Props) {
-  // Column resizing state
-  const [width, setWidth] = useState<number>(DEFAULT_COLUMN_WIDTH);
-  const resizing = useRef(false);
-  const startX = useRef(0);
-  const startWidth = useRef(DEFAULT_COLUMN_WIDTH);
+  const { width, onResizeMouseDown, stepWidth } = useColumnResize();
   const { addCard, removeColumn, archiveCard, updateColumn, updateCard } =
     useBoard();
   const { copiedCard, copyCard, pasteCard } = useClipboard();
@@ -80,53 +72,6 @@ export function Column({
     onSave: saveTitle,
     onRevert: revertTitle,
   });
-  // Mouse event handlers for resizing — stored in refs to avoid stale closure issues
-  const onResizeMouseMove = useRef<((e: MouseEvent) => void) | null>(null);
-  const onResizeMouseUp = useRef<(() => void) | null>(null);
-
-  const onResizeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    resizing.current = true;
-    startX.current = e.clientX;
-    startWidth.current = width;
-    document.body.style.cursor = "col-resize";
-
-    const handleMouseMove = (ev: MouseEvent) => {
-      if (!resizing.current) return;
-      const delta = ev.clientX - startX.current;
-      let newWidth = startWidth.current + delta;
-      newWidth = Math.max(
-        MIN_COLUMN_WIDTH,
-        Math.min(MAX_COLUMN_WIDTH, newWidth),
-      );
-      setWidth(newWidth);
-    };
-
-    const handleMouseUp = () => {
-      resizing.current = false;
-      document.body.style.cursor = "";
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      onResizeMouseMove.current = null;
-      onResizeMouseUp.current = null;
-    };
-
-    onResizeMouseMove.current = handleMouseMove;
-    onResizeMouseUp.current = handleMouseUp;
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-  };
-
-  useEffect(() => {
-    return () => {
-      // Clean up listeners if unmounted while resizing
-      if (onResizeMouseMove.current)
-        window.removeEventListener("mousemove", onResizeMouseMove.current);
-      if (onResizeMouseUp.current)
-        window.removeEventListener("mouseup", onResizeMouseUp.current);
-      document.body.style.cursor = "";
-    };
-  }, []);
-
   return (
     <section
       data-column-id={id}
@@ -298,10 +243,8 @@ export function Column({
           role="separator"
           tabIndex={0}
           onKeyDown={(e) => {
-            if (e.key === "ArrowRight")
-              setWidth((w) => Math.min(MAX_COLUMN_WIDTH, w + 10));
-            if (e.key === "ArrowLeft")
-              setWidth((w) => Math.max(MIN_COLUMN_WIDTH, w - 10));
+            if (e.key === "ArrowRight") stepWidth(10);
+            if (e.key === "ArrowLeft") stepWidth(-10);
           }}
           data-testid={`resize-handle-${index}`}
         >
