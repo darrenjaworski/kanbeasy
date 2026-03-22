@@ -99,7 +99,12 @@ export function ThemeSection() {
       </div>
       <fieldset className="flex items-center justify-between gap-3 border-0 p-0 m-0">
         <legend className="sr-only">Card density</legend>
-        <span aria-hidden>Card density</span>
+        <span aria-hidden>
+          Card density
+          <span className="block text-xs font-normal opacity-60">
+            Control how much detail cards show on the board
+          </span>
+        </span>
         <div className={`${tc.buttonGroup} rounded-full`}>
           <button
             type="button"
@@ -138,6 +143,7 @@ export function ThemeSection() {
           </button>
         </div>
       </fieldset>
+      <div className="h-0.5" />
       <ToggleSwitch
         id="accent-gradient"
         label="Accent gradient"

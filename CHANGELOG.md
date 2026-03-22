@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Accent gradient background — optional radial gradient using the accent color; desktop originates from top-left corner, mobile from top-center; toggle in Settings > Appearance
-- Add missing descriptions to "Column resizing" and "Warn before removing columns with cards" settings toggles for visual consistency
+- Add missing descriptions to "Column resizing", "Warn before removing columns with cards", and "Card density" settings for visual consistency
 
 ### Changed
 
