@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.49.1]
+
+### Fixed
+
+- Drag and drop broken after first operation — replaced `PointerSensor` (with `delay: 200, tolerance: 5`) with separate `MouseSensor` (`distance: 5`) for desktop and `TouchSensor` (`delay: 200, tolerance: 5`) for mobile; mouse users now get immediate drag activation without a hold delay
+
 ## [1.49.0]
 
 ### Features
