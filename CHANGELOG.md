@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump GitHub Actions to latest major versions: `actions/checkout` v5→v6, `actions/setup-node` v5→v6, `actions/upload-artifact` v4→v7
+
 ## [1.49.2]
 
 ### Fixed
