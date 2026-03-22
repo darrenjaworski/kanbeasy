@@ -8,6 +8,7 @@ import { useBoard } from "../../board/useBoard";
 import { useTheme } from "../../theme/useTheme";
 import { useBoardDragAndDrop } from "../../board/useBoardDragAndDrop";
 import { useIsMobile, useSwipeNavigation } from "../../hooks";
+import { findCardWithColumn } from "../../board/dragUtils";
 import { AddColumn } from "./AddColumn";
 import {
   DndContext,
@@ -111,13 +112,7 @@ export function Board() {
     setDetailCardId(cardId);
   }, []);
   const detailCard = detailCardId
-    ? (() => {
-        for (const col of columns) {
-          const card = col.cards.find((c) => c.id === detailCardId);
-          if (card) return { card, columnId: col.id };
-        }
-        return null;
-      })()
+    ? findCardWithColumn(columns, detailCardId)
     : null;
 
   const {

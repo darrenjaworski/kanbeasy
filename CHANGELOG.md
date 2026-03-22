@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactor: add `findCardWithColumn` to `dragUtils.ts` and replace identical IIFEs in `Board`, `ListView`, and `CalendarView` that each manually searched columns for a card by ID
 - Refactor: centralize `@dnd-kit` attribute casting in `src/utils/dnd.ts` (`asDOMAttributes`) — removes 4 `as unknown as` casts across `CardControls`, `SortableColumnItem`, and `Column`
 - Refactor: extract `SelectChevron` shared component to eliminate duplicate inline SVG+positioning in `CardDetailModal` and `CardTypeSection` (4 instances → 1 source)
 - Refactor `ThemeProvider`: extract `useStoredBool` and `useStoredString` hooks (`src/theme/useStoredSetting.ts`) to eliminate 10 useState+useEffect boilerplate pairs — simple settings now declare state and persistence in a single line each

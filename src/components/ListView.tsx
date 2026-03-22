@@ -7,6 +7,7 @@ import { useIsMobile } from "../hooks";
 import { CardTypeBadge } from "./shared/CardTypeBadge";
 import { CardDetailModal } from "./board/CardDetailModal";
 import { formatDate } from "../utils/formatDate";
+import { findCardWithColumn } from "../board/dragUtils";
 
 interface CardRow {
   id: string;
@@ -197,13 +198,7 @@ export function ListView() {
 
   const [detailCardId, setDetailCardId] = useState<string | null>(null);
   const detailCard = detailCardId
-    ? (() => {
-        for (const col of columns) {
-          const card = col.cards.find((c) => c.id === detailCardId);
-          if (card) return { card, columnId: col.id };
-        }
-        return null;
-      })()
+    ? findCardWithColumn(columns, detailCardId)
     : null;
 
   const rows = useMemo<CardRow[]>(

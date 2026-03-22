@@ -5,6 +5,7 @@ import { tc } from "../theme/classNames";
 import { useIsMobile } from "../hooks";
 import { CardTypeBadge } from "./shared/CardTypeBadge";
 import { CardDetailModal } from "./board/CardDetailModal";
+import { findCardWithColumn } from "../board/dragUtils";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -303,13 +304,7 @@ export function CalendarView() {
 
   const [detailCardId, setDetailCardId] = useState<string | null>(null);
   const detailCard = detailCardId
-    ? (() => {
-        for (const col of columns) {
-          const card = col.cards.find((c) => c.id === detailCardId);
-          if (card) return { card, columnId: col.id };
-        }
-        return null;
-      })()
+    ? findCardWithColumn(columns, detailCardId)
     : null;
 
   const today = new Date();

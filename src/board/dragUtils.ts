@@ -33,6 +33,22 @@ export function findCardInColumns(
 }
 
 /**
+ * Finds a card across all columns and returns both the card and its column ID.
+ * Useful for detail modals that need to pass both to their props.
+ * @returns `{ card, columnId }` or null if not found
+ */
+export function findCardWithColumn(
+  columns: Column[],
+  cardId: string,
+): { card: Card; columnId: string } | null {
+  for (const col of columns) {
+    const found = col.cards.find((c) => c.id === cardId);
+    if (found) return { card: found, columnId: col.id };
+  }
+  return null;
+}
+
+/**
  * Reorders columns by moving a column from one position to another.
  * @returns A new columns array with the reordered columns
  */
