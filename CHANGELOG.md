@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.50.1]
+
+### Changed
+
+- Bump dev dependency patch versions in lockfile (`brace-expansion`, `picomatch`, `smol-toml`, `yaml`)
+
 ## [1.50.0]
 
 ### Features
