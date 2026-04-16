@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.50.2]
+
+### Fixed
+
+- Update Vite to 7.3.2
+
 ## [1.50.1]
 
 ### Changed
