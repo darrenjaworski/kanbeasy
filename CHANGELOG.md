@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.50.3]
+
+### Changed
+
+- Split `useBoardMutations` (458 lines) into four focused hooks: `useColumnMutations`, `useCardMutations`, `useCardTypeMutations`, and `useArchiveMutations`; `useBoardMutations` is now a thin combiner with an unchanged public API
+- Extract `ColumnCardCountBadge`, `ColumnTitleEdit`, and `ColumnResizeHandle` subcomponents from `Column.tsx`
+- Split `Board.tsx` into `DesktopBoard` and `MobileBoard` components backed by a new `useBoardScroll` hook
+- Consolidate scattered magic numbers (`MAX_UNDO_HISTORY`, `SEARCH_FUZZY_THRESHOLD`, `WRITE_DEBOUNCE_MS`, `SKELETON_DELAY_MS`) into `src/constants/behavior.ts`
+- Extract `useDocumentKeyDown` hook to deduplicate the shared `addEventListener`/`useEffect` pattern in `useUndoRedoKeyboard` and `useCommandPaletteShortcut`
+- Add `docs/refactor-review.md` — prioritized codebase refactor review document
+
 ## [1.50.2]
 
 ### Fixed
