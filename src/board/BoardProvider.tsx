@@ -3,6 +3,7 @@ import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState } from "./types";
 import { kvGet, kvSet, getBoard, saveBoard } from "../utils/db";
 import { STORAGE_KEYS } from "../constants/storage";
+import { MAX_UNDO_HISTORY } from "../constants/behavior";
 import { isArchivedCard, isColumn } from "./validation";
 import { migrateColumnsWithNumbering } from "./migration";
 import { useUndoableState } from "./useUndoableState";
@@ -181,7 +182,7 @@ export function BoardProvider({
 
   const { state, setState, undo, redo, canUndo, canRedo } =
     useUndoableState<BoardState>(() => loadResult.current!.state, {
-      maxHistory: 50,
+      maxHistory: MAX_UNDO_HISTORY,
     });
 
   const nextCardNumberRef = useRef(loadResult.current.nextCardNumber);

@@ -1,13 +1,12 @@
 import type { BoardState } from "../board/types";
 import { STORAGE_KEYS } from "../constants/storage";
+import { WRITE_DEBOUNCE_MS } from "../constants/behavior";
 
 const DB_NAME = "kanbeasy";
 const DB_VERSION = 1;
 const KV_STORE = "kv";
 const BOARD_STORE = "board";
 const DEFAULT_BOARD_ID = "default";
-
-const WRITE_DEBOUNCE_MS = 100;
 
 // In-memory cache — authoritative at runtime
 const kvCache = new Map<string, unknown>();

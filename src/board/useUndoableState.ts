@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import { MAX_UNDO_HISTORY } from "../constants/behavior";
 
 type HistoryState<T> = {
   past: T[];
@@ -24,7 +25,7 @@ export function useUndoableState<T>(
   initialState: T | (() => T),
   options: UseUndoableStateOptions = {},
 ): UseUndoableStateReturn<T> {
-  const { enabled = true, maxHistory = 50 } = options;
+  const { enabled = true, maxHistory = MAX_UNDO_HISTORY } = options;
 
   const [history, setHistory] = useState<HistoryState<T>>(() => {
     const initial =

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { openDatabase } from "../utils/db";
-
-const SKELETON_DELAY_MS = 100;
+import { SKELETON_DELAY_MS } from "../constants/behavior";
 
 export function AppLoader({
   children,

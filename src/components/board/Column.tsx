@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import type { Card } from "../../board/types";
 import { useTheme } from "../../theme/useTheme";
 import { useColumnResize } from "./useColumnResize";
-
 import { useBoard } from "../../board/useBoard";
 import { useClipboard } from "../../board/useClipboard";
 import { DragIndicatorIcon, CloseIcon } from "../icons";
@@ -10,8 +9,10 @@ import { CardList } from "./CardList";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
 import { Tooltip } from "../shared/Tooltip";
 import { tc } from "../../theme/classNames";
-import { useInlineEdit, useIsMobile } from "../../hooks";
-import { getBadgeHeat } from "./badgeHeat";
+import { useIsMobile } from "../../hooks";
+import { ColumnCardCountBadge } from "./ColumnCardCountBadge";
+import { ColumnTitleEdit } from "./ColumnTitleEdit";
+import { ColumnResizeHandle } from "./ColumnResizeHandle";
 
 type Props = Readonly<{
   id: string;
@@ -44,8 +45,7 @@ export function Column({
   fullWidth = false,
 }: Props) {
   const { width, onResizeMouseDown, stepWidth } = useColumnResize();
-  const { addCard, removeColumn, archiveCard, updateColumn, updateCard } =
-    useBoard();
+  const { addCard, removeColumn, archiveCard, updateCard } = useBoard();
   const { copiedCard, copyCard, pasteCard } = useClipboard();
   const {
     cardDensity,
@@ -57,21 +57,7 @@ export function Column({
   const isMobile = useIsMobile();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [autoFocusCardId, setAutoFocusCardId] = useState<string | null>(null);
-  const [tempTitle, setTempTitle] = useState(title);
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    setTempTitle(title);
-  }, [title]);
-  const revertTitle = useCallback(() => setTempTitle(title), [title]);
-  const saveTitle = useCallback(
-    (value: string) => updateColumn(id, value),
-    [id, updateColumn],
-  );
-  const { onKeyDown: titleKeyDown, onBlur: titleBlur } = useInlineEdit({
-    originalValue: title,
-    onSave: saveTitle,
-    onRevert: revertTitle,
-  });
+
   return (
     <section
       data-column-id={id}
@@ -122,41 +108,17 @@ export function Column({
           </button>
         </Tooltip>
       </div>
-      {/* Card count badge — slides left on hover to clear controls */}
-      {(() => {
-        const heat = getBadgeHeat(cards.length, index, columnCount);
-        return (
-          <span
-            className={`absolute top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : tc.glassSubtle} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} ${isMobile ? (canDrag ? "right-20" : "right-12") : `right-2 transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}`}
-            style={
-              heat
-                ? {
-                    backgroundColor: `color-mix(in srgb, var(--color-accent) ${heat.accentPercent}%, transparent)`,
-                  }
-                : undefined
-            }
-            aria-label={`${cards.length} card${cards.length === 1 ? "" : "s"}`}
-            data-heat-level={heat ? (heat.bold ? "high" : "medium") : undefined}
-          >
-            {cards.length}
-          </span>
-        );
-      })()}
-      <div className="mb-3 mr-8">
-        <input
-          ref={inputRef}
-          type="text"
-          aria-label="Column title"
-          className={`${tc.input} w-full px-0 py-0 text-base font-semibold tracking-tight opacity-80 rounded-xs`}
-          value={tempTitle}
-          onFocus={(e) => e.target.select()}
-          onChange={(e) => setTempTitle(e.target.value)}
-          id={`${id}-title`}
-          onKeyDown={titleKeyDown}
-          onBlur={titleBlur}
-          data-testid={`column-title-input-${index}`}
-        />
-      </div>
+
+      <ColumnCardCountBadge
+        cardCount={cards.length}
+        index={index}
+        columnCount={columnCount}
+        isMobile={isMobile}
+        canDrag={canDrag}
+      />
+
+      <ColumnTitleEdit id={id} title={title} index={index} />
+
       <div className="mb-3 flex gap-2">
         <button
           type="button"
@@ -196,6 +158,7 @@ export function Column({
           </button>
         )}
       </div>
+
       <CardList
         cards={cards}
         onCopy={(cardId) => {
@@ -218,6 +181,7 @@ export function Column({
         autoFocusCardId={autoFocusCardId}
         onAutoFocused={() => setAutoFocusCardId(null)}
       />
+
       <ConfirmDialog
         open={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
@@ -229,31 +193,14 @@ export function Column({
         confirmLabel="Remove"
         message={`This column has ${cards.length} card${cards.length === 1 ? "" : "s"}. Its cards will be archived and can be restored later.`}
       />
-      {/* Resize handle (feature-flagged) */}
-      {/* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- separator with tabIndex is an interactive resize widget */}
+
       {columnResizingEnabled && !fullWidth && (
-        <div
-          className="absolute top-0 pt-[8px] pb-[8px] right-0 h-full w-2 cursor-col-resize z-10 group/resizer"
-          style={{
-            marginRight: -8,
-            touchAction: "none",
-          }}
+        <ColumnResizeHandle
           onMouseDown={onResizeMouseDown}
-          aria-label="Resize column"
-          role="separator"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowRight") stepWidth(10);
-            if (e.key === "ArrowLeft") stepWidth(-10);
-          }}
-          data-testid={`resize-handle-${index}`}
-        >
-          <div
-            className={`mx-auto h-full w-1 rounded-md ${tc.separator} opacity-60 hover:opacity-100 transition-opacity`}
-          />
-        </div>
+          stepWidth={stepWidth}
+          index={index}
+        />
       )}
-      {/* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */}
     </section>
   );
 }

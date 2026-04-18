@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useDocumentKeyDown } from "./useDocumentKeyDown";
 
 type UseUndoRedoKeyboardOptions = {
   undo: () => void;
@@ -25,21 +26,16 @@ export function useUndoRedoKeyboard({
   const callbacksRef = useRef({ undo, redo, canUndo, canRedo });
   callbacksRef.current = { undo, redo, canUndo, canRedo };
 
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      const mod = e.metaKey || e.ctrlKey;
-      if (!mod || e.key !== "z") return;
-      if (isEditableTarget(e.target)) return;
+  useDocumentKeyDown((e) => {
+    const mod = e.metaKey || e.ctrlKey;
+    if (!mod || e.key !== "z") return;
+    if (isEditableTarget(e.target)) return;
 
-      e.preventDefault();
-      if (e.shiftKey) {
-        if (callbacksRef.current.canRedo) callbacksRef.current.redo();
-      } else {
-        if (callbacksRef.current.canUndo) callbacksRef.current.undo();
-      }
+    e.preventDefault();
+    if (e.shiftKey) {
+      if (callbacksRef.current.canRedo) callbacksRef.current.redo();
+    } else {
+      if (callbacksRef.current.canUndo) callbacksRef.current.undo();
     }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  });
 }

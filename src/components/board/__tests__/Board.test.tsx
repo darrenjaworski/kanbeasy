@@ -208,6 +208,8 @@ describe("Board", () => {
   // --- Sensor configuration (regression for v1.49.1 PointerSensor bug) ---
 
   it("registers MouseSensor with distance: 5 (no delay) for desktop drag", () => {
+    // Sensors live in DesktopBoard, which only renders when columns exist
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "To Do" })]);
     render(<Board />);
     const mouseCall = mockUseSensor.mock.calls.find(
       ([cls]) => cls === MouseSensor,
@@ -217,6 +219,8 @@ describe("Board", () => {
   });
 
   it("registers TouchSensor with delay: 200 and tolerance: 5 for mobile drag", () => {
+    // Sensors live in DesktopBoard, which only renders when columns exist
+    mockColumns.mockReturnValue([makeColumn({ id: "c1", title: "To Do" })]);
     render(<Board />);
     const touchCall = mockUseSensor.mock.calls.find(
       ([cls]) => cls === TouchSensor,

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import Fuse from "fuse.js";
 import type { Column } from "./types";
+import { SEARCH_FUZZY_THRESHOLD } from "../constants/behavior";
 
 export function useCardSearch(columns: Column[]) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,7 +25,7 @@ export function useCardSearch(columns: Column[]) {
     if (hasTextSearch) {
       const fuse = new Fuse(allCards, {
         keys: ["title", "description"],
-        threshold: 0.4,
+        threshold: SEARCH_FUZZY_THRESHOLD,
         ignoreLocation: true,
       });
       textMatchIds = new Set(fuse.search(searchQuery).map((r) => r.item.id));
