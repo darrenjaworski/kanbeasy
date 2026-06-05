@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.50.4]
+
+### Changed
+
+- Run `npm audit fix` to apply security patches to transitive dependencies
+
 ## [1.50.3]
 
 ### Changed
