@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Add `.npmrc` with `legacy-peer-deps=true` to resolve `eslint-plugin-jsx-a11y@6.x` peer dep conflict with ESLint 10 in CI and local installs
 - Upgrade `fuse.js` 7.1→7.4, `prettier` 3.8.1→3.8.3, `@playwright/test` 1.58→1.60, `marked` 17.0.4→17.0.6, `knip` 5.86→5.88
 
 - Upgrade ESLint from v9 to v10; upgrade `@eslint/js`, `eslint-plugin-react-hooks` (v5→v7), `eslint-plugin-react-refresh`, `eslint-import-resolver-typescript`, `eslint-plugin-import-x`, and `globals` (v16→v17) to latest; pin react-hooks config to `rules-of-hooks` + `exhaustive-deps` only (v7 `recommended-latest` includes React Compiler rules not applicable here)
