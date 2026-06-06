@@ -16,7 +16,15 @@ export default tseslint.config([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommendedTypeChecked,
-      reactHooks.configs["recommended-latest"],
+      // Only the two core rules — react-hooks v7 "recommended-latest" adds React Compiler
+      // rules (refs, set-state-in-effect, purity, etc.) that don't apply without the compiler.
+      {
+        plugins: { "react-hooks": reactHooks },
+        rules: {
+          "react-hooks/rules-of-hooks": "error",
+          "react-hooks/exhaustive-deps": "warn",
+        },
+      },
       reactRefresh.configs.vite,
       jsxA11y.flatConfigs.recommended,
       importX.flatConfigs.recommended,

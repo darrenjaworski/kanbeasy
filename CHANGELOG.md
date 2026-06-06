@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade ESLint from v9 to v10; upgrade `@eslint/js`, `eslint-plugin-react-hooks` (v5→v7), `eslint-plugin-react-refresh`, `eslint-import-resolver-typescript`, `eslint-plugin-import-x`, and `globals` (v16→v17) to latest; pin react-hooks config to `rules-of-hooks` + `exhaustive-deps` only (v7 `recommended-latest` includes React Compiler rules not applicable here)
+
 ### Tests
 
 - Add `eslint-plugin-testing-library` to ESLint config scoped to test files; fix all 84 violations: replace `document.activeElement` with `toHaveFocus()`, replace destructured render queries with `screen`, remove redundant `cleanup()`, restructure `renderHook` out of `beforeEach`, use `within().getByRole("checkbox")` instead of `querySelector`; suppress with `eslint-disable-next-line` where direct DOM access is genuinely necessary (CSS class assertions, SVG/kbd elements, markdown HTML output)
