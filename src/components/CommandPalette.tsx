@@ -21,8 +21,18 @@ export function CommandPalette({ open, onClose }: Props) {
   const { viewMode, setViewMode, defaultCardTypeId, cardTypes } = useTheme();
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [prevOpen, setPrevOpen] = useState(open);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+
+  // Inline state reset when palette opens — avoids an extra render with stale UI
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) {
+      setQuery("");
+      setSelectedIndex(0);
+    }
+  }
 
   const hasCards = columns.some((c) => c.cards.length > 0);
   const hasDueDates = columns.some((c) => c.cards.some((card) => card.dueDate));
@@ -67,8 +77,6 @@ export function CommandPalette({ open, onClose }: Props) {
 
   useEffect(() => {
     if (open) {
-      setQuery("");
-      setSelectedIndex(0);
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [open]);

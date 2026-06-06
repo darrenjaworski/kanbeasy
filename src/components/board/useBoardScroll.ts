@@ -44,6 +44,7 @@ export function useBoardScroll(columnCount: number) {
       setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
       setCanScrollLeft(scrollLeft > 0);
     };
+    // react-doctor-disable-next-line react-doctor/no-adjust-state-on-prop-change -- state derives from DOM geometry, not columnCount directly
     update();
     el.addEventListener("scroll", update, { passive: true });
     const ro = new ResizeObserver(update);

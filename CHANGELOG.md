@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.51.1]
+
+### Changed
+
+- Add react-doctor as a dev tool with pre-commit hook, `npm run doctor` script, and GitHub Actions CI workflow for ongoing React health scanning
+- Bump `softprops/action-gh-release` from v2 to v3 in release workflow (Node 24 runtime)
+
+### Fixed
+
+- CommandPalette: replace effect-based state reset with inline prev-prop comparison to avoid a stale-UI flash when reopening the palette
+- ToggleSwitch: add `aria-checked` to `role="switch"` input so screen readers correctly announce toggle state
+
 ## [1.51.0]
 
 ### Features

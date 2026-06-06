@@ -28,6 +28,7 @@ export function ToggleSwitch({
           id={id}
           type="checkbox"
           role="switch"
+          aria-checked={checked}
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
           className="sr-only peer"
