@@ -158,8 +158,8 @@ function loadState(): LoadResult {
 
   // Migrate timestamps and assign card numbers
   const { columns, archive, nextCardNumber } = migrateColumnsWithNumbering(
-    cols as unknown as Record<string, unknown>[],
-    rawArchive as unknown as Record<string, unknown>[],
+    cols,
+    rawArchive,
   );
 
   // Reconcile with persisted counter (take the max)

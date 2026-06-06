@@ -156,7 +156,7 @@ export function SortableCardItem({
           rows={rowsForDensity}
           style={
             density === "dynamic"
-              ? ({ fieldSizing: "content" } as CSSProperties)
+              ? ({ fieldSizing: "content" })
               : undefined
           }
           onKeyDown={cardKeyDown}

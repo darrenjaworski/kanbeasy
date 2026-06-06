@@ -91,8 +91,8 @@ export function validateExportData(parsed: unknown): ImportResult {
     if (Array.isArray(parsed.board.columns)) {
       const validColumns = (parsed.board.columns as unknown[]).filter(isColumn);
       const result = migrateColumnsWithNumbering(
-        validColumns as unknown as Record<string, unknown>[],
-        rawArchive as unknown as Record<string, unknown>[],
+        validColumns,
+        rawArchive,
       );
       columns = result.columns;
       archive = result.archive;
