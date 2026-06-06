@@ -5,6 +5,7 @@ export { CalendarIcon } from "./CalendarIcon";
 export { CardDragIcon } from "./CardDragIcon";
 export { CloseIcon } from "./CloseIcon";
 export { CopyIcon } from "./CopyIcon";
+export { DensityDynamicIcon } from "./DensityDynamicIcon";
 export { DensityLargeIcon } from "./DensityLargeIcon";
 export { DensityMediumIcon } from "./DensityMediumIcon";
 export { DensitySmallIcon } from "./DensitySmallIcon";
