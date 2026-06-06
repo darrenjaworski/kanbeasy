@@ -1,12 +1,13 @@
 import type { ThemeId, ThemeMode } from "./themes";
 import type { CardType } from "../constants/cardTypes";
 
-export type CardDensity = "small" | "medium" | "large";
+export type CardDensity = "small" | "medium" | "large" | "dynamic";
 
-export const ROWS_FOR_DENSITY: Record<CardDensity, number> = {
+export const ROWS_FOR_DENSITY: Record<CardDensity, number | undefined> = {
   small: 1,
   medium: 2,
   large: 3,
+  dynamic: undefined,
 };
 
 export type ThemePreference = "light" | "dark" | "system";

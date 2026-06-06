@@ -69,7 +69,12 @@ function getInitialThemeId(preference: ThemePreference): ThemeId {
 
 function getInitialDensity(): CardDensity {
   const stored = kvGet<string>(STORAGE_KEYS.CARD_DENSITY, "small");
-  if (stored === "small" || stored === "medium" || stored === "large") {
+  if (
+    stored === "small" ||
+    stored === "medium" ||
+    stored === "large" ||
+    stored === "dynamic"
+  ) {
     return stored;
   }
   return "small";
