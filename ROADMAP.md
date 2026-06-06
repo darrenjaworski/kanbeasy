@@ -102,6 +102,7 @@ an ultra simple task organizer
 - ✅ mobile `CalendarView` — day-list layout on mobile replacing the 7-column grid; only days with cards shown, sorted chronologically; today accent-highlighted; tapping opens `CardDetailModal`
 - ✅ fix: copying a card now preserves its due date
 - ✅ accent gradient background — optional radial gradient using the accent color (top-left on desktop, top-center on mobile); toggle in Settings > Appearance
+- ✅ dynamic card sizing — "Dynamic" density option in Settings; cards auto-size to their content via CSS `field-sizing: content`
 
 Settings
 

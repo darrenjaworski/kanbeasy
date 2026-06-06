@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.51.0]
+
+### Features
+
+- Dynamic card density — new "Dynamic" option in Settings > Appearance card density selector; uses CSS `field-sizing: content` to auto-size card textareas to their content rather than a fixed row count
+
+### Fixed
+
+- Import board now correctly accepts `"dynamic"` as a valid card density value (was silently falling back to `"small"` before)
+
 ## [1.50.4]
 
 ### Changed
