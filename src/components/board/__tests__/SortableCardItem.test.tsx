@@ -96,4 +96,14 @@ describe("SortableCardItem", () => {
     await userEvent.click(screen.getByTestId("card-content-0"));
     expect(onOpenDetail).toHaveBeenCalledTimes(1);
   });
+
+  it("renders textarea without rows and with field-sizing style when density is dynamic", () => {
+    mockUseSortable.mockReturnValue(sortableDefaults());
+    render(<SortableCardItem {...baseProps} density="dynamic" />);
+    const textarea = screen.getByRole("textbox", { name: /card content/i });
+    expect(textarea).not.toHaveAttribute("rows");
+    // jsdom stores unknown CSS properties in the style object but does not
+    // serialize them to the style attribute — check the JS style property directly.
+    expect((textarea as HTMLTextAreaElement).style.fieldSizing).toBe("content");
+  });
 });
