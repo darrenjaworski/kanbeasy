@@ -82,6 +82,7 @@ describe("Header mobile menu", () => {
 
     // The backdrop is a dedicated div with aria-hidden="true" and its own onClick.
     // Fire directly on that element — clicking document.body does not reach it.
+    // eslint-disable-next-line testing-library/no-node-access -- backdrop has no accessible role; aria-hidden attribute is the only selector
     const backdrop = document.querySelector(
       'div[aria-hidden="true"]',
     ) as HTMLElement;

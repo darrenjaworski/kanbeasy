@@ -1,3 +1,4 @@
+// eslint-disable-next-line testing-library/no-manual-cleanup -- intentional mid-test cleanup to test state persistence across remounts
 import { screen, within, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { seedBoard } from "../utils/db";

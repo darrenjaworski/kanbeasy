@@ -25,9 +25,11 @@ describe("card delete", () => {
     ).toHaveLength(2);
 
     // Click the archive button on the first card in the column
-    const firstCard = within(column as HTMLElement)
-      .getAllByText(/new card/i)[0]
-      .closest("div");
+    const firstCardText = within(column as HTMLElement).getAllByText(
+      /new card/i,
+    )[0];
+    // eslint-disable-next-line testing-library/no-node-access -- closest("div") navigates to card wrapper which has no accessible role
+    const firstCard = firstCardText.closest("div");
     const archiveBtn = within(firstCard as HTMLElement).getByRole("button", {
       name: /archive card/i,
     });

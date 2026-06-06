@@ -1,5 +1,5 @@
-import { renderHook, cleanup } from "@testing-library/react";
-import { describe, expect, it, vi, afterEach } from "vitest";
+import { renderHook } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { useUndoRedoKeyboard } from "../useUndoRedoKeyboard";
 
 function fireKey(opts: Partial<KeyboardEventInit> & { key: string }) {
@@ -8,10 +8,6 @@ function fireKey(opts: Partial<KeyboardEventInit> & { key: string }) {
 }
 
 describe("useUndoRedoKeyboard", () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   it("calls undo on Cmd+Z", () => {
     const undo = vi.fn();
     const redo = vi.fn();

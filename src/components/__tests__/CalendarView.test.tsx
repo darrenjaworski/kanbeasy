@@ -340,7 +340,9 @@ describe("CalendarView", () => {
     await user.type(searchInput, "Alpha");
 
     const grid = screen.getByTestId("calendar-grid");
+    // eslint-disable-next-line testing-library/no-node-access -- closest() needed since card buttons have composite accessible names not matching exact title
     const alphaBtn = within(grid).getByText("Alpha Task").closest("button")!;
+    // eslint-disable-next-line testing-library/no-node-access -- closest() needed since card buttons have composite accessible names not matching exact title
     const betaBtn = within(grid).getByText("Beta Task").closest("button")!;
 
     expect(alphaBtn).toHaveAttribute("data-search-highlight", "true");

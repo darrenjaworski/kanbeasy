@@ -4,6 +4,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import { importX } from "eslint-plugin-import-x";
+import testingLibrary from "eslint-plugin-testing-library";
 import tseslint from "typescript-eslint";
 import { globalIgnores } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier";
@@ -75,6 +76,11 @@ export default tseslint.config([
         ...globals.node,
       },
     },
+  },
+  // Testing Library rules — scoped to unit test files only
+  {
+    files: ["**/*.test.{ts,tsx}", "src/test/**"],
+    extends: [testingLibrary.configs["flat/react"]],
   },
   // Disable type-aware rules for files not covered by a tsconfig
   {

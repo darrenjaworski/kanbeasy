@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Tests
+
+- Add `eslint-plugin-testing-library` to ESLint config scoped to test files; fix all 84 violations: replace `document.activeElement` with `toHaveFocus()`, replace destructured render queries with `screen`, remove redundant `cleanup()`, restructure `renderHook` out of `beforeEach`, use `within().getByRole("checkbox")` instead of `querySelector`; suppress with `eslint-disable-next-line` where direct DOM access is genuinely necessary (CSS class assertions, SVG/kbd elements, markdown HTML output)
+
 ### Changed
 
 - Upgrade tsconfig lib from `ES2022` to `ES2025`; drop redundant `DOM.Iterable` (now included in `DOM` since TypeScript 6)

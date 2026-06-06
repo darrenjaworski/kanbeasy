@@ -218,6 +218,7 @@ describe("CommandPalette", () => {
     renderPalette(true, vi.fn(), { columns: [col] });
 
     const addCardItem = screen.getByTestId("command-add-card");
+    // eslint-disable-next-line testing-library/no-node-access -- kbd element has no accessible role; querySelector is the only option
     expect(addCardItem.querySelector("kbd")).toBeNull();
   });
 

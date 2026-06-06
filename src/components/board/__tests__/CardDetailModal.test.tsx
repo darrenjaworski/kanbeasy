@@ -55,8 +55,8 @@ function renderModal(
     cardTypes: [] as Parameters<typeof CardDetailModal>[0]["cardTypes"],
   };
   const props = { ...defaults, ...overrides };
-  const result = render(<CardDetailModal {...props} />);
-  return { ...result, ...props };
+  const view = render(<CardDetailModal {...props} />);
+  return { ...view, ...props };
 }
 
 /** Click the markdown preview to enter edit mode, returns the textarea */
@@ -137,6 +137,7 @@ describe("CardDetailModal", () => {
     const preview = screen.getByTestId("card-detail-description-preview");
     expect(preview).toBeInTheDocument();
     // Check that bold text is rendered
+    // eslint-disable-next-line testing-library/no-node-access -- testing markdown HTML output; <strong> has no accessible role
     const strong = preview.querySelector("strong");
     expect(strong).toHaveTextContent("bold text");
   });
@@ -354,7 +355,7 @@ describe("CardDetailModal", () => {
 
     it("renders interactive checkboxes in preview", () => {
       renderModal({ card: checklistCard });
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const checkboxes = screen.getAllByRole("checkbox");
       expect(checkboxes).toHaveLength(3);
       expect(checkboxes[0]).not.toBeChecked();
       expect(checkboxes[0]).not.toBeDisabled();
@@ -367,7 +368,7 @@ describe("CardDetailModal", () => {
       const user = userEvent.setup();
       const { onUpdate } = renderModal({ card: checklistCard });
 
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const checkboxes = screen.getAllByRole("checkbox");
       await user.click(checkboxes[0]);
 
       expect(onUpdate).toHaveBeenCalledWith({
@@ -379,7 +380,7 @@ describe("CardDetailModal", () => {
       const user = userEvent.setup();
       renderModal({ card: checklistCard });
 
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const checkboxes = screen.getAllByRole("checkbox");
       await user.click(checkboxes[0]);
 
       // Should still be in preview mode, not edit mode

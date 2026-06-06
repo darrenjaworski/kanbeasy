@@ -26,6 +26,7 @@ describe("card gets blur background while dragging", () => {
     const textareas = within(column).getAllByRole("textbox", {
       name: /card content/i,
     });
+    // eslint-disable-next-line testing-library/no-node-access -- parentElement needed to check CSS class on unstyled container div
     const cardContainer = textareas[0].parentElement as HTMLElement;
     expect(cardContainer).toBeInTheDocument();
 

@@ -391,7 +391,7 @@ describe("useBoardDragAndDrop", () => {
       const button = document.createElement("button");
       document.body.appendChild(button);
       button.focus();
-      expect(document.activeElement).toBe(button);
+      expect(button).toHaveFocus();
 
       const startEvent = createDragStartEvent("col-1", "column");
       const endEvent = createDragEndEvent("col-1", "column", "col-2", "column");
@@ -401,7 +401,7 @@ describe("useBoardDragAndDrop", () => {
         result.current.handleDragEnd(endEvent);
       });
 
-      expect(document.activeElement).toBe(document.body);
+      expect(document.body).toHaveFocus();
       document.body.removeChild(button);
     });
   });
@@ -440,7 +440,7 @@ describe("useBoardDragAndDrop", () => {
       const button = document.createElement("button");
       document.body.appendChild(button);
       button.focus();
-      expect(document.activeElement).toBe(button);
+      expect(button).toHaveFocus();
 
       const startEvent = createDragStartEvent("card-1", "card", "col-1");
 
@@ -449,7 +449,7 @@ describe("useBoardDragAndDrop", () => {
         result.current.handleDragCancel();
       });
 
-      expect(document.activeElement).toBe(document.body);
+      expect(document.body).toHaveFocus();
       document.body.removeChild(button);
     });
   });

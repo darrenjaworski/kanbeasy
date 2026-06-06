@@ -85,7 +85,7 @@ function renderColumn(opts: RenderColumnOptions = {}) {
     columnCount: 3,
   };
 
-  const result = render(
+  const view = render(
     <BoardContext.Provider value={boardCtx}>
       <ThemeContext.Provider value={themeCtx}>
         <ClipboardContext.Provider value={clipCtx}>
@@ -95,7 +95,7 @@ function renderColumn(opts: RenderColumnOptions = {}) {
     </BoardContext.Provider>,
   );
 
-  return { ...result, boardCtx, themeCtx, clipCtx };
+  return { ...view, boardCtx, themeCtx, clipCtx };
 }
 
 // ---------------------------------------------------------------------------

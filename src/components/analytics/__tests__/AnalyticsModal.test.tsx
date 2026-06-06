@@ -369,6 +369,7 @@ describe("AnalyticsModal", () => {
     expect(archivedLabel).toBeInTheDocument();
 
     // The "(archived)" label should be near the archived card title
+    // eslint-disable-next-line testing-library/no-node-access -- closest("td") navigates to table cell which has no independent accessible name
     const archivedCell = archivedLabel.closest("td")!;
     expect(archivedCell.textContent).toContain("Archived task");
 
@@ -376,6 +377,7 @@ describe("AnalyticsModal", () => {
     const boardRow = within(dlg).getByText((text) =>
       text.includes("Board task"),
     );
+    // eslint-disable-next-line testing-library/no-node-access -- closest("td") navigates to table cell which has no independent accessible name
     const boardCell = boardRow.closest("td")!;
     expect(boardCell.textContent).not.toContain("(archived)");
   });

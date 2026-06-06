@@ -12,6 +12,7 @@ describe("DueDateBadge", () => {
 
   it("renders nothing when dueDate is null", () => {
     const { container } = render(<DueDateBadge dueDate={null} />);
+    // eslint-disable-next-line testing-library/no-node-access -- container.firstChild is the standard TL pattern for asserting empty render
     expect(container.firstChild).toBeNull();
   });
 
@@ -105,6 +106,7 @@ describe("DueDateBadge", () => {
   it("renders a calendar icon", () => {
     vi.useFakeTimers({ now: new Date("2025-06-01T12:00:00") });
     render(<DueDateBadge dueDate="2025-06-15" />);
+    // eslint-disable-next-line testing-library/no-node-access -- SVG has no accessible role; querySelector is the only option
     const svg = screen.getByTestId("due-date-badge").querySelector("svg");
     expect(svg).toBeInTheDocument();
     expect(svg).toHaveAttribute("aria-hidden", "true");

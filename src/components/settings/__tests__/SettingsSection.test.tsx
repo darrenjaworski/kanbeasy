@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+// eslint-disable-next-line testing-library/no-manual-cleanup -- intentional mid-test cleanup to test state persistence across remounts
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { SettingsSection } from "../SettingsSection";

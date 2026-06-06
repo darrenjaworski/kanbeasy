@@ -43,7 +43,7 @@ describe("column add card", () => {
     });
     await user.click(addCardBtn);
 
-    expect(document.activeElement).not.toBe(addCardBtn);
+    expect(addCardBtn).not.toHaveFocus();
   });
 
   it("auto-focuses and selects the new card title after adding a card", async () => {
@@ -62,7 +62,7 @@ describe("column add card", () => {
     const cardTextarea = within(column as HTMLElement).getByRole("textbox", {
       name: /card content/i,
     });
-    expect(document.activeElement).toBe(cardTextarea);
+    expect(cardTextarea).toHaveFocus();
 
     // The default title text should be selected so the user can type to replace
     expect((cardTextarea as HTMLTextAreaElement).selectionStart).toBe(0);

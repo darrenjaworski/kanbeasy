@@ -30,6 +30,7 @@ describe("drag handle cursor styles", () => {
     const textareas = within(first).getAllByRole("textbox", {
       name: /card content/i,
     });
+    // eslint-disable-next-line testing-library/no-node-access -- parentElement needed to find container div for CSS class assertions
     const cardContainer = textareas[0].parentElement as HTMLElement;
     const dragBtn = within(cardContainer).getByRole("button", {
       name: /drag card/i,

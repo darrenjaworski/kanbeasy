@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { screen, fireEvent } from "@testing-library/react";
+import { screen, within, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderApp } from "../../test/renderApp";
@@ -105,7 +105,7 @@ describe("SearchInput — card type filter popover", () => {
       screen.getByRole("button", { name: /filter by card type/i }),
     );
     const option = screen.getByTestId("card-type-filter-option-feat");
-    const checkbox = option.querySelector("input[type='checkbox']")!;
+    const checkbox = within(option).getByRole("checkbox");
     expect(checkbox).not.toBeChecked();
     await user.click(option);
     expect(checkbox).toBeChecked();
@@ -120,7 +120,7 @@ describe("SearchInput — card type filter popover", () => {
     const option = screen.getByTestId("card-type-filter-option-feat");
     await user.click(option);
     await user.click(option);
-    expect(option.querySelector("input[type='checkbox']")).not.toBeChecked();
+    expect(within(option).getByRole("checkbox")).not.toBeChecked();
   });
 
   it("clear button appears when at least one type is selected", async () => {
@@ -148,9 +148,9 @@ describe("SearchInput — card type filter popover", () => {
       screen.queryByTestId("card-type-filter-clear"),
     ).not.toBeInTheDocument();
     expect(
-      screen
-        .getByTestId("card-type-filter-option-feat")
-        .querySelector("input[type='checkbox']"),
+      within(screen.getByTestId("card-type-filter-option-feat")).getByRole(
+        "checkbox",
+      ),
     ).not.toBeChecked();
   });
 

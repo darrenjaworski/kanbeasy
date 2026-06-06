@@ -63,6 +63,7 @@ describe("AppLoader", () => {
     });
 
     // The skeleton should be visible (has animate-pulse class)
+    // eslint-disable-next-line testing-library/no-node-access -- skeleton has no accessible role; CSS class is the only selector
     const skeleton = document.querySelector(".animate-pulse");
     expect(skeleton).toBeInTheDocument();
     expect(screen.queryByText("Board content")).not.toBeInTheDocument();

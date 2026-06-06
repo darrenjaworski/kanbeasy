@@ -51,6 +51,7 @@ describe("card drag handle visibility", () => {
     const textareas = within(first).getAllByRole("textbox", {
       name: /card content/i,
     });
+    // eslint-disable-next-line testing-library/no-node-access -- parentElement needed to check CSS class on unstyled container div
     const cardContainer = textareas[0].parentElement as HTMLElement;
     expect(
       within(cardContainer).getByRole("button", { name: /drag card/i }),

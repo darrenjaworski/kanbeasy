@@ -42,9 +42,9 @@ describe("BottomBar", () => {
     mockKeyboardShortcutsEnabled = true;
     mockViewMode = "board";
     render(<BottomBar onOpenCommandPalette={vi.fn()} />);
-    const kbd = screen
-      .getByTestId("keyboard-shortcut-hint")
-      .querySelector("kbd");
+    const hint = screen.getByTestId("keyboard-shortcut-hint");
+    // eslint-disable-next-line testing-library/no-node-access -- kbd element has no accessible role; querySelector is the only option
+    const kbd = hint.querySelector("kbd");
     expect(kbd).toHaveTextContent("⌘k");
   });
 

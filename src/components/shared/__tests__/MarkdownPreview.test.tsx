@@ -1,3 +1,5 @@
+// Testing markdown HTML output requires direct DOM access — no accessible-role alternatives exist for <hr>, <script>, <b>, checkboxes, etc.
+/* eslint-disable testing-library/no-node-access, testing-library/no-container */
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
