@@ -79,10 +79,9 @@ export function useArchiveMutations(
         if (cardsToRestore.length === 0) return prev;
         const now = Date.now();
         const newColumns = prev.columns.slice();
+        const colIndexById = new Map(newColumns.map((col, i) => [col.id, i]));
         for (const archived of cardsToRestore) {
-          const colIdx = newColumns.findIndex(
-            (c) => c.id === archived.archivedFromColumnId,
-          );
+          const colIdx = colIndexById.get(archived.archivedFromColumnId) ?? -1;
           const targetIdx = colIdx !== -1 ? colIdx : 0;
           if (targetIdx >= newColumns.length) continue;
           const {
