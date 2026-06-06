@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgrade Vite from v7 to v8 (Rolldown bundler); bump `@vitejs/plugin-react-swc` and `@tailwindcss/vite` to latest; production build time reduced to ~159ms
 - Upgrade TypeScript from v5.9 to v6.0; bump `typescript-eslint` to v8.60 for peer-dep compatibility
 - Remove 5 type assertions made redundant by TypeScript 6's improved inference (`BoardProvider`, `SortableCardItem`, `importBoard`)
 
