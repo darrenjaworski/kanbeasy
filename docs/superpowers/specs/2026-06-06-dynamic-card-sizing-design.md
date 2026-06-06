@@ -30,6 +30,16 @@ Add a `"dynamic"` option to the card density setting. When selected, cards auto-
 - Add a fourth option `"Dynamic"` (value `"dynamic"`) to the card density selector, after `"Large"`.
 - No other settings changes required.
 
+## Backwards Compatibility
+
+**`getInitialDensity()` allowlist (`src/theme/ThemeProvider.tsx`):** This function validates the stored string against an explicit allowlist before accepting it. `"dynamic"` must be added to this guard — without it, selecting "Dynamic" would persist to localStorage but be silently reset to `"small"` on the next page load.
+
+**`ROWS_FOR_DENSITY` type:** The map type changes from `Record<CardDensity, number>` to `Record<CardDensity, number | undefined>`. All call sites that read this map and pass the result to `rows={...}` must guard against `undefined` (only pass `rows` when the value is defined). TypeScript will surface any missed call sites at compile time.
+
+**Existing users:** No stored density value changes. Users already on `"small"`, `"medium"`, or `"large"` are unaffected — those paths are identical after this change. The default density remains `"small"`.
+
+**Downgrade safety:** If a user selects `"dynamic"`, then downgrades to an older build, `getInitialDensity()` on the old build will not recognise `"dynamic"` and will fall back to `"small"` — the same fallback it uses for any unknown value today. No data loss occurs.
+
 ## Storage & Migration
 
 - `CardDensity` is persisted to localStorage as a string. `"dynamic"` is a new valid string; existing values continue to work without a migration.
