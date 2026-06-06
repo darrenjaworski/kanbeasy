@@ -154,11 +154,7 @@ export function SortableCardItem({
           defaultValue={cardValue}
           className={`${tc.input} mt-1 w-full resize-none hover:resize-y focus:resize-y rounded-xs`}
           rows={rowsForDensity}
-          style={
-            density === "dynamic"
-              ? ({ fieldSizing: "content" })
-              : undefined
-          }
+          style={density === "dynamic" ? { fieldSizing: "content" } : undefined}
           onKeyDown={cardKeyDown}
           onBlur={cardBlur}
           data-testid={`card-content-${index}`}

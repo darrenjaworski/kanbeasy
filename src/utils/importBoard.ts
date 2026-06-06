@@ -90,10 +90,7 @@ export function validateExportData(parsed: unknown): ImportResult {
         : [];
     if (Array.isArray(parsed.board.columns)) {
       const validColumns = (parsed.board.columns as unknown[]).filter(isColumn);
-      const result = migrateColumnsWithNumbering(
-        validColumns,
-        rawArchive,
-      );
+      const result = migrateColumnsWithNumbering(validColumns, rawArchive);
       columns = result.columns;
       archive = result.archive;
       nextCardNumber = result.nextCardNumber;
