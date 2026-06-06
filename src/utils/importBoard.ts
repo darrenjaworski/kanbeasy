@@ -33,6 +33,7 @@ const VALID_DENSITIES: ReadonlySet<string> = new Set([
   "small",
   "medium",
   "large",
+  "dynamic",
 ]);
 const VALID_PREFERENCES: ReadonlySet<string> = new Set([
   "light",

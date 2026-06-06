@@ -81,7 +81,7 @@ export function CardDetailModal({
             ref={titleRef}
             id="card-detail-title-input"
             className={`bg-transparent outline-hidden ${tc.focusRing} ${tc.glass} w-full rounded-md border ${tc.border} px-3 py-2 text-sm resize-y`}
-            rows={ROWS_FOR_DENSITY[density]}
+            rows={ROWS_FOR_DENSITY[density] ?? undefined}
             value={tempTitle}
             onChange={(e) => setTempTitle(e.target.value)}
             onKeyDown={titleKeyDown}
