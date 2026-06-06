@@ -6,6 +6,7 @@ import {
   DensitySmallIcon,
   DensityMediumIcon,
   DensityLargeIcon,
+  DensityDynamicIcon,
 } from "../icons";
 import { ToggleSwitch } from "../shared/ToggleSwitch";
 import { useIsMobile } from "../../hooks";
@@ -140,6 +141,18 @@ export function ThemeSection() {
             }`}
           >
             <DensityLargeIcon />
+          </button>
+          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+          <button
+            type="button"
+            onClick={() => setCardDensity("dynamic")}
+            aria-label="Dynamic"
+            aria-pressed={cardDensity === "dynamic"}
+            className={`h-9 w-9 ${tc.iconButton} ${
+              cardDensity === "dynamic" ? tc.pressed : ""
+            }`}
+          >
+            <DensityDynamicIcon />
           </button>
         </div>
       </fieldset>
