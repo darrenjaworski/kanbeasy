@@ -7,49 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+## [1.52.0] - 2026-06-18
+
+### Features
 
 - VS Code host mode — when embedded in the Kanbeasy VS Code extension webview (`?host=vscode`), board and settings storage is backed by the extension host via `postMessage` instead of IndexedDB, and external (Copilot/MCP) board edits apply live. Standalone web behavior is unchanged.
 
 ### Security
 
-- Host mode now pins the parent (VS Code webview) origin on the first handshake message: inbound `postMessage` events from any other origin are ignored, and data-carrying outbound posts target the pinned origin instead of broadcasting with `"*"`.
+- Host mode pins the parent (VS Code webview) origin on the first handshake message: inbound `postMessage` events from any other origin are ignored, and data-carrying outbound posts target the pinned origin instead of broadcasting with `"*"`.
 
 ### Changed
 
 - Host mode `host:init` handshake now times out (5s) and falls back to a default board instead of hanging the app on load if the extension host never replies.
 - External (host-pushed) board changes now reset the undo/redo history, so a user can no longer undo across an MCP edit and echo a stale board back to the extension host.
-- Add `.npmrc` with `legacy-peer-deps=true` to resolve `eslint-plugin-jsx-a11y@6.x` peer dep conflict with ESLint 10 in CI and local installs
-- Upgrade `fuse.js` 7.1→7.4, `prettier` 3.8.1→3.8.3, `@playwright/test` 1.58→1.60, `marked` 17.0.4→17.0.6, `knip` 5.86→5.88
-
-- Upgrade ESLint from v9 to v10; upgrade `@eslint/js`, `eslint-plugin-react-hooks` (v5→v7), `eslint-plugin-react-refresh`, `eslint-import-resolver-typescript`, `eslint-plugin-import-x`, and `globals` (v16→v17) to latest; pin react-hooks config to `rules-of-hooks` + `exhaustive-deps` only (v7 `recommended-latest` includes React Compiler rules not applicable here)
-
-### Tests
-
-- Add `eslint-plugin-testing-library` to ESLint config scoped to test files; fix all 84 violations: replace `document.activeElement` with `toHaveFocus()`, replace destructured render queries with `screen`, remove redundant `cleanup()`, restructure `renderHook` out of `beforeEach`, use `within().getByRole("checkbox")` instead of `querySelector`; suppress with `eslint-disable-next-line` where direct DOM access is genuinely necessary (CSS class assertions, SVG/kbd elements, markdown HTML output)
-
-### Changed
-
-- Upgrade tsconfig lib from `ES2022` to `ES2025`; drop redundant `DOM.Iterable` (now included in `DOM` since TypeScript 6)
-- Replace `findIndex` loop in `restoreCards` with an upfront `Map` index, eliminating repeated O(n) column scans
-
-### Changed
-
-- Upgrade Vite from v7 to v8 (Rolldown bundler); bump `@vitejs/plugin-react-swc` and `@tailwindcss/vite` to latest; production build time reduced to ~159ms
-- Upgrade TypeScript from v5.9 to v6.0; bump `typescript-eslint` to v8.60 for peer-dep compatibility
-- Remove 5 type assertions made redundant by TypeScript 6's improved inference (`BoardProvider`, `SortableCardItem`, `importBoard`)
-
-## [1.51.1]
-
-### Changed
-
-- Add react-doctor as a dev tool with pre-commit hook, `npm run doctor` script, and GitHub Actions CI workflow for ongoing React health scanning
-- Bump `softprops/action-gh-release` from v2 to v3 in release workflow (Node 24 runtime)
+- Upgrade React, React DOM, and `@types/react` to 19.2.7.
+- Upgrade Vite from v7 to v8 (Rolldown bundler); bump `@vitejs/plugin-react-swc` and `@tailwindcss/vite` to latest; production build time reduced to ~159ms.
+- Upgrade TypeScript from v5.9 to v6.0; bump `typescript-eslint` to v8.60 for peer-dep compatibility; remove 5 type assertions made redundant by TypeScript 6's improved inference (`BoardProvider`, `SortableCardItem`, `importBoard`).
+- Upgrade tsconfig lib from `ES2022` to `ES2025`; drop redundant `DOM.Iterable` (now included in `DOM` since TypeScript 6).
+- Upgrade ESLint from v9 to v10; upgrade `@eslint/js`, `eslint-plugin-react-hooks` (v5→v7), `eslint-plugin-react-refresh`, `eslint-import-resolver-typescript`, `eslint-plugin-import-x`, and `globals` (v16→v17) to latest; pin react-hooks config to `rules-of-hooks` + `exhaustive-deps` only (v7 `recommended-latest` includes React Compiler rules not applicable here).
+- Upgrade `fuse.js` 7.1→7.4, `prettier` 3.8.1→3.8.3, `@playwright/test` 1.58→1.60, `marked` 17.0.4→17.0.6, `knip` 5.86→5.88.
+- Add `.npmrc` with `legacy-peer-deps=true` to resolve `eslint-plugin-jsx-a11y@6.x` peer dep conflict with ESLint 10 in CI and local installs.
+- Replace `findIndex` loop in `restoreCards` with an upfront `Map` index, eliminating repeated O(n) column scans.
+- Add react-doctor as a dev tool with pre-commit hook, `npm run doctor` script, and GitHub Actions CI workflow for ongoing React health scanning.
+- Bump `softprops/action-gh-release` from v2 to v3 in release workflow (Node 24 runtime).
 
 ### Fixed
 
-- CommandPalette: replace effect-based state reset with inline prev-prop comparison to avoid a stale-UI flash when reopening the palette
-- ToggleSwitch: add `aria-checked` to `role="switch"` input so screen readers correctly announce toggle state
+- CommandPalette: replace effect-based state reset with inline prev-prop comparison to avoid a stale-UI flash when reopening the palette.
+- ToggleSwitch: add `aria-checked` to `role="switch"` input so screen readers correctly announce toggle state.
+
+### Tests
+
+- Add `eslint-plugin-testing-library` to ESLint config scoped to test files; fix all 84 violations: replace `document.activeElement` with `toHaveFocus()`, replace destructured render queries with `screen`, remove redundant `cleanup()`, restructure `renderHook` out of `beforeEach`, use `within().getByRole("checkbox")` instead of `querySelector`; suppress with `eslint-disable-next-line` where direct DOM access is genuinely necessary (CSS class assertions, SVG/kbd elements, markdown HTML output).
 
 ## [1.51.0]
 
