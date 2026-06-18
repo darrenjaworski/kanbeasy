@@ -15,6 +15,7 @@ type UseUndoableStateOptions = {
 type UseUndoableStateReturn<T> = {
   state: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
+  replaceState: (next: T) => void;
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
@@ -67,6 +68,13 @@ export function useUndoableState<T>(
     [],
   );
 
+  const replaceState = useCallback((next: T) => {
+    setHistory((prev) => {
+      if (next === prev.present) return prev;
+      return { past: prev.past, present: next, future: prev.future };
+    });
+  }, []);
+
   const undo = useCallback(() => {
     setHistory((prev) => {
       if (prev.past.length === 0) return prev;
@@ -94,5 +102,13 @@ export function useUndoableState<T>(
   const canUndo = enabled && history.past.length > 0;
   const canRedo = enabled && history.future.length > 0;
 
-  return { state: history.present, setState, undo, redo, canUndo, canRedo };
+  return {
+    state: history.present,
+    setState,
+    replaceState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  };
 }
