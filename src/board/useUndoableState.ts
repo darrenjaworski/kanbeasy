@@ -71,7 +71,10 @@ export function useUndoableState<T>(
   const replaceState = useCallback((next: T) => {
     setHistory((prev) => {
       if (next === prev.present) return prev;
-      return { past: prev.past, present: next, future: prev.future };
+      // An external authoritative push (e.g. an MCP edit from the VS Code host)
+      // is a new baseline, not a user action. Clear undo/redo history so the
+      // user cannot rewind across it and echo a stale board back to the host.
+      return { past: [], present: next, future: [] };
     });
   }, []);
 

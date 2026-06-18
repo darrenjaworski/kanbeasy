@@ -11,8 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - VS Code host mode — when embedded in the Kanbeasy VS Code extension webview (`?host=vscode`), board and settings storage is backed by the extension host via `postMessage` instead of IndexedDB, and external (Copilot/MCP) board edits apply live. Standalone web behavior is unchanged.
 
+### Security
+
+- Host mode now pins the parent (VS Code webview) origin on the first handshake message: inbound `postMessage` events from any other origin are ignored, and data-carrying outbound posts target the pinned origin instead of broadcasting with `"*"`.
+
 ### Changed
 
+- Host mode `host:init` handshake now times out (5s) and falls back to a default board instead of hanging the app on load if the extension host never replies.
+- External (host-pushed) board changes now reset the undo/redo history, so a user can no longer undo across an MCP edit and echo a stale board back to the extension host.
 - Add `.npmrc` with `legacy-peer-deps=true` to resolve `eslint-plugin-jsx-a11y@6.x` peer dep conflict with ESLint 10 in CI and local installs
 - Upgrade `fuse.js` 7.1→7.4, `prettier` 3.8.1→3.8.3, `@playwright/test` 1.58→1.60, `marked` 17.0.4→17.0.6, `knip` 5.86→5.88
 

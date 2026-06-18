@@ -16,6 +16,7 @@ import {
   setHostModeForTesting,
   resetHostBridgeForTesting,
 } from "../hostBridge";
+import { HOST_INIT_TIMEOUT_MS } from "../../constants/behavior";
 import type { BoardState } from "../../board/types";
 
 const BOARD: BoardState = {
@@ -108,5 +109,19 @@ describe("db host backend", () => {
     });
     expect(calls).toEqual([[BOARD, 7]]);
     off();
+  });
+
+  it("openDatabase resolves with an empty board when host:init never arrives", async () => {
+    vi.useFakeTimers();
+    try {
+      const promise = openDatabase();
+      await vi.advanceTimersByTimeAsync(HOST_INIT_TIMEOUT_MS);
+      // Resolves instead of hanging; no board was seeded, so the caller
+      // (BoardProvider) creates a default board from getBoard() === null.
+      await expect(promise).resolves.toBeUndefined();
+      expect(getBoard()).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

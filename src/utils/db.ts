@@ -229,8 +229,20 @@ export async function openDatabase(): Promise<void> {
 
 async function openHostBackend(): Promise<void> {
   available = true;
-  const init: InitPayload = await requestInitFromHost();
-  applyInitToCache(init);
+  try {
+    const init: InitPayload = await requestInitFromHost();
+    applyInitToCache(init);
+  } catch (err) {
+    // The handshake never completed (host crashed, version mismatch, dropped
+    // message). Render anyway: leave the caches empty so getBoard() returns null
+    // and the BoardProvider seeds a default board instead of hanging on load.
+    if (import.meta.env.DEV) {
+      console.warn(
+        "[db] host:init handshake did not complete; starting with a default board.",
+        err,
+      );
+    }
+  }
 }
 
 function applyInitToCache(init: InitPayload): void {
