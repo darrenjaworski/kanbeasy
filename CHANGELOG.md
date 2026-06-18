@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- VS Code host mode — when embedded in the Kanbeasy VS Code extension webview (`?host=vscode`), board and settings storage is backed by the extension host via `postMessage` instead of IndexedDB, and external (Copilot/MCP) board edits apply live. Standalone web behavior is unchanged.
+
 ### Changed
 
 - Add `.npmrc` with `legacy-peer-deps=true` to resolve `eslint-plugin-jsx-a11y@6.x` peer dep conflict with ESLint 10 in CI and local installs
