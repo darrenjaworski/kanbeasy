@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- React Doctor now runs only on pull requests, not on every push to `main`.
+
 ## [1.52.0] - 2026-06-18
 
 ### Features
