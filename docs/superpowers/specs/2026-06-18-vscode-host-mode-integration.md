@@ -87,14 +87,14 @@ to the webview. Updating the cache alone will not re-render React, so:
 All messages carry `{ source: "kanbeasy", protocolVersion: <n>, type, payload }`. Direction is
 relative to the web app.
 
-| Type                | Direction | Payload                                             |
-| ------------------- | --------- | --------------------------------------------------- |
-| `host:ready`        | app → ext | `{}` (handshake; app is mounted and awaiting state) |
-| `host:init`         | ext → app | `{ board, nextCardNumber, kv }`                     |
-| `host:saveBoard`    | app → ext | `{ state }`                                         |
-| `host:kvSet`        | app → ext | `{ key, value }`                                    |
-| `host:kvRemove`     | app → ext | `{ key }`                                           |
-| `host:boardChanged` | ext → app | `{ state, nextCardNumber }` (external/MCP edit)     |
+| Type                | Direction | Payload                                                                                  |
+| ------------------- | --------- | ---------------------------------------------------------------------------------------- |
+| `host:ready`        | app → ext | `{}` (handshake; app is mounted and awaiting state)                                      |
+| `host:init`         | ext → app | `{ board, kv }` (next-card-number travels in `kv` under `STORAGE_KEYS.NEXT_CARD_NUMBER`) |
+| `host:saveBoard`    | app → ext | `{ state }`                                                                              |
+| `host:kvSet`        | app → ext | `{ key, value }`                                                                         |
+| `host:kvRemove`     | app → ext | `{ key }`                                                                                |
+| `host:boardChanged` | ext → app | `{ state, nextCardNumber }` (external/MCP edit)                                          |
 
 - `protocolVersion` mismatch: the extension surfaces a banner and treats the session as
   read-only rather than risk corrupting data. The web app should tolerate receiving only
