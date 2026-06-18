@@ -1,6 +1,13 @@
 import type { BoardState } from "../board/types";
 import { STORAGE_KEYS } from "../constants/storage";
 import { WRITE_DEBOUNCE_MS } from "../constants/behavior";
+import {
+  isHostMode,
+  postToHost,
+  onHostMessage,
+  requestInitFromHost,
+} from "./hostBridge";
+import type { BoardChangedPayload, InitPayload } from "./hostBridge";
 
 const DB_NAME = "kanbeasy";
 const DB_VERSION = 1;
@@ -48,7 +55,10 @@ function flushBoardWrite(): void {
   pendingBoardId = null;
   boardWriteTimer = null;
   const state = boardCache[id];
-  if (state) {
+  if (!state) return;
+  if (isHostMode()) {
+    postToHost("host:saveBoard", { state });
+  } else {
     idbPut(BOARD_STORE, { id, state });
   }
 }
@@ -143,6 +153,10 @@ function applyMigrationToCache(
 // --- Public API ---
 
 export async function openDatabase(): Promise<void> {
+  if (isHostMode()) {
+    await openHostBackend();
+    return;
+  }
   if (typeof indexedDB === "undefined") {
     available = false;
     if (import.meta.env.DEV) {
@@ -213,6 +227,20 @@ export async function openDatabase(): Promise<void> {
   }
 }
 
+async function openHostBackend(): Promise<void> {
+  available = true;
+  const init: InitPayload = await requestInitFromHost();
+  applyInitToCache(init);
+}
+
+function applyInitToCache(init: InitPayload): void {
+  kvCache.clear();
+  for (const [key, value] of Object.entries(init.kv)) {
+    kvCache.set(key, value);
+  }
+  boardCache[DEFAULT_BOARD_ID] = init.board;
+}
+
 async function populateCaches(database: IDBDatabase): Promise<void> {
   return new Promise((resolve, reject) => {
     const tx = database.transaction([KV_STORE, BOARD_STORE], "readonly");
@@ -272,7 +300,9 @@ export function kvSet<T>(key: string, value: T): void {
     return;
   }
   kvCache.set(key, value);
-  if (available) {
+  if (isHostMode()) {
+    postToHost("host:kvSet", { key, value });
+  } else if (available) {
     idbPut(KV_STORE, { key, value });
   }
 }
@@ -285,7 +315,9 @@ export function kvSetBool(key: string, value: boolean): void {
 
 export function kvRemove(key: string): void {
   kvCache.delete(key);
-  if (available) {
+  if (isHostMode()) {
+    postToHost("host:kvRemove", { key });
+  } else if (available) {
     idbDelete(KV_STORE, key);
   }
 }
@@ -314,6 +346,21 @@ export function saveBoard(
   if (available) {
     scheduleBoardWrite(id);
   }
+}
+
+export function subscribeToExternalBoardChange(
+  callback: (state: BoardState, nextCardNumber: number) => void,
+): () => void {
+  if (!isHostMode()) {
+    return () => {};
+  }
+  return onHostMessage((type, payload) => {
+    if (type === "host:boardChanged") {
+      const { state, nextCardNumber } = payload as BoardChangedPayload;
+      boardCache[DEFAULT_BOARD_ID] = state;
+      callback(state, nextCardNumber);
+    }
+  });
 }
 
 // --- Bulk operations ---

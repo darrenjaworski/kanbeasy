@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { BoardContext } from "./BoardContext";
 import type { BoardContextValue, BoardState } from "./types";
-import { kvGet, kvSet, getBoard, saveBoard } from "../utils/db";
+import {
+  kvGet,
+  kvSet,
+  getBoard,
+  saveBoard,
+  subscribeToExternalBoardChange,
+} from "../utils/db";
 import { STORAGE_KEYS } from "../constants/storage";
 import { MAX_UNDO_HISTORY } from "../constants/behavior";
 import { isArchivedCard, isColumn } from "./validation";
@@ -180,7 +186,7 @@ export function BoardProvider({
     loadResult.current = loadState();
   }
 
-  const { state, setState, undo, redo, canUndo, canRedo } =
+  const { state, setState, replaceState, undo, redo, canUndo, canRedo } =
     useUndoableState<BoardState>(() => loadResult.current!.state, {
       maxHistory: MAX_UNDO_HISTORY,
     });
@@ -193,13 +199,24 @@ export function BoardProvider({
   }, []);
 
   const initialStateRef = useRef(state);
+  const externalStateRef = useRef<BoardState | null>(null);
   useEffect(() => {
     // Skip when state is still the initial reference — the data was just read
     // from IDB (or freshly created and cached by loadState), no need to write
     // it back. Only persist when the user actually changes state.
     if (state === initialStateRef.current) return;
+    if (state === externalStateRef.current) return; // inbound external change — do not echo
     saveBoard(state);
   }, [state]);
+
+  // Apply external (MCP-originated) board changes pushed by the extension host.
+  useEffect(() => {
+    return subscribeToExternalBoardChange((nextState, nextNumber) => {
+      externalStateRef.current = nextState;
+      nextCardNumberRef.current = nextNumber;
+      replaceState(nextState);
+    });
+  }, [replaceState]);
 
   const mutations = useBoardMutations(setState, nextCardNumberRef, saveCounter);
   const {
