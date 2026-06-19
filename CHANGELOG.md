@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Card detail modal title field now auto-grows to fit its content (via `field-sizing: content`) instead of clipping long titles to a fixed row count, mirroring the dynamic card density behavior on the board. The density row count is retained as the minimum height.
+
 ### Changed
 
 - React Doctor now runs only on pull requests, not on every push to `main`.

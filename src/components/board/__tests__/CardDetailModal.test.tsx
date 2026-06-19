@@ -110,6 +110,22 @@ describe("CardDetailModal", () => {
     expect(onUpdate).toHaveBeenCalledWith({ title: "New Title" });
   });
 
+  // The title field auto-grows to its content via CSS `field-sizing: content`
+  // (jsdom strips that property, so the growth itself can't be asserted here).
+  // The `rows` value acts as the minimum height floor below which it won't shrink.
+  it("uses the density row count as the title's minimum height", () => {
+    renderModal({ density: "large" });
+    const titleInput = screen.getByTestId("card-detail-title");
+    expect(titleInput).toHaveAttribute("rows", "3");
+  });
+
+  it("falls back to a single-row minimum for the dynamic density", () => {
+    renderModal({ density: "dynamic" });
+    const titleInput = screen.getByTestId("card-detail-title");
+    // dynamic density has no fixed row count, so it falls back to a 1-row floor
+    expect(titleInput).toHaveAttribute("rows", "1");
+  });
+
   it("shows placeholder when description is empty", () => {
     renderModal({ card: emptyDescCard });
     const placeholder = screen.getByTestId(
