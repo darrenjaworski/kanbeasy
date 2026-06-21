@@ -87,9 +87,10 @@ jobs:
         with:
           path: all-blobs
           pattern: blob-*
+          merge-multiple: true
 
       - name: Merge into HTML report
-        run: npx playwright merge-reports --reporter=html ./all-blobs/*/
+        run: npx playwright merge-reports --reporter=html ./all-blobs
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v7
