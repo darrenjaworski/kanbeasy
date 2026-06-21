@@ -15,6 +15,7 @@ export function SortableColumnItem({
   index,
   columnCount,
   onOpenDetail,
+  holdToDrag = false,
 }: Readonly<{
   id: string;
   title: string;
@@ -25,6 +26,7 @@ export function SortableColumnItem({
   index?: number;
   columnCount?: number;
   onOpenDetail?: (cardId: string) => void;
+  holdToDrag?: boolean;
 }>) {
   const {
     attributes,
@@ -46,8 +48,12 @@ export function SortableColumnItem({
     [style, transform, transition, isDragging],
   );
 
+  const rootListeners = holdToDrag
+    ? asDOMAttributes<HTMLDivElement>(attributes, listeners)
+    : undefined;
+
   return (
-    <div ref={setNodeRef} style={combinedStyle}>
+    <div ref={setNodeRef} style={combinedStyle} {...rootListeners}>
       <Column
         index={index}
         id={id}
@@ -57,11 +63,13 @@ export function SortableColumnItem({
         columnCount={columnCount}
         onOpenDetail={onOpenDetail}
         isDragging={isDragging}
-        dragHandleRef={setActivatorNodeRef}
-        dragHandleProps={asDOMAttributes<HTMLButtonElement>(
-          attributes,
-          listeners,
-        )}
+        showDragHandle={!holdToDrag}
+        dragHandleRef={holdToDrag ? undefined : setActivatorNodeRef}
+        dragHandleProps={
+          holdToDrag
+            ? undefined
+            : asDOMAttributes<HTMLButtonElement>(attributes, listeners)
+        }
       />
     </div>
   );

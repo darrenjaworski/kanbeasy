@@ -12,6 +12,8 @@ import { ROWS_FOR_DENSITY, type CardDensity } from "../../theme/types";
 import { CardControls } from "./CardControls";
 import { tc } from "../../theme/classNames";
 import { useInlineEdit, useIsMobile } from "../../hooks";
+import { useTheme } from "../../theme/useTheme";
+import { asDOMAttributes } from "../../utils/dnd";
 import { ChecklistProgress } from "../shared/ChecklistProgress";
 import { DueDateBadge } from "../shared/DueDateBadge";
 import { CardTypeBadge } from "../shared/CardTypeBadge";
@@ -99,11 +101,23 @@ export function SortableCardItem({
   }, [autoFocus, onAutoFocused]);
 
   const isMobile = useIsMobile();
+  const { holdToDragEnabled } = useTheme();
   const rowsForDensity = ROWS_FOR_DENSITY[density];
+
+  const rootDragProps =
+    canDrag && holdToDragEnabled && !isMobile
+      ? {
+          ref: (el: HTMLDivElement | null) => {
+            setNodeRef(el);
+            setActivatorNodeRef(el);
+          },
+          ...asDOMAttributes<HTMLDivElement>(attributes, listeners),
+        }
+      : { ref: setNodeRef };
 
   return (
     <div
-      ref={setNodeRef}
+      {...rootDragProps}
       style={style}
       className={`group/card relative rounded-md border p-2 text-sm ${
         isSearchMatch
@@ -127,6 +141,7 @@ export function SortableCardItem({
         <CardControls
           index={index}
           canDrag={canDrag}
+          showDragHandle={!holdToDragEnabled}
           cardTitle={card.title}
           onCopy={onCopy}
           onArchive={onArchive}

@@ -19,6 +19,8 @@ type Props = Readonly<{
   title: string;
   cards: Card[];
   canDrag?: boolean;
+  /** When false, the drag grip button is hidden (hold-to-drag mode) */
+  showDragHandle?: boolean;
   dragHandleRef?: (el: HTMLButtonElement | null) => void;
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
   overlayMode?: boolean;
@@ -35,6 +37,7 @@ export function Column({
   title,
   cards,
   canDrag = true,
+  showDragHandle = true,
   dragHandleRef,
   dragHandleProps,
   overlayMode = false,
@@ -74,7 +77,7 @@ export function Column({
       <div
         className={`absolute right-2 top-2 z-2 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full transition-opacity ${isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"}`}
       >
-        {canDrag && (
+        {canDrag && showDragHandle && (
           <Tooltip
             content="Drag to reorder"
             disabled={isDragging || overlayMode}
@@ -91,7 +94,9 @@ export function Column({
             </button>
           </Tooltip>
         )}
-        {canDrag && <span aria-hidden className={`${tc.separator} h-6 w-px`} />}
+        {canDrag && showDragHandle && (
+          <span aria-hidden className={`${tc.separator} h-6 w-px`} />
+        )}
         <Tooltip content="Remove column" disabled={isDragging || overlayMode}>
           <button
             type="button"
@@ -101,7 +106,7 @@ export function Column({
                 : removeColumn(id)
             }
             aria-label={`Remove column ${title || "column"}`}
-            className={`${tc.iconButton} h-8 w-8 ${canDrag ? "rounded-r-full" : "rounded-full"}`}
+            className={`${tc.iconButton} h-8 w-8 ${canDrag && showDragHandle ? "rounded-r-full" : "rounded-full"}`}
             data-testid={`delete-column-button-${index}`}
           >
             <CloseIcon className="size-5" />

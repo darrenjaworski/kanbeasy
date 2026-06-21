@@ -21,6 +21,7 @@ import { BoardDragOverlay } from "./BoardDragOverlay";
 import { BoardScrollGradients } from "./BoardScrollGradients";
 import { SortableColumnItem } from "./SortableColumnItem";
 import { useBoardScroll } from "./useBoardScroll";
+import { useTheme } from "../../theme/useTheme";
 
 type Props = Readonly<{
   columns: Column[];
@@ -48,9 +49,14 @@ export function DesktopBoard({
   const { scrollerRef, canScrollLeft, canScrollRight } = useBoardScroll(
     columns.length,
   );
+  const { holdToDragEnabled } = useTheme();
 
   const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(MouseSensor, {
+      activationConstraint: holdToDragEnabled
+        ? { delay: 200, tolerance: 5 }
+        : { distance: 5 },
+    }),
     useSensor(TouchSensor, {
       activationConstraint: { delay: 200, tolerance: 5 },
     }),
@@ -88,6 +94,7 @@ export function DesktopBoard({
                   disabled={columnOrderLocked}
                   columnCount={columns.length}
                   onOpenDetail={onOpenDetail}
+                  holdToDrag={holdToDragEnabled}
                 />
               ))}
               <AddColumn handleOnClick={onAddColumn} />

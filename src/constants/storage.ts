@@ -57,4 +57,7 @@ export const STORAGE_KEYS = {
 
   /** Settings section open/closed states (JSON object) */
   SETTINGS_SECTIONS: "kanbeasy:settingsSections",
+
+  /** Hold-to-drag mode — hides grip buttons and activates drag via press-and-hold */
+  HOLD_TO_DRAG_ENABLED: "kanbeasy:holdToDragEnabled",
 } as const;

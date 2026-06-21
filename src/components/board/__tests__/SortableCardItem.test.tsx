@@ -12,6 +12,10 @@ vi.mock("../../../hooks", () => ({
   useInlineEdit: () => ({ onKeyDown: vi.fn(), onBlur: vi.fn() }),
 }));
 
+vi.mock("../../../theme/useTheme", () => ({
+  useTheme: () => ({ holdToDragEnabled: false }),
+}));
+
 const mockUseSortable = vi.fn();
 
 vi.mock("@dnd-kit/sortable", () => ({

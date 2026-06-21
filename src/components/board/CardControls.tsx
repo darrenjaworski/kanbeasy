@@ -7,6 +7,7 @@ import { useIsMobile } from "../../hooks";
 
 interface CardControlsProps {
   readonly canDrag: boolean;
+  readonly showDragHandle?: boolean;
   readonly cardTitle: string;
   readonly onCopy: () => void;
   readonly onArchive: () => void;
@@ -19,6 +20,7 @@ interface CardControlsProps {
 
 export function CardControls({
   canDrag,
+  showDragHandle = true,
   cardTitle,
   onCopy,
   onArchive,
@@ -33,7 +35,7 @@ export function CardControls({
     <div
       className={`absolute right-2 top-2 z-1 inline-flex items-center border ${tc.border} ${tc.glassSubtle} backdrop-blur-sm rounded-full transition-opacity ${isMobile ? "opacity-100" : "opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100"}`}
     >
-      {canDrag && !isMobile && (
+      {canDrag && !isMobile && showDragHandle && (
         <Tooltip content="Drag to reorder">
           <button
             type="button"
@@ -47,7 +49,7 @@ export function CardControls({
           </button>
         </Tooltip>
       )}
-      {canDrag && !isMobile && (
+      {canDrag && !isMobile && showDragHandle && (
         <span aria-hidden className={`${tc.separator} h-6 w-px`} />
       )}
       <Tooltip content="Copy card">
@@ -55,7 +57,7 @@ export function CardControls({
           type="button"
           onClick={onCopy}
           aria-label={`Copy card ${cardTitle || "Untitled"}`}
-          className={`${tc.iconButton} h-6 w-6${canDrag && !isMobile ? "" : " rounded-l-full"}`}
+          className={`${tc.iconButton} h-6 w-6${canDrag && !isMobile && showDragHandle ? "" : " rounded-l-full"}`}
           data-testid={`card-copy-${index}`}
         >
           <CopyIcon className="size-4" />

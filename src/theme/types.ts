@@ -45,5 +45,7 @@ export type ThemeContextValue = Readonly<{
   setColumnOrderLocked: (locked: boolean) => void;
   accentGradientEnabled: boolean;
   setAccentGradientEnabled: (enabled: boolean) => void;
+  holdToDragEnabled: boolean;
+  setHoldToDragEnabled: (enabled: boolean) => void;
   resetSettings: () => void;
 }>;

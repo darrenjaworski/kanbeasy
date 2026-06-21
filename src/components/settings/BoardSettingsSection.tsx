@@ -15,6 +15,8 @@ export function BoardSettingsSection() {
     setKeyboardShortcutsEnabled,
     columnOrderLocked,
     setColumnOrderLocked,
+    holdToDragEnabled,
+    setHoldToDragEnabled,
   } = useTheme();
 
   return (
@@ -26,6 +28,15 @@ export function BoardSettingsSection() {
           description="Drag column edges to adjust their width"
           checked={columnResizingEnabled}
           onChange={setColumnResizingEnabled}
+        />
+      )}
+      {!isMobile && (
+        <ToggleSwitch
+          id="hold-to-drag"
+          label="Hold to drag (hide handles)"
+          description="Press and hold to drag cards and columns instead of using grip buttons"
+          checked={holdToDragEnabled}
+          onChange={setHoldToDragEnabled}
         />
       )}
       {!isMobile && (

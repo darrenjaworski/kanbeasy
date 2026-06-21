@@ -158,6 +158,10 @@ export function ThemeProvider({
     STORAGE_KEYS.ACCENT_GRADIENT_ENABLED,
     false,
   );
+  const [holdToDragEnabled, setHoldToDragEnabled] = useStoredBool(
+    STORAGE_KEYS.HOLD_TO_DRAG_ENABLED,
+    false,
+  );
 
   // ── Accent gradient class on body ────────────────────────────────────────
   useEffect(() => {
@@ -254,6 +258,7 @@ export function ThemeProvider({
     kvRemove(STORAGE_KEYS.KEYBOARD_SHORTCUTS_ENABLED);
     kvRemove(STORAGE_KEYS.COLUMN_ORDER_LOCKED);
     kvRemove(STORAGE_KEYS.ACCENT_GRADIENT_ENABLED);
+    kvRemove(STORAGE_KEYS.HOLD_TO_DRAG_ENABLED);
     kvRemove(STORAGE_KEYS.HAS_SEEN_WELCOME);
 
     setThemePreferenceState("system");
@@ -271,10 +276,12 @@ export function ThemeProvider({
     setKeyboardShortcutsEnabled(false);
     setColumnOrderLocked(false);
     setAccentGradientEnabled(false);
+    setHoldToDragEnabled(false);
   }, [
     setCardDensity,
     setCardTypePresetId,
     setAccentGradientEnabled,
+    setHoldToDragEnabled,
     setColumnOrderLocked,
     setColumnResizingEnabled,
     setCompactHeader,
@@ -319,6 +326,8 @@ export function ThemeProvider({
       setColumnOrderLocked,
       accentGradientEnabled,
       setAccentGradientEnabled,
+      holdToDragEnabled,
+      setHoldToDragEnabled,
       resetSettings,
     }),
     [
@@ -348,6 +357,8 @@ export function ThemeProvider({
       setColumnOrderLocked,
       accentGradientEnabled,
       setAccentGradientEnabled,
+      holdToDragEnabled,
+      setHoldToDragEnabled,
       resetSettings,
     ],
   );
