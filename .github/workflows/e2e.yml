@@ -23,9 +23,10 @@ jobs:
     # @playwright/test version in package.json.
     container:
       image: mcr.microsoft.com/playwright:v1.61.0-noble
-      # Firefox requires $HOME to be owned by the running user; GitHub Actions
-      # sets HOME=/github/home (owned by pwuser), so override it.
-      options: --user root
+      # GitHub Actions overrides HOME to /github/home (owned by pwuser), which
+      # causes Firefox to refuse to launch. Setting HOME=/root fixes it.
+      env:
+        HOME: /root
     timeout-minutes: 20
     strategy:
       fail-fast: false
