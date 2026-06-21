@@ -105,6 +105,7 @@ an ultra simple task organizer
 - ✅ dynamic card sizing — "Dynamic" density option in Settings; cards auto-size to their content via CSS `field-sizing: content`
 - ✅ VS Code host mode — when embedded in the Kanbeasy VS Code extension webview (`?host=vscode`), board and settings storage is backed by the extension host via `postMessage` instead of IndexedDB, enabling an MCP server to let Copilot read/edit the board; external edits apply live; origin-pinned and handshake-timeout hardened; standalone web behavior unchanged
 - ✅ fix: card detail modal title field auto-grows to fit its content via CSS `field-sizing: content` instead of clipping long titles to a fixed row count
+- ✅ hold-to-drag mode — optional setting (Settings > Preferences) that hides grip-button drag handles and activates drag via 200ms press-and-hold on both cards and columns; MouseSensor switches to delay-based activation matching the existing touch behavior; default off
 
 Settings
 

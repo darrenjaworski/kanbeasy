@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.53.0] - 2026-06-21
+
 ### Features
 
 - Add "Hold to drag (hide handles)" setting in Preferences: when enabled, grip buttons are hidden and dragging cards/columns is activated by pressing and holding (200ms delay) instead. Mouse sensor uses a delay-based activation constraint to match the existing touch behavior. Default is off, preserving the current experience for existing users.
+
+### Fixed
+
+- Column card count badge now correctly animates to the right position when drag handles are hidden — it previously reserved space for the grip button even when it wasn't shown.
 
 ## [1.52.1] - 2026-06-18
 
