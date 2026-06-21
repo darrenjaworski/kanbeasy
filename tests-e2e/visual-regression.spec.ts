@@ -1,11 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
-import { makeE2eCard } from "./fixtures";
+import { applySeed, gotoApp, makeE2eCard, type SeedConfig } from "./fixtures";
 
 // Use a fixed timestamp so card metadata is deterministic across runs
 const FIXED_NOW = new Date("2025-06-15T12:00:00Z").getTime();
 
 function boardWithCards() {
-  return JSON.stringify({
+  return {
     columns: [
       {
         id: "col-0",
@@ -99,32 +99,30 @@ function boardWithCards() {
         archivedFromColumnId: "col-0",
       },
     ],
-  });
+  };
 }
 
-const DEVELOPMENT_TYPES = JSON.stringify([
+const DEVELOPMENT_TYPES = [
   { id: "feat", label: "Feature", color: "#22c55e" },
   { id: "fix", label: "Fix", color: "#ef4444" },
   { id: "refactor", label: "Refactor", color: "#6366f1" },
   { id: "chore", label: "Chore", color: "#8b5cf6" },
   { id: "test", label: "Test", color: "#f59e0b" },
   { id: "docs", label: "Docs", color: "#06b6d4" },
-]);
+];
 
-async function seedAndNavigate(page: Page) {
-  const board = boardWithCards();
-  await page.addInitScript(
-    ({ b, types }: { b: string; types: string }) => {
-      localStorage.setItem("kanbeasy:board", b);
-      localStorage.setItem("kanbeasy:nextCardNumber", "7");
-      localStorage.setItem("kanbeasy:ticketTypePreset", "development");
-      localStorage.setItem("kanbeasy:ticketTypes", types);
-      localStorage.setItem("hasSeenWelcome", "true");
-    },
-    { b: board, types: DEVELOPMENT_TYPES },
-  );
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
+// Seed the full demo board (plus optional overrides such as theme) and render.
+// Welcome is pre-dismissed via `hasSeenWelcome` so no click is needed.
+async function seedAndNavigate(page: Page, extra: SeedConfig = {}) {
+  await applySeed(page, {
+    board: boardWithCards(),
+    nextCardNumber: 7,
+    cardTypePreset: "development",
+    cardTypes: DEVELOPMENT_TYPES,
+    storage: { hasSeenWelcome: "true" },
+    ...extra,
+  });
+  await gotoApp(page, { skipWelcome: true });
   // Wait for the board to render
   await expect(page.getByTestId("column-0")).toBeVisible();
 }
@@ -155,22 +153,20 @@ test.describe("Visual regression", () => {
   // ── Theme variants ────────────────────────────────────
   // Light themes
   test("board view — stone theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "light-stone");
-      localStorage.setItem("kanbeasy:themePreference", "light");
+    await seedAndNavigate(page, {
+      theme: "light-stone",
+      themePreference: "light",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-stone.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — rose theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "light-rose");
-      localStorage.setItem("kanbeasy:themePreference", "light");
+    await seedAndNavigate(page, {
+      theme: "light-rose",
+      themePreference: "light",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-rose.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
@@ -178,110 +174,98 @@ test.describe("Visual regression", () => {
 
   // Dark themes
   test("board view — midnight theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "dark-slate");
-      localStorage.setItem("kanbeasy:themePreference", "dark");
+    await seedAndNavigate(page, {
+      theme: "dark-slate",
+      themePreference: "dark",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-midnight.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — forest theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "dark-emerald");
-      localStorage.setItem("kanbeasy:themePreference", "dark");
+    await seedAndNavigate(page, {
+      theme: "dark-emerald",
+      themePreference: "dark",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-forest.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — twilight theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "dark-purple");
-      localStorage.setItem("kanbeasy:themePreference", "dark");
+    await seedAndNavigate(page, {
+      theme: "dark-purple",
+      themePreference: "dark",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-twilight.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — sage theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "light-sage");
-      localStorage.setItem("kanbeasy:themePreference", "light");
+    await seedAndNavigate(page, {
+      theme: "light-sage",
+      themePreference: "light",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-sage.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — sky theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "light-sky");
-      localStorage.setItem("kanbeasy:themePreference", "light");
+    await seedAndNavigate(page, {
+      theme: "light-sky",
+      themePreference: "light",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-sky.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — sand theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "light-sand");
-      localStorage.setItem("kanbeasy:themePreference", "light");
+    await seedAndNavigate(page, {
+      theme: "light-sand",
+      themePreference: "light",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-sand.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — obsidian theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "dark-obsidian");
-      localStorage.setItem("kanbeasy:themePreference", "dark");
+    await seedAndNavigate(page, {
+      theme: "dark-obsidian",
+      themePreference: "dark",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-obsidian.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — ocean theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "dark-ocean");
-      localStorage.setItem("kanbeasy:themePreference", "dark");
+    await seedAndNavigate(page, {
+      theme: "dark-ocean",
+      themePreference: "dark",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-ocean.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("board view — crimson theme", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:theme", "dark-crimson");
-      localStorage.setItem("kanbeasy:themePreference", "dark");
+    await seedAndNavigate(page, {
+      theme: "dark-crimson",
+      themePreference: "dark",
     });
-    await seedAndNavigate(page);
     await expect(page).toHaveScreenshot("board-crimson.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
     });
   });
 
   test("welcome modal", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-    });
-    const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-    await page.goto(target);
+    await applySeed(page);
+    await gotoApp(page, { skipWelcome: true });
     await expect(page.getByTestId("get-started-button")).toBeVisible();
     await expect(page).toHaveScreenshot("welcome-modal.png", {
       maxDiffPixelRatio: DIFF_PIXEL_RATIO,
@@ -391,12 +375,8 @@ test.describe("Visual regression", () => {
   });
 
   test("empty board", async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-      localStorage.setItem("hasSeenWelcome", "true");
-    });
-    const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-    await page.goto(target);
+    await applySeed(page, { storage: { hasSeenWelcome: "true" } });
+    await gotoApp(page, { skipWelcome: true });
     await expect(page.getByTestId("add-column-button")).toBeVisible();
 
     await expect(page).toHaveScreenshot("empty-board.png", {

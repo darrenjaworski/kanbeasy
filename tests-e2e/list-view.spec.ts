@@ -1,10 +1,9 @@
-import { test, expect } from "@playwright/test";
-import { makeE2eCard } from "./fixtures";
+import { test, expect, makeE2eCard } from "./fixtures";
 
 const now = Date.now();
 
 function seedBoard() {
-  return JSON.stringify({
+  return {
     columns: [
       {
         id: "col-0",
@@ -37,20 +36,13 @@ function seedBoard() {
         cards: [makeE2eCard("c3", "col-1", { number: 3, title: "Card 3" })],
       },
     ],
-  });
+  };
 }
 
 test.describe("List view", () => {
-  test.beforeEach(async ({ page }) => {
-    const board = seedBoard();
-    await page.addInitScript((b: string) => {
-      localStorage.setItem("kanbeasy:board", b);
-      localStorage.setItem("kanbeasy:nextCardNumber", "4");
-    }, board);
-    const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-    await page.goto(target);
-    await page.getByTestId("get-started-button").click();
+  test.use({ seed: { board: seedBoard(), nextCardNumber: 4 } });
 
+  test.beforeEach(async ({ page }) => {
     // Switch to list view
     await page.getByRole("radio", { name: /list view/i }).click();
   });
@@ -127,28 +119,28 @@ test.describe("List view", () => {
   });
 });
 
-test("list view toggle is disabled when board has no cards", async ({
-  page,
-}) => {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      "kanbeasy:board",
-      JSON.stringify({
+test.describe("List view — empty board", () => {
+  test.use({
+    seed: {
+      board: {
         columns: [
           {
             id: "col-0",
             title: "Empty",
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
+            createdAt: now,
+            updatedAt: now,
             cards: [],
           },
         ],
-      }),
-    );
+      },
+    },
   });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-  await page.getByTestId("get-started-button").click();
 
-  await expect(page.getByRole("radio", { name: /list view/i })).toBeDisabled();
+  test("list view toggle is disabled when board has no cards", async ({
+    page,
+  }) => {
+    await expect(
+      page.getByRole("radio", { name: /list view/i }),
+    ).toBeDisabled();
+  });
 });

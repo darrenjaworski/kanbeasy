@@ -1,12 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, gotoApp } from "./fixtures";
 
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-});
+// Leave the welcome modal open so these specs can assert on it.
+test.use({ seed: { skipWelcome: true } });
 
 test("welcome modal is visible", async ({ page }) => {
   await expect(page.getByTestId("get-started-button")).toBeVisible();
@@ -22,8 +17,7 @@ test("it will only show once", async ({ page }) => {
   await page.getByTestId("get-started-button").click();
   await expect(page.getByTestId("welcome-description")).not.toBeVisible();
 
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
+  await gotoApp(page, { skipWelcome: true });
 
   await expect(page.getByTestId("welcome-description")).not.toBeVisible();
 });

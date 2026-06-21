@@ -1,17 +1,6 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("kanbeasy:board", JSON.stringify({ columns: [] }));
-    localStorage.setItem(
-      "kanbeasy:keyboardShortcutsEnabled",
-      JSON.stringify("true"),
-    );
-  });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-  await page.getByTestId("get-started-button").click();
-});
+test.use({ seed: { keyboardShortcutsEnabled: true } });
 
 test("clicking keyboard shortcut hint opens command palette", async ({
   page,

@@ -1,55 +1,44 @@
-import { test as base, expect } from "@playwright/test";
-import { makeE2eCard } from "./fixtures";
+import { test, expect, makeE2eCard } from "./fixtures";
 
 /**
- * Custom fixture that seeds a board with typed and untyped cards.
+ * Seed a board with typed and untyped cards.
  * Cards: feat-1 "Auth feature", fix-2 "Auth bugfix", #3 "Untyped task"
  */
-const test = base.extend<{ boardPage: never }>({
-  boardPage: [
-    async ({ page }, use) => {
-      const colId = "col-1";
-      const board = {
-        columns: [
-          {
-            id: colId,
-            title: "To Do",
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            cards: [
-              makeE2eCard("c1", colId, {
-                number: 1,
-                title: "Auth feature",
-                cardTypeId: "feat",
-                cardTypeLabel: "Feature",
-                cardTypeColor: "#22c55e",
-              }),
-              makeE2eCard("c2", colId, {
-                number: 2,
-                title: "Auth bugfix",
-                cardTypeId: "fix",
-                cardTypeLabel: "Fix",
-                cardTypeColor: "#ef4444",
-              }),
-              makeE2eCard("c3", colId, {
-                number: 3,
-                title: "Untyped task",
-              }),
-            ],
-          },
-        ],
-        archive: [],
-      };
-      await page.addInitScript((b) => {
-        localStorage.setItem("kanbeasy:board", JSON.stringify(b));
-      }, board);
-      const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-      await page.goto(target);
-      await page.getByTestId("get-started-button").click();
-      await use(page as never);
+const colId = "col-1";
+test.use({
+  seed: {
+    board: {
+      columns: [
+        {
+          id: colId,
+          title: "To Do",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          cards: [
+            makeE2eCard("c1", colId, {
+              number: 1,
+              title: "Auth feature",
+              cardTypeId: "feat",
+              cardTypeLabel: "Feature",
+              cardTypeColor: "#22c55e",
+            }),
+            makeE2eCard("c2", colId, {
+              number: 2,
+              title: "Auth bugfix",
+              cardTypeId: "fix",
+              cardTypeLabel: "Fix",
+              cardTypeColor: "#ef4444",
+            }),
+            makeE2eCard("c3", colId, {
+              number: 3,
+              title: "Untyped task",
+            }),
+          ],
+        },
+      ],
+      archive: [],
     },
-    { auto: true },
-  ],
+  },
 });
 
 test("filter button appears and is enabled with cards", async ({ page }) => {

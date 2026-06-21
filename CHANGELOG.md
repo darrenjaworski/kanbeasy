@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Tests
+
+- E2E fixtures gain a declarative `seed` option so specs can load board and config state (theme, view mode, card numbering, card types, keyboard shortcuts, etc.) via `test.use({ seed: { ... } })` instead of hand-rolled `addInitScript` boilerplate. The CI base-path and welcome-modal dismissal are centralized in the fixture, with `applySeed`/`gotoApp` helpers for specs needing manual navigation control. Migrated the 7 specs that previously opted out of the shared fixture (badge-heat, calendar, card-type-filter, command-palette, list-view, visual-regression, welcome). Storage encoding is derived from the app's `STORAGE_KEYS`, keeping the seeder in sync with the localStorage→IndexedDB migration.
+
 ### Changed
 
 - E2E CI now runs as a sharded matrix (3 browsers × 3 shards = 9 parallel jobs) inside the official Playwright container instead of a single serial job that installed all browsers on each run. Shards emit blob reports that a follow-up job merges into a single HTML report. Playwright config gains `fullyParallel: true` and pins CI `workers` to 2; CI retries reduced from 2 to 1. Job timeout lowered from 60 to 20 minutes.

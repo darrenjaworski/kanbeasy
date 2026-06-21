@@ -1,5 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { makeE2eCard, idbKvGet } from "./fixtures";
+import { test, expect, makeE2eCard, idbKvGet } from "./fixtures";
 
 const now = Date.now();
 
@@ -13,7 +12,7 @@ function todayStr() {
 }
 
 function seedBoard() {
-  return JSON.stringify({
+  return {
     columns: [
       {
         id: "col-0",
@@ -47,20 +46,13 @@ function seedBoard() {
         ],
       },
     ],
-  });
+  };
 }
 
 test.describe("Calendar view", () => {
-  test.beforeEach(async ({ page }) => {
-    const board = seedBoard();
-    await page.addInitScript((b: string) => {
-      localStorage.setItem("kanbeasy:board", b);
-      localStorage.setItem("kanbeasy:nextCardNumber", "4");
-    }, board);
-    const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-    await page.goto(target);
-    await page.getByTestId("get-started-button").click();
+  test.use({ seed: { board: seedBoard(), nextCardNumber: 4 } });
 
+  test.beforeEach(async ({ page }) => {
     // Switch to calendar view
     await page.getByRole("radio", { name: /calendar view/i }).click();
   });
@@ -125,67 +117,57 @@ test.describe("Calendar view", () => {
   });
 });
 
-test("calendar view toggle is disabled when board has no cards", async ({
-  page,
-}) => {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      "kanbeasy:board",
-      JSON.stringify({
+test.describe("Calendar view — empty board", () => {
+  test.use({
+    seed: {
+      board: {
         columns: [
           {
             id: "col-0",
             title: "Empty",
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
+            createdAt: now,
+            updatedAt: now,
             cards: [],
           },
         ],
-      }),
-    );
+      },
+    },
   });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-  await page.getByTestId("get-started-button").click();
 
-  await expect(
-    page.getByRole("radio", { name: /calendar view/i }),
-  ).toBeDisabled();
+  test("calendar view toggle is disabled when board has no cards", async ({
+    page,
+  }) => {
+    await expect(
+      page.getByRole("radio", { name: /calendar view/i }),
+    ).toBeDisabled();
+  });
 });
 
-test("shows empty state when no cards have due dates", async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      "kanbeasy:board",
-      JSON.stringify({
+test.describe("Calendar view — no due dates", () => {
+  test.use({
+    seed: {
+      viewMode: "calendar",
+      board: {
         columns: [
           {
             id: "col-0",
             title: "To Do",
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
+            createdAt: now,
+            updatedAt: now,
             cards: [
-              {
-                id: "c1",
+              makeE2eCard("c1", "col-0", {
                 number: 1,
                 title: "No date",
-                description: "",
-                cardTypeId: null,
                 dueDate: null,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-                columnHistory: [{ columnId: "col-0", enteredAt: Date.now() }],
-              },
+              }),
             ],
           },
         ],
-      }),
-    );
-    localStorage.setItem("kanbeasy:viewMode", "calendar");
+      },
+    },
   });
-  const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-  await page.goto(target);
-  await page.getByTestId("get-started-button").click();
 
-  await expect(page.getByText(/no cards with due dates/i)).toBeVisible();
+  test("shows empty state when no cards have due dates", async ({ page }) => {
+    await expect(page.getByText(/no cards with due dates/i)).toBeVisible();
+  });
 });

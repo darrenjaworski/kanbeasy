@@ -1,24 +1,15 @@
-import { test, expect } from "@playwright/test";
-import { seedBoard } from "./fixtures";
+import { test, expect, seedBoard } from "./fixtures";
 
 test.describe("Badge heat indicator", () => {
-  test.beforeEach(async ({ page }) => {
-    const target = process.env.CI === "true" ? "/kanbeasy" : "/";
-    // Seed a 3-column board so the middle column (index 1) is eligible for heat
-    await page.addInitScript(
-      (board: string) => {
-        localStorage.setItem("kanbeasy:board", board);
-      },
-      JSON.stringify(
-        seedBoard([
-          { id: "col-0", title: "To Do", cardCount: 0 },
-          { id: "col-1", title: "In Progress", cardCount: 0 },
-          { id: "col-2", title: "Done", cardCount: 0 },
-        ]),
-      ),
-    );
-    await page.goto(target);
-    await page.getByTestId("get-started-button").click();
+  // Seed a 3-column board so the middle column (index 1) is eligible for heat
+  test.use({
+    seed: {
+      board: seedBoard([
+        { id: "col-0", title: "To Do", cardCount: 0 },
+        { id: "col-1", title: "In Progress", cardCount: 0 },
+        { id: "col-2", title: "Done", cardCount: 0 },
+      ]),
+    },
   });
 
   test("no heat on first column even with many cards", async ({ page }) => {
