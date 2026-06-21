@@ -7,6 +7,7 @@ type Props = Readonly<{
   columnCount?: number;
   isMobile: boolean;
   canDrag: boolean;
+  showDragHandle?: boolean;
 }>;
 
 export function ColumnCardCountBadge({
@@ -15,11 +16,13 @@ export function ColumnCardCountBadge({
   columnCount,
   isMobile,
   canDrag,
+  showDragHandle = true,
 }: Props) {
   const heat = getBadgeHeat(cardCount, index, columnCount);
+  const showGrip = canDrag && showDragHandle;
   return (
     <span
-      className={`absolute top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : tc.glassSubtle} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} ${isMobile ? (canDrag ? "right-20" : "right-12") : `right-2 transition-[right] duration-200 ease-in-out ${canDrag ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}`}
+      className={`absolute top-2 z-1 inline-flex h-8 min-w-8 items-center justify-center rounded-full border ${tc.border} ${heat ? "" : tc.glassSubtle} backdrop-blur-sm px-2.5 text-sm ${heat?.bold ? "font-bold" : "font-medium"} ${heat ? tc.text : tc.textFaint} ${isMobile ? (showGrip ? "right-20" : "right-12") : `right-2 transition-[right] duration-200 ease-in-out ${showGrip ? "group-hover:right-20 group-focus-within:right-20" : "group-hover:right-12 group-focus-within:right-12"}`}`}
       style={
         heat
           ? {

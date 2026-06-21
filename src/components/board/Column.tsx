@@ -120,6 +120,7 @@ export function Column({
         columnCount={columnCount}
         isMobile={isMobile}
         canDrag={canDrag}
+        showDragHandle={showDragHandle}
       />
 
       <ColumnTitleEdit id={id} title={title} index={index} />
