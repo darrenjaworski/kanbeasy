@@ -21,12 +21,7 @@ jobs:
     # Browsers + OS deps are pre-baked in this image, so there is no
     # `playwright install` step. Keep this tag in lockstep with the
     # @playwright/test version in package.json.
-    container:
-      image: mcr.microsoft.com/playwright:v1.61.0-noble
-      # GitHub Actions overrides HOME to /github/home (owned by pwuser), which
-      # causes Firefox to refuse to launch. Setting HOME=/root fixes it.
-      env:
-        HOME: /root
+    container: mcr.microsoft.com/playwright:v1.61.0-noble
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -50,6 +45,10 @@ jobs:
         env:
           CI: true
           E2E_BASE_URL: https://darrenjaworski.github.io/kanbeasy
+          # GitHub Actions hardcodes HOME=/github/home (owned by pwuser) for
+          # container jobs, which prevents Firefox from launching. Override it
+          # here at step scope, where it takes effect after the runner setup.
+          HOME: /root
         run: >
           npx playwright test
           --project=${{ matrix.browser }}
@@ -90,7 +89,7 @@ jobs:
           pattern: blob-*
 
       - name: Merge into HTML report
-        run: npx playwright merge-reports --reporter=html ./all-blobs
+        run: npx playwright merge-reports --reporter=html ./all-blobs/*/
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v7
