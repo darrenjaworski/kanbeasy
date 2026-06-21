@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- E2E CI now runs as a sharded matrix (3 browsers × 3 shards = 9 parallel jobs) inside the official Playwright container instead of a single serial job that installed all browsers on each run. Shards emit blob reports that a follow-up job merges into a single HTML report. Playwright config gains `fullyParallel: true` and pins CI `workers` to 2; CI retries reduced from 2 to 1. Job timeout lowered from 60 to 20 minutes.
+
 ## [1.53.0] - 2026-06-21
 
 ### Features

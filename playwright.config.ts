@@ -7,7 +7,9 @@ const isCI = process.env.CI === "true";
 export default defineConfig({
   testDir: "./tests-e2e",
   timeout: 30_000,
-  retries: isCI ? 2 : 0,
+  fullyParallel: true,
+  workers: isCI ? 2 : undefined,
+  retries: isCI ? 1 : 0,
   reporter: isCI ? [["github"], ["html"]] : [["list"], ["html"]],
   use: {
     baseURL: deployedBaseURL || "http://localhost:5173",
