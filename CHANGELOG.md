@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.53.1] - 2026-06-22
+
+### Fixed
+
+- When the VS Code extension sends `host:init` with `isFirstRun: true` (i.e., the user just upgraded from v1.2.x to v1.3.0), the web app now reads any existing board data from IndexedDB and posts it back to the extension to persist in VS Code `globalState`. This prevents data loss that occurred because v1.3.0 switched storage from IndexedDB (web app) to `globalState` (extension host) without migrating existing data.
+
 ### Tests
 
 - E2E fixtures gain a declarative `seed` option so specs can load board and config state (theme, view mode, card numbering, card types, keyboard shortcuts, etc.) via `test.use({ seed: { ... } })` instead of hand-rolled `addInitScript` boilerplate. The CI base-path and welcome-modal dismissal are centralized in the fixture, with `applySeed`/`gotoApp` helpers for specs needing manual navigation control. Migrated the 7 specs that previously opted out of the shared fixture (badge-heat, calendar, card-type-filter, command-palette, list-view, visual-regression, welcome). Storage encoding is derived from the app's `STORAGE_KEYS`, keeping the seeder in sync with the localStorage→IndexedDB migration.
