@@ -143,7 +143,7 @@ async function readFromIndexedDb(): Promise<{
   if (typeof indexedDB === "undefined") return null;
   return new Promise((resolve) => {
     let didUpgrade = false;
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    const req = indexedDB.open(DB_NAME);
     req.onupgradeneeded = () => {
       // DB did not exist before — nothing to migrate
       didUpgrade = true;
