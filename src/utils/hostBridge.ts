@@ -7,6 +7,7 @@ export const PROTOCOL_VERSION = 1;
 export type InitPayload = {
   board: BoardState;
   kv: Record<string, unknown>;
+  isFirstRun?: boolean;
 };
 
 export type BoardChangedPayload = {
@@ -62,7 +63,7 @@ export function postToHost(type: string, payload: unknown): void {
   // Once the host origin is known, target it directly so board/settings data is
   // never broadcast to an unexpected frame. Before the handshake the only post
   // is the empty `host:ready`, which carries no data and may be broadcast.
-  window.parent.postMessage(message, trustedOrigin ?? "*");
+  window.parent.postMessage(message, trustedOrigin || "*");
 }
 
 function onMessage(event: MessageEvent): void {

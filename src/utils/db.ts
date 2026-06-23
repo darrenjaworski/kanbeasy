@@ -136,6 +136,72 @@ async function writeMigrationToIdb(
   });
 }
 
+async function readFromIndexedDb(): Promise<{
+  board: BoardState;
+  kv: Record<string, unknown>;
+} | null> {
+  if (typeof indexedDB === "undefined") return null;
+  return new Promise((resolve) => {
+    let didUpgrade = false;
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      // DB did not exist before — nothing to migrate
+      didUpgrade = true;
+    };
+    req.onerror = () => resolve(null);
+    req.onsuccess = () => {
+      const database = req.result;
+      if (didUpgrade) {
+        // We just created a fresh empty DB; close it and report no data
+        database.close();
+        resolve(null);
+        return;
+      }
+      if (
+        !database.objectStoreNames.contains(KV_STORE) ||
+        !database.objectStoreNames.contains(BOARD_STORE)
+      ) {
+        database.close();
+        resolve(null);
+        return;
+      }
+      const tx = database.transaction([KV_STORE, BOARD_STORE], "readonly");
+      const kv: Record<string, unknown> = {};
+      let board: BoardState | null = null;
+      let pending = 2;
+      const done = () => {
+        if (--pending === 0) {
+          database.close();
+          resolve(board ? { board, kv } : null);
+        }
+      };
+
+      const kvReq = tx.objectStore(KV_STORE).getAll();
+      kvReq.onsuccess = () => {
+        const entries = kvReq.result as { key: string; value: unknown }[];
+        for (const e of entries) {
+          // Exclude internal migration sentinel
+          if (e.key !== "_migrated_from_localstorage") {
+            kv[e.key] = e.value;
+          }
+        }
+        done();
+      };
+      kvReq.onerror = () => done();
+
+      const boardReq = tx.objectStore(BOARD_STORE).get(DEFAULT_BOARD_ID);
+      boardReq.onsuccess = () => {
+        const entry = boardReq.result as
+          | { id: string; state: BoardState }
+          | undefined;
+        board = entry?.state ?? null;
+        done();
+      };
+      boardReq.onerror = () => done();
+    };
+  });
+}
+
 // --- Internal helpers ---
 
 function applyMigrationToCache(
@@ -231,6 +297,20 @@ async function openHostBackend(): Promise<void> {
   available = true;
   try {
     const init: InitPayload = await requestInitFromHost();
+
+    if (init.isFirstRun) {
+      const migrated = await readFromIndexedDb();
+      if (migrated) {
+        // Send migrated data to extension so it's persisted in globalState
+        postToHost("host:saveBoard", { state: migrated.board });
+        for (const [key, value] of Object.entries(migrated.kv)) {
+          postToHost("host:kvSet", { key, value });
+        }
+        applyInitToCache({ board: migrated.board, kv: migrated.kv });
+        return;
+      }
+    }
+
     applyInitToCache(init);
   } catch (err) {
     // The handshake never completed (host crashed, version mismatch, dropped
