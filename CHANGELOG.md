@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.53.3] - 2026-06-26
+
 ### Performance
 
 - Adding (or otherwise mutating) a card no longer re-renders every other card on the board. `SortableCardItem` is now memoized, and `CardList`/`Column` pass stable callback references instead of fresh closures on each render, so untouched cards and their subtrees (controls, badges, tooltips) skip re-rendering. Profiling showed a single card add previously re-rendering all existing cards (59 cards → 800+ fibers per commit); the work is now scoped to the changed card and its column.
