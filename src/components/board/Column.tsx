@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { Card } from "../../board/types";
+import { useCallback, useMemo, useRef, useState } from "react";
+import type { Card, CardUpdates } from "../../board/types";
 import { useTheme } from "../../theme/useTheme";
 import { useColumnResize } from "./useColumnResize";
 import { useBoard } from "../../board/useBoard";
@@ -60,6 +60,42 @@ export function Column({
   const isMobile = useIsMobile();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [autoFocusCardId, setAutoFocusCardId] = useState<string | null>(null);
+
+  // Keep a ref to the latest cards so onCopy can look one up without depending
+  // on `cards` — that would change identity on every add/remove and re-render
+  // the whole list. The handlers below stay referentially stable so the
+  // memoized cards skip re-rendering when only the Column re-renders.
+  const cardsRef = useRef(cards);
+  cardsRef.current = cards;
+
+  const handleCopy = useCallback(
+    (cardId: string) => {
+      const card = cardsRef.current.find((c) => c.id === cardId);
+      if (card)
+        copyCard({
+          title: card.title,
+          description: card.description,
+          cardTypeId: card.cardTypeId,
+          cardTypeLabel: card.cardTypeLabel,
+          cardTypeColor: card.cardTypeColor,
+          dueDate: card.dueDate,
+        });
+    },
+    [copyCard],
+  );
+  const handleArchive = useCallback(
+    (cardId: string) => archiveCard(id, cardId),
+    [archiveCard, id],
+  );
+  const handleUpdate = useCallback(
+    (cardId: string, updates: CardUpdates) => updateCard(id, cardId, updates),
+    [updateCard, id],
+  );
+  const handleAutoFocused = useCallback(() => setAutoFocusCardId(null), []);
+  const handleOpenDetail = useMemo(
+    () => onOpenDetail ?? (() => {}),
+    [onOpenDetail],
+  );
 
   return (
     <section
@@ -167,25 +203,14 @@ export function Column({
 
       <CardList
         cards={cards}
-        onCopy={(cardId) => {
-          const card = cards.find((c) => c.id === cardId);
-          if (card)
-            copyCard({
-              title: card.title,
-              description: card.description,
-              cardTypeId: card.cardTypeId,
-              cardTypeLabel: card.cardTypeLabel,
-              cardTypeColor: card.cardTypeColor,
-              dueDate: card.dueDate,
-            });
-        }}
-        onArchive={(cardId) => archiveCard(id, cardId)}
-        onUpdate={(cardId, updates) => updateCard(id, cardId, updates)}
-        onOpenDetail={onOpenDetail ?? (() => {})}
+        onCopy={handleCopy}
+        onArchive={handleArchive}
+        onUpdate={handleUpdate}
+        onOpenDetail={handleOpenDetail}
         density={cardDensity}
         columnId={id}
         autoFocusCardId={autoFocusCardId}
-        onAutoFocused={() => setAutoFocusCardId(null)}
+        onAutoFocused={handleAutoFocused}
       />
 
       <ConfirmDialog

@@ -66,10 +66,10 @@ export function CardList({
               index={index}
               key={card.id}
               card={card}
-              onCopy={() => onCopy(card.id)}
-              onArchive={() => onArchive(card.id)}
-              onUpdate={(updates) => onUpdate(card.id, updates)}
-              onOpenDetail={() => onOpenDetail(card.id)}
+              onCopy={onCopy}
+              onArchive={onArchive}
+              onUpdate={onUpdate}
+              onOpenDetail={onOpenDetail}
               canDrag={cards.length > 1 || columns.length > 1}
               density={density}
               columnId={columnId}

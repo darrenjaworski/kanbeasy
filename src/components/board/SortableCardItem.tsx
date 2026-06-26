@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -20,10 +21,10 @@ import { CardTypeBadge } from "../shared/CardTypeBadge";
 
 type SortableCardItemProps = Readonly<{
   card: Card;
-  onCopy: () => void;
-  onArchive: () => void;
-  onUpdate: (updates: CardUpdates) => void;
-  onOpenDetail: () => void;
+  onCopy: (cardId: string) => void;
+  onArchive: (cardId: string) => void;
+  onUpdate: (cardId: string, updates: CardUpdates) => void;
+  onOpenDetail: (cardId: string) => void;
   canDrag?: boolean;
   density: CardDensity;
   columnId: string;
@@ -33,7 +34,7 @@ type SortableCardItemProps = Readonly<{
   onAutoFocused?: () => void;
 }>;
 
-export function SortableCardItem({
+function SortableCardItemImpl({
   card,
   onCopy,
   onArchive,
@@ -78,12 +79,25 @@ export function SortableCardItem({
     }
   }
 
+  // Stable per-card handlers: the parent passes a single callback reference for
+  // the whole list, and each card binds its own id here without creating fresh
+  // closures on every parent render (which would defeat memoization).
+  const handleCopy = useCallback(() => onCopy(card.id), [onCopy, card.id]);
+  const handleArchive = useCallback(
+    () => onArchive(card.id),
+    [onArchive, card.id],
+  );
+  const handleOpenDetail = useCallback(
+    () => onOpenDetail(card.id),
+    [onOpenDetail, card.id],
+  );
+
   const revertCard = useCallback(() => {
     if (textareaRef.current) textareaRef.current.value = cardValue;
   }, [cardValue]);
   const saveCard = useCallback(
-    (value: string) => onUpdate({ title: value }),
-    [onUpdate],
+    (value: string) => onUpdate(card.id, { title: value }),
+    [onUpdate, card.id],
   );
   const { onKeyDown: cardKeyDown, onBlur: cardBlur } = useInlineEdit({
     originalValue: card.title,
@@ -143,9 +157,9 @@ export function SortableCardItem({
           canDrag={canDrag}
           showDragHandle={!holdToDragEnabled}
           cardTitle={card.title}
-          onCopy={onCopy}
-          onArchive={onArchive}
-          onOpenDetail={onOpenDetail}
+          onCopy={handleCopy}
+          onArchive={handleArchive}
+          onOpenDetail={handleOpenDetail}
           setActivatorNodeRef={setActivatorNodeRef}
           attributes={attributes}
           listeners={listeners}
@@ -155,7 +169,7 @@ export function SortableCardItem({
       {isMobile ? (
         <button
           type="button"
-          onClick={onOpenDetail}
+          onClick={handleOpenDetail}
           className={`mt-1 w-full text-left text-sm ${tc.text} leading-snug`}
           data-testid={`card-content-${index}`}
         >
@@ -186,3 +200,7 @@ export function SortableCardItem({
     </div>
   );
 }
+
+// Memoized so that re-rendering the parent CardList (e.g. when a card is added
+// or removed elsewhere) does not re-render untouched cards and their subtrees.
+export const SortableCardItem = memo(SortableCardItemImpl);
