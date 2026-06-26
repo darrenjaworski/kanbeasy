@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.53.2] - 2026-06-25
+
 ### Changed
 
 - Switched the Vite React plugin from `@vitejs/plugin-react-swc` to `@vitejs/plugin-react`. Under Vite 8 / Rolldown the standard plugin transforms via the built-in Oxc pass (no separate SWC binary), which resolves the dev-server `[vite:react-swc]` performance warning and drops 4 transitive packages from the dependency tree.
