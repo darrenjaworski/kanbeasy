@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.53.4] - 2026-06-28
+
 ### Fixed
 
 - Copy/cut/paste and right-click now work in card title and description fields when the board runs inside the VS Code extension (issue #20). VS Code drops the native clipboard shortcuts and context menu for content in a nested cross-origin iframe (microsoft/vscode#129178, #180234), so a host-mode-only bridge (`HostClipboardBridge`) intercepts Cmd/Ctrl+C/X/V/A and right-click on text fields and drives the async Clipboard API directly. The standalone web app installs no listeners and is unaffected. Requires the companion extension change that delegates `clipboard-read; clipboard-write` to the iframe.
