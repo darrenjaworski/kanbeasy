@@ -3,6 +3,7 @@ import { Board } from "./components/board/Board";
 import { BottomBar } from "./components/BottomBar";
 import { CommandPalette } from "./components/CommandPalette";
 import { Header } from "./components/Header";
+import { HostClipboardBridge } from "./components/HostClipboardBridge";
 import { WelcomeModal } from "./components/WelcomeModal";
 import { OwlBuddy } from "./components/OwlBuddy";
 import { ListView } from "./components/ListView";
@@ -30,6 +31,7 @@ function App() {
       {viewMode === "calendar" && <CalendarView />}
       <BottomBar onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
       <OwlBuddy />
+      <HostClipboardBridge />
       <CommandPalette
         open={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}
