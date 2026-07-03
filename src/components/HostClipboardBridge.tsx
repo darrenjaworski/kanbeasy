@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { tc } from "../theme/classNames";
 import {
   deleteFieldSelection,
@@ -7,7 +13,13 @@ import {
   readFieldSelection,
   type EditableField,
 } from "../utils/clipboardFallback";
-import { isHostMode } from "../utils/hostBridge";
+import {
+  hasHostClipboard,
+  isHostMode,
+  readClipboardViaHost,
+  subscribeHostCapabilities,
+  writeClipboardViaHost,
+} from "../utils/hostBridge";
 
 /**
  * Restores copy / cut / paste / select-all for card text fields when the app
@@ -16,12 +28,16 @@ import { isHostMode } from "../utils/hostBridge";
  * In that environment the app is a cross-origin iframe nested in a webview, and
  * VS Code drops the native clipboard keyboard shortcuts and context-menu for
  * nested-iframe content (microsoft/vscode#129178, #180234). This bridge
- * intercepts the shortcuts and right-click on text inputs and drives the
- * clipboard via the async Clipboard API (the extension delegates
- * `clipboard-read; clipboard-write` to the iframe so this is permitted).
+ * intercepts the shortcuts and right-click on text inputs and routes the
+ * clipboard through the extension host (`vscode.env.clipboard` via
+ * host:clipboard:* messages) — navigator.clipboard is blocked in the nested
+ * cross-origin iframe even with permission delegation.
  *
- * It renders nothing and installs no listeners outside host mode, so the
- * standalone web app is completely unaffected.
+ * It only activates when the host advertised `capabilities.clipboard` in
+ * host:init, so against older extension versions (which can't serve the
+ * clipboard messages) it stays completely inert instead of breaking paste.
+ * Outside host mode it renders nothing and installs no listeners, so the
+ * standalone web app is unaffected.
  */
 
 type MenuState = {
@@ -30,11 +46,30 @@ type MenuState = {
   field: EditableField;
 };
 
+async function writeClipboardText(text: string): Promise<void> {
+  if (hasHostClipboard()) {
+    writeClipboardViaHost(text);
+    return;
+  }
+  await navigator.clipboard.writeText(text);
+}
+
+async function readClipboardText(): Promise<string> {
+  if (hasHostClipboard()) {
+    try {
+      return await readClipboardViaHost();
+    } catch {
+      // Host reply timed out — try the browser API before giving up.
+    }
+  }
+  return navigator.clipboard.readText();
+}
+
 async function copySelection(field: EditableField): Promise<void> {
   const selection = readFieldSelection(field);
   if (!selection) return;
   try {
-    await navigator.clipboard.writeText(selection);
+    await writeClipboardText(selection);
   } catch {
     // Clipboard write can reject if permission/focus is lost; nothing to undo.
   }
@@ -44,7 +79,7 @@ async function cutSelection(field: EditableField): Promise<void> {
   const selection = readFieldSelection(field);
   if (!selection) return;
   try {
-    await navigator.clipboard.writeText(selection);
+    await writeClipboardText(selection);
     deleteFieldSelection(field);
   } catch {
     // Leave the field untouched if the copy half failed.
@@ -53,7 +88,7 @@ async function cutSelection(field: EditableField): Promise<void> {
 
 async function pasteIntoField(field: EditableField): Promise<void> {
   try {
-    const text = await navigator.clipboard.readText();
+    const text = await readClipboardText();
     if (text) insertTextIntoField(field, text);
   } catch {
     // Reading can reject without clipboard-read permission; nothing to insert.
@@ -61,7 +96,12 @@ async function pasteIntoField(field: EditableField): Promise<void> {
 }
 
 export function HostClipboardBridge() {
-  const enabled = isHostMode();
+  const clipboardCapable = useSyncExternalStore(
+    subscribeHostCapabilities,
+    hasHostClipboard,
+    hasHostClipboard,
+  );
+  const enabled = isHostMode() && clipboardCapable;
   const [menu, setMenu] = useState<MenuState | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 

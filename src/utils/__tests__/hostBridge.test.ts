@@ -8,6 +8,10 @@ import {
   onHostMessage,
   requestInitFromHost,
   resetHostBridgeForTesting,
+  hasHostClipboard,
+  subscribeHostCapabilities,
+  writeClipboardViaHost,
+  readClipboardViaHost,
 } from "../hostBridge";
 
 function dispatchHostMessage(type: string, payload: unknown, origin = "") {
@@ -153,5 +157,83 @@ describe("hostBridge", () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  describe("host capabilities", () => {
+    it("captures capabilities from host:init and notifies subscribers", () => {
+      const notified = vi.fn();
+      subscribeHostCapabilities(notified);
+      onHostMessage(() => {}); // start listening
+      expect(hasHostClipboard()).toBe(false);
+
+      dispatchHostMessage("host:init", {
+        board: { columns: [], archive: [] },
+        kv: {},
+        capabilities: { clipboard: true },
+      });
+
+      expect(hasHostClipboard()).toBe(true);
+      expect(notified).toHaveBeenCalled();
+    });
+
+    it("stays without clipboard capability when host:init omits capabilities (old extension)", () => {
+      onHostMessage(() => {});
+      dispatchHostMessage("host:init", {
+        board: { columns: [], archive: [] },
+        kv: {},
+      });
+      expect(hasHostClipboard()).toBe(false);
+    });
+  });
+
+  describe("host-mediated clipboard", () => {
+    it("writeClipboardViaHost posts host:clipboard:write with the text", () => {
+      const spy = vi.spyOn(window.parent, "postMessage");
+      writeClipboardViaHost("copied");
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "host:clipboard:write",
+          payload: { text: "copied" },
+        }),
+        "*",
+      );
+      spy.mockRestore();
+    });
+
+    it("readClipboardViaHost resolves with the matching readResult and ignores other requestIds", async () => {
+      const spy = vi.spyOn(window.parent, "postMessage");
+      const promise = readClipboardViaHost();
+      const posted = spy.mock.calls.at(-1)?.[0] as {
+        type: string;
+        payload: { requestId: string };
+      };
+      expect(posted.type).toBe("host:clipboard:read");
+
+      dispatchHostMessage("host:clipboard:readResult", {
+        requestId: "someone-else",
+        text: "WRONG",
+      });
+      dispatchHostMessage("host:clipboard:readResult", {
+        requestId: posted.payload.requestId,
+        text: "RIGHT",
+      });
+
+      await expect(promise).resolves.toBe("RIGHT");
+      spy.mockRestore();
+    });
+
+    it("readClipboardViaHost rejects after the timeout when no reply arrives", async () => {
+      vi.useFakeTimers();
+      try {
+        const promise = readClipboardViaHost(500);
+        const assertion = expect(promise).rejects.toThrow(
+          /host:clipboard:readResult/,
+        );
+        await vi.advanceTimersByTimeAsync(500);
+        await assertion;
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 });

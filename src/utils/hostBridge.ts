@@ -1,13 +1,26 @@
 import type { BoardState } from "../board/types";
-import { HOST_INIT_TIMEOUT_MS } from "../constants/behavior";
+import {
+  HOST_CLIPBOARD_READ_TIMEOUT_MS,
+  HOST_INIT_TIMEOUT_MS,
+} from "../constants/behavior";
 
 export const MESSAGE_SOURCE = "kanbeasy";
 export const PROTOCOL_VERSION = 1;
+
+/**
+ * Optional features the host advertises in `host:init`. Older extension
+ * versions omit this entirely, so every capability defaults to "absent" —
+ * features gated on a capability must stay inert until it is advertised.
+ */
+export type HostCapabilities = {
+  clipboard?: boolean;
+};
 
 export type InitPayload = {
   board: BoardState;
   kv: Record<string, unknown>;
   isFirstRun?: boolean;
+  capabilities?: HostCapabilities;
 };
 
 export type BoardChangedPayload = {
@@ -50,6 +63,33 @@ export function isHostMode(): boolean {
   return hostMode;
 }
 
+// --- Host capabilities (learned from host:init) ---
+
+let capabilities: HostCapabilities = {};
+const capabilityListeners = new Set<() => void>();
+
+export function hasHostClipboard(): boolean {
+  return capabilities.clipboard === true;
+}
+
+/** Subscribe to capability changes (useSyncExternalStore-compatible). */
+export function subscribeHostCapabilities(listener: () => void): () => void {
+  capabilityListeners.add(listener);
+  return () => {
+    capabilityListeners.delete(listener);
+  };
+}
+
+function captureCapabilities(payload: unknown): void {
+  const caps = (payload as InitPayload | undefined)?.capabilities;
+  if (caps && typeof caps === "object") {
+    capabilities = caps;
+    for (const listener of capabilityListeners) {
+      listener();
+    }
+  }
+}
+
 export function postToHost(type: string, payload: unknown): void {
   if (typeof window === "undefined") {
     return;
@@ -79,6 +119,9 @@ function onMessage(event: MessageEvent): void {
     trustedOrigin = event.origin; // pin the host origin on first valid message
   } else if (event.origin !== trustedOrigin) {
     return; // drop messages from any other origin
+  }
+  if (data.type === "host:init") {
+    captureCapabilities(data.payload);
   }
   for (const listener of listeners) {
     listener(data.type, data.payload);
@@ -122,14 +165,65 @@ export function requestInitFromHost(
   });
 }
 
+// --- Host-mediated clipboard ---
+// The VS Code webview blocks navigator.clipboard in the nested cross-origin
+// iframe (even with allow="clipboard-read; clipboard-write" delegation), so
+// clipboard traffic is routed through the extension host, which uses
+// vscode.env.clipboard and needs no browser permissions.
+
+let clipboardRequestCounter = 0;
+
+export function writeClipboardViaHost(text: string): void {
+  postToHost("host:clipboard:write", { text });
+}
+
+export function readClipboardViaHost(
+  timeoutMs: number = HOST_CLIPBOARD_READ_TIMEOUT_MS,
+): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const requestId = `clipboard-${++clipboardRequestCounter}`;
+    const off = onHostMessage((type, payload) => {
+      if (type !== "host:clipboard:readResult") return;
+      const result = payload as
+        | { requestId?: string; text?: string }
+        | undefined;
+      if (!result || result.requestId !== requestId) return;
+      cleanup();
+      resolve(typeof result.text === "string" ? result.text : "");
+    });
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(
+        new Error(
+          `Timed out after ${timeoutMs}ms waiting for host:clipboard:readResult`,
+        ),
+      );
+    }, timeoutMs);
+    function cleanup(): void {
+      clearTimeout(timer);
+      off();
+    }
+    postToHost("host:clipboard:read", { requestId });
+  });
+}
+
 // --- Test helpers ---
 
 export function setHostModeForTesting(value: boolean): void {
   hostMode = value;
 }
 
+export function setHostCapabilitiesForTesting(value: HostCapabilities): void {
+  capabilities = value;
+  for (const listener of capabilityListeners) {
+    listener();
+  }
+}
+
 export function resetHostBridgeForTesting(): void {
   listeners.clear();
+  capabilityListeners.clear();
+  capabilities = {};
   if (listening && typeof window !== "undefined") {
     window.removeEventListener("message", onMessage);
   }

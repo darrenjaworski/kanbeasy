@@ -15,3 +15,9 @@ export const SKELETON_DELAY_MS = 100;
  * before giving up and rendering with a default board instead of hanging.
  */
 export const HOST_INIT_TIMEOUT_MS = 5000;
+
+/**
+ * Milliseconds to wait for a `host:clipboard:readResult` reply in VS Code host
+ * mode before falling back to the browser Clipboard API.
+ */
+export const HOST_CLIPBOARD_READ_TIMEOUT_MS = 2000;
