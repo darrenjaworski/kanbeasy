@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.53.6] - 2026-07-02
+
 ### Fixed
 
 - Re-enabled `HostClipboardBridge` (issue #20, second attempt) with two safety changes over the rolled-back v1.53.4 approach. Clipboard traffic is now host-mediated: copy/cut/paste post `host:clipboard:write` / `host:clipboard:read` messages to the extension, which serves them with `vscode.env.clipboard` — `navigator.clipboard` is blocked in the nested cross-origin iframe even with `allow` permission delegation, which is why v1.53.4 failed. And the bridge only activates when `host:init` advertises `capabilities: { clipboard: true }`, so against older extension versions (which can't serve the clipboard messages) it stays completely inert — deploying the web app can no longer break paste for not-yet-updated extensions. Requires extension ≥ v1.4.0 for working clipboard; either side can ship first without regressions.
