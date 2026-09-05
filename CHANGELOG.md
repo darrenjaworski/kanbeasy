@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.53.7] - 2026-09-05
+
 ### Fixed
 
 - Appearance and card density divider lines in Settings now span the full height of their button row instead of stopping short, by having them `self-stretch` rather than use a fixed height.
+
+### Changed
+
+- Ran `npm audit fix` to pick up patched transitive dependencies.
 
 ## [1.53.6] - 2026-07-02
 
