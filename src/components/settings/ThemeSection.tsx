@@ -56,7 +56,10 @@ export function ThemeSection() {
         {MODE_OPTIONS.map((opt, i) => (
           <span key={opt.value} className="contents">
             {i > 0 && (
-              <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+              <span
+                aria-hidden
+                className={`${tc.separator} self-stretch w-px`}
+              />
             )}
             <button
               type="button"
@@ -118,7 +121,7 @@ export function ThemeSection() {
           >
             <DensitySmallIcon />
           </button>
-          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+          <span aria-hidden className={`${tc.separator} self-stretch w-px`} />
           <button
             type="button"
             onClick={() => setCardDensity("medium")}
@@ -130,7 +133,7 @@ export function ThemeSection() {
           >
             <DensityMediumIcon />
           </button>
-          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+          <span aria-hidden className={`${tc.separator} self-stretch w-px`} />
           <button
             type="button"
             onClick={() => setCardDensity("large")}
@@ -142,7 +145,7 @@ export function ThemeSection() {
           >
             <DensityLargeIcon />
           </button>
-          <span aria-hidden className={`${tc.separator} h-7 w-px`} />
+          <span aria-hidden className={`${tc.separator} self-stretch w-px`} />
           <button
             type="button"
             onClick={() => setCardDensity("dynamic")}
