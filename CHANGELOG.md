@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Expanded the roadmap's WIP limit entry into a concrete spec: per-column optional numeric limit configurable in the column header or settings, with a visual warning when a column's card count exceeds it.
+
 ## [1.53.7] - 2026-09-05
 
 ### Fixed

@@ -150,7 +150,9 @@ Settings
 - sortable table columns — click a column header to sort ascending, click again for descending, click again to reset (list view, analytics tables, archive table)
 - card sorting UI (alphabetical, by date created, by last updated)
 - column collapse/expand to save horizontal space
-- column WIP limits with visual warning when exceeded
+- customizable column WIP limits
+  - per-column optional numeric limit, configurable in the column header or settings
+  - visual warning (badge color/style change) when a column's card count exceeds its limit
 - drag to trash drop zone for card deletion
 - quick add with Enter (inline input at top of column)
 - limit the number of columns
