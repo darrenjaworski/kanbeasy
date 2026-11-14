@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dependencies to latest semver-compatible versions (React 19.3, Vite 8.3, Tailwind 4.3.5, ESLint 10.15, Playwright 1.65, Vitest 4.1.12, Prettier 3.10, and others); bumped the CI Playwright container to `v1.65.1-noble` to match, and reformatted files for Prettier 3.10's union-type layout.
 - Upgraded `react-doctor` from 0.4 to 0.9, clearing the high-severity `effect`/`toml` audit advisories; synced the `tailwindcss` range floor to 4.3.5.
 - Upgraded `marked` from 17 to 18 (trims trailing blank lines from block tokens); adds ~2.6 kB gzipped to the bundle.
+- Upgraded `knip` from 5 to 6 and removed the now-redundant `open` entry from `ignoreBinaries`.
 
 ## [1.53.7] - 2026-09-05
 
