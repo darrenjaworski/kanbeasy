@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `react-doctor` from 0.4 to 0.9, clearing the high-severity `effect`/`toml` audit advisories; synced the `tailwindcss` range floor to 4.3.5.
 - Upgraded `marked` from 17 to 18 (trims trailing blank lines from block tokens); adds ~2.6 kB gzipped to the bundle.
 - Upgraded `knip` from 5 to 6 and removed the now-redundant `open` entry from `ignoreBinaries`.
+- Upgraded `@testing-library/jest-dom` from 6 to 7.
 
 ## [1.53.7] - 2026-09-05
 
