@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `marked` from 17 to 18 (trims trailing blank lines from block tokens); adds ~2.6 kB gzipped to the bundle.
 - Upgraded `knip` from 5 to 6 and removed the now-redundant `open` entry from `ignoreBinaries`.
 - Upgraded `@testing-library/jest-dom` from 6 to 7.
+- Upgraded `vitest` and `@vitest/coverage-v8` from 4 to 5 and `jsdom` from 26 to 31; no test changes required and coverage is unchanged.
 
 ## [1.53.7] - 2026-09-05
 
