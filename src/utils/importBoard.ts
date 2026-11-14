@@ -26,8 +26,7 @@ interface ValidatedImport {
 }
 
 type ImportResult =
-  | { ok: true; data: ValidatedImport }
-  | { ok: false; error: string };
+  { ok: true; data: ValidatedImport } | { ok: false; error: string };
 
 const VALID_DENSITIES: ReadonlySet<string> = new Set([
   "small",

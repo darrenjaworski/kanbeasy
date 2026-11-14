@@ -192,8 +192,7 @@ async function readFromIndexedDb(): Promise<{
       const boardReq = tx.objectStore(BOARD_STORE).get(DEFAULT_BOARD_ID);
       boardReq.onsuccess = () => {
         const entry = boardReq.result as
-          | { id: string; state: BoardState }
-          | undefined;
+          { id: string; state: BoardState } | undefined;
         board = entry?.state ?? null;
         done();
       };

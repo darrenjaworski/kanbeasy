@@ -39,8 +39,7 @@ const clipboard = {
 function installFakeHost(hostClipboard: { text: string; written: string[] }) {
   function onMessage(event: MessageEvent) {
     const data = event.data as
-      | { source?: string; type?: string; payload?: unknown }
-      | undefined;
+      { source?: string; type?: string; payload?: unknown } | undefined;
     if (!data || data.source !== MESSAGE_SOURCE) return;
     if (data.type === "host:clipboard:write") {
       const { text } = data.payload as { text: string };

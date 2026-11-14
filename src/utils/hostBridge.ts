@@ -185,8 +185,7 @@ export function readClipboardViaHost(
     const off = onHostMessage((type, payload) => {
       if (type !== "host:clipboard:readResult") return;
       const result = payload as
-        | { requestId?: string; text?: string }
-        | undefined;
+        { requestId?: string; text?: string } | undefined;
       if (!result || result.requestId !== requestId) return;
       cleanup();
       resolve(typeof result.text === "string" ? result.text : "");

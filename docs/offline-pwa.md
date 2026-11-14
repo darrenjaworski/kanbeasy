@@ -149,9 +149,7 @@ VitePWA({
     cleanupOutdatedCaches: true,
     clientsClaim: true,
   },
-  manifest: {
-    /* ... manifest config from above ... */
-  },
+  manifest: {/* ... manifest config from above ... */},
   includeAssets: ["kanban.svg", "icons/*.png"],
 });
 ```

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Expanded the roadmap's WIP limit entry into a concrete spec: per-column optional numeric limit configurable in the column header or settings, with a visual warning when a column's card count exceeds it.
+- Updated dependencies to latest semver-compatible versions (React 19.3, Vite 8.3, Tailwind 4.3.5, ESLint 10.15, Playwright 1.65, Vitest 4.1.12, Prettier 3.10, and others); bumped the CI Playwright container to `v1.65.1-noble` to match, and reformatted files for Prettier 3.10's union-type layout.
 
 ## [1.53.7] - 2026-09-05
 
